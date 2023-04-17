@@ -1,6 +1,6 @@
 {
   "name": "ushell-common-components",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -24,7 +24,6 @@
     "typescript",
     "ushell"
   ],
-  "author": "Rafael Weschle",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -48,6 +47,9 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "ushell-modulebase": "^1.0.0"
+    "fusefx-modeldescription": "^1.1.0",
+    "rxjs": "^7.8.0",
+    "ushell-modulebase": "^1.0.1",
+    "ushell-portfoliodescription": "^0.1.0"
   }
 }
