@@ -1,6 +1,6 @@
 {
   "name": "ushell-common-components",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -46,5 +46,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "ushell-modulebase": "^1.0.0"
   }
 }
