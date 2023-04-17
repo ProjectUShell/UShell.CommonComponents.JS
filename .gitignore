@@ -1,3 +1,4 @@
 node_modules
 dist
 ushell-common-components-*.tgz
+.vscode/
