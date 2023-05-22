@@ -3,11 +3,6 @@ import { MenuItem } from '../ShellMenu'
 import ChevronDown from '../_Icons/ChevronDown'
 import Dropdown from '../_Atoms/Dropdown'
 import VerticalMenu from './VerticalMenu'
-import React, { useState } from 'react'
-import { MenuItem } from '../ShellMenu'
-import ChevronDown from '../_Icons/ChevronDown'
-import Dropdown from '../_Atoms/Dropdown'
-import VerticalMenu from './VerticalMenu'
 
 const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
   const [openStateById, setOpenStateById] = useState<{ [id: string]: boolean }>({})
@@ -16,13 +11,9 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
     const newIsOpenState = { ...openStateById }
     newIsOpenState[id] = isOpen
     setOpenStateById(newIsOpenState)
-    const newIsOpenState = { ...openStateById }
-    newIsOpenState[id] = isOpen
-    setOpenStateById(newIsOpenState)
   }
 
   return (
-    <div className='flex items-center text-sm select-none'>
     <div className='flex items-center text-sm select-none'>
       {menuItems.map((mi: MenuItem) => (
         <div key={mi.id}>
@@ -45,7 +36,6 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
               }}
             >
               <div className='p-2 bg-backgroundone dark:bg-backgroundonedark rounded-md border-2 border-solid border-black'>
-              <div className='p-2 bg-backgroundone dark:bg-backgroundonedark rounded-md border-2 border-solid border-black'>
                 <VerticalMenu menuItems={mi.children}></VerticalMenu>
               </div>
             </Dropdown>
@@ -55,8 +45,5 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
     </div>
   )
 }
-  )
-}
 
-export default HorizontalMenu
 export default HorizontalMenu
