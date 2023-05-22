@@ -1,21 +1,21 @@
-import React from "react";
-import { MenuItem } from "../ShellMenu";
-import VerticalMenu from "./VerticalMenu";
-import HorizontalMenu from "./HorizontalMenu";
+import React from 'react'
+import { MenuItem } from '../ShellMenu'
+import VerticalMenu from './VerticalMenu'
+import HorizontalMenu from './HorizontalMenu'
 
-type MenuDirection = "Vertical" | "Horizontal";
+type MenuDirection = 'Vertical' | 'Horizontal'
 
 const Menu: React.FC<{
-  menuItems: MenuItem[];
-  direction: MenuDirection;
+  menuItems: MenuItem[]
+  direction: MenuDirection
 }> = ({ menuItems, direction }) => {
   switch (direction) {
-    case "Vertical":
-      return <VerticalMenu menuItems={menuItems}></VerticalMenu>;
-    case "Horizontal":
-      return <HorizontalMenu menuItems={menuItems}></HorizontalMenu>;
+    case 'Vertical':
+      return <VerticalMenu menuItems={menuItems}></VerticalMenu>
+    case 'Horizontal':
+      return <HorizontalMenu menuItems={menuItems}></HorizontalMenu>
   }
-  return <div>Menu</div>;
-};
+  return <div>Menu</div>
+}
 
-export default Menu;
+export default Menu
