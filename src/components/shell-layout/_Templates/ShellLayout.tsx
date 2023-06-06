@@ -5,6 +5,8 @@ import HorizontalShellLayout from './HorizontalShellLayout'
 import { ColorMode, LayoutMode, loadShellSettings, saveShellSettings, ShellSettings } from '../ShellSettings'
 import { ShellMenu } from '../ShellMenu'
 
+import './../ShellLayout.css'
+
 const ShellLayout: React.FC<{
   shellMenu: ShellMenu
   topBarElements?: JSX.Element[]
