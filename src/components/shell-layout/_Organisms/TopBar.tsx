@@ -1,14 +1,15 @@
 import React from 'react'
 import SettingsDropdown from '../_Molecules/SettingsDropdown'
-import { LayoutMode, ColorMode } from '../ShellSettings'
+import { LayoutMode, ColorMode, ShellSettings } from '../ShellSettings'
 
 const TopBar: React.FC<{
   setLayoutMode: (layoutMode: LayoutMode) => void
   setColorMode: (colorMode: ColorMode) => void
+  shellSettings: ShellSettings
   toggleSidebarOpen: () => void
   title: string
   topBarElements?: JSX.Element[]
-}> = ({ setLayoutMode, setColorMode, toggleSidebarOpen, topBarElements, title }) => {
+}> = ({ setLayoutMode, setColorMode, toggleSidebarOpen, topBarElements, title, shellSettings }) => {
   return (
     <header className='static top-0 flex flex-col z-50 px-6 bg-backgroundone dark:bg-backgroundonedark text-textone dark:text-textonedark shadow-lg'>
       <div className='flex justify-between items-center py-1'>
@@ -38,7 +39,11 @@ const TopBar: React.FC<{
                 {e}
               </div>
             ))}
-          <SettingsDropdown setLayoutMode={setLayoutMode} setColorMode={setColorMode}></SettingsDropdown>
+          <SettingsDropdown
+            shellSettings={shellSettings}
+            setLayoutMode={setLayoutMode}
+            setColorMode={setColorMode}
+          ></SettingsDropdown>
         </div>
       </div>
     </header>

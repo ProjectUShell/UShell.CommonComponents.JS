@@ -12,9 +12,11 @@ const HorizontalShellLayout: React.FC<{
         className='flex flex-col z-20 px-6 bg-backgroundone dark:bg-backgroundonedark
       text-textone dark:text-textonedark shadow-md'
       >
-        <div className='flex justify-between items-center py-2'>
-          <Menu direction='Horizontal' menuItems={shellMenu.items}></Menu>
-        </div>
+        {shellMenu.items.length > 0 && (
+          <div className='flex justify-between items-center py-2'>
+            <Menu direction='Horizontal' menuItems={shellMenu.items}></Menu>
+          </div>
+        )}
       </header>
       <div
         className='w-screen h-full flex min-w-0 

@@ -24,7 +24,6 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
             }}
           >
             <div className='px-1'> {mi.label}</div>
-            <div className='px-1'> {mi.label}</div>
             {mi.children && <ChevronDown size={4}></ChevronDown>}
           </div>
           {mi.children && openStateById[mi.id] && (

@@ -12,8 +12,4 @@ export { GuifadFuse }
 export * from './components/shell-layout/_Templates/ShellLayout'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(
-  <React.StrictMode>
-    <Demo></Demo>
-  </React.StrictMode>,
-)
+root.render(<Demo></Demo>)

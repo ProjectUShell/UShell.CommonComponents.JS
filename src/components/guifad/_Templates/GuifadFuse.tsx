@@ -1,22 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import { GetFuseDatasource } from '../FuseDatasource'
 import Guifad from './Guifad'
-import { IDataSource2 } from '../IDataSource2'
+import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
+import { FuseConnector } from '../FuseConnector'
 
-const GuifadFuse: React.FC<{ fuseUrl: string }> = ({ fuseUrl }) => {
-  const [dataSource, setDataSource] = useState<IDataSource2 | null>(null)
+const GuifadFuse: React.FC<{ fuseUrl: string; rootEntityName: string }> = ({ fuseUrl, rootEntityName }) => {
+  const [schemaRoot, setSchemaRoot] = useState<SchemaRoot | null>(null)
+
   useEffect(() => {
-    GetFuseDatasource(fuseUrl).then((ds) => {
-      console.log(ds)
-      setDataSource(ds)
-      ds?.getRecords('Employee').then((r: any) => {
-        console.log('records', r)
-        console.log('es', ds.entitySchema)
-      })
+    FuseConnector.getEntitySchema(fuseUrl).then((r) => {
+      setSchemaRoot(r)
     })
   }, [fuseUrl])
-  if (!dataSource) return <div>Loading...</div>
-  return <Guifad dataSource={dataSource}></Guifad>
+
+  function getSchema(entityName: string): EntitySchema | undefined {
+    return schemaRoot!.entities?.find((e) => e.name == entityName)
+  }
+
+  if (!schemaRoot) return <div>Loading...</div>
+
+  return (
+    <Guifad
+      schemaRoot={schemaRoot}
+      rootEntityName={rootEntityName}
+      getDataSource={(entityName: string) => GetFuseDatasource(fuseUrl, getSchema(entityName)!)}
+    ></Guifad>
+  )
 }
 
 export default GuifadFuse

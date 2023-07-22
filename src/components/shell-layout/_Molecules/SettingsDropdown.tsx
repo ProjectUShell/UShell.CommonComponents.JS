@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import Dropdown from '../_Atoms/Dropdown'
 import RadioGroup from '../_Atoms/RadioGroup'
-import { ColorMode, LayoutMode } from '../ShellSettings'
+import { ColorMode, LayoutMode, ShellSettings } from '../ShellSettings'
 
 const SettingsDropdown: React.FC<{
   setLayoutMode: (layoutMode: LayoutMode) => void
   setColorMode: (colorMode: ColorMode) => void
-}> = ({ setLayoutMode, setColorMode }) => {
+  shellSettings: ShellSettings
+}> = ({ setLayoutMode, setColorMode, shellSettings }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -33,7 +34,7 @@ const SettingsDropdown: React.FC<{
           <div className='bg-backgroundone dark:bg-backgroundonedark p-1 rounded-md'>
             <div className='mb-4'>
               <RadioGroup
-                value={0}
+                value={shellSettings.layoutMode}
                 key={0}
                 labelText='Layout Mode'
                 options={[<div key={1}>Vertical</div>, <div key={2}>Horizontal</div>]}
@@ -52,7 +53,7 @@ const SettingsDropdown: React.FC<{
             <div className='mb-4'>
               <RadioGroup
                 labelText='Color Mode'
-                value={0}
+                value={shellSettings.colorMode}
                 key={0}
                 options={[<div key={1}>Light</div>, <div key={2}>Dark</div>]}
                 onChange={(index) => {

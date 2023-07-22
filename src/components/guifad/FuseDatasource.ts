@@ -3,28 +3,33 @@ import { FuseConnector } from './FuseConnector'
 import { EntitySchema } from 'fusefx-modeldescription'
 import { IDataSource2 } from './IDataSource2'
 
-export async function GetFuseDatasource(url: string): Promise<IDataSource2> {
-  const entitySchema: EntitySchema = await FuseConnector.getEntitySchema(url)
-  const datasource: IDataSource2 = {
+export function GetFuseDatasource(url: string, entitySchema: EntitySchema): IDataSource {
+  const datasource: IDataSource = {
     dataSourceUid: '1',
     entitySchema: entitySchema,
-    entityFactoryMethod: (entityName: string) => {
-      return {}
+    entityFactoryMethod: () => {
+      return { id: 0 }
     },
-    entityUpdateMethod: (entityName: string, e: any) => {
+    entityUpdateMethod: (e: any) => {
+      return FuseConnector.addOrUpdate(url, entitySchema.name, e)
+    },
+    entityInsertMethod: (e: any) => {
       return new Promise<boolean>(() => true)
     },
-    entityInsertMethod: (entityName: string, e: any) => {
-      return new Promise<boolean>(() => true)
+    entityDeleteMethod: (e: any) => {
+      return FuseConnector.deleteEntities(url, entitySchema.name, [[e.id]])
     },
-    entityDeleteMethod: (entityName: string, e: any) => {
-      return new Promise<boolean>(() => true)
-    },
-    getRecord(entityName: string) {
+    getRecord() {
       return new Promise<object[]>(() => [])
     },
-    getRecords(entityName: string) {
-      return FuseConnector.getEntities(url, 'Employee')
+    getRecords() {
+      return FuseConnector.getEntities(url, entitySchema.name)
+    },
+    extractIdentityFrom: (entity: object) => {
+      return {}
+    },
+    containsIdentityOf: (entity: object) => {
+      return new Promise<boolean>(() => true)
     },
   }
   return datasource
