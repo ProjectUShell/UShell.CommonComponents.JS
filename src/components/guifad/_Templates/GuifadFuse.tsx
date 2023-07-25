@@ -3,12 +3,16 @@ import { GetFuseDatasource } from '../FuseDatasource'
 import Guifad from './Guifad'
 import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
 import { FuseConnector } from '../FuseConnector'
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 const GuifadFuse: React.FC<{ fuseUrl: string; rootEntityName: string }> = ({ fuseUrl, rootEntityName }) => {
-  const [schemaRoot, setSchemaRoot] = useState<SchemaRoot | null>(null)
+  const [schemaRoot, setSchemaRoot] = useState<SchemaRoot | null | undefined>(undefined)
 
   useEffect(() => {
     FuseConnector.getEntitySchema(fuseUrl).then((r) => {
+      console.log('es', r)
       setSchemaRoot(r)
     })
   }, [fuseUrl])
@@ -17,14 +21,17 @@ const GuifadFuse: React.FC<{ fuseUrl: string; rootEntityName: string }> = ({ fus
     return schemaRoot!.entities?.find((e) => e.name == entityName)
   }
 
-  if (!schemaRoot) return <div>Loading...</div>
+  if (schemaRoot == null) return <div>No Entity Schema!</div>
+  if (schemaRoot == undefined) return <div>Loading...</div>
 
   return (
-    <Guifad
-      schemaRoot={schemaRoot}
-      rootEntityName={rootEntityName}
-      getDataSource={(entityName: string) => GetFuseDatasource(fuseUrl, getSchema(entityName)!)}
-    ></Guifad>
+    <QueryClientProvider client={queryClient}>
+      <Guifad
+        schemaRoot={schemaRoot}
+        rootEntityName={rootEntityName}
+        getDataSource={(entityName: string) => GetFuseDatasource(fuseUrl, getSchema(entityName)!)}
+      ></Guifad>
+    </QueryClientProvider>
   )
 }
 

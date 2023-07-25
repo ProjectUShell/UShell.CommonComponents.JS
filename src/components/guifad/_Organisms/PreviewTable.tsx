@@ -18,7 +18,7 @@ const PreviewTable: React.FC<{
     const newColumns: TableColumn[] = [{ label: 'id' }]
     setColumns(newColumns)
     dataSource.getRecords().then((r) => {
-      setRecords(r)
+      setRecords(r.page)
     })
   }, [dataSource])
 
@@ -30,6 +30,10 @@ const PreviewTable: React.FC<{
       onSelectedRecordsChange={onSelectedRecordsChange}
       className={className}
       pagingParams={{ pageSize: 10, pageNumber: 1 }}
+      totalCount={0}
+      onPagingParamsChange={(p) => {
+        console.log('todo')
+      }}
     ></Table>
   )
 }

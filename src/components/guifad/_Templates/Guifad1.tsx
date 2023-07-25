@@ -19,6 +19,7 @@ const Guifad1: React.FC<{
   const [currentRecord, setCurrentRecord] = useState<any | null>(null)
   const [currentRelation, setCurrentRelation] = useState<RelationSchema | null>(null)
   const [currentMode, setCurrentMode] = useState<'list' | 'details'>('list')
+  const [dirty, setDirty] = useState(false)
 
   if (!rootNode.dataSource) {
     return <div>No DataSource</div>
@@ -73,6 +74,7 @@ const Guifad1: React.FC<{
               const newMode = n[n.length - 1].record ? 'details' : 'list'
               setCurrentMode(newMode)
             }}
+            dirty={dirty}
           ></Breadcrumb>
         </header>
 
@@ -89,7 +91,12 @@ const Guifad1: React.FC<{
             ></EntityTable>
           )}
           {currentMode == 'details' && (
-            <EntityForm dataSource={nodes[nodes.length - 1].dataSource} entity={currentRecord}></EntityForm>
+            <EntityForm
+              dataSource={nodes[nodes.length - 1].dataSource}
+              entity={currentRecord}
+              dirty={dirty}
+              setDirty={setDirty}
+            ></EntityForm>
           )}
         </div>
       </div>
@@ -104,6 +111,7 @@ const Guifad1: React.FC<{
           mode={currentMode}
           relation={currentRelation}
           className='h-1/2  '
+          dirty={dirty}
         ></StructureNavigation>
         {currentRelation && currentRecord && (
           <PreviewTable

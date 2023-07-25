@@ -1,4 +1,6 @@
 import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
+import { PaginatedList } from 'ushell-modulebase/lib/PaginatedList'
+import { PagingParams } from 'ushell-modulebase/lib/PagingParams'
 
 export class FuseConnector {
   private static async post(url: string, bodyParams: any = null): Promise<any> {
@@ -15,12 +17,14 @@ export class FuseConnector {
     return content
   }
 
-  static async getEntitySchema(url: string): Promise<SchemaRoot> {
-    return this.post(url + `GetSchemaRoot`).then((r) => r.return)
+  static async getEntitySchema(url: string): Promise<SchemaRoot | null> {
+    return this.post(url + `GetSchemaRoot`)
+      .then((r) => r.return)
+      .catch((e) => null)
   }
 
-  static async getEntities(url: string, entityName: string): Promise<any> {
-    return this.post(url + `GetEntities`, { entityName: entityName }).then((r) => r.return)
+  static async getEntities(url: string, entityName: string, pagingParams?: PagingParams): Promise<PaginatedList> {
+    return this.post(url + `GetEntities`, { entityName: entityName, pagingParams: pagingParams }).then((r) => r.return)
   }
 
   static async addOrUpdate(url: string, entityName: string, entity: any): Promise<any> {

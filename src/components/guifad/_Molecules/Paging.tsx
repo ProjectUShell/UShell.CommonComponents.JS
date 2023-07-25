@@ -1,70 +1,88 @@
-import React from 'react'
-import { PagingParams } from '../_Organisms/Table.tsx'
+import React, { useEffect, useState } from 'react'
+import { PagingParams } from 'ushell-modulebase/lib/PagingParams'
 
-const Paging: React.FC<{ pagingParams: PagingParams }> = ({ pagingParams }) => {
+const Paging: React.FC<{
+  pagingParams: PagingParams
+  total: number
+  onPagingParamsChange: (p: PagingParams) => void
+}> = ({ pagingParams, total, onPagingParamsChange }) => {
+  const [pages, setPages] = useState<number[]>([])
+
+  useEffect(() => {
+    const numPages: number = Math.ceil(total / pagingParams.pageSize)
+    if (numPages <= 5) {
+      setPages(Array.from({ length: numPages }, (_, index) => index + 1))
+    } else if (pagingParams.pageNumber <= 2) {
+      setPages([1, 2, 3, 4, numPages])
+    } else if (pagingParams.pageNumber >= numPages - 1) {
+      setPages([1, numPages - 3, numPages - 2, numPages - 1, numPages])
+    } else {
+      setPages([1, pagingParams.pageNumber - 1, pagingParams.pageNumber, pagingParams.pageNumber + 1, numPages])
+    }
+  }, [pagingParams, total])
+
+  console.log('pages', pages)
+
   return (
     <nav className='flex items-center justify-between pt-4' aria-label='Table navigation'>
-      <span className='text-sm font-normal text-gray-500 dark:text-gray-400'>
-        Showing <span className='font-semibold text-gray-900 dark:text-white'>1-10</span> of{' '}
-        <span className='font-semibold text-gray-900 dark:text-white'>1000</span>
-      </span>
+      <div>
+        <label className='my-auto mx-1  text-sm'>Page Size:</label>
+        <select
+          defaultValue={pagingParams.pageSize}
+          onChange={(e) =>
+            console.log('select', onPagingParamsChange({ ...pagingParams, pageSize: Number.parseInt(e.target.value) }))
+          }
+          className='bg-backgroundone dark:bg-backgroundonedark mr-2 rounded-md text-sm'
+        >
+          <option value={10}>10</option>
+          <option value={20}>20</option>
+          <option value={50}>50</option>
+        </select>
+        <span className='text-sm font-normal text-gray-500 dark:text-gray-400'>
+          Showing{' '}
+          <span className='font-semibold text-gray-900 dark:text-white'>
+            {pagingParams.pageSize * (pagingParams.pageNumber - 1) + 1}-
+            {pagingParams.pageSize * (pagingParams.pageNumber - 1) + pagingParams.pageSize}
+          </span>{' '}
+          of <span className='font-semibold text-gray-900 dark:text-white'>{total}</span>
+        </span>
+      </div>
+      <div></div>
       <ul className='inline-flex -space-x-px text-sm h-8'>
-        <li>
-          <a
-            href='#'
+        <li className=''>
+          <button
+            disabled={pagingParams.pageNumber == 1}
+            onClick={(e) => onPagingParamsChange({ ...pagingParams, pageNumber: pagingParams.pageNumber - 1 })}
             className='flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
           >
             Previous
-          </a>
+          </button>
         </li>
+        {pages.map((p) => (
+          <li key={p}>
+            <button
+              onClick={(e) => onPagingParamsChange({ ...pagingParams, pageNumber: p })}
+              className={`flex items-center justify-center px-3 h-8 leading-tight
+               text-gray-500  border border-gray-300 hover:bg-gray-100 
+                dark:border-gray-700 dark:text-gray-400  dark:hover:text-white
+                ${
+                  p == pagingParams.pageNumber
+                    ? 'bg-blue-300 dark:bg-blue-200'
+                    : 'hover:text-gray-700 dark:hover:bg-gray-700'
+                }`}
+            >
+              {p}
+            </button>
+          </li>
+        ))}
         <li>
-          <a
-            href='#'
-            className='flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
-          >
-            1
-          </a>
-        </li>
-        <li>
-          <a
-            href='#'
-            className='flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
-          >
-            2
-          </a>
-        </li>
-        <li>
-          <a
-            href='#'
-            aria-current='page'
-            className='flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white'
-          >
-            3
-          </a>
-        </li>
-        <li>
-          <a
-            href='#'
-            className='flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
-          >
-            4
-          </a>
-        </li>
-        <li>
-          <a
-            href='#'
-            className='flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
-          >
-            5
-          </a>
-        </li>
-        <li>
-          <a
-            href='#'
+          <button
+            disabled={pagingParams.pageNumber * pagingParams.pageSize >= total}
+            onClick={(e) => onPagingParamsChange({ ...pagingParams, pageNumber: pagingParams.pageNumber + 1 })}
             className='flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
           >
             Next
-          </a>
+          </button>
         </li>
       </ul>
     </nav>

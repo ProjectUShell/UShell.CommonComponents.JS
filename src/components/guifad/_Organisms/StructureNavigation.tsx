@@ -17,6 +17,7 @@ const StructureNavigation: React.FC<{
   mode: 'list' | 'details'
   relation: RelationSchema | null
   className?: string
+  dirty: boolean
 }> = ({
   currentRecord,
   entitySchema,
@@ -27,6 +28,7 @@ const StructureNavigation: React.FC<{
   mode,
   relation,
   className,
+  dirty,
 }) => {
   return (
     <div className={`text-md ${className}`}>
@@ -36,7 +38,8 @@ const StructureNavigation: React.FC<{
           : entitySchema.namePlural}
       </h1>
       <button
-        className={`w-full flex gap-1 hover:bg-blue-200 dark:hover:bg-blue-300 hover:cursor-pointer rounded-md p-1 ${
+        disabled={dirty}
+        className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 enabled:hover:cursor-pointer rounded-md p-1 ${
           mode == 'list' && 'bg-blue-300 dark:bg-blue-400'
         }`}
         onClick={(e) => onModeSelected('list')}
@@ -56,8 +59,8 @@ const StructureNavigation: React.FC<{
       {EntitySchemaService.getRelations(schemaRoot, entitySchema, false).map((er) => (
         <button
           key={er.name}
-          disabled={!currentRecord}
-          className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 hover:cursor-pointer rounded-md p-1 ${
+          disabled={!currentRecord || dirty}
+          className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 enabled:hover:cursor-pointer rounded-md p-1 ${
             relation?.name == er.name && 'enabled:bg-blue-300 enabled:dark:bg-blue-400'
           }`}
           onClick={() => onRelationSelected(er)}

@@ -2,14 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { IDataSource } from 'ushell-modulebase'
 import { lowerFirstLetter } from '../../../utils/StringUtils'
 import Paging from '../_Molecules/Paging'
+import { PagingParams } from 'ushell-modulebase/lib/PagingParams'
+import ArrowUpDown from '../../../_Icons/ArrowUpDown'
 
 export interface TableColumn {
   label: string
-}
-
-export interface PagingParams {
-  pageNumber: number
-  pageSize: number
 }
 
 const Table: React.FC<{
@@ -20,7 +17,22 @@ const Table: React.FC<{
   onSelectedRecordsChange: (selectedRecords: any[]) => void
   selectedRecord?: any
   pagingParams: PagingParams
-}> = ({ columns, records, className, onRecordEnter, onSelectedRecordsChange, selectedRecord, pagingParams }) => {
+  totalCount: number
+  onPagingParamsChange: (p: PagingParams) => void
+  sortingParams?: { fieldName: string; desc: boolean }[]
+  onSortingParamsChange?: (sortingParams: { fieldName: string; desc: boolean }[]) => void
+}> = ({
+  columns,
+  records,
+  className,
+  onRecordEnter,
+  onSelectedRecordsChange,
+  selectedRecord,
+  pagingParams,
+  totalCount,
+  onPagingParamsChange,
+  sortingParams,
+}) => {
   const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean }>({})
   const [initialSelectedRecord, setInitialSelectedRecord] = useState<any>(selectedRecord)
 
@@ -97,7 +109,12 @@ const Table: React.FC<{
               </th> */}
               {columns.map((c) => (
                 <th key={c.label} className='px-6 py-3'>
-                  {c.label}
+                  <div className='flex items-center'>
+                    {c.label}
+                    <button>
+                      <ArrowUpDown></ArrowUpDown>
+                    </button>
+                  </div>
                 </th>
               ))}
             </tr>
@@ -134,7 +151,7 @@ const Table: React.FC<{
           </tbody>
         </table>
       </div>
-      <Paging pagingParams={pagingParams}></Paging>
+      <Paging pagingParams={pagingParams} total={totalCount} onPagingParamsChange={onPagingParamsChange}></Paging>
     </div>
   )
 }

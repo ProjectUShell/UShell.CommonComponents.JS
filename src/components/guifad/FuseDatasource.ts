@@ -2,6 +2,7 @@ import { IDataSource } from 'ushell-modulebase'
 import { FuseConnector } from './FuseConnector'
 import { EntitySchema } from 'fusefx-modeldescription'
 import { IDataSource2 } from './IDataSource2'
+import { PagingParams } from 'ushell-modulebase/lib/PagingParams'
 
 export function GetFuseDatasource(url: string, entitySchema: EntitySchema): IDataSource {
   const datasource: IDataSource = {
@@ -22,8 +23,8 @@ export function GetFuseDatasource(url: string, entitySchema: EntitySchema): IDat
     getRecord() {
       return new Promise<object[]>(() => [])
     },
-    getRecords() {
-      return FuseConnector.getEntities(url, entitySchema.name)
+    getRecords(pagingParams?: PagingParams) {
+      return FuseConnector.getEntities(url, entitySchema.name, pagingParams)
     },
     extractIdentityFrom: (entity: object) => {
       return {}

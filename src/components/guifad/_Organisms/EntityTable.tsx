@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { IDataSource } from 'ushell-modulebase'
-import Table, { PagingParams, TableColumn } from './Table.tsx'
+import Table, { TableColumn } from './Table.tsx'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import TrashIcon from '../../../_Icons/TrashIcon'
+import { useQuery } from '@tanstack/react-query'
+import { FuseConnector } from '../FuseConnector.js'
+import { PagingParams } from 'ushell-modulebase/lib/PagingParams.js'
 
 const EntityTable: React.FC<{
   dataSource: IDataSource
@@ -12,26 +15,43 @@ const EntityTable: React.FC<{
   selectedRecord: any | null
   onCreateRecord: () => void
 }> = ({ dataSource, className, onRecordEnter, onSelectedRecordsChange, selectedRecord, onCreateRecord }) => {
-  const [records, setRecords] = useState<any[]>([])
+  // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
   const [columns, setColumns] = useState<TableColumn[]>([])
-  const [pagingParams, setPagingParams] = useState<PagingParams>({ pageNumber: 1, pageSize: 50 })
+  const [pagingParams, setPagingParams] = useState<PagingParams>({ pageNumber: 1, pageSize: 10 })
+  // const [sortingParams, setSortingParams] = useState<SortingF>({ pageNumber: 1, pageSize: 10 })
+  const [reloadTrigger, setReloadTrigger] = useState(0)
+
+  function forceReload() {
+    setReloadTrigger((r) => r + 1)
+  }
 
   useEffect(() => {
     const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
       return { label: f.name }
     })
     setColumns(newColumns)
-    dataSource.getRecords().then((r) => {
-      setRecords(r)
-    })
+    // dataSource.getRecords().then((r) => {
+    //   setRecords(r)
+    // })
   }, [dataSource])
 
-  function reloadRecords() {
-    dataSource.getRecords().then((r) => {
-      setRecords(r)
-    })
-  }
+  const { isLoading, error, data } = useQuery({
+    queryKey: [dataSource.entitySchema!.name, pagingParams, reloadTrigger],
+    queryFn: () => dataSource.getRecords(pagingParams),
+  })
+
+  const data1: any = data
+
+  if (isLoading) return <div>Loading...</div>
+
+  if (error) return <div>An error has occurred: {error.toString()}</div> //+ error.message
+
+  // function reloadRecords() {
+  //   dataSource.getRecords().then((r) => {
+  //     setRecords(r)
+  //   })
+  // }
 
   function addRecord() {
     onCreateRecord()
@@ -51,8 +71,10 @@ const EntityTable: React.FC<{
       return
     }
     dataSource.entityDeleteMethod(selectedRecords[0]).then((r) => {
-      reloadRecords()
+      // reloadRecords()
+      setSelectedRecords([])
       onSelectedRecordsChange([])
+      forceReload()
     })
   }
 
@@ -75,7 +97,7 @@ const EntityTable: React.FC<{
       <Table
         className='overflow-auto h-full'
         columns={columns}
-        records={records}
+        records={data1!.page}
         onRecordEnter={onRecordEnter}
         onSelectedRecordsChange={(sr) => {
           setSelectedRecords(sr)
@@ -83,6 +105,8 @@ const EntityTable: React.FC<{
         }}
         selectedRecord={selectedRecords.length > 1 ? null : selectedRecord}
         pagingParams={pagingParams}
+        totalCount={data1!.total}
+        onPagingParamsChange={(pp) => setPagingParams(pp)}
       ></Table>
     </div>
   )
