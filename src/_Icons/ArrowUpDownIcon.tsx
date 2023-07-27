@@ -1,9 +1,9 @@
 import React from 'react'
 
-const ArrowUpDown = () => {
+const ArrowUpDownIcon: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <svg
-      className='w-3 h-3 ml-1.5'
+      className={'w-4 h-4' + className}
       aria-hidden='true'
       xmlns='http://www.w3.org/2000/svg'
       fill='currentColor'
@@ -14,4 +14,4 @@ const ArrowUpDown = () => {
   )
 }
 
-export default ArrowUpDown
+export default ArrowUpDownIcon

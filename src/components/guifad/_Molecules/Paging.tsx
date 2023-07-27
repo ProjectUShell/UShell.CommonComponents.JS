@@ -9,7 +9,11 @@ const Paging: React.FC<{
   const [pages, setPages] = useState<number[]>([])
 
   useEffect(() => {
-    const numPages: number = Math.ceil(total / pagingParams.pageSize)
+    let numPages: number = Math.ceil(total / pagingParams.pageSize)
+    if (!numPages || numPages == 0) {
+      numPages = 1
+    }
+    console.log('num Pages', numPages)
     if (numPages <= 5) {
       setPages(Array.from({ length: numPages }, (_, index) => index + 1))
     } else if (pagingParams.pageNumber <= 2) {

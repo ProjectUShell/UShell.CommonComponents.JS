@@ -1,6 +1,8 @@
 import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
+import { LogicalExpression } from 'ushell-modulebase/lib/LogicalExpression'
 import { PaginatedList } from 'ushell-modulebase/lib/PaginatedList'
 import { PagingParams } from 'ushell-modulebase/lib/PagingParams'
+import { SortingField } from 'ushell-modulebase/lib/SortingField'
 
 export class FuseConnector {
   private static async post(url: string, bodyParams: any = null): Promise<any> {
@@ -23,8 +25,32 @@ export class FuseConnector {
       .catch((e) => null)
   }
 
-  static async getEntities(url: string, entityName: string, pagingParams?: PagingParams): Promise<PaginatedList> {
-    return this.post(url + `GetEntities`, { entityName: entityName, pagingParams: pagingParams }).then((r) => r.return)
+  static async getEntities(
+    url: string,
+    entityName: string,
+    filter?: LogicalExpression,
+    pagingParams?: PagingParams,
+    sortingParams?: SortingField[],
+  ): Promise<PaginatedList> {
+    return this.post(url + `GetEntities`, {
+      entityName: entityName,
+      pagingParams: pagingParams,
+      sortingParams: sortingParams,
+    }).then((r) => r.return)
+  }
+
+  static async getEntityRefs(
+    url: string,
+    entityName: string,
+    filter?: LogicalExpression,
+    pagingParams?: PagingParams,
+    sortingParams?: SortingField[],
+  ): Promise<PaginatedList> {
+    return this.post(url + `GetEntityRefs`, {
+      entityName: entityName,
+      pagingParams: pagingParams,
+      sortingParams: sortingParams,
+    }).then((r) => r.return)
   }
 
   static async addOrUpdate(url: string, entityName: string, entity: any): Promise<any> {

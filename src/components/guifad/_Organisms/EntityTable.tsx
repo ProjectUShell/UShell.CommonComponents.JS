@@ -6,6 +6,7 @@ import TrashIcon from '../../../_Icons/TrashIcon'
 import { useQuery } from '@tanstack/react-query'
 import { FuseConnector } from '../FuseConnector.js'
 import { PagingParams } from 'ushell-modulebase/lib/PagingParams.js'
+import { SortingField } from 'ushell-modulebase/lib/SortingField.js'
 
 const EntityTable: React.FC<{
   dataSource: IDataSource
@@ -19,7 +20,7 @@ const EntityTable: React.FC<{
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
   const [columns, setColumns] = useState<TableColumn[]>([])
   const [pagingParams, setPagingParams] = useState<PagingParams>({ pageNumber: 1, pageSize: 10 })
-  // const [sortingParams, setSortingParams] = useState<SortingF>({ pageNumber: 1, pageSize: 10 })
+  const [sortingParams, setSortingParams] = useState<SortingField[]>([])
   const [reloadTrigger, setReloadTrigger] = useState(0)
 
   function forceReload() {
@@ -28,7 +29,7 @@ const EntityTable: React.FC<{
 
   useEffect(() => {
     const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
-      return { label: f.name }
+      return { label: f.name, fieldName: f.name }
     })
     setColumns(newColumns)
     // dataSource.getRecords().then((r) => {
@@ -37,8 +38,8 @@ const EntityTable: React.FC<{
   }, [dataSource])
 
   const { isLoading, error, data } = useQuery({
-    queryKey: [dataSource.entitySchema!.name, pagingParams, reloadTrigger],
-    queryFn: () => dataSource.getRecords(pagingParams),
+    queryKey: [dataSource.entitySchema!.name, pagingParams, sortingParams, reloadTrigger],
+    queryFn: () => dataSource.getRecords(undefined, pagingParams, sortingParams),
   })
 
   const data1: any = data
@@ -107,6 +108,11 @@ const EntityTable: React.FC<{
         pagingParams={pagingParams}
         totalCount={data1!.total}
         onPagingParamsChange={(pp) => setPagingParams(pp)}
+        sortingParams={sortingParams}
+        onSortingParamsChange={(sp) => {
+          console.log('sp', sp)
+          setSortingParams(sp)
+        }}
       ></Table>
     </div>
   )
