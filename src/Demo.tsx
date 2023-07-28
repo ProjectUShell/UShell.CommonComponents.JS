@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import './App.css'
+import './tailwind.css'
 import ShellLayout from './components/shell-layout/_Templates/ShellLayout'
 import Guifad from './components/guifad/_Templates/Guifad'
 import GuifadFuse from './components/guifad/_Templates/GuifadFuse'
