@@ -9,6 +9,8 @@ import SwitchIcon from '../../../_Icons/SwitchIcon'
 import { LogicalExpression } from 'ushell-modulebase/lib/LogicalExpression'
 import FunnelIcon from '../../../_Icons/FunnelIcon'
 import Dropdown from '../../shell-layout/_Atoms/Dropdown'
+import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
+import MinusCircleIcon from '../../../_Icons/MinusCircleIcon'
 
 export interface TableColumn {
   label: string
@@ -17,6 +19,11 @@ export interface TableColumn {
   onRenderCell?: (cellValue: any) => React.JSX.Element
   maxCellLength?: number
   renderFilter?: (onFilterChanged: (filter: LogicalExpression) => void, column: TableColumn) => React.JSX.Element
+}
+
+export interface ExpandableProps {
+  renderExpandedRow: (record: any) => React.JSX.Element
+  rowExpandable: (record: any) => boolean
 }
 
 const Table: React.FC<{
@@ -32,6 +39,7 @@ const Table: React.FC<{
   sortingParams?: SortingField[]
   onSortingParamsChange?: (sortingParams: SortingField[]) => void
   onFilterChanged?: (filter: LogicalExpression) => void
+  expandableRowProps?: ExpandableProps
 }> = ({
   columns,
   records,
@@ -45,11 +53,13 @@ const Table: React.FC<{
   sortingParams,
   onSortingParamsChange,
   onFilterChanged,
+  expandableRowProps,
 }) => {
   const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean }>({})
   const [initialSelectedRecord, setInitialSelectedRecord] = useState<any>(selectedRecord)
   const [filterVisible, setFilterVisible] = useState<{ [c: string]: boolean }>({})
   const [filterByColumn, setFilterByColumn] = useState<{ [c: string]: LogicalExpression }>({})
+  const [rowExpanded, setRowExpanded] = useState<{ [r: number]: boolean }>({})
   const [reRender, setReRender] = useState(0)
 
   useEffect(() => {
@@ -76,6 +86,12 @@ const Table: React.FC<{
   }, [])
 
   function onRowClick(i: number, e: any) {
+    if (e.target.tagName == 'path' || e.target.tagName == 'svg') {
+      return
+    }
+    console.log('e.target', e.target.tagName)
+
+    console.log('row click', e.target)
     const newSelectedValue = !selectedRows[i]
     const newSr = e.ctrlKey ? { ...selectedRows } : {}
     newSr[i] = newSelectedValue
@@ -161,12 +177,20 @@ const Table: React.FC<{
     onFilterChanged(tableFilter)
   }
 
+  function onToggleRowExpand(r: number) {
+    setRowExpanded((re) => {
+      re[r] = !re[r]
+      return { ...re }
+    })
+  }
+
   return (
     <div className='relative overflow-auto shadow-md sm:rounded-lg h-full flex flex-col justify-between border-4 border-green-500'>
       <div className='flex flex-col h-full overflow-auto border-4 border-black'>
         <table className='w-full max-h-full text-sm text-left'>
           <thead className='text-xs uppercase bg-backgroundfour dark:bg-backgroundfourdark sticky top-0'>
             <tr className=''>
+              {expandableRowProps && <th className='flex items-center gap-1'></th>}
               {columns.map((c) => (
                 <th key={c.label} className='px-6 py-3'>
                   <div className='flex items-center gap-1'>
@@ -203,38 +227,61 @@ const Table: React.FC<{
             </tr>
           </thead>
           <tbody className='overflow-auto h-full  border-4 border-pink-400'>
-            {records.map((r, i) => (
-              <tr
-                key={i}
-                className={`border-b bg-backgroundthree dark:bg-backgroundthreedark hover:bg-blue-200 dark:hover:bg-blue-300 dark:border-gray-700 ${
-                  selectedRows[i] && 'bg-blue-300 && dark:bg-blue-400'
-                }`}
-                onClick={(e) => onRowClick(i, e)}
-                onDoubleClick={(e) => onRowDoubleClick(i, e)}
-              >
-                {/* <td className='w-4 p-4'>
-                  <div className='flex items-center'>
-                    <input
-                      id='checkbox-table-search-1'
-                      type='checkbox'
-                      className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                    />
-                    <label htmlFor='checkbox-table-search-1' className='sr-only'>
-                      checkbox
-                    </label>
-                  </div>
-                </td> */}
-                {columns.map((c, j) => (
-                  <td
-                    id={`table_cell_${j}_${i}`}
-                    key={j}
-                    className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'
-                  >
-                    {getDisplay(r[lowerFirstLetter(c.fieldName)], c, document.getElementById(`table_cell_${j}_${i}`))}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {records.map((r, i) => {
+              const renderRow = (
+                <tr
+                  key={i}
+                  className={`border-b bg-backgroundthree dark:bg-backgroundthreedark dark:border-gray-700 ${
+                    selectedRows[i] && 'bg-blue-300 && dark:bg-blue-400'
+                  }`}
+                  onClick={(e) => onRowClick(i, e)}
+                  onDoubleClick={(e) => onRowDoubleClick(i, e)}
+                >
+                  {/* <td className='w-4 p-4'>
+                          <div className='flex items-center'>
+                            <input
+                              id='checkbox-table-search-1'
+                              type='checkbox'
+                              className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                            />
+                            <label htmlFor='checkbox-table-search-1' className='sr-only'>
+                              checkbox
+                            </label>
+                          </div>
+                        </td> */}
+                  {expandableRowProps && expandableRowProps.rowExpandable(r) && (
+                    <td className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'>
+                      <button
+                        id={`expand_${i}`}
+                        className='rounded-md hover:text-blue-600'
+                        onClick={(e) => onToggleRowExpand(i)}
+                      >
+                        {rowExpanded[i] ? <MinusCircleIcon></MinusCircleIcon> : <PlusCircleIcon></PlusCircleIcon>}
+                      </button>
+                    </td>
+                  )}
+                  {columns.map((c, j) => (
+                    <td
+                      id={`table_cell_${j}_${i}`}
+                      key={j}
+                      className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'
+                    >
+                      {getDisplay(r[lowerFirstLetter(c.fieldName)], c, document.getElementById(`table_cell_${j}_${i}`))}
+                    </td>
+                  ))}
+                </tr>
+              )
+              return rowExpanded[i]
+                ? [
+                    renderRow,
+                    <tr key={i + 1000} className=''>
+                      <td className='' colSpan={columns.length + 1}>
+                        {expandableRowProps?.renderExpandedRow(r)}
+                      </td>
+                    </tr>,
+                  ]
+                : renderRow
+            })}
           </tbody>
         </table>
       </div>
