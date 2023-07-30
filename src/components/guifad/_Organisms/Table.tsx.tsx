@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { IDataSource } from 'ushell-modulebase'
 import { lowerFirstLetter } from '../../../utils/StringUtils'
 import Paging from '../_Molecules/Paging'
 import { PagingParams } from 'ushell-modulebase/lib/PagingParams'
-import ArrowUpDownIcon from '../../../_Icons/ArrowUpDownIcon'
 import { SortingField } from 'ushell-modulebase/lib/SortingField'
-import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
-import ArrowUpIcon from '../../../_Icons/ArrowUpIcon'
 import BarsArrowUpIcon from '../../../_Icons/BarsArrowUpIcon'
 import BarsArrowDownIcon from '../../../_Icons/BarsArrowDownIcon'
 import SwitchIcon from '../../../_Icons/SwitchIcon'
+import { LogicalExpression } from 'ushell-modulebase/lib/LogicalExpression'
+import FunnelIcon from '../../../_Icons/FunnelIcon'
+import Dropdown from '../../shell-layout/_Atoms/Dropdown'
 
 export interface TableColumn {
   label: string
   fieldName: string
+  fieldType: string
   onRenderCell?: (cellValue: any) => React.JSX.Element
   maxCellLength?: number
+  renderFilter?: (onFilterChanged: (filter: LogicalExpression) => void, column: TableColumn) => React.JSX.Element
 }
 
 const Table: React.FC<{
@@ -30,6 +31,7 @@ const Table: React.FC<{
   onPagingParamsChange?: (p: PagingParams) => void
   sortingParams?: SortingField[]
   onSortingParamsChange?: (sortingParams: SortingField[]) => void
+  onFilterChanged?: (filter: LogicalExpression) => void
 }> = ({
   columns,
   records,
@@ -42,9 +44,12 @@ const Table: React.FC<{
   onPagingParamsChange,
   sortingParams,
   onSortingParamsChange,
+  onFilterChanged,
 }) => {
   const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean }>({})
   const [initialSelectedRecord, setInitialSelectedRecord] = useState<any>(selectedRecord)
+  const [filterVisible, setFilterVisible] = useState<{ [c: string]: boolean }>({})
+  const [filterByColumn, setFilterByColumn] = useState<{ [c: string]: LogicalExpression }>({})
   const [reRender, setReRender] = useState(0)
 
   useEffect(() => {
@@ -52,7 +57,6 @@ const Table: React.FC<{
       const i: number = records.findIndex((r) => r.id == initialSelectedRecord?.id)
       const newSr: { [index: number]: boolean } = {}
       newSr[i] = true
-      console.log('initialSr', newSr)
       return newSr
     }
     setSelectedRows(getIntialSelectedRows())
@@ -71,7 +75,6 @@ const Table: React.FC<{
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  console.log('selectedRows', selectedRows)
   function onRowClick(i: number, e: any) {
     const newSelectedValue = !selectedRows[i]
     const newSr = e.ctrlKey ? { ...selectedRows } : {}
@@ -108,9 +111,15 @@ const Table: React.FC<{
     onSortingParamsChange([...sortingParams])
   }
 
+  function onSetFilterVisible(c: string, v: boolean) {
+    setFilterVisible((f) => {
+      const newFilterVisible = { ...f }
+      newFilterVisible[c] = v
+      return newFilterVisible
+    })
+  }
+
   function getDisplay(v: any, c: TableColumn, test: any) {
-    // console.log('test', test)
-    // console.log('test.width', test?.offsetWidth)
     if (c.onRenderCell) {
       return c.onRenderCell(v)
     }
@@ -124,10 +133,7 @@ const Table: React.FC<{
     const vLength = charLength * v.length
     const maxCellLength: number = c.maxCellLength ? c.maxCellLength : 20
     const maxVLength = maxCellLength * charLength
-    console.log('vLength', vLength)
-    console.log('maxCellLength', maxCellLength)
-    console.log('maxVLength', maxVLength)
-    console.log('test?.width', test?.offsetWidth)
+
     // if (maxVLength < test?.offsetWidth) {
     //   return v
     // }
@@ -138,27 +144,32 @@ const Table: React.FC<{
     return v
   }
 
+  function onColumnFilterChange(columnFilter: LogicalExpression, column: TableColumn) {
+    if (!onFilterChanged) {
+      return
+    }
+    filterByColumn[column.fieldName] = columnFilter
+    const tableFilters: LogicalExpression[] = []
+    for (const column in filterByColumn) {
+      tableFilters.push(filterByColumn[column])
+    }
+    const tableFilter: LogicalExpression = {
+      operator: 'and',
+      atomArguments: [],
+      expressionArguments: tableFilters,
+    }
+    onFilterChanged(tableFilter)
+  }
+
   return (
     <div className='relative overflow-auto shadow-md sm:rounded-lg h-full flex flex-col justify-between border-4 border-green-500'>
       <div className='flex flex-col h-full overflow-auto border-4 border-black'>
         <table className='w-full max-h-full text-sm text-left'>
           <thead className='text-xs uppercase bg-backgroundfour dark:bg-backgroundfourdark sticky top-0'>
             <tr className=''>
-              {/* <th scope='col' className='p-4'>
-                <div className='flex items-center'>
-                  <input
-                    id='checkbox-all-search'
-                    type='checkbox'
-                    className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                  />
-                  <label htmlFor='checkbox-all-search' className='sr-only'>
-                    checkbox
-                  </label>
-                </div>
-              </th> */}
               {columns.map((c) => (
                 <th key={c.label} className='px-6 py-3'>
-                  <div className='flex items-center'>
+                  <div className='flex items-center gap-1'>
                     {c.label}
                     <button onClick={(e) => toggleSorting(c.label)} className='pl-2'>
                       {!sortingParams?.find((sf) => sf.fieldName == c.label) && <SwitchIcon></SwitchIcon>}
@@ -170,6 +181,22 @@ const Table: React.FC<{
                           <BarsArrowUpIcon className='text-blue-600 dark:text-blue-400'></BarsArrowUpIcon>
                         )}
                     </button>
+                    <div className=''>
+                      {c.renderFilter && onFilterChanged && (
+                        <>
+                          {filterVisible[c.fieldName] && (
+                            <Dropdown setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}>
+                              <div className='w-40 bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md'>
+                                {c.renderFilter((f) => onColumnFilterChange(f, c), c)}
+                              </div>
+                            </Dropdown>
+                          )}
+                          <button onClick={(e) => onSetFilterVisible(c.fieldName, true)}>
+                            <FunnelIcon></FunnelIcon>
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </th>
               ))}

@@ -15,7 +15,7 @@ const PreviewTable: React.FC<{
     // const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
     //   return { label: f.name }
     // })
-    const newColumns: TableColumn[] = [{ label: 'id', fieldName: 'id' }]
+    const newColumns: TableColumn[] = [{ label: 'id', fieldName: 'id', fieldType: 'number' }]
     setColumns(newColumns)
     dataSource.getEntityRefs().then((r) => {
       setRecords(r.page)

@@ -13,7 +13,6 @@ const Paging: React.FC<{
     if (!numPages || numPages == 0) {
       numPages = 1
     }
-    console.log('num Pages', numPages)
     if (numPages <= 5) {
       setPages(Array.from({ length: numPages }, (_, index) => index + 1))
     } else if (pagingParams.pageNumber <= 2) {
@@ -24,8 +23,6 @@ const Paging: React.FC<{
       setPages([1, pagingParams.pageNumber - 1, pagingParams.pageNumber, pagingParams.pageNumber + 1, numPages])
     }
   }, [pagingParams, total])
-
-  console.log('pages', pages)
 
   return (
     <nav className='flex items-center justify-between pt-4' aria-label='Table navigation'>
