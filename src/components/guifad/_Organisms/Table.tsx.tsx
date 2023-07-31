@@ -185,8 +185,8 @@ const Table: React.FC<{
   }
 
   return (
-    <div className='relative overflow-auto shadow-md sm:rounded-lg h-full flex flex-col justify-between border-4 border-green-500'>
-      <div className='flex flex-col h-full overflow-auto border-4 border-black'>
+    <div className='relative overflow-auto shadow-md sm:rounded-lg h-full flex flex-col justify-between '>
+      <div className='flex flex-col h-full overflow-auto '>
         <table className='w-full max-h-full text-sm text-left'>
           <thead className='text-xs uppercase bg-backgroundfour dark:bg-backgroundfourdark sticky top-0'>
             <tr className=''>
