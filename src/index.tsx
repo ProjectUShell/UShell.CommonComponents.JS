@@ -7,13 +7,15 @@ import Demo from './Demo'
 import Guifad from './components/guifad/_Templates/Guifad'
 import GuifadFuse from './components/guifad/_Templates/GuifadFuse'
 import Table from './components/guifad/_Organisms/Table.tsx'
+import MultiSelectFilter from './_Molecules/MultiSelectFilter'
 
 // export { MyComponent }
 export { Guifad }
 export { GuifadFuse }
 export { Table }
+export { MultiSelectFilter }
 
 export * from './components/shell-layout/_Templates/ShellLayout'
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(<Demo></Demo>)
+// const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+// root.render(<Demo></Demo>)

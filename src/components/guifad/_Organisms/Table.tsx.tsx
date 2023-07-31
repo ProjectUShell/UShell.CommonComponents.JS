@@ -147,6 +147,9 @@ const Table: React.FC<{
     if (c.onRenderCell) {
       return c.onRenderCell(v)
     }
+    if (!v) {
+      return v
+    }
     if (!v.length) {
       return v
     }
@@ -196,16 +199,18 @@ const Table: React.FC<{
                 <th key={c.label} className='px-6 py-3'>
                   <div className='flex items-center gap-1'>
                     {c.label}
-                    <button onClick={(e) => toggleSorting(c.label)} className='pl-2'>
-                      {!sortingParams?.find((sf) => sf.fieldName == c.label) && <SwitchIcon></SwitchIcon>}
-                      {sortingParams?.find((sf) => sf.fieldName == c.label)?.descending && (
-                        <BarsArrowDownIcon className='text-blue-600 dark:text-blue-400'></BarsArrowDownIcon>
-                      )}
-                      {sortingParams?.find((sf) => sf.fieldName == c.label) &&
-                        !sortingParams?.find((sf) => sf.fieldName == c.label)!.descending && (
-                          <BarsArrowUpIcon className='text-blue-600 dark:text-blue-400'></BarsArrowUpIcon>
+                    {sortingParams && (
+                      <button onClick={(e) => toggleSorting(c.label)} className='pl-2'>
+                        {!sortingParams?.find((sf) => sf.fieldName == c.label) && <SwitchIcon></SwitchIcon>}
+                        {sortingParams?.find((sf) => sf.fieldName == c.label)?.descending && (
+                          <BarsArrowDownIcon className='text-blue-600 dark:text-blue-400'></BarsArrowDownIcon>
                         )}
-                    </button>
+                        {sortingParams?.find((sf) => sf.fieldName == c.label) &&
+                          !sortingParams?.find((sf) => sf.fieldName == c.label)!.descending && (
+                            <BarsArrowUpIcon className='text-blue-600 dark:text-blue-400'></BarsArrowUpIcon>
+                          )}
+                      </button>
+                    )}
                     <div className=''>
                       {c.renderFilter && onFilterChanged && (
                         <>
