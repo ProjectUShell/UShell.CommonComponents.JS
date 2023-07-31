@@ -54,6 +54,7 @@ const TableDemo = () => {
         onPagingParamsChange={(p: PagingParams) => {
           console.log('p', p)
         }}
+        sortingParams={[]}
         onFilterChanged={(f) => console.log('Filter changed', f)}
         expandableRowProps={{ rowExpandable: (r) => true, renderExpandedRow: (r) => <div>{r.name}</div> }}
       ></Table>
