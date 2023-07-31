@@ -3,6 +3,7 @@ import Table, { TableColumn } from '../components/guifad/_Organisms/Table.tsx'
 import { PagingParams } from 'ushell-modulebase/lib/PagingParams.js'
 import MultiSelect from '../_Atoms/MultiSelect'
 import MultiSelectFilter from '../_Molecules/MultiSelectFilter'
+import { getSelectedValues } from '../utils/LogicUtils'
 
 const columns: TableColumn[] = [
   { label: 'Id', fieldName: 'id', fieldType: 'number' },
@@ -17,11 +18,11 @@ const columns: TableColumn[] = [
         TEST
       </button>
     ),
-    renderFilter(onFilterChanged, column) {
+    renderFilter(filter, onFilterChanged, column) {
       return (
         <MultiSelectFilter
           column={column}
-          initialValues={[]}
+          initialValues={getSelectedValues(filter)}
           onFilterChanged={onFilterChanged}
           options={[
             { label: 'debug', value: 0 },

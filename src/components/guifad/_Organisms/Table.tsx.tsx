@@ -18,7 +18,11 @@ export interface TableColumn {
   fieldType: string
   onRenderCell?: (cellValue: any) => React.JSX.Element
   maxCellLength?: number
-  renderFilter?: (onFilterChanged: (filter: LogicalExpression) => void, column: TableColumn) => React.JSX.Element
+  renderFilter?: (
+    filter: LogicalExpression,
+    onFilterChanged: (filter: LogicalExpression) => void,
+    column: TableColumn,
+  ) => React.JSX.Element
 }
 
 export interface ExpandableProps {
@@ -38,7 +42,8 @@ const Table: React.FC<{
   onPagingParamsChange?: (p: PagingParams) => void
   sortingParams?: SortingField[]
   onSortingParamsChange?: (sortingParams: SortingField[]) => void
-  onFilterChanged?: (filter: LogicalExpression) => void
+  initialFilters?: { [c: string]: LogicalExpression }
+  onFilterChanged?: (filterByColumn: { [c: string]: LogicalExpression }) => void
   expandableRowProps?: ExpandableProps
 }> = ({
   columns,
@@ -52,13 +57,16 @@ const Table: React.FC<{
   onPagingParamsChange,
   sortingParams,
   onSortingParamsChange,
+  initialFilters,
   onFilterChanged,
   expandableRowProps,
 }) => {
   const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean }>({})
   const [initialSelectedRecord, setInitialSelectedRecord] = useState<any>(selectedRecord)
   const [filterVisible, setFilterVisible] = useState<{ [c: string]: boolean }>({})
-  const [filterByColumn, setFilterByColumn] = useState<{ [c: string]: LogicalExpression }>({})
+  const [filterByColumn, setFilterByColumn] = useState<{ [c: string]: LogicalExpression }>(
+    initialFilters ? initialFilters : {},
+  )
   const [rowExpanded, setRowExpanded] = useState<{ [r: number]: boolean }>({})
   const [reRender, setReRender] = useState(0)
 
@@ -165,16 +173,9 @@ const Table: React.FC<{
       return
     }
     filterByColumn[column.fieldName] = columnFilter
-    const tableFilters: LogicalExpression[] = []
-    for (const column in filterByColumn) {
-      tableFilters.push(filterByColumn[column])
-    }
-    const tableFilter: LogicalExpression = {
-      operator: 'and',
-      atomArguments: [],
-      expressionArguments: tableFilters,
-    }
-    onFilterChanged(tableFilter)
+    setFilterByColumn({ ...filterByColumn })
+
+    onFilterChanged(filterByColumn)
   }
 
   function onToggleRowExpand(r: number) {
@@ -185,8 +186,8 @@ const Table: React.FC<{
   }
 
   return (
-    <div className='relative overflow-auto shadow-md sm:rounded-lg h-full flex flex-col justify-between '>
-      <div className='flex flex-col h-full overflow-auto '>
+    <div className='relative overflow-auto shadow-md sm:rounded-lg h-full flex flex-col justify-between'>
+      <div className='flex flex-col h-full overflow-auto'>
         <table className='w-full max-h-full text-sm text-left'>
           <thead className='text-xs uppercase bg-backgroundfour dark:bg-backgroundfourdark sticky top-0'>
             <tr className=''>
@@ -211,7 +212,7 @@ const Table: React.FC<{
                           {filterVisible[c.fieldName] && (
                             <Dropdown setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}>
                               <div className='w-40 bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md'>
-                                {c.renderFilter((f) => onColumnFilterChange(f, c), c)}
+                                {c.renderFilter(filterByColumn[c.fieldName], (f) => onColumnFilterChange(f, c), c)}
                               </div>
                             </Dropdown>
                           )}
@@ -226,7 +227,7 @@ const Table: React.FC<{
               ))}
             </tr>
           </thead>
-          <tbody className='overflow-auto h-full  border-4 border-pink-400'>
+          <tbody className='overflow-auto h-full'>
             {records.map((r, i) => {
               const renderRow = (
                 <tr
