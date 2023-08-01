@@ -100,7 +100,7 @@ const Guifad1: React.FC<{
           )}
         </div>
       </div>
-      <aside className='flex flex-col justify-start bg-backgroundfour dark:bg-backgroundfourdark w-80 p-2'>
+      <aside className='flex flex-col justify-start bg-backgroundthree dark:bg-backgroundthreedark w-80 p-2'>
         <StructureNavigation
           schemaRoot={schemaRoot}
           currentRecord={currentRecord}

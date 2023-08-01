@@ -29,7 +29,7 @@ const EntityTable: React.FC<{
 
   useEffect(() => {
     const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
-      return { label: f.name, fieldName: f.name, fieldType: f.type }
+      return { label: f.name, fieldName: f.name, fieldType: f.type, key: f.name }
     })
     setColumns(newColumns)
     // dataSource.getRecords().then((r) => {

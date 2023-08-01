@@ -15,9 +15,9 @@ const PreviewTable: React.FC<{
     // const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
     //   return { label: f.name }
     // })
-    const newColumns: TableColumn[] = [{ label: 'id', fieldName: 'id', fieldType: 'number' }]
+    const newColumns: TableColumn[] = [{ label: 'id', fieldName: 'id', fieldType: 'number', key: 'id' }]
     setColumns(newColumns)
-    dataSource.getEntityRefs().then((r) => {
+    dataSource.getRecords().then((r) => {
       setRecords(r.page)
     })
   }, [dataSource])
@@ -31,9 +31,6 @@ const PreviewTable: React.FC<{
       className={className}
       pagingParams={{ pageSize: 10, pageNumber: 1 }}
       totalCount={0}
-      onPagingParamsChange={(p) => {
-        console.log('todo')
-      }}
     ></Table>
   )
 }

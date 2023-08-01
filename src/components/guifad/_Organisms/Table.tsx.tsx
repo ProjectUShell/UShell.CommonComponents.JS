@@ -16,11 +16,12 @@ export interface TableColumn {
   label: string
   fieldName: string
   fieldType: string
+  key: string
   onRenderCell?: (cellValue: any) => React.JSX.Element
   maxCellLength?: number
   renderFilter?: (
     filter: LogicalExpression,
-    onFilterChanged: (filter: LogicalExpression) => void,
+    onFilterChanged: (filter: LogicalExpression | null) => void,
     column: TableColumn,
   ) => React.JSX.Element
 }
@@ -171,13 +172,21 @@ const Table: React.FC<{
     return v
   }
 
-  function onColumnFilterChange(columnFilter: LogicalExpression, column: TableColumn) {
+  function onColumnFilterChange(columnFilter: LogicalExpression | null, column: TableColumn) {
     if (!onFilterChanged) {
       return
     }
-    filterByColumn[column.fieldName] = columnFilter
+    if (columnFilter) {
+      filterByColumn[column.fieldName] = columnFilter
+    } else {
+      delete filterByColumn[column.fieldName]
+    }
     setFilterByColumn({ ...filterByColumn })
-
+    setFilterVisible((fv) => {
+      fv[column.fieldName] = false
+      return { ...fv }
+    })
+    console.log('onFilterChange', columnFilter)
     onFilterChanged(filterByColumn)
   }
 

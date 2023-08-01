@@ -7,12 +7,16 @@ import { TableColumn } from '../components/guifad/_Organisms/Table.tsx'
 const MultiSelectFilter: React.FC<{
   column: TableColumn
   options: Option[]
-  onFilterChanged: (filter: LogicalExpression) => void
+  onFilterChanged: (filter: LogicalExpression | null) => void
   initialValues: any[]
 }> = ({ options, onFilterChanged, initialValues, column }) => {
   const [selectedValues, setSelectedValues] = useState<any[]>([])
 
-  function onSelectionChanged(sv: any[]) {
+  function onSelectionChanged(sv: any[] | null) {
+    if (!sv) {
+      onFilterChanged(null)
+      return
+    }
     const relation: RelationElement = {
       propertyName: column.fieldName,
       relation: 'in',
@@ -35,7 +39,9 @@ const MultiSelectFilter: React.FC<{
         onSelectionChange={(sv: any[]) => setSelectedValues(sv)}
       ></MultiSelect>
       <div className='flex justify-end gap-1 text-sm'>
-        {/* <button className='rounded-md hover:bg-backgroundtwo p-1'>Cancel</button> */}
+        <button className='rounded-md hover:bg-backgroundtwo p-1' onClick={(e) => onSelectionChanged(null)}>
+          Clear
+        </button>
         <button className='rounded-md hover:bg-backgroundtwo p-1' onClick={(e) => onSelectionChanged(selectedValues)}>
           Ok
         </button>

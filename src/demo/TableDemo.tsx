@@ -6,13 +6,14 @@ import MultiSelectFilter from '../_Molecules/MultiSelectFilter'
 import { getSelectedValues } from '../utils/LogicUtils'
 
 const columns: TableColumn[] = [
-  { label: 'Id', fieldName: 'id', fieldType: 'number' },
-  { label: 'Name', fieldName: 'name', maxCellLength: 40, fieldType: 'string' },
-  { label: 'DateOfBirth', fieldName: 'dateOfBirth', fieldType: 'date' },
+  { label: 'Id', fieldName: 'id', fieldType: 'number', key: 'id' },
+  { label: 'Name', fieldName: 'name', maxCellLength: 40, fieldType: 'string', key: 'name' },
+  { label: 'DateOfBirth', fieldName: 'dateOfBirth', fieldType: 'date', key: 'dateOfBirth' },
   {
     label: 'Level',
     fieldName: 'level',
     fieldType: 'number',
+    key: 'level',
     onRenderCell: (v) => (
       <button className='bg-red-200 p-1 text-xs rounded-md' onClick={(e) => console.log('level clicked')}>
         TEST
