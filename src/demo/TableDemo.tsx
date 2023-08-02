@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Table, { TableColumn } from '../components/guifad/_Organisms/Table.tsx'
 import { PagingParams } from 'ushell-modulebase/lib/PagingParams.js'
 import MultiSelect from '../_Atoms/MultiSelect'
@@ -34,6 +34,31 @@ const columns: TableColumn[] = [
       )
     },
   },
+  {
+    label: 'Category',
+    fieldName: 'category',
+    fieldType: 'number',
+    key: 'category',
+    onRenderCell: (v) => (
+      <button className='bg-red-200 p-1 text-xs rounded-md' onClick={(e) => console.log('level clicked')}>
+        TEST
+      </button>
+    ),
+    renderFilter(filter, onFilterChanged, column) {
+      return (
+        <MultiSelectFilter
+          column={column}
+          initialValues={getSelectedValues(filter)}
+          onFilterChanged={onFilterChanged}
+          options={[
+            { label: 'good', value: 0 },
+            { label: 'bad', value: 1 },
+            { label: 'red', value: 2 },
+          ]}
+        ></MultiSelectFilter>
+      )
+    },
+  },
 ]
 const records: any[] = [
   {
@@ -45,6 +70,22 @@ const records: any[] = [
 ]
 
 const TableDemo = () => {
+  const [currentFilter, setCurrentFilter] = useState<any>({})
+
+  useEffect(() => {
+    let initialFilter: any = localStorage.getItem('demo_filter')
+    if (!initialFilter) {
+      return
+    }
+    initialFilter = JSON.parse(initialFilter)
+    setCurrentFilter(initialFilter)
+  }, [])
+
+  function onFilterChange(f: any) {
+    setCurrentFilter(f)
+    localStorage.setItem('demo_filter', JSON.stringify(f))
+  }
+
   return (
     <div className='overflow-hidden w-full h-full'>
       <Table
@@ -56,7 +97,8 @@ const TableDemo = () => {
           console.log('p', p)
         }}
         sortingParams={[]}
-        onFilterChanged={(f) => console.log('Filter changed', f)}
+        onFilterChanged={onFilterChange}
+        initialFilters={currentFilter}
         expandableRowProps={{ rowExpandable: (r) => true, renderExpandedRow: (r) => <div>{r.name}</div> }}
       ></Table>
     </div>

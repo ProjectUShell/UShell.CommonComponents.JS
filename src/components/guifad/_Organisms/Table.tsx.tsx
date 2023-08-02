@@ -72,6 +72,13 @@ const Table: React.FC<{
   const [reRender, setReRender] = useState(0)
 
   useEffect(() => {
+    if (!initialFilters) {
+      return
+    }
+    setFilterByColumn(initialFilters)
+  }, [initialFilters])
+
+  useEffect(() => {
     function getIntialSelectedRows(): { [index: number]: boolean } {
       const i: number = records.findIndex((r) => r.id == initialSelectedRecord?.id)
       const newSr: { [index: number]: boolean } = {}
@@ -186,7 +193,6 @@ const Table: React.FC<{
       fv[column.fieldName] = false
       return { ...fv }
     })
-    console.log('onFilterChange', columnFilter)
     onFilterChanged(filterByColumn)
   }
 
@@ -230,7 +236,12 @@ const Table: React.FC<{
                               </div>
                             </Dropdown>
                           )}
-                          <button onClick={(e) => onSetFilterVisible(c.fieldName, true)}>
+                          <button
+                            onClick={(e) => onSetFilterVisible(c.fieldName, true)}
+                            className={`${
+                              filterByColumn[c.fieldName] ? 'bg-green-200 dark:bg-green-600' : ''
+                            }  rounded-lg p-1`}
+                          >
                             <FunnelIcon></FunnelIcon>
                           </button>
                         </>
