@@ -80,7 +80,7 @@ const EntityTable: React.FC<{
   }
 
   return (
-    <div className='flex flex-col h-full border-4 border-blue-400'>
+    <div className='flex flex-col h-full'>
       <div className={`flex justify-end p-1 ${className} rounded-md mb-2 bg-backgroundtwo dark:bg-backgroundtwodark `}>
         <button
           className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark'
@@ -108,7 +108,7 @@ const EntityTable: React.FC<{
         pagingParams={pagingParams}
         totalCount={data1!.total}
         onPagingParamsChange={(pp) => setPagingParams(pp)}
-        sortingParams={sortingParams}
+        initialSortingParams={sortingParams}
         onSortingParamsChange={(sp) => {
           console.log('sp', sp)
           setSortingParams(sp)

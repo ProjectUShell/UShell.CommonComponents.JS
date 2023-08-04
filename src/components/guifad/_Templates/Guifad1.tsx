@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 import Breadcrumb from '../_Organisms/Breadcrumb'
 import { IDataSource } from 'ushell-modulebase'
 import StructureNavigation from '../_Organisms/StructureNavigation'
-import { EntitySchema, RelationSchema, SchemaRoot } from 'fusefx-modeldescription'
-import PreviewList from '../_Organisms/PreviewTable'
+import { RelationSchema, SchemaRoot } from 'fusefx-modeldescription'
 import EntityTable from '../_Organisms/EntityTable'
 import EntityForm from '../_Organisms/EntityForm'
 import PreviewTable from '../_Organisms/PreviewTable'
@@ -62,8 +61,8 @@ const Guifad1: React.FC<{
   }
 
   return (
-    <div className='w-full h-full flex overflow-hidden border-4 border-black'>
-      <div className='h-full w-full flex flex-col min-w-0 border-4 border-red-600'>
+    <div className='w-full h-full flex overflow-hidden'>
+      <div className='h-full w-full flex flex-col min-w-0'>
         <header className='flex flex-col'>
           <Breadcrumb
             nodes={nodes}
@@ -78,7 +77,7 @@ const Guifad1: React.FC<{
           ></Breadcrumb>
         </header>
 
-        <div className='p-2 h-full overflow-auto border-4 border-yellow-400'>
+        <div className='p-2 h-full overflow-auto'>
           {currentMode == 'list' && (
             <EntityTable
               dataSource={nodes[nodes.length - 1].dataSource}

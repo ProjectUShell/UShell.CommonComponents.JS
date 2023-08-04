@@ -24,6 +24,7 @@ export interface TableColumn {
     onFilterChanged: (filter: LogicalExpression | null) => void,
     column: TableColumn,
   ) => React.JSX.Element
+  sortable?: boolean
 }
 
 export interface ExpandableProps {
@@ -41,7 +42,7 @@ const Table: React.FC<{
   pagingParams?: PagingParams
   totalCount?: number
   onPagingParamsChange?: (p: PagingParams) => void
-  sortingParams?: SortingField[]
+  initialSortingParams?: SortingField[]
   onSortingParamsChange?: (sortingParams: SortingField[]) => void
   initialFilters?: { [c: string]: LogicalExpression }
   onFilterChanged?: (filterByColumn: { [c: string]: LogicalExpression }) => void
@@ -56,7 +57,7 @@ const Table: React.FC<{
   pagingParams,
   totalCount,
   onPagingParamsChange,
-  sortingParams,
+  initialSortingParams,
   onSortingParamsChange,
   initialFilters,
   onFilterChanged,
@@ -68,15 +69,25 @@ const Table: React.FC<{
   const [filterByColumn, setFilterByColumn] = useState<{ [c: string]: LogicalExpression }>(
     initialFilters ? initialFilters : {},
   )
+  const [sortingParams, setSortingParams] = useState<SortingField[]>([])
   const [rowExpanded, setRowExpanded] = useState<{ [r: number]: boolean }>({})
   const [reRender, setReRender] = useState(0)
 
   useEffect(() => {
     if (!initialFilters) {
+      setFilterByColumn({})
       return
     }
     setFilterByColumn(initialFilters)
   }, [initialFilters])
+
+  useEffect(() => {
+    if (!initialSortingParams) {
+      setSortingParams([])
+      return
+    }
+    setSortingParams(initialSortingParams)
+  }, [initialSortingParams])
 
   useEffect(() => {
     function getIntialSelectedRows(): { [index: number]: boolean } {
@@ -128,19 +139,21 @@ const Table: React.FC<{
     onRecordEnter(records[i])
   }
 
-  function toggleSorting(fieldName: string) {
-    if (!sortingParams || !onSortingParamsChange) {
+  function toggleSorting(colKey: string) {
+    if (!onSortingParamsChange) {
       return
     }
-    const currentSortingField: SortingField | undefined = sortingParams?.find((sf) => sf.fieldName == fieldName)
+    const newSortingParams = [...sortingParams]
+    const currentSortingField: SortingField | undefined = newSortingParams?.find((sf) => sf.fieldName == colKey)
     if (!currentSortingField) {
-      sortingParams?.push({ fieldName: fieldName, descending: false })
+      newSortingParams.push({ fieldName: colKey, descending: false })
     } else if (currentSortingField.descending) {
-      sortingParams?.splice(sortingParams.indexOf(currentSortingField), 1)
+      newSortingParams.splice(newSortingParams.indexOf(currentSortingField), 1)
     } else {
       currentSortingField.descending = true
     }
-    onSortingParamsChange([...sortingParams])
+    setSortingParams(newSortingParams)
+    onSortingParamsChange(newSortingParams)
   }
 
   function onSetFilterVisible(c: string, v: boolean) {
@@ -204,24 +217,24 @@ const Table: React.FC<{
   }
 
   return (
-    <div className='relative overflow-auto shadow-md sm:rounded-lg h-full flex flex-col justify-between'>
+    <div className={`relative overflow-auto shadow-md sm:rounded-lg h-full flex flex-col justify-between ${className}`}>
       <div className='flex flex-col h-full overflow-auto'>
         <table className='w-full max-h-full text-sm text-left'>
           <thead className='text-xs uppercase bg-backgroundfour dark:bg-backgroundfourdark sticky top-0'>
             <tr className=''>
               {expandableRowProps && <th className='flex items-center gap-1'></th>}
-              {columns.map((c) => (
+              {columns.map((c: TableColumn) => (
                 <th key={c.label} className='px-6 py-3'>
                   <div className='flex items-center gap-1'>
                     {c.label}
-                    {sortingParams && (
-                      <button onClick={(e) => toggleSorting(c.label)} className='pl-2'>
-                        {!sortingParams?.find((sf) => sf.fieldName == c.label) && <SwitchIcon></SwitchIcon>}
-                        {sortingParams?.find((sf) => sf.fieldName == c.label)?.descending && (
+                    {onSortingParamsChange && c.sortable && (
+                      <button onClick={(e) => toggleSorting(c.key)} className='pl-2'>
+                        {!sortingParams.find((sf) => sf.fieldName == c.key) && <SwitchIcon></SwitchIcon>}
+                        {sortingParams.find((sf) => sf.fieldName == c.key)?.descending && (
                           <BarsArrowDownIcon className='text-blue-600 dark:text-blue-400'></BarsArrowDownIcon>
                         )}
-                        {sortingParams?.find((sf) => sf.fieldName == c.label) &&
-                          !sortingParams?.find((sf) => sf.fieldName == c.label)!.descending && (
+                        {sortingParams.find((sf) => sf.fieldName == c.key) &&
+                          !sortingParams?.find((sf) => sf.fieldName == c.key)!.descending && (
                             <BarsArrowUpIcon className='text-blue-600 dark:text-blue-400'></BarsArrowUpIcon>
                           )}
                       </button>

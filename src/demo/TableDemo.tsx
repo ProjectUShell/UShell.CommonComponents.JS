@@ -4,10 +4,11 @@ import { PagingParams } from 'ushell-modulebase/lib/PagingParams.js'
 import MultiSelect from '../_Atoms/MultiSelect'
 import MultiSelectFilter from '../_Molecules/MultiSelectFilter'
 import { getSelectedValues } from '../utils/LogicUtils'
+import { SortingField } from 'ushell-modulebase/lib/SortingField.js'
 
 const columns: TableColumn[] = [
   { label: 'Id', fieldName: 'id', fieldType: 'number', key: 'id' },
-  { label: 'Name', fieldName: 'name', maxCellLength: 40, fieldType: 'string', key: 'name' },
+  { label: 'Name', fieldName: 'name', maxCellLength: 40, fieldType: 'string', key: 'name', sortable: true },
   { label: 'DateOfBirth', fieldName: 'dateOfBirth', fieldType: 'date', key: 'dateOfBirth' },
   {
     label: 'Level',
@@ -96,7 +97,10 @@ const TableDemo = () => {
         onPagingParamsChange={(p: PagingParams) => {
           console.log('p', p)
         }}
-        sortingParams={[]}
+        initialSortingParams={[]}
+        onSortingParamsChange={(sp: SortingField[]) => {
+          console.log('sorting', sp)
+        }}
         onFilterChanged={onFilterChange}
         initialFilters={currentFilter}
         expandableRowProps={{ rowExpandable: (r) => true, renderExpandedRow: (r) => <div>{r.name}</div> }}
