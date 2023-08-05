@@ -3,10 +3,11 @@ import { ObjectGraphNode } from '../ObjectGraphNode'
 import Breadcrumb from '../_Organisms/Breadcrumb'
 import { IDataSource } from 'ushell-modulebase'
 import StructureNavigation from '../_Organisms/StructureNavigation'
-import { RelationSchema, SchemaRoot } from 'fusefx-modeldescription'
+import { EntitySchema, RelationSchema, SchemaRoot } from 'fusefx-modeldescription'
 import EntityTable from '../_Organisms/EntityTable'
 import EntityForm from '../_Organisms/EntityForm'
 import PreviewTable from '../_Organisms/PreviewTable'
+import { getParentFilter, setParentId } from '../../../data/DataSourceService'
 
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
@@ -32,12 +33,18 @@ const Guifad1: React.FC<{
     return nodes[nodes.length - 1]
   }
 
-  function enterRelation(rel: RelationSchema) {
+  function enterRelation(rel: RelationSchema, r: any) {
+    setCurrentRecord(r)
+    if (r) {
+      setCurrentMode('details')
+      setCurrentRelation(null)
+    }
+    setCurrentRelation(null)
     setCurrentNodes((n) => {
       n.push({
         dataSource: getDataSource(rel.foreignEntityName),
         parent: { ...getCurrentNode(), record: currentRecord },
-        record: null,
+        record: r,
       })
       return [...n]
     })
@@ -48,11 +55,22 @@ const Guifad1: React.FC<{
       setCurrentRecord(selectedRecords[0])
     } else {
       setCurrentRecord(null)
+      setCurrentRelation(null)
     }
   }
 
   function createRecord(): void {
     const newRecord: any = dataSource.entityFactoryMethod()
+    if (getCurrentNode().parent) {
+      setParentId(
+        newRecord,
+        schemaRoot,
+        getCurrentNode().parent!.dataSource.entitySchema!,
+        getCurrentDataSource().entitySchema!,
+        getCurrentNode().parent!.record,
+      )
+    }
+    console.log('new Record', newRecord)
     setCurrentRecord(newRecord)
     setCurrentMode('details')
     // return dataSource.entityUpdateMethod(dataSource.entityFactoryMethod()).then((newEntry: any) => {
@@ -60,17 +78,30 @@ const Guifad1: React.FC<{
     // })
   }
 
+  function getCurrentDataSource(): IDataSource {
+    return nodes[nodes.length - 1].dataSource
+  }
+
+  function getParent(): ObjectGraphNode | null {
+    if (nodes.length > 1) {
+      return nodes[nodes.length - 2]
+    } else {
+      return null
+    }
+  }
+
+  console.log('nodes', nodes)
+
   return (
     <div className='w-full h-full flex overflow-hidden'>
       <div className='h-full w-full flex flex-col min-w-0'>
         <header className='flex flex-col'>
           <Breadcrumb
             nodes={nodes}
-            onNodeClick={(n: ObjectGraphNode[]) => {
-              console.log('new nodes', n)
+            onNodeClick={(n: ObjectGraphNode[], r: any) => {
               setCurrentNodes(n)
-              setCurrentRecord(n[n.length - 1].record)
-              const newMode = n[n.length - 1].record ? 'details' : 'list'
+              setCurrentRecord(r)
+              const newMode = r ? 'details' : 'list'
               setCurrentMode(newMode)
             }}
             dirty={dirty}
@@ -87,6 +118,9 @@ const Guifad1: React.FC<{
               onSelectedRecordsChange={(selectedRecords) => onSelectedRecordsChange(selectedRecords)}
               selectedRecord={currentRecord}
               onCreateRecord={createRecord}
+              parentSchema={getParent()?.dataSource?.entitySchema}
+              schemaRoot={schemaRoot}
+              parent={getCurrentNode()?.parent?.record}
             ></EntityTable>
           )}
           {currentMode == 'details' && (
@@ -95,34 +129,43 @@ const Guifad1: React.FC<{
               entity={currentRecord}
               dirty={dirty}
               setDirty={setDirty}
+              onChange={(updatedEntity: any) => {
+                setCurrentRecord(updatedEntity)
+                setDirty(false)
+              }}
             ></EntityForm>
           )}
         </div>
       </div>
-      <aside className='flex flex-col justify-start bg-backgroundthree dark:bg-backgroundthreedark w-80 p-2'>
+      <aside className='flex flex-col justify-start bg-backgroundthree dark:bg-backgroundthreedark w-72 p-2'>
         <StructureNavigation
           schemaRoot={schemaRoot}
           currentRecord={currentRecord}
           entitySchema={nodes[nodes.length - 1].dataSource.entitySchema!}
           onRelationSelected={(rel: RelationSchema) => setCurrentRelation(rel)}
-          onRelationEnter={(rel: RelationSchema) => enterRelation(rel)}
+          onRelationEnter={(rel: RelationSchema) => enterRelation(rel, null)}
           onModeSelected={(mode: 'list' | 'details') => setCurrentMode(mode)}
           mode={currentMode}
           relation={currentRelation}
-          className='h-1/2  '
+          className=''
           dirty={dirty}
         ></StructureNavigation>
         {currentRelation && currentRecord && (
           <PreviewTable
             dataSource={getDataSource(currentRelation.foreignEntityName)}
             onRecordEnter={(r: any) => {
-              // console.log('r', r)
+              console.log('record enter')
+              enterRelation(currentRelation, r)
             }}
             onSelectedRecordsChange={(sr: any[]) => {
-              // console.log('sr', sr)
+              console.log('sr', sr)
             }}
+            parentSchema={getCurrentDataSource().entitySchema!}
+            schemaRoot={schemaRoot}
+            parent={currentRecord}
           ></PreviewTable>
         )}
+        {!currentRelation && <div className='h-full w-64 pr-1 mt-1'></div>}
       </aside>
     </div>
   )

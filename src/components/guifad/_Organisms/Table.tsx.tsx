@@ -90,7 +90,11 @@ const Table: React.FC<{
   }, [initialSortingParams])
 
   useEffect(() => {
+    console.log('initialSelectedRecord', initialSelectedRecord)
     function getIntialSelectedRows(): { [index: number]: boolean } {
+      if (!initialSelectedRecord) {
+        return []
+      }
       const i: number = records.findIndex((r) => r.id == initialSelectedRecord?.id)
       const newSr: { [index: number]: boolean } = {}
       newSr[i] = true
@@ -133,6 +137,7 @@ const Table: React.FC<{
   }
 
   function onRowDoubleClick(i: number, e: any) {
+    console.log('row dblck')
     if (!onRecordEnter) {
       return
     }
@@ -217,8 +222,10 @@ const Table: React.FC<{
   }
 
   return (
-    <div className={`relative overflow-auto shadow-md sm:rounded-lg h-full flex flex-col justify-between ${className}`}>
-      <div className='flex flex-col h-full overflow-auto'>
+    <div
+      className={`relative overflow-auto shadow-md sm:rounded-lg h-full w-full flex flex-col justify-between ${className}`}
+    >
+      <div className='flex flex-col h-full w-full overflow-auto'>
         <table className='w-full max-h-full text-sm text-left'>
           <thead className='text-xs uppercase bg-backgroundfour dark:bg-backgroundfourdark sticky top-0'>
             <tr className=''>

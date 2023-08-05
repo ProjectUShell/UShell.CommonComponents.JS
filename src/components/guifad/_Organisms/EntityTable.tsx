@@ -4,18 +4,35 @@ import Table, { TableColumn } from './Table.tsx'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import TrashIcon from '../../../_Icons/TrashIcon'
 import { useQuery } from '@tanstack/react-query'
-import { FuseConnector } from '../FuseConnector.js'
 import { PagingParams } from 'ushell-modulebase/lib/PagingParams.js'
 import { SortingField } from 'ushell-modulebase/lib/SortingField.js'
+import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
+import { LogicalExpression } from 'ushell-modulebase/lib/LogicalExpression.js'
+import { getParentFilter } from '../../../data/DataSourceService'
 
 const EntityTable: React.FC<{
   dataSource: IDataSource
+  parentSchema: EntitySchema | undefined
+  parent: any | undefined
+  schemaRoot: SchemaRoot
   className?: string
   onRecordEnter: (r: any) => void
   onSelectedRecordsChange: (selectedRecords: any[]) => void
   selectedRecord: any | null
   onCreateRecord: () => void
-}> = ({ dataSource, className, onRecordEnter, onSelectedRecordsChange, selectedRecord, onCreateRecord }) => {
+}> = ({
+  dataSource,
+  schemaRoot,
+  parentSchema,
+  parent,
+  className,
+  onRecordEnter,
+  onSelectedRecordsChange,
+  selectedRecord,
+  onCreateRecord,
+}) => {
+  console.log('parent', parent)
+
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
   const [columns, setColumns] = useState<TableColumn[]>([])
@@ -28,6 +45,10 @@ const EntityTable: React.FC<{
   }
 
   useEffect(() => {
+    setSelectedRecords([])
+  }, [selectedRecord])
+
+  useEffect(() => {
     const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
       return { label: f.name, fieldName: f.name, fieldType: f.type, key: f.name }
     })
@@ -38,8 +59,23 @@ const EntityTable: React.FC<{
   }, [dataSource])
 
   const { isLoading, error, data } = useQuery({
-    queryKey: [dataSource.entitySchema!.name, pagingParams, sortingParams, reloadTrigger],
-    queryFn: () => dataSource.getRecords(undefined, pagingParams, sortingParams),
+    queryKey: [
+      dataSource.entitySchema!.name,
+      pagingParams,
+      sortingParams,
+      reloadTrigger,
+      parent,
+      parentSchema,
+      schemaRoot,
+    ],
+    queryFn: () => {
+      const parentFilter: LogicalExpression | null =
+        parentSchema && parent && schemaRoot
+          ? getParentFilter(schemaRoot, parentSchema, dataSource.entitySchema!, parent)
+          : null
+      console.log('parent Filter', parentFilter)
+      return dataSource.getRecords(parentFilter ? parentFilter : undefined, pagingParams, sortingParams)
+    },
   })
 
   const data1: any = data

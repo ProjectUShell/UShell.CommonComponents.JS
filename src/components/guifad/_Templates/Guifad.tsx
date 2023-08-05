@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { IDataSource } from 'ushell-modulebase'
-import { GetFuseDatasource } from '../FuseDatasource'
-import { IDataSource2 } from '../IDataSource2'
 import Guifad1 from './Guifad1'
-import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
+import { SchemaRoot } from 'fusefx-modeldescription'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 
 const Guifad: React.FC<{

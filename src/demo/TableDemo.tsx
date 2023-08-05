@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Table, { TableColumn } from '../components/guifad/_Organisms/Table.tsx'
 import { PagingParams } from 'ushell-modulebase/lib/PagingParams.js'
-import MultiSelect from '../_Atoms/MultiSelect'
 import MultiSelectFilter from '../_Molecules/MultiSelectFilter'
 import { getSelectedValues } from '../utils/LogicUtils'
 import { SortingField } from 'ushell-modulebase/lib/SortingField.js'

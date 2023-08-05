@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { IDataSource } from 'ushell-modulebase'
 import Table, { TableColumn } from './Table.tsx'
+import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
+import { LogicalExpression } from 'ushell-modulebase/lib/LogicalExpression.js'
+import { getParentFilter } from '../../../data/DataSourceService'
 
 const PreviewTable: React.FC<{
   dataSource: IDataSource
-  className?: string
+  parentSchema: EntitySchema
+  parent: any
+  schemaRoot: SchemaRoot
   onRecordEnter: (r: any) => void
   onSelectedRecordsChange: (selectedRecords: any[]) => void
-}> = ({ dataSource, className, onRecordEnter, onSelectedRecordsChange }) => {
+}> = ({ dataSource, onRecordEnter, onSelectedRecordsChange, schemaRoot, parentSchema, parent }) => {
   const [columns, setColumns] = useState<TableColumn[]>([])
   const [records, setRecords] = useState<any[]>([])
 
@@ -15,23 +20,31 @@ const PreviewTable: React.FC<{
     // const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
     //   return { label: f.name }
     // })
-    const newColumns: TableColumn[] = [{ label: 'id', fieldName: 'id', fieldType: 'number', key: 'id' }]
+    const newColumns: TableColumn[] = [
+      { label: 'Label', fieldName: 'id', fieldType: 'number', key: 'label', maxCellLength: 30 },
+    ]
     setColumns(newColumns)
-    dataSource.getRecords().then((r) => {
+    const parentFilter: LogicalExpression | null =
+      parentSchema && parent && schemaRoot
+        ? getParentFilter(schemaRoot, parentSchema, dataSource.entitySchema!, parent)
+        : null
+    console.log('parentFilter', parentFilter)
+    dataSource.getRecords(parentFilter ? parentFilter : undefined).then((r) => {
       setRecords(r.page)
     })
-  }, [dataSource])
+  }, [dataSource, parentSchema, parent, schemaRoot])
 
   return (
-    <Table
-      columns={columns}
-      records={records}
-      onRecordEnter={onRecordEnter}
-      onSelectedRecordsChange={onSelectedRecordsChange}
-      className={className}
-      pagingParams={{ pageSize: 10, pageNumber: 1 }}
-      totalCount={0}
-    ></Table>
+    <div className='h-full w-64 pr-1 mt-1'>
+      <Table
+        columns={columns}
+        records={records}
+        onRecordEnter={onRecordEnter}
+        className=''
+        pagingParams={{ pageSize: 10, pageNumber: 1 }}
+        totalCount={0}
+      ></Table>
+    </div>
   )
 }
 

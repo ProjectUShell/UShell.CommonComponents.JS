@@ -3,7 +3,7 @@ import { ObjectGraphNode } from '../ObjectGraphNode'
 
 const Breadcrumb: React.FC<{
   nodes: ObjectGraphNode[]
-  onNodeClick: (n: ObjectGraphNode[]) => void
+  onNodeClick: (n: ObjectGraphNode[], currentRecord: any) => void
   dirty: boolean
 }> = ({ nodes, onNodeClick, dirty }) => {
   function getLabel(n: ObjectGraphNode, i: number) {
@@ -16,6 +16,14 @@ const Breadcrumb: React.FC<{
       : n.dataSource.entitySchema!.namePlural
   }
 
+  function getCallingRecord(i: number): any {
+    if (i >= nodes.length - 1) {
+      return null
+    }
+    const succNode: ObjectGraphNode = nodes[i + 1]
+    return succNode.parent?.record
+  }
+
   return (
     <div className='font-bold flex'>
       {nodes.map((n, i) => (
@@ -24,7 +32,7 @@ const Breadcrumb: React.FC<{
           <button
             disabled={dirty}
             className='rounded-md py-1 m-1 enabled:hover:bg-backgroundone enabled:dark:hover:bg-backgroundonedark'
-            onClick={() => onNodeClick(nodes.slice(0, i + 1))}
+            onClick={() => onNodeClick(nodes.slice(0, i + 1), getCallingRecord(i))}
           >
             {getLabel(n, i)}
           </button>

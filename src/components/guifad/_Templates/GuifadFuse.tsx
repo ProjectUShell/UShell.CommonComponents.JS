@@ -3,7 +3,7 @@ import { GetFuseDatasource } from '../FuseDatasource'
 import Guifad from './Guifad'
 import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
 import { FuseConnector } from '../FuseConnector'
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const queryClient = new QueryClient()
 

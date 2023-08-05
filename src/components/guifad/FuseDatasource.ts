@@ -27,7 +27,6 @@ export function GetFuseDatasource(url: string, entitySchema: EntitySchema): IDat
       return new Promise<object[]>(() => [])
     },
     getRecords(filter?: LogicalExpression, pagingParams?: PagingParams, sortingParams?: SortingField[]) {
-      console.log('getting entities', sortingParams)
       return FuseConnector.getEntities(url, entitySchema.name, filter, pagingParams, sortingParams)
     },
     getEntityRefs(

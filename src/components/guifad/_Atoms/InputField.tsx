@@ -8,7 +8,10 @@ const InputField: React.FC<{
   onValueChange: (newValue: any) => void
 }> = ({ className, label, inputType, initialValue, onValueChange }) => {
   const [currentValue, setCurrentValue] = useState(initialValue)
-  console.log('input type', inputType)
+
+  useEffect(() => {
+    setCurrentValue(initialValue)
+  }, [initialValue])
 
   function getInputType(propertyType: string) {
     switch (propertyType) {

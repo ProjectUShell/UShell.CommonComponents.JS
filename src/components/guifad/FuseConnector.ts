@@ -34,6 +34,7 @@ export class FuseConnector {
   ): Promise<PaginatedList> {
     return this.post(url + `GetEntities`, {
       entityName: entityName,
+      filter: filter,
       pagingParams: pagingParams,
       sortingParams: sortingParams,
     }).then((r) => r.return)
@@ -48,6 +49,7 @@ export class FuseConnector {
   ): Promise<PaginatedList> {
     return this.post(url + `GetEntityRefs`, {
       entityName: entityName,
+      filter: filter,
       pagingParams: pagingParams,
       sortingParams: sortingParams,
     }).then((r) => r.return)
