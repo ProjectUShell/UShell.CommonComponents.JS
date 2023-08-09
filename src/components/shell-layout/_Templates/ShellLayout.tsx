@@ -48,7 +48,7 @@ const ShellLayout: React.FC<{
     <div className={`${shellSettings.colorMode == ColorMode.Dark && 'dark'}`}>
       <div
         className={`h-screen w-screen flex flex-col overflow-hidden font-custom antialiased text-textone dark:text-textonedark ${
-          shellSettings.colorMode == ColorMode.Dark && 'dark'
+          shellSettings.colorMode == ColorMode.Dark ? 'dark' : ''
         }`}
       >
         <TopBar

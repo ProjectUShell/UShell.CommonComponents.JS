@@ -221,6 +221,7 @@ const Table: React.FC<{
     })
   }
 
+  console.log('selectedRows', selectedRows)
   return (
     <div
       className={`relative overflow-auto shadow-md sm:rounded-lg h-full w-full flex flex-col justify-between ${className}`}
@@ -278,7 +279,7 @@ const Table: React.FC<{
                 <tr
                   key={i}
                   className={`border-b bg-backgroundthree dark:bg-backgroundthreedark dark:border-gray-700 ${
-                    selectedRows[i] && 'bg-blue-300 && dark:bg-blue-400'
+                    selectedRows[i] ? 'bg-blue-300 && dark:bg-blue-400' : ''
                   }`}
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}

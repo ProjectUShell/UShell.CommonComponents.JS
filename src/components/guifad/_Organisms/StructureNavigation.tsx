@@ -40,7 +40,7 @@ const StructureNavigation: React.FC<{
       <button
         disabled={dirty}
         className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 enabled:hover:cursor-pointer rounded-md p-1 ${
-          mode == 'list' && 'bg-blue-300 dark:bg-blue-400'
+          mode == 'list' ? 'bg-blue-300 dark:bg-blue-400' : ''
         }`}
         onClick={(e) => onModeSelected('list')}
       >
@@ -49,7 +49,7 @@ const StructureNavigation: React.FC<{
       <button
         disabled={!currentRecord}
         className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 ${
-          mode == 'details' && 'bg-blue-300 dark:bg-blue-400'
+          mode == 'details' ? 'bg-blue-300 dark:bg-blue-400' : ''
         } enabled:hover:cursor-pointer rounded-md p-1`}
         onClick={(e) => onModeSelected('details')}
       >
@@ -61,7 +61,7 @@ const StructureNavigation: React.FC<{
           key={er.name}
           disabled={!currentRecord || dirty}
           className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 enabled:hover:cursor-pointer rounded-md p-1 ${
-            relation?.name == er.name && 'enabled:bg-blue-300 enabled:dark:bg-blue-400'
+            relation?.name == er.name ? 'enabled:bg-blue-300 enabled:dark:bg-blue-400' : ''
           }`}
           onClick={() => onRelationSelected(er)}
           onDoubleClick={() => onRelationEnter(er)}

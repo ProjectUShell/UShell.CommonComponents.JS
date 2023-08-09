@@ -44,7 +44,7 @@ const VerticalMenuInternal: React.FC<{
           <li
             key={mi.id}
             className={`flex items-center gap-x-4 p-1 rounded-md ${depthCssClass} ${
-              mi.type !== 'Group' && 'hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer'
+              mi.type !== 'Group' ? 'hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer' : ''
             } ${mi.type == 'Command' ? 'mt-0 font-light' : 'mt-4 font-bold'} ${
               shellMenuState.activeItemId == mi.id ? 'bg-backgroundfour dark:bg-backgroundfourdark' : ''
             }`}
