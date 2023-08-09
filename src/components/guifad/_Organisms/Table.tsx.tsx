@@ -278,8 +278,8 @@ const Table: React.FC<{
               const renderRow = (
                 <tr
                   key={i}
-                  className={`border-b bg-backgroundthree dark:bg-backgroundthreedark dark:border-gray-700 ${
-                    selectedRows[i] ? 'bg-blue-300 && dark:bg-blue-400' : ''
+                  className={`border-b dark:border-gray-700 ${
+                    selectedRows[i] ? 'bg-blue-300 dark:bg-blue-400' : 'bg-backgroundthree dark:bg-backgroundthreedark'
                   }`}
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}
