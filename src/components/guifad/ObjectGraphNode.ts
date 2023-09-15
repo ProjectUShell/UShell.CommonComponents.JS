@@ -1,4 +1,4 @@
-import { IDataSource } from 'ushell-modulebase'
+import { IDataSource } from '../../ushell-modulebase/lib/iDataSource'
 
 export interface ObjectGraphNode {
   dataSource: IDataSource

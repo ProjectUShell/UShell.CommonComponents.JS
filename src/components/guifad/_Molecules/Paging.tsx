@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { PagingParams } from 'ushell-modulebase/lib/PagingParams'
+import { PagingParams } from '../../../fusefx-repositorycontract/PagingParams'
 
 const Paging: React.FC<{
   pagingParams: PagingParams

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { IDataSource } from 'ushell-modulebase'
+import { IDataSource } from '../../../ushell-modulebase/lib/iDataSource'
 import Table, { TableColumn } from './Table.tsx'
 import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
-import { LogicalExpression } from 'ushell-modulebase/lib/LogicalExpression.js'
+import { LogicalExpression } from '../../../fusefx-repositorycontract/LogicalExpression.js'
 import { getParentFilter } from '../../../data/DataSourceService'
 
 const PreviewTable: React.FC<{

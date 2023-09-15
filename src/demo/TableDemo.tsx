@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Table, { TableColumn } from '../components/guifad/_Organisms/Table.tsx'
-import { PagingParams } from 'ushell-modulebase/lib/PagingParams.js'
+import { PagingParams } from '../fusefx-repositorycontract/PagingParams'
 import MultiSelectFilter from '../_Molecules/MultiSelectFilter'
 import { getSelectedValues } from '../utils/LogicUtils'
-import { SortingField } from 'ushell-modulebase/lib/SortingField.js'
+import { SortingField } from '../fusefx-repositorycontract/SortingField.js'
 
 const columns: TableColumn[] = [
   { label: 'Id', fieldName: 'id', fieldType: 'number', key: 'id' },

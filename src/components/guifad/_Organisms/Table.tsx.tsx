@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { lowerFirstLetter } from '../../../utils/StringUtils'
 import Paging from '../_Molecules/Paging'
-import { PagingParams } from 'ushell-modulebase/lib/PagingParams'
-import { SortingField } from 'ushell-modulebase/lib/SortingField'
+import { PagingParams } from '../../../fusefx-repositorycontract/PagingParams'
+import { SortingField } from '../../../fusefx-repositorycontract/SortingField'
 import BarsArrowUpIcon from '../../../_Icons/BarsArrowUpIcon'
 import BarsArrowDownIcon from '../../../_Icons/BarsArrowDownIcon'
 import SwitchIcon from '../../../_Icons/SwitchIcon'
-import { LogicalExpression } from 'ushell-modulebase/lib/LogicalExpression'
+import { LogicalExpression } from '../../../fusefx-repositorycontract/LogicalExpression'
 import FunnelIcon from '../../../_Icons/FunnelIcon'
-import Dropdown from '../../shell-layout/_Atoms/Dropdown'
+import Dropdown from '../../../_Atoms/Dropdown'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import MinusCircleIcon from '../../../_Icons/MinusCircleIcon'
+import PaddingDummy from '../../../_Atoms/PaddingDummy'
 
 export interface TableColumn {
   label: string
@@ -47,6 +48,7 @@ const Table: React.FC<{
   initialFilters?: { [c: string]: LogicalExpression }
   onFilterChanged?: (filterByColumn: { [c: string]: LogicalExpression }) => void
   expandableRowProps?: ExpandableProps
+  rowHeight?: number
 }> = ({
   columns,
   records,
@@ -62,6 +64,7 @@ const Table: React.FC<{
   initialFilters,
   onFilterChanged,
   expandableRowProps,
+  rowHeight,
 }) => {
   const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean }>({})
   const [initialSelectedRecord, setInitialSelectedRecord] = useState<any>(selectedRecord)
@@ -90,7 +93,6 @@ const Table: React.FC<{
   }, [initialSortingParams])
 
   useEffect(() => {
-    console.log('initialSelectedRecord', initialSelectedRecord)
     function getIntialSelectedRows(): { [index: number]: boolean } {
       if (!initialSelectedRecord) {
         return []
@@ -120,9 +122,7 @@ const Table: React.FC<{
     if (e.target.tagName == 'path' || e.target.tagName == 'svg') {
       return
     }
-    console.log('e.target', e.target.tagName)
 
-    console.log('row click', e.target)
     const newSelectedValue = !selectedRows[i]
     const newSr = e.ctrlKey ? { ...selectedRows } : {}
     newSr[i] = newSelectedValue
@@ -137,7 +137,6 @@ const Table: React.FC<{
   }
 
   function onRowDoubleClick(i: number, e: any) {
-    console.log('row dblck')
     if (!onRecordEnter) {
       return
     }
@@ -221,7 +220,6 @@ const Table: React.FC<{
     })
   }
 
-  console.log('selectedRows', selectedRows)
   return (
     <div
       className={`relative overflow-auto shadow-md sm:rounded-lg h-full w-full flex flex-col justify-between ${className}`}
@@ -263,7 +261,7 @@ const Table: React.FC<{
                               filterByColumn[c.fieldName] ? 'bg-green-200 dark:bg-green-600' : ''
                             }  rounded-lg p-1`}
                           >
-                            <FunnelIcon></FunnelIcon>
+                            <FunnelIcon size={4}></FunnelIcon>
                           </button>
                         </>
                       )}
@@ -311,7 +309,9 @@ const Table: React.FC<{
                     <td
                       id={`table_cell_${j}_${i}`}
                       key={j}
-                      className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'
+                      className={`px-6 py-${
+                        rowHeight && rowHeight > 0 ? rowHeight : 4
+                      } font-medium text-gray-900 whitespace-nowrap dark:text-white`}
                     >
                       {getDisplay(r[lowerFirstLetter(c.fieldName)], c, document.getElementById(`table_cell_${j}_${i}`))}
                     </td>

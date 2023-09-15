@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 import Breadcrumb from '../_Organisms/Breadcrumb'
-import { IDataSource } from 'ushell-modulebase'
+import { IDataSource } from '../../../ushell-modulebase/lib/iDataSource'
 import StructureNavigation from '../_Organisms/StructureNavigation'
 import { EntitySchema, RelationSchema, SchemaRoot } from 'fusefx-modeldescription'
 import EntityTable from '../_Organisms/EntityTable'

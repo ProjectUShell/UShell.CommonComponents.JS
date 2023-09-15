@@ -1,8 +1,8 @@
 import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
-import { LogicalExpression } from 'ushell-modulebase/lib/LogicalExpression'
-import { PaginatedList } from 'ushell-modulebase/lib/PaginatedList'
-import { PagingParams } from 'ushell-modulebase/lib/PagingParams'
-import { SortingField } from 'ushell-modulebase/lib/SortingField'
+import { LogicalExpression } from '../fusefx-repositorycontract/LogicalExpression'
+import { PaginatedList } from '../fusefx-repositorycontract/PaginatedList'
+import { PagingParams } from '../fusefx-repositorycontract/PagingParams'
+import { SortingField } from '../fusefx-repositorycontract/SortingField'
 
 export class FuseConnector {
   private static async post(url: string, bodyParams: any = null): Promise<any> {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { MenuItem } from '../ShellMenu'
 import ChevronDown from '../_Icons/ChevronDown'
-import Dropdown from '../_Atoms/Dropdown'
+import Dropdown from '../../../_Atoms/Dropdown'
 import VerticalMenu from './VerticalMenu'
 
 const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {

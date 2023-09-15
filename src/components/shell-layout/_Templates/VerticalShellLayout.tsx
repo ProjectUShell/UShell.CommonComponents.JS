@@ -12,7 +12,7 @@ const VerticalShellLayout: React.FC<{
       {/* Sidebar */}
       {shellMenu.items.length > 0 && (
         <div
-          className={`fixed lg:static z-40 top-10 bottom-0 left-0
+          className={`fixed lg:static z-10 top-10 bottom-0 left-0
           bg-backgroundone dark:bg-backgroundonedark py-4 overflow-auto transform ${
             sidebarOpen
               ? 'translate-x-0 w-64 px-2  ease-out transition-all duration-200'

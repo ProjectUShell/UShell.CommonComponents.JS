@@ -64,7 +64,7 @@
     "rxjs": "^7.8.0",
     "style-loader": "^3.3.2",
     "tailwindcss-cli": "^0.1.2",
-    "ushell-modulebase": "^1.0.5"
+    "ushell-modulebase": "^1.0.9"
   },
   "browserslist": {
     "production": [

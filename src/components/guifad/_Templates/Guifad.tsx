@@ -1,9 +1,12 @@
 import React from 'react'
-import { IDataSource } from 'ushell-modulebase'
+import { IDataSource } from '../../../ushell-modulebase/lib/iDataSource'
 import Guifad1 from './Guifad1'
 import { SchemaRoot } from 'fusefx-modeldescription'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 
+//TODO statt SchemRoot => genauere Funktionenen auf dem SchemaRoot wie getNavigations
+// oder komplett nur IDataSourceManager reingeben
+// IDataSourceManager: getDataSource, getNavigations
 const Guifad: React.FC<{
   getDataSource: (entityName: string) => IDataSource
   rootEntityName: string

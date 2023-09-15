@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Dropdown from '../_Atoms/Dropdown'
+import Dropdown from '../../../_Atoms/Dropdown'
 import RadioGroup from '../_Atoms/RadioGroup'
 import { ColorMode, LayoutMode, ShellSettings } from '../ShellSettings'
 
@@ -30,7 +30,7 @@ const SettingsDropdown: React.FC<{
         </svg>
       </button>
       {isOpen && (
-        <Dropdown setIsOpen={setIsOpen}>
+        <Dropdown setIsOpen={setIsOpen} rightOffset={1}>
           <div className='bg-backgroundone dark:bg-backgroundonedark p-1 rounded-md'>
             <div className='mb-4'>
               <RadioGroup

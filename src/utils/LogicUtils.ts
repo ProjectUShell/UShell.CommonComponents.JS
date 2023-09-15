@@ -1,4 +1,4 @@
-import { LogicalExpression } from 'ushell-modulebase/lib/LogicalExpression'
+import { LogicalExpression } from '../fusefx-repositorycontract/LogicalExpression'
 
 export function getSelectedValues(filter: LogicalExpression): any[] {
   if (!filter || !filter.atomArguments || filter.atomArguments.length == 0) {

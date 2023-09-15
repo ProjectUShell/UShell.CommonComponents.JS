@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { IDataSource } from 'ushell-modulebase'
+import { IDataSource } from '../../../ushell-modulebase/lib/iDataSource'
 import FloppyDiskIcon from '../../../_Icons/FloppyDiskIcon'
 import Group from '../_Atoms/Group'
 import InputField from '../_Atoms/InputField'
