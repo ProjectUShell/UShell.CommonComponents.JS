@@ -1,19 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { IDataSource } from '../../../ushell-modulebase/lib/iDataSource'
 import Guifad1 from './Guifad1'
-import { SchemaRoot } from 'fusefx-modeldescription'
 import { ObjectGraphNode } from '../ObjectGraphNode'
+import { IDataSourceManagerBase } from '../../../ushell-modulebase/lib/IDataSourceManager'
 
 //TODO statt SchemRoot => genauere Funktionenen auf dem SchemaRoot wie getNavigations
 // oder komplett nur IDataSourceManager reingeben
 // IDataSourceManager: getDataSource, getNavigations
 const Guifad: React.FC<{
-  getDataSource: (entityName: string) => IDataSource
+  dataSourceManager: IDataSourceManagerBase
   rootEntityName: string
-  schemaRoot: SchemaRoot
-}> = ({ getDataSource, rootEntityName, schemaRoot }) => {
-  const rootDataSource: IDataSource = getDataSource(rootEntityName)
-  // const rootEntity: EntitySchema | undefined = getDataSource(rootEntityName).entitySchema
+}> = ({ dataSourceManager, rootEntityName }) => {
+  const [rootDataSource, setRootDataSource] = useState<IDataSource | null>(null)
+  useEffect(() => {
+    dataSourceManager.tryGetDataSource(rootEntityName).then((ds) => {
+      setRootDataSource(ds)
+    })
+  }, [rootEntityName, dataSourceManager])
 
   if (!rootDataSource) {
     return <div>No Root Entity</div>
@@ -23,7 +26,7 @@ const Guifad: React.FC<{
     parent: null,
     record: null,
   }
-  return <Guifad1 schemaRoot={schemaRoot} rootNode={rootNode} getDataSource={getDataSource}></Guifad1>
+  return <Guifad1 dataSourceManager={dataSourceManager} rootNode={rootNode}></Guifad1>
 }
 
 export default Guifad

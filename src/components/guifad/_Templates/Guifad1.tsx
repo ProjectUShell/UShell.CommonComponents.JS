@@ -1,25 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 import Breadcrumb from '../_Organisms/Breadcrumb'
 import { IDataSource } from '../../../ushell-modulebase/lib/iDataSource'
 import StructureNavigation from '../_Organisms/StructureNavigation'
-import { EntitySchema, RelationSchema, SchemaRoot } from 'fusefx-modeldescription'
+import { RelationSchema } from 'fusefx-modeldescription'
 import EntityTable from '../_Organisms/EntityTable'
 import EntityForm from '../_Organisms/EntityForm'
-import PreviewTable from '../_Organisms/PreviewTable'
-import { getParentFilter, setParentId } from '../../../data/DataSourceService'
+import { setParentId } from '../../../data/DataSourceService'
+import { IDataSourceManagerBase } from '../../../ushell-modulebase/lib/IDataSourceManager'
+import { SchemaRoot } from 'fusefx-modeldescription'
 
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
-  getDataSource: (entityName: string) => IDataSource
-  schemaRoot: SchemaRoot
-}> = ({ rootNode, getDataSource, schemaRoot }) => {
+  dataSourceManager: IDataSourceManagerBase
+}> = ({ rootNode, dataSourceManager }) => {
   const [nodes, setCurrentNodes] = useState([rootNode])
   const [dataSource, setDataSource] = useState<IDataSource>(nodes[nodes.length - 1].dataSource)
   const [currentRecord, setCurrentRecord] = useState<any | null>(null)
   const [currentRelation, setCurrentRelation] = useState<RelationSchema | null>(null)
   const [currentMode, setCurrentMode] = useState<'list' | 'details'>('list')
   const [dirty, setDirty] = useState(false)
+  const [schemaRoot, setSchemaRoot] = useState<SchemaRoot | null>(null)
+
+  useEffect(() => {
+    dataSourceManager.getSchemaRoot().then((sr) => setSchemaRoot(sr))
+  }, [dataSourceManager])
 
   if (!rootNode.dataSource) {
     return <div>No DataSource</div>
@@ -40,13 +45,20 @@ const Guifad1: React.FC<{
       setCurrentRelation(null)
     }
     setCurrentRelation(null)
-    setCurrentNodes((n) => {
-      n.push({
-        dataSource: getDataSource(rel.foreignEntityName),
-        parent: { ...getCurrentNode(), record: currentRecord },
-        record: r,
+
+    dataSourceManager.tryGetDataSource(rel.foreignEntityName).then((ds) => {
+      if (!ds) {
+        console.error(`No dataSource ${rel.foreignEntityName}`)
+        return
+      }
+      setCurrentNodes((n) => {
+        n.push({
+          dataSource: ds,
+          parent: { ...getCurrentNode(), record: currentRecord },
+          record: r,
+        })
+        return [...n]
       })
-      return [...n]
     })
   }
 
@@ -64,7 +76,7 @@ const Guifad1: React.FC<{
     if (getCurrentNode().parent) {
       setParentId(
         newRecord,
-        schemaRoot,
+        schemaRoot!,
         getCurrentNode().parent!.dataSource.entitySchema!,
         getCurrentDataSource().entitySchema!,
         getCurrentNode().parent!.record,
@@ -119,7 +131,7 @@ const Guifad1: React.FC<{
               selectedRecord={currentRecord}
               onCreateRecord={createRecord}
               parentSchema={getParent()?.dataSource?.entitySchema}
-              schemaRoot={schemaRoot}
+              schemaRoot={schemaRoot!}
               parent={getCurrentNode()?.parent?.record}
             ></EntityTable>
           )}
@@ -139,7 +151,7 @@ const Guifad1: React.FC<{
       </div>
       <aside className='flex flex-col justify-start bg-backgroundthree dark:bg-backgroundthreedark w-72 p-2'>
         <StructureNavigation
-          schemaRoot={schemaRoot}
+          schemaRoot={schemaRoot!}
           currentRecord={currentRecord}
           entitySchema={nodes[nodes.length - 1].dataSource.entitySchema!}
           onRelationSelected={(rel: RelationSchema) => setCurrentRelation(rel)}
@@ -150,9 +162,9 @@ const Guifad1: React.FC<{
           className=''
           dirty={dirty}
         ></StructureNavigation>
-        {currentRelation && currentRecord && (
+        {/* {currentRelation && currentRecord && (
           <PreviewTable
-            dataSource={getDataSource(currentRelation.foreignEntityName)}
+            dataSource={dataSourceManager.tryGetDataSource(currentRelation.foreignEntityName)}
             onRecordEnter={(r: any) => {
               console.log('record enter')
               enterRelation(currentRelation, r)
@@ -161,10 +173,10 @@ const Guifad1: React.FC<{
               console.log('sr', sr)
             }}
             parentSchema={getCurrentDataSource().entitySchema!}
-            schemaRoot={schemaRoot}
+            schemaRoot={dataSourceManager.getSchemaRoot()}
             parent={currentRecord}
           ></PreviewTable>
-        )}
+        )} */}
         {!currentRelation && <div className='h-full w-64 pr-1 mt-1'></div>}
       </aside>
     </div>

@@ -52,6 +52,7 @@ const ShellLayout: React.FC<{
         }`}
       >
         <TopBar
+          layoutMode={shellSettings.layoutMode}
           setLayoutMode={setLayoutMode}
           setColorMode={setColorMode}
           shellSettings={shellSettings}

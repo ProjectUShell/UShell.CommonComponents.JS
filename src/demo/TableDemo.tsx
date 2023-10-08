@@ -103,6 +103,7 @@ const TableDemo = () => {
         onFilterChanged={onFilterChange}
         initialFilters={currentFilter}
         expandableRowProps={{ rowExpandable: (r) => true, renderExpandedRow: (r) => <div>{r.name}</div> }}
+        rowHeight={0}
       ></Table>
     </div>
   )

@@ -8,7 +8,7 @@ export function getParentFilter(
   childSchema: EntitySchema,
   parent: any,
 ): LogicalExpression | null {
-  const pks: IndexSchema[] = parentSchema.indices.filter((i) => i.name === parentSchema.PrimaryKeyIndexName)
+  const pks: IndexSchema[] = parentSchema.indices.filter((i) => i.name === parentSchema.primaryKeyIndexName)
   const childToParentRelations: RelationSchema[] = schemaRoot.relations.filter(
     (r) => r.primaryEntityName === childSchema.name && r.foreignEntityName === parentSchema.name,
   )
@@ -48,7 +48,7 @@ export function setParentId(
   childSchema: EntitySchema,
   parent: any,
 ): void {
-  const pks: IndexSchema[] = parentSchema.indices.filter((i) => i.name === parentSchema.PrimaryKeyIndexName)
+  const pks: IndexSchema[] = parentSchema.indices.filter((i) => i.name === parentSchema.primaryKeyIndexName)
   const childToParentRelations: RelationSchema[] = schemaRoot.relations.filter(
     (r) => r.primaryEntityName === childSchema.name && r.foreignEntityName === parentSchema.name,
   )

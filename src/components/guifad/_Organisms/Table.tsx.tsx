@@ -226,7 +226,7 @@ const Table: React.FC<{
     >
       <div className='flex flex-col h-full w-full overflow-auto'>
         <table className='w-full max-h-full text-sm text-left'>
-          <thead className='text-xs uppercase bg-backgroundfour dark:bg-backgroundfourdark sticky top-0'>
+          <thead className='text-xs bg-backgroundfour dark:bg-backgroundfourdark sticky top-0'>
             <tr className=''>
               {expandableRowProps && <th className='flex items-center gap-1'></th>}
               {columns.map((c: TableColumn) => (
@@ -278,7 +278,7 @@ const Table: React.FC<{
                   key={i}
                   className={`border-b dark:border-gray-700 ${
                     selectedRows[i] ? 'bg-blue-300 dark:bg-blue-400' : 'bg-backgroundthree dark:bg-backgroundthreedark'
-                  }`}
+                  } text-sm`}
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}
                 >
@@ -295,7 +295,11 @@ const Table: React.FC<{
                           </div>
                         </td> */}
                   {expandableRowProps && expandableRowProps.rowExpandable(r) && (
-                    <td className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'>
+                    <td
+                      className={`px-6 py-${
+                        rowHeight !== undefined ? rowHeight : 4
+                      } font-medium text-gray-900 whitespace-nowrap dark:text-white`}
+                    >
                       <button
                         id={`expand_${i}`}
                         className='rounded-md hover:text-blue-600'
@@ -310,8 +314,8 @@ const Table: React.FC<{
                       id={`table_cell_${j}_${i}`}
                       key={j}
                       className={`px-6 py-${
-                        rowHeight && rowHeight > 0 ? rowHeight : 4
-                      } font-medium text-gray-900 whitespace-nowrap dark:text-white`}
+                        rowHeight !== undefined ? rowHeight : 4
+                      } font-normal text-gray-900 whitespace-nowrap dark:text-white`}
                     >
                       {getDisplay(r[lowerFirstLetter(c.fieldName)], c, document.getElementById(`table_cell_${j}_${i}`))}
                     </td>

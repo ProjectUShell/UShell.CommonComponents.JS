@@ -1,11 +1,11 @@
 import { GetFuseDatasource } from '../components/guifad/FuseDatasource'
-import { IDataSourceManager } from '../ushell-modulebase/lib/IDataSourceManager'
+import { IDataSourceManager, IDataSourceManagerBase } from '../ushell-modulebase/lib/IDataSourceManager'
 import { IDataStore } from '../ushell-modulebase/lib/IDataStore'
 import { IDataSource } from '../ushell-modulebase/lib/iDataSource'
 import { FuseConnector } from './FuseConnector'
 import { SchemaRoot, EntitySchema } from 'fusefx-modeldescription'
 
-export class FuseDataStore implements IDataStore {
+export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   private _Url: string
   private _SchemaRoot: SchemaRoot = new SchemaRoot()
 
