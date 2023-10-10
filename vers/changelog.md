@@ -8,9 +8,10 @@ This files contains a version history including all changes relevant for semanti
 
 ## Upcoming Changes
 
-* reorganized solution structure and added Versioning / change log
+ - update
 
-
+## v 1.0.22
+ - update
 
 ## v 1.0.21
  - last version before change log was added
