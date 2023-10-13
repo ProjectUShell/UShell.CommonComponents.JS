@@ -10,7 +10,7 @@ This files contains a version history including all changes relevant for semanti
 
  - new Feature
 
-## v 1.0.22
+## v 1.1.22
  - update
 
 ## v 1.0.21
