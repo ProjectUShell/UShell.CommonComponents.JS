@@ -1,10 +1,7 @@
 import { IDataSource } from '../../ushell-modulebase/lib/iDataSource'
 import { FuseConnector } from '../../data/FuseConnector'
 import { EntitySchema } from 'fusefx-modeldescription'
-import { PagingParams } from '../../fusefx-repositorycontract/PagingParams'
-import { LogicalExpression } from '../../fusefx-repositorycontract/LogicalExpression'
-import { SortingField } from '../../fusefx-repositorycontract/SortingField'
-import { PaginatedList } from '../../fusefx-repositorycontract/PaginatedList'
+import { PaginatedList, LogicalExpression, PagingParams, SortingField } from 'fusefx-repositorycontract'
 
 export function GetFuseDatasource(url: string, entitySchema: EntitySchema): IDataSource {
   const datasource: IDataSource = {

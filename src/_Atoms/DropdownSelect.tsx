@@ -19,6 +19,7 @@ const DropdownSelect: React.FC<{
   const [currentMatchingOptionIndex, setCurrentMatchingOptionIndex] = useState<number | null>(0)
 
   useEffect(() => {
+    console.log('initial Option changed', initialOption)
     if (!initialOption) {
       return
     }

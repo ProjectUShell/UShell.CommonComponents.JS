@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { RelationElement } from '../../../fusefx-repositorycontract/RelationElement'
+import { RelationElement } from 'fusefx-repositorycontract'
 import Dropdown from '../../../_Atoms/Dropdown'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import { FieldSchema } from 'fusefx-modeldescription'
@@ -14,8 +14,10 @@ const RelationEditor: React.FC<{
   onUpdateRelation: (r: RelationElement) => void
   fields: IFieldInfo[]
 }> = ({ initialRelation, fields, onUpdateRelation }) => {
+  console.log('initialRelation', initialRelation)
+
   const [currrentField, setCurrentField] = useState<IFieldInfo | null>(null)
-  const [currrentOperator, setCurrentOperator] = useState<string>('')
+  const [currentOperator, setCurrentOperator] = useState<string>('')
   const [currrentValue, setCurrentValue] = useState<string>('')
 
   useEffect(() => {
@@ -25,6 +27,7 @@ const RelationEditor: React.FC<{
   }, [initialRelation])
 
   function getValidOperators(fieldType?: string): string[] {
+    return ['=', '<', '>', 'in']
     if (!fieldType) {
       return []
     }
@@ -50,7 +53,7 @@ const RelationEditor: React.FC<{
       return
     }
     setCurrentField(fieldToSet)
-    notifyRelationUpdated(fieldToSet, currrentOperator, currrentValue)
+    notifyRelationUpdated(fieldToSet, currentOperator, currrentValue)
   }
 
   function onOperatorSet(o: string) {
@@ -60,11 +63,12 @@ const RelationEditor: React.FC<{
 
   function onValueSet(v: string) {
     setCurrentValue(v)
-    notifyRelationUpdated(currrentField, currrentOperator, v)
+    notifyRelationUpdated(currrentField, currentOperator, v)
     console.log('value set', v)
   }
 
   console.log('initialRelation RE', initialRelation)
+  console.log('currrentOperator', currentOperator)
 
   return (
     <div className='flex p-2 gap-1 bg-backgroundthree dark:bg-backgroundthreedark rounded-sm'>
@@ -81,7 +85,7 @@ const RelationEditor: React.FC<{
         options={getValidOperators(currrentField?.type).map((o) => {
           return { label: o, value: o }
         })}
-        initialOption={currrentOperator !== '' ? { label: currrentOperator, value: currrentOperator } : null}
+        initialOption={currrentField && { label: currentOperator, value: currentOperator }}
         onOptionSet={(o) => onOperatorSet(o?.value)}
         placeholder={currrentField ? 'Select a operator' : 'Select a field first'}
       ></DropdownSelect>

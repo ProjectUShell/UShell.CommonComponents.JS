@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { LogicalExpression } from '../../../fusefx-repositorycontract/LogicalExpression'
-import { RelationElement } from '../../../fusefx-repositorycontract/RelationElement'
+import { RelationElement, LogicalExpression } from 'fusefx-repositorycontract'
 import DropdownButton from '../../../_Atoms/DropdownButton'
 import FunnelIcon from '../../../_Icons/FunnelIcon'
 import LogicalExpressionEditor from './LogicalExpressionEditor'

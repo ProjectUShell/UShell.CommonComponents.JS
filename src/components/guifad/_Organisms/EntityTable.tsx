@@ -4,10 +4,8 @@ import Table, { TableColumn } from './Table.tsx'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import TrashIcon from '../../../_Icons/TrashIcon'
 import { useQuery } from '@tanstack/react-query'
-import { PagingParams } from '../../../fusefx-repositorycontract/PagingParams.js'
-import { SortingField } from '../../../fusefx-repositorycontract/SortingField.js'
 import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
-import { LogicalExpression } from '../../../fusefx-repositorycontract/LogicalExpression'
+import { LogicalExpression, PagingParams, SortingField } from 'fusefx-repositorycontract'
 import { getParentFilter } from '../../../data/DataSourceService'
 import FunnelIcon from '../../../_Icons/FunnelIcon'
 import Modal from '../../../_Atoms/Modal'
@@ -130,6 +128,7 @@ const EntityTable: React.FC<{
         <div className={`flex p-1 ${className} rounded-md bg-backgroundtwo dark:bg-backgroundtwodark `}>
           <DropdownButton leftOffset={1} topOffset={-1} buttonContent={<FunnelIcon size={5}></FunnelIcon>}>
             <LogicalExpressionEditor
+              intialExpression={null}
               fields={dataSource.entitySchema!.fields}
               onUpdateExpression={(e) => {
                 setFilter((f) => [...f, e])

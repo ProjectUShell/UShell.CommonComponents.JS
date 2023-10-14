@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { LogicalExpression } from '../../../fusefx-repositorycontract/LogicalExpression'
 import RelationEditor from './RelationEditor'
 import { FieldSchema } from 'fusefx-modeldescription'
-import { RelationElement } from '../../../fusefx-repositorycontract/RelationElement'
+import { RelationElement, LogicalExpression } from 'fusefx-repositorycontract'
 import TrashIcon from '../../../_Icons/TrashIcon'
 
 function isRelationValid(r: RelationElement) {
@@ -21,7 +20,10 @@ function getEmptyRelationElement(): RelationElement {
   return { propertyName: '', propertyType: '', relation: '', value: '' }
 }
 
-function getCopy(e: LogicalExpression): LogicalExpression {
+function getCopy(e: LogicalExpression | null): LogicalExpression {
+  if (e == null) {
+    return getEmptyExpression()
+  }
   const result: LogicalExpression = { ...e }
   for (let i = 0; i < result.atomArguments.length; i++) {
     result.atomArguments[i] = { ...result.atomArguments[i] }
@@ -33,23 +35,15 @@ function getCopy(e: LogicalExpression): LogicalExpression {
 }
 
 const LogicalExpressionEditor: React.FC<{
-  intialExpression?: LogicalExpression
+  intialExpression: LogicalExpression | null
   onUpdateExpression: (e: LogicalExpression) => void
   fields: FieldSchema[]
 }> = ({ intialExpression, fields, onUpdateExpression }) => {
-  const [expression, setExpression] = useState<LogicalExpression | null>(null)
+  const [originalExpression, setOriginalExpression] = useState<LogicalExpression | null>(getCopy(intialExpression))
+  const [expression, setExpression] = useState<LogicalExpression>()
 
   useEffect(() => {
-    console.log('initialExpression changed LE1', intialExpression)
-    setExpression(
-      intialExpression
-        ? getCopy(intialExpression)
-        : {
-            expressionArguments: [],
-            atomArguments: [getEmptyRelationElement()],
-            operator: '',
-          },
-    )
+    setExpression(intialExpression ? intialExpression : getEmptyExpression())
   }, [intialExpression])
 
   if (!expression) return <div>Nein</div>
@@ -93,10 +87,9 @@ const LogicalExpressionEditor: React.FC<{
       <div className='flex gap-1 justify-end border-t pt-1 border-gray-400'>
         <button
           className='bg-backgroundthree dark:bg-backgroundthreedark p-1 rounded-md disabled:text-gray-400'
-          disabled={!isExpressionValid(expression)}
           onClick={(e) => {
             console.log('cancel', intialExpression)
-            setExpression(intialExpression ? getCopy(intialExpression) : getEmptyExpression())
+            setExpression(originalExpression ? getCopy(originalExpression) : getEmptyExpression())
           }}
         >
           Cancel

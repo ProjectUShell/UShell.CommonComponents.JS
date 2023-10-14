@@ -1,5 +1,5 @@
 import React from 'react'
-import { LogicalExpression } from '../../../fusefx-repositorycontract/LogicalExpression'
+import { LogicalExpression } from 'fusefx-repositorycontract'
 import { FieldSchema } from 'fusefx-modeldescription'
 import FilterTag from './FilterTag'
 

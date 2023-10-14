@@ -1,4 +1,4 @@
-import { LogicalExpression } from '../fusefx-repositorycontract/LogicalExpression'
+import { LogicalExpression } from 'fusefx-repositorycontract'
 
 export function getSelectedValues(filter: LogicalExpression): any[] {
   if (!filter || !filter.atomArguments || filter.atomArguments.length == 0) {

@@ -23,7 +23,12 @@ const Guifad1: React.FC<{
   const [schemaRoot, setSchemaRoot] = useState<SchemaRoot | null>(null)
 
   useEffect(() => {
-    dataSourceManager.getSchemaRoot().then((sr) => setSchemaRoot(sr))
+    console.log('Guifad1 useEffect')
+
+    dataSourceManager.getSchemaRoot().then((sr) => {
+      console.log('Guifad1 sr', sr)
+      setSchemaRoot(sr)
+    })
   }, [dataSourceManager])
 
   if (!rootNode.dataSource) {
@@ -104,6 +109,10 @@ const Guifad1: React.FC<{
 
   console.log('nodes', nodes)
 
+  if (!schemaRoot) {
+    return <div>no schema root</div>
+  }
+
   return (
     <div className='w-full h-full flex overflow-hidden'>
       <div className='h-full w-full flex flex-col min-w-0'>
@@ -131,7 +140,7 @@ const Guifad1: React.FC<{
               selectedRecord={currentRecord}
               onCreateRecord={createRecord}
               parentSchema={getParent()?.dataSource?.entitySchema}
-              schemaRoot={schemaRoot!}
+              schemaRoot={schemaRoot}
               parent={getCurrentNode()?.parent?.record}
             ></EntityTable>
           )}
