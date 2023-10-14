@@ -1,0 +1,13 @@
+{
+  "currentVersion": "1.2.0",
+  "currentVersionWithSuffix": "1.2.0",
+  "releaseType": "official",
+  "previousVersion": "1.1.22",
+  "changeGrade": "minor",
+  "currentMajor": 1,
+  "currentMinor": 2,
+  "currentPatch": 0,
+  "versionDateInfo": "2023-10-13",
+  "versionTimeInfo": "12:16:03",
+  "versionNotes": "- new Feature\n"
+}
