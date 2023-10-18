@@ -3,16 +3,15 @@ import TopBar from '../_Organisms/TopBar'
 import VerticalShellLayout from './VerticalShellLayout'
 import HorizontalShellLayout from './HorizontalShellLayout'
 import { ColorMode, LayoutMode, loadShellSettings, saveShellSettings, ShellSettings } from '../ShellSettings'
-import { ShellMenu } from '../ShellMenu'
+import { ShellMenu, TopBarItem } from '../ShellMenu'
 
 // import '../../../tailwind.css'
 
 const ShellLayout: React.FC<{
   shellMenu: ShellMenu
-  topBarElements?: JSX.Element[]
   children: any
   title: JSX.Element | string
-}> = ({ shellMenu, children, topBarElements, title }) => {
+}> = ({ shellMenu, children, title }) => {
   const [shellSettings, setShellSettings] = useState<ShellSettings>({
     colorMode: ColorMode.Light,
     layoutMode: LayoutMode.Vertical,
@@ -57,7 +56,7 @@ const ShellLayout: React.FC<{
           setColorMode={setColorMode}
           shellSettings={shellSettings}
           toggleSidebarOpen={toggleSidebarOpen}
-          topBarElements={topBarElements}
+          topBarElements={shellMenu.topBarItems}
           title={title}
         ></TopBar>
         {shellSettings.layoutMode == LayoutMode.Vertical ? (

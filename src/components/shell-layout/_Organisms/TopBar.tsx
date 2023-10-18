@@ -1,6 +1,7 @@
 import React from 'react'
 import SettingsDropdown from '../_Molecules/SettingsDropdown'
 import { LayoutMode, ColorMode, ShellSettings } from '../ShellSettings'
+import { TopBarItem } from '../ShellMenu'
 
 const TopBar: React.FC<{
   layoutMode: LayoutMode
@@ -9,7 +10,7 @@ const TopBar: React.FC<{
   shellSettings: ShellSettings
   toggleSidebarOpen: () => void
   title: JSX.Element | string
-  topBarElements?: JSX.Element[]
+  topBarElements?: TopBarItem[]
 }> = ({ layoutMode, setLayoutMode, setColorMode, toggleSidebarOpen, topBarElements, title, shellSettings }) => {
   return (
     <header className='static top-0 flex flex-col z-20 px-6 bg-backgroundone dark:bg-backgroundonedark text-textone dark:text-textonedark shadow-lg'>
@@ -34,19 +35,19 @@ const TopBar: React.FC<{
 
         <div>Search</div>
 
-        <div className='flex items-center justify-between py-2'>
-          {topBarElements &&
-            topBarElements!.map((e: JSX.Element, index: number) => (
-              <div className='px-2' key={index}>
-                {' '}
-                {e}
-              </div>
-            ))}
+        <div className='flex items-center gap-1 justify-between py-2'>
           <SettingsDropdown
             shellSettings={shellSettings}
             setLayoutMode={setLayoutMode}
             setColorMode={setColorMode}
           ></SettingsDropdown>
+          {topBarElements &&
+            topBarElements!.map((e: TopBarItem, index: number) => (
+              <div className='align-middle' key={index}>
+                {' '}
+                {e.icon}
+              </div>
+            ))}
         </div>
       </div>
     </header>

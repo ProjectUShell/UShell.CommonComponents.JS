@@ -11,6 +11,13 @@ export class MenuItem {
   id = ''
 }
 
+export interface TopBarItem {
+  icon: ReactElement
+  command?: (e: any) => void
+  id: string
+}
+
 export class ShellMenu {
   items: MenuItem[] = []
+  topBarItems?: TopBarItem[] = []
 }
