@@ -40,7 +40,6 @@ const ShellLayout: React.FC<{
       saveShellSettings(newSettings)
       return newSettings
     })
-    saveShellSettings(shellSettings)
   }
 
   return (

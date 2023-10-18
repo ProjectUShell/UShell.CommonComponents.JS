@@ -1,6 +1,8 @@
 import React from 'react'
 import { ReactElement } from 'react'
-import { ShellMenu, MenuItem } from './ShellMenu'
+import { ShellMenu } from './ShellMenu'
+import { MenuItem } from './ShellMenu'
+
 import { CommandDescription, ModuleDescription } from 'ushell-portfoliodescription'
 import PowerIcon from '../../_Atoms/PowerIcon'
 import ListIcon from '../../_Icons/ListIcon'
@@ -27,7 +29,11 @@ export class MenuBuilder {
   private static getIcon(iconKey: string): ReactElement {
     switch (iconKey) {
       case 'Power':
-        return <PowerIcon></PowerIcon>
+        return (
+          <div className='hover:text-red-400 dark:hover:text-red-300'>
+            <PowerIcon></PowerIcon>
+          </div>
+        )
       default:
         return <ListIcon></ListIcon>
     }
@@ -46,7 +52,11 @@ export class MenuBuilder {
           result.topBarItems = []
         }
         result.topBarItems.push({
-          icon: <button onClick={(e) => executeCommand(command, e)}>{icon}</button>,
+          icon: (
+            <button className='align-middle ' onClick={(e) => executeCommand(command, e)}>
+              {icon}
+            </button>
+          ),
           id: command.uniqueCommandKey,
         })
       } else {
