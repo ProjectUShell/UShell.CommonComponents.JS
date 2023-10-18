@@ -42,7 +42,10 @@ export class MenuBuilder {
     commands.forEach((command: CommandDescription) => {
       if (command.menuFolder == 'TopBar') {
         const icon: ReactElement = this.getIcon(command.iconKey ? command.iconKey : '')
-        result.topBarItems?.push({
+        if (!result.topBarItems) {
+          result.topBarItems = []
+        }
+        result.topBarItems.push({
           icon: <button onClick={(e) => executeCommand(command, e)}>{icon}</button>,
           id: command.uniqueCommandKey,
         })
