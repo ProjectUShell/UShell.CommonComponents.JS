@@ -8,7 +8,7 @@ const TopBar: React.FC<{
   setColorMode: (colorMode: ColorMode) => void
   shellSettings: ShellSettings
   toggleSidebarOpen: () => void
-  title: string
+  title: JSX.Element | string
   topBarElements?: JSX.Element[]
 }> = ({ layoutMode, setLayoutMode, setColorMode, toggleSidebarOpen, topBarElements, title, shellSettings }) => {
   return (

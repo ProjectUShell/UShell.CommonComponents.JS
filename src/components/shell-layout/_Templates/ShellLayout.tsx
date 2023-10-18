@@ -11,7 +11,7 @@ const ShellLayout: React.FC<{
   shellMenu: ShellMenu
   topBarElements?: JSX.Element[]
   children: any
-  title: string
+  title: JSX.Element | string
 }> = ({ shellMenu, children, topBarElements, title }) => {
   const [shellSettings, setShellSettings] = useState<ShellSettings>({
     colorMode: ColorMode.Light,
