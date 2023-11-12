@@ -1,7 +1,5 @@
 import { GetFuseDatasource } from '../components/guifad/FuseDatasource'
-import { IDataSourceManager, IDataSourceManagerBase } from '../ushell-modulebase/lib/IDataSourceManager'
-import { IDataStore } from '../ushell-modulebase/lib/IDataStore'
-import { IDataSource } from '../ushell-modulebase/lib/iDataSource'
+import { IDataSource, IDataStore, IDataSourceManagerBase } from 'ushell-modulebase'
 import { FuseConnector } from './FuseConnector'
 import { SchemaRoot, EntitySchema } from 'fusefx-modeldescription'
 

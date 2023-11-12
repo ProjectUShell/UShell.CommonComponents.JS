@@ -28,6 +28,10 @@ const FilterTag: React.FC<{
         result += ` ${f.operator} `
       }
     }
+    if (f.expressionArguments.length > 0) {
+      result += ` ${f.operator} `
+    }
+
     for (let i = 0; i < f.expressionArguments.length; ++i) {
       const e: LogicalExpression = f.expressionArguments[i]
       if (numArgs == 1) {
@@ -35,7 +39,7 @@ const FilterTag: React.FC<{
       } else {
         result += `(${getLabel(e)})`
       }
-      if (i < f.atomArguments.length - 1) {
+      if (i < f.expressionArguments.length - 1) {
         result += ` ${f.operator} `
       }
     }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { IDataSource } from '../../../ushell-modulebase/lib/iDataSource'
+import { IDataSource } from 'ushell-modulebase'
 import Table, { TableColumn } from './Table.tsx'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import TrashIcon from '../../../_Icons/TrashIcon'

@@ -2,7 +2,7 @@ import React from 'react'
 import './tailwind.css'
 
 import ReactDOM from 'react-dom/client'
-import Demo from './Demo'
+import Demo from './DemoOverview'
 // import MyComponent from './MyComponent'
 import Guifad from './components/guifad/_Templates/Guifad'
 import GuifadFuse from './components/guifad/_Templates/GuifadFuse'
@@ -19,5 +19,5 @@ export { ShellLayout }
 
 export * from './components/shell-layout/_Templates/ShellLayout'
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(<Demo></Demo>)
+// const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+// root.render(<Demo></Demo>)

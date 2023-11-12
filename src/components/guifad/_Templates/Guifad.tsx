@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { IDataSource } from '../../../ushell-modulebase/lib/iDataSource'
+import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
 import Guifad1 from './Guifad1'
 import { ObjectGraphNode } from '../ObjectGraphNode'
-import { IDataSourceManagerBase } from '../../../ushell-modulebase/lib/IDataSourceManager'
 
 //TODO statt SchemRoot => genauere Funktionenen auf dem SchemaRoot wie getNavigations
 // oder komplett nur IDataSourceManager reingeben

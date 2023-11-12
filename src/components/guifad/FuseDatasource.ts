@@ -1,4 +1,4 @@
-import { IDataSource } from '../../ushell-modulebase/lib/iDataSource'
+import { IDataSource } from 'ushell-modulebase'
 import { FuseConnector } from '../../data/FuseConnector'
 import { EntitySchema } from 'fusefx-modeldescription'
 import { PaginatedList, LogicalExpression, PagingParams, SortingField } from 'fusefx-repositorycontract'

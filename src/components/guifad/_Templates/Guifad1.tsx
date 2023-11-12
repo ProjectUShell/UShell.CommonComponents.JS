@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 import Breadcrumb from '../_Organisms/Breadcrumb'
-import { IDataSource } from '../../../ushell-modulebase/lib/iDataSource'
+import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
 import StructureNavigation from '../_Organisms/StructureNavigation'
 import { RelationSchema } from 'fusefx-modeldescription'
 import EntityTable from '../_Organisms/EntityTable'
 import EntityForm from '../_Organisms/EntityForm'
 import { setParentId } from '../../../data/DataSourceService'
-import { IDataSourceManagerBase } from '../../../ushell-modulebase/lib/IDataSourceManager'
 import { SchemaRoot } from 'fusefx-modeldescription'
 
 const Guifad1: React.FC<{
