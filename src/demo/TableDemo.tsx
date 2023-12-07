@@ -6,7 +6,7 @@ import { SortingField, PagingParams } from 'fusefx-repositorycontract'
 
 const columns: TableColumn[] = [
   { label: 'Id', fieldName: 'id', fieldType: 'number', key: 'id' },
-  { label: 'Name', fieldName: 'name', maxCellLength: 40, fieldType: 'string', key: 'name', sortable: true },
+  { label: 'Name', fieldName: 'name', maxCellLength: 400, fieldType: 'string', key: 'name', sortable: true },
   { label: 'DateOfBirth', fieldName: 'dateOfBirth', fieldType: 'date', key: 'dateOfBirth' },
   {
     label: 'Level',

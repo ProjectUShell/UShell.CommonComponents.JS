@@ -166,7 +166,33 @@ const Table: React.FC<{
     })
   }
 
+  let canvas: any
+  function getTextWidth(text: string, font: any) {
+    // re-use canvas object for better performance
+    const canvas1: any = canvas || (canvas = document.createElement('canvas'))
+    const context = canvas1.getContext('2d')
+    context.font = font
+    const metrics = context.measureText(text)
+    return metrics.width
+  }
+
+  function getCssStyle(element: any, prop: any) {
+    if (!element) return null
+    return window.getComputedStyle(element, null).getPropertyValue(prop)
+  }
+
+  function getCanvasFont(el = document.body) {
+    const fontWeight = getCssStyle(el, 'font-weight') || 'normal'
+    const fontSize = getCssStyle(el, 'font-size') || '16px'
+    const fontFamily = getCssStyle(el, 'font-family') || 'Times New Roman'
+
+    return `${fontWeight} ${fontSize} ${fontFamily}`
+  }
+
   function getDisplay(v: any, c: TableColumn, test: any) {
+    if (!test) {
+      return v
+    }
     if (c.onRenderCell) {
       return c.onRenderCell(v)
     }
@@ -187,6 +213,15 @@ const Table: React.FC<{
     // if (maxVLength < test?.offsetWidth) {
     //   return v
     // }
+    const textWidth = getTextWidth(v, getCanvasFont(test)) + 50
+    if (textWidth > test.clientWidth) {
+      const textLength = v.length
+      const ratio = maxCellLength / textWidth
+      const desiredTextLength: number = ratio * textLength
+      const s: string = v
+      return s.substring(0, desiredTextLength - 3) + '...'
+    }
+    return v
     if (v.length > maxCellLength) {
       const s: string = v
       return s.substring(0, maxCellLength) + '...'
