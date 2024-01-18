@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { IDataSource } from 'ushell-modulebase'
-import Table, { TableColumn } from './Table.tsx'
+import Table, { TableColumn } from './Table'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import TrashIcon from '../../../_Icons/TrashIcon'
 import { useQuery } from '@tanstack/react-query'

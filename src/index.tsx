@@ -6,7 +6,7 @@ import Demo from './DemoOverview'
 // import MyComponent from './MyComponent'
 import Guifad from './components/guifad/_Templates/Guifad'
 import GuifadFuse from './components/guifad/_Templates/GuifadFuse'
-import Table from './components/guifad/_Organisms/Table.tsx'
+import Table from './components/guifad/_Organisms/Table'
 import MultiSelectFilter from './_Molecules/MultiSelectFilter'
 import ShellLayout from './components/shell-layout/_Templates/ShellLayout'
 

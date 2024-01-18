@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { IDataSource } from 'ushell-modulebase'
-import Table, { TableColumn } from './Table.tsx'
+import Table, { TableColumn } from './Table'
 import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
 import { LogicalExpression } from 'fusefx-repositorycontract'
 import { getParentFilter } from '../../../data/DataSourceService'

@@ -10,28 +10,15 @@ import Dropdown from '../../../_Atoms/Dropdown'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import MinusCircleIcon from '../../../_Icons/MinusCircleIcon'
 import PaddingDummy from '../../../_Atoms/PaddingDummy'
-
-export interface TableColumn {
-  label: string
-  fieldName: string
-  fieldType: string
-  key: string
-  onRenderCell?: (cellValue: any) => React.JSX.Element
-  maxCellLength?: number
-  renderFilter?: (
-    filter: LogicalExpression,
-    onFilterChanged: (filter: LogicalExpression | null) => void,
-    column: TableColumn,
-  ) => React.JSX.Element
-  sortable?: boolean
-}
+import { Resizable } from 'react-resizable'
+import { TableColumn } from './Table'
 
 export interface ExpandableProps {
   renderExpandedRow: (record: any) => React.JSX.Element
   rowExpandable: (record: any) => boolean
 }
 
-const Table: React.FC<{
+const Table2: React.FC<{
   columns: TableColumn[]
   records: any[]
   className?: string
@@ -189,6 +176,15 @@ const Table: React.FC<{
     return `${fontWeight} ${fontSize} ${fontFamily}`
   }
 
+  const [lastWidth, setLastWidth] = useState(window.innerWidth)
+  const [widthDelta, setWidthDelta] = useState(0)
+  const currentWidth = window.innerWidth
+
+  if (currentWidth !== lastWidth) {
+    setWidthDelta(currentWidth - lastWidth)
+    setLastWidth(currentWidth)
+  }
+
   function getDisplay(v: any, c: TableColumn, test: any) {
     if (!test) {
       return v
@@ -205,6 +201,8 @@ const Table: React.FC<{
     if (!c.maxCellLength) {
       return v
     }
+    console.log('display', widthDelta)
+    console.log('display client Width', test.clientWidth)
     const charLength = 0.875 * 4
     const vLength = charLength * v.length
     const maxCellLength: number = c.maxCellLength ? c.maxCellLength : 20
@@ -216,7 +214,19 @@ const Table: React.FC<{
     const textWidth = getTextWidth(v, getCanvasFont(test)) + 50
     if (textWidth > test.clientWidth) {
       const textLength = v.length
-      const ratio = maxCellLength / textWidth
+      let desiredWidth: number = maxCellLength > test.clientWidth ? maxCellLength : test.clientWidth
+      if (widthDelta < 0) {
+        desiredWidth = ((currentWidth + widthDelta) / currentWidth) * test.clientWidth
+        if (desiredWidth < maxCellLength) {
+          desiredWidth = maxCellLength
+        }
+        // desiredWidth = maxCellLength
+      }
+      if (widthDelta == 0) {
+        desiredWidth = maxCellLength
+      }
+      console.log('desiredWidth', desiredWidth)
+      const ratio = desiredWidth / textWidth
       const desiredTextLength: number = ratio * textLength
       const s: string = v
       return s.substring(0, desiredTextLength - 3) + '...'
@@ -258,13 +268,13 @@ const Table: React.FC<{
       className={`relative overflow-auto shadow-md sm:rounded-lg h-full w-full flex flex-col justify-between ${className}`}
     >
       <div className='flex flex-col h-full w-full overflow-auto'>
-        <table className='w-full max-h-full text-sm text-left'>
+        <table className='border-collapse w-full max-h-full text-sm text-left'>
           <thead className='text-xs bg-backgroundfour dark:bg-backgroundfourdark sticky top-0'>
             <tr className=''>
-              {expandableRowProps && <th className='flex items-center gap-1'></th>}
-              {columns.map((c: TableColumn) => (
-                <th key={c.label} className='px-6 py-3'>
-                  <div className='flex items-center gap-1'>
+              {expandableRowProps && <th className='border border-slate-600 px-6 py-3'></th>}
+              {columns.map((c: TableColumn, index) => (
+                <th key={c.label} className='border border-slate-600 px-6 py-3' style={{ width: 100 }}>
+                  <div className='flex justify-between items-center gap-1'>
                     {c.label}
                     {onSortingParamsChange && c.sortable && (
                       <button onClick={(e) => toggleSorting(c.key)} className='pl-2'>
@@ -278,7 +288,7 @@ const Table: React.FC<{
                           )}
                       </button>
                     )}
-                    <div className=''>
+                    <div className='flex-1'>
                       {c.renderFilter && onFilterChanged && (
                         <>
                           {filterVisible[c.fieldName] && (
@@ -299,6 +309,7 @@ const Table: React.FC<{
                         </>
                       )}
                     </div>
+                    <div className='px-2 hover:cursor-move'>|</div>
                   </div>
                 </th>
               ))}
@@ -329,7 +340,7 @@ const Table: React.FC<{
                         </td> */}
                   {expandableRowProps && expandableRowProps.rowExpandable(r) && (
                     <td
-                      className={`px-6 py-${
+                      className={`border border-slate-600 px-6 py-${
                         rowHeight !== undefined ? rowHeight : 4
                       } font-medium text-gray-900 whitespace-nowrap dark:text-white`}
                     >
@@ -346,7 +357,8 @@ const Table: React.FC<{
                     <td
                       id={`table_cell_${j}_${i}`}
                       key={j}
-                      className={`px-6 py-${
+                      style={{ width: 100 }}
+                      className={`border border-slate-600 px-6 py-${
                         rowHeight !== undefined ? rowHeight : 4
                       } font-normal text-gray-900 whitespace-nowrap dark:text-white`}
                     >
@@ -380,4 +392,4 @@ const Table: React.FC<{
   )
 }
 
-export default Table
+export default Table2

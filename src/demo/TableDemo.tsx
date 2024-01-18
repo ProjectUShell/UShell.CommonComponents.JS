@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import Table, { TableColumn } from '../components/guifad/_Organisms/Table.tsx'
+import Table, { TableColumn } from '../components/guifad/_Organisms/Table'
 import MultiSelectFilter from '../_Molecules/MultiSelectFilter'
 import { getSelectedValues } from '../utils/LogicUtils'
 import { SortingField, PagingParams } from 'fusefx-repositorycontract'
+import ResizableTable from '../components/guifad/_Organisms/ResizableTable'
 
 const columns: TableColumn[] = [
   { label: 'Id', fieldName: 'id', fieldType: 'number', key: 'id' },
@@ -62,7 +63,7 @@ const columns: TableColumn[] = [
 const records: any[] = [
   {
     id: 0,
-    name: 'horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss',
+    name: 'horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss',
     dateOfBirth: '16.07.1990',
     level: 13,
   },
@@ -85,6 +86,16 @@ const TableDemo = () => {
     localStorage.setItem('demo_filter', JSON.stringify(f))
   }
 
+  // return (
+  //   <ResizableTable
+  //     columns={[
+  //       { key: 'name', title: 'name' },
+  //       { key: 'name2', title: 'name2' },
+  //     ]}
+  //     data={[{ name: 'asd', name2: 'asdsa asdsa asdsa asdsa asdsa asdsa' }]}
+  //   ></ResizableTable>
+  // )
+
   return (
     <div className='overflow-hidden w-full h-full'>
       <Table
@@ -101,7 +112,7 @@ const TableDemo = () => {
         }}
         onFilterChanged={onFilterChange}
         initialFilters={currentFilter}
-        expandableRowProps={{ rowExpandable: (r) => true, renderExpandedRow: (r) => <div>{r.name}</div> }}
+        expandableRowProps={{ rowExpandable: (r: any) => true, renderExpandedRow: (r) => <div>{r.name}</div> }}
         rowHeight={0}
       ></Table>
     </div>

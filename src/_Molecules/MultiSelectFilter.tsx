@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import MultiSelect, { Option } from '../_Atoms/MultiSelect'
 import { RelationElement, LogicalExpression } from 'fusefx-repositorycontract'
-import { TableColumn } from '../components/guifad/_Organisms/Table.tsx'
+import { TableColumn } from '../components/guifad/_Organisms/Table'
 
 const MultiSelectFilter: React.FC<{
   column: TableColumn
