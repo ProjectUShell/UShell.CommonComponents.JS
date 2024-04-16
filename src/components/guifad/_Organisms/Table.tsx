@@ -373,7 +373,19 @@ const Table: React.FC<{
                         rowHeight !== undefined ? rowHeight : 4
                       } font-normal text-gray-900 whitespace-nowrap dark:text-white`}
                     >
-                      {getDisplay(r[lowerFirstLetter(c.fieldName)], c, document.getElementById(`table_cell_${j}_${i}`))}
+                      {c.onRenderCell ? (
+                        c.onRenderCell(r[c.fieldName])
+                      ) : (
+                        <>
+                          {c.fieldName in r
+                            ? getDisplay(r[c.fieldName], c, document.getElementById(`table_cell_${j}_${i}`))
+                            : getDisplay(
+                                r[lowerFirstLetter(c.fieldName)],
+                                c,
+                                document.getElementById(`table_cell_${j}_${i}`),
+                              )}
+                        </>
+                      )}
                     </td>
                   ))}
                 </tr>

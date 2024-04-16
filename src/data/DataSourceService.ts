@@ -10,14 +10,14 @@ export function getParentFilter(
 ): LogicalExpression | null {
   const pks: IndexSchema[] = parentSchema.indices.filter((i) => i.name === parentSchema.primaryKeyIndexName)
   const childToParentRelations: RelationSchema[] = schemaRoot.relations.filter(
-    (r) => r.primaryEntityName === childSchema.name && r.foreignEntityName === parentSchema.name,
+    (r) => r.primaryEntityName === parentSchema.name && r.foreignEntityName === childSchema.name,
   )
   if (childToParentRelations.length <= 0) {
+    console.log('no childToParentRelations')
     return null
   }
   const childToParentRelation: RelationSchema = childToParentRelations[0]
   const result: LogicalExpression = new LogicalExpression()
-  result.operator = ''
 
   const pk: IndexSchema | null = pks.length > 0 ? pks[0] : null
 
@@ -31,11 +31,12 @@ export function getParentFilter(
   const parentIdName: string = parentIdFieldName || 'id'
   console.log('parentIdName', parentIdName)
   console.log('parent', parent)
-  result.atomArguments.push({
-    relation: '=',
-    propertyName: childToParentRelation.foreignKeyIndexName,
-    value: parent[lowerFirstLetter(parentIdName)],
-    propertyType: parentIdFieldType,
+  const parentKeyValue = parent[parentIdName]
+  if (!parentKeyValue) return result
+  result.predicates.push({
+    operator: '=',
+    fieldName: childToParentRelation.foreignKeyIndexName,
+    value: parent[parentIdName],
   })
   console.log('result', result)
   return result
@@ -48,9 +49,11 @@ export function setParentId(
   childSchema: EntitySchema,
   parent: any,
 ): void {
+  console.log('setParentId parentSchema', parentSchema)
   const pks: IndexSchema[] = parentSchema.indices.filter((i) => i.name === parentSchema.primaryKeyIndexName)
+  console.log('setParentId pks', pks)
   const childToParentRelations: RelationSchema[] = schemaRoot.relations.filter(
-    (r) => r.primaryEntityName === childSchema.name && r.foreignEntityName === parentSchema.name,
+    (r) => r.primaryEntityName === parentSchema.name && r.foreignEntityName === childSchema.name,
   )
   if (childToParentRelations.length <= 0) {
     return
@@ -64,5 +67,5 @@ export function setParentId(
   const parentIdName: string = parentIdFieldName || 'id'
   console.log('parentIdName', parentIdName)
   console.log('parent', parent)
-  child[lowerFirstLetter(childToParentRelation.foreignKeyIndexName)] = parent[lowerFirstLetter(parentIdName)]
+  child[childToParentRelation.foreignKeyIndexName] = parent[parentIdName]
 }

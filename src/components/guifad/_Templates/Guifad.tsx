@@ -6,15 +6,14 @@ import { ObjectGraphNode } from '../ObjectGraphNode'
 //TODO statt SchemRoot => genauere Funktionenen auf dem SchemaRoot wie getNavigations
 // oder komplett nur IDataSourceManager reingeben
 // IDataSourceManager: getDataSource, getNavigations
+// TODO wenn kein rootEntityName => Auswahl der EntityTypes darstellen
 const Guifad: React.FC<{
   dataSourceManager: IDataSourceManagerBase
   rootEntityName: string
 }> = ({ dataSourceManager, rootEntityName }) => {
   const [rootDataSource, setRootDataSource] = useState<IDataSource | null>(null)
   useEffect(() => {
-    dataSourceManager.tryGetDataSource(rootEntityName).then((ds) => {
-      setRootDataSource(ds)
-    })
+    setRootDataSource(dataSourceManager.tryGetDataSource(rootEntityName))
   }, [rootEntityName, dataSourceManager])
 
   if (!rootDataSource) {

@@ -32,9 +32,12 @@ export class FuseConnector {
     return this.post(url + `GetEntities`, {
       entityName: entityName,
       filter: filter,
-      pagingParams: pagingParams,
+      limit: pagingParams?.pageSize,
+      skip: pagingParams ? (pagingParams?.pageNumber - 1) * pagingParams?.pageSize : 0,
       sortingParams: sortingParams,
-    }).then((r) => r.return)
+    }).then((r) => {
+      return { page: r.return, total: 1000 }
+    })
   }
 
   static async getEntityRefs(
@@ -47,13 +50,24 @@ export class FuseConnector {
     return this.post(url + `GetEntityRefs`, {
       entityName: entityName,
       filter: filter,
-      pagingParams: pagingParams,
+      skip: pagingParams ? (pagingParams.pageNumber - 1) * pagingParams.pageSize : 0,
+      limit: pagingParams ? pagingParams.pageSize + 2 : 10,
       sortingParams: sortingParams,
-    }).then((r) => r.return)
+    }).then((r) => {
+      return {
+        page: r.return,
+        total: 1000,
+      }
+    })
   }
 
   static async addOrUpdate(url: string, entityName: string, entity: any): Promise<any> {
-    return this.post(url + `AddOrUpdate`, { entityName: entityName, entity: entity }).then((r) => r.return)
+    return this.post(url + `AddOrUpdateEntity`, { entityName: entityName, entity: entity }).then((r) => {
+      if (r.fault) {
+        console.error('AddOrUpdate failed', { entity: entity, fault: r.fault })
+      }
+      return r.return
+    })
   }
 
   static async deleteEntities(url: string, entityName: string, idsToDelete: any[][]): Promise<any> {

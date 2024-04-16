@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { RelationElement, LogicalExpression } from 'fusefx-repositorycontract'
+import { LogicalExpression } from 'fusefx-repositorycontract'
 import DropdownButton from '../../../_Atoms/DropdownButton'
-import FunnelIcon from '../../../_Icons/FunnelIcon'
 import LogicalExpressionEditor from './LogicalExpressionEditor'
 import { FieldSchema } from 'fusefx-modeldescription'
 import XMarkIcon from '../../../_Icons/XMarkIcon'
+import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 
 const FilterTag: React.FC<{
   filter: LogicalExpression
@@ -16,31 +16,31 @@ const FilterTag: React.FC<{
 
   function getLabel(f: LogicalExpression) {
     let result = ''
-    const numArgs: number = f.atomArguments.length + f.expressionArguments.length
-    for (let i = 0; i < f.atomArguments.length; ++i) {
-      const r: RelationElement = f.atomArguments[i]
+    const numArgs: number = f.predicates.length + f.subTree.length
+    for (let i = 0; i < f.predicates.length; ++i) {
+      const r: FieldPredicate = f.predicates[i]
       if (numArgs == 1) {
-        result += `${r.propertyName} ${r.relation} ${r.value}`
+        result += `${r.fieldName} ${r.operator} ${r.value}`
       } else {
-        result += `(${r.propertyName} ${r.relation} ${r.value})`
+        result += `(${r.fieldName} ${r.operator} ${r.value})`
       }
-      if (i < f.atomArguments.length - 1) {
-        result += ` ${f.operator} `
+      if (i < f.predicates.length - 1) {
+        result += ` ${f.matchAll ? 'And' : 'Or'} `
       }
     }
-    if (f.expressionArguments.length > 0) {
-      result += ` ${f.operator} `
+    if (f.subTree.length > 0) {
+      result += ` ${f.matchAll ? 'And' : 'Or'} `
     }
 
-    for (let i = 0; i < f.expressionArguments.length; ++i) {
-      const e: LogicalExpression = f.expressionArguments[i]
+    for (let i = 0; i < f.subTree.length; ++i) {
+      const e: LogicalExpression = f.subTree[i]
       if (numArgs == 1) {
         result += `${getLabel(e)}`
       } else {
         result += `(${getLabel(e)})`
       }
-      if (i < f.expressionArguments.length - 1) {
-        result += ` ${f.operator} `
+      if (i < f.subTree.length - 1) {
+        result += ` ${f.matchAll ? 'And' : 'Or'} `
       }
     }
     return result

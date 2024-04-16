@@ -4,7 +4,7 @@ import Table, { TableColumn } from './Table'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import TrashIcon from '../../../_Icons/TrashIcon'
 import { useQuery } from '@tanstack/react-query'
-import { EntitySchema, SchemaRoot } from 'fusefx-modeldescription'
+import { EntitySchema, SchemaRoot, RelationSchema } from 'fusefx-modeldescription'
 import { LogicalExpression, PagingParams, SortingField } from 'fusefx-repositorycontract'
 import { getParentFilter } from '../../../data/DataSourceService'
 import FunnelIcon from '../../../_Icons/FunnelIcon'
@@ -13,12 +13,16 @@ import Dropdown from '../../../_Atoms/Dropdown'
 import DropdownButton from '../../../_Atoms/DropdownButton'
 import LogicalExpressionEditor from '../_Molecules/LogicalExpressionEditor'
 import FilterTagBar from '../_Molecules/FilterTagBar'
+import { EntitySchemaService } from '../../../data/EntitySchemaService'
+import ArrowUturnUpd from '../../../_Icons/ArrowUturnUpd'
+import Tooltip from '../../../_Atoms/Tooltip'
 
 const EntityTable: React.FC<{
   dataSource: IDataSource
   parentSchema: EntitySchema | undefined
   parent: any | undefined
   schemaRoot: SchemaRoot
+  entitySchema: EntitySchema
   className?: string
   onRecordEnter: (r: any) => void
   onSelectedRecordsChange: (selectedRecords: any[]) => void
@@ -27,6 +31,7 @@ const EntityTable: React.FC<{
 }> = ({
   dataSource,
   schemaRoot,
+  entitySchema,
   parentSchema,
   parent,
   className,
@@ -41,6 +46,7 @@ const EntityTable: React.FC<{
   const [pagingParams, setPagingParams] = useState<PagingParams>({ pageNumber: 1, pageSize: 10 })
   const [sortingParams, setSortingParams] = useState<SortingField[]>([])
   const [filter, setFilter] = useState<LogicalExpression[]>([])
+  const [useParentFilter, setUseParentFilter] = useState(true)
   const [reloadTrigger, setReloadTrigger] = useState(0)
 
   function forceReload() {
@@ -53,33 +59,49 @@ const EntityTable: React.FC<{
 
   useEffect(() => {
     const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
+      console.log('f', f)
+      console.log('schemaRoot', schemaRoot)
+      const foreignKeyRelations: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
+        schemaRoot,
+        (r) => r.foreignEntityName == entitySchema.name && r.foreignKeyIndexName == f.name,
+      )
+
+      if (foreignKeyRelations.length > 0) {
+        const fkRelation: RelationSchema = foreignKeyRelations[0]
+        console.log('foreignKeyRelations', foreignKeyRelations)
+        if (fkRelation.foreignNavigationName && fkRelation.foreignNavigationName != '') {
+          return {
+            label: fkRelation.foreignNavigationName,
+            fieldName: fkRelation.foreignNavigationName,
+            fieldType: f.type,
+            key: fkRelation.foreignNavigationName,
+            onRenderCell: (cellValue) => {
+              console.log('cellValue', cellValue)
+              return <div>{EntitySchemaService.getLabel(schemaRoot, fkRelation.primaryEntityName, cellValue)}</div>
+            },
+          }
+        }
+      }
+
       return { label: f.name, fieldName: f.name, fieldType: f.type, key: f.name }
     })
     setColumns(newColumns)
     // dataSource.getRecords().then((r) => {
     //   setRecords(r)
     // })
-  }, [dataSource])
+  }, [dataSource, schemaRoot, entitySchema])
 
   function buildFilterExpression(): LogicalExpression | undefined {
-    const parentFilter: LogicalExpression | null =
-      parentSchema && parent && schemaRoot
-        ? getParentFilter(schemaRoot, parentSchema, dataSource.entitySchema!, parent)
-        : null
     const result: LogicalExpression = new LogicalExpression()
-    filter.forEach((f) => result.expressionArguments.push(f))
-    if (parentFilter) {
-      result.expressionArguments.push(parentFilter)
-    }
-    switch (result.expressionArguments.length) {
-      case 0:
-        return undefined
-      case 1:
-        result.operator = 'and'
-        break
-      default:
-        result.operator = 'and'
-        break
+    filter.forEach((f) => result.subTree.push(f))
+    if (useParentFilter) {
+      const parentFilter: LogicalExpression | null =
+        parentSchema && parent && schemaRoot
+          ? getParentFilter(schemaRoot, parentSchema, dataSource.entitySchema!, parent)
+          : null
+      if (parentFilter) {
+        result.subTree.push(parentFilter)
+      }
     }
     console.log('filter result', result)
     return result
@@ -95,6 +117,7 @@ const EntityTable: React.FC<{
       parent,
       parentSchema,
       schemaRoot,
+      useParentFilter,
     ],
     queryFn: () => {
       return dataSource.getRecords(buildFilterExpression(), pagingParams, sortingParams)
@@ -106,6 +129,8 @@ const EntityTable: React.FC<{
   if (isLoading) return <div>Loading...</div>
 
   if (error) return <div>An error has occurred: {error.toString()}</div> //+ error.message
+
+  console.warn('data1', data!)
 
   function addRecord() {
     onCreateRecord()
@@ -124,7 +149,7 @@ const EntityTable: React.FC<{
 
   return (
     <div className='flex flex-col h-full'>
-      <div className='flex justify-between'>
+      <div className='flex justify-between items-center'>
         <div className={`flex p-1 ${className} rounded-md bg-backgroundtwo dark:bg-backgroundtwodark `}>
           <DropdownButton leftOffset={1} topOffset={-1} buttonContent={<FunnelIcon size={5}></FunnelIcon>}>
             <LogicalExpressionEditor
@@ -136,6 +161,18 @@ const EntityTable: React.FC<{
               }}
             ></LogicalExpressionEditor>
           </DropdownButton>
+          <button
+            id='ParentFilterButton'
+            className={`hover:bg-backgroundthree hover:dark:bg-backgroundthreedark p-1 rounded-md ${
+              useParentFilter ? 'text-green-600' : ''
+            }`}
+            onClick={() => setUseParentFilter((x) => !x)}
+          >
+            <ArrowUturnUpd size={5}></ArrowUturnUpd>
+            <Tooltip targetId='ParentFilterButton'>
+              <div>{useParentFilter ? 'Disable Parent Filter' : 'Activate Parent Filter'}</div>
+            </Tooltip>
+          </button>
         </div>
         <div className={`flex justify-end p-1 ${className} rounded-md bg-backgroundtwo dark:bg-backgroundtwodark `}>
           <button
@@ -163,7 +200,7 @@ const EntityTable: React.FC<{
       <Table
         className='overflow-auto h-full'
         columns={columns}
-        records={data1!.page}
+        records={data1.page}
         onRecordEnter={onRecordEnter}
         onSelectedRecordsChange={(sr) => {
           setSelectedRecords(sr)

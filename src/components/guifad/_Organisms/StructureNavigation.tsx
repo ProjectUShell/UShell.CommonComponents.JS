@@ -13,7 +13,7 @@ const StructureNavigation: React.FC<{
   schemaRoot: SchemaRoot
   onRelationSelected: (rel: RelationSchema) => void
   onRelationEnter: (rel: RelationSchema) => void
-  onModeSelected: (mode: 'list' | 'details') => void
+  setMode: (mode: 'list' | 'details') => void
   mode: 'list' | 'details'
   relation: RelationSchema | null
   className?: string
@@ -23,7 +23,7 @@ const StructureNavigation: React.FC<{
   entitySchema,
   schemaRoot,
   onRelationSelected,
-  onModeSelected,
+  setMode,
   onRelationEnter,
   mode,
   relation,
@@ -36,15 +36,15 @@ const StructureNavigation: React.FC<{
     <div className={`text-md ${className}`}>
       <h1 className='mb-2 font-bold'>
         {currentRecord
-          ? entitySchema.name + ' ' + currentRecord[lowerFirstLetter(entitySchema.fields[0].name)]
-          : entitySchema.namePlural}
+          ? entitySchema.name + ' ' + EntitySchemaService.getLabel(schemaRoot, entitySchema.name, currentRecord)
+          : entitySchema.name}
       </h1>
       <button
         disabled={dirty}
         className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 enabled:hover:cursor-pointer rounded-md p-1 ${
           mode == 'list' ? 'bg-blue-300 dark:bg-blue-400' : ''
         }`}
-        onClick={(e) => onModeSelected('list')}
+        onClick={(e) => setMode('list')}
       >
         <ListIcon></ListIcon>List
       </button>
@@ -53,22 +53,24 @@ const StructureNavigation: React.FC<{
         className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 ${
           mode == 'details' ? 'bg-blue-300 dark:bg-blue-400' : ''
         } enabled:hover:cursor-pointer rounded-md p-1`}
-        onClick={(e) => onModeSelected('details')}
+        onClick={(e) => setMode('details')}
       >
         <PencilIcon></PencilIcon>Details
       </button>
       <div className='w-full border-b-2 my-1 border-texttwo dark:border-textonedark'></div>
       {EntitySchemaService.getRelations(schemaRoot, entitySchema, false).map((er) => (
         <button
-          key={er.name}
+          key={er.primaryNavigationName}
           disabled={!currentRecord || dirty}
-          className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 enabled:hover:cursor-pointer rounded-md p-1 ${
-            relation?.name == er.name ? 'enabled:bg-blue-300 enabled:dark:bg-blue-400' : ''
+          className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-green-200 enabled:dark:hover:bg-blue-300 enabled:hover:cursor-pointer rounded-md p-1 ${
+            relation?.primaryNavigationName == er.primaryNavigationName
+              ? 'enabled:bg-blue-300 enabled:dark:bg-blue-400'
+              : ''
           }`}
           onClick={() => onRelationSelected(er)}
           onDoubleClick={() => onRelationEnter(er)}
         >
-          <FolderIcon></FolderIcon> {er.name}
+          <FolderIcon></FolderIcon> {er.primaryNavigationName}
         </button>
       ))}
     </div>

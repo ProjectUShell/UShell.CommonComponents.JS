@@ -1,57 +1,59 @@
 import React, { useEffect, useState } from 'react'
 import RelationEditor from './RelationEditor'
 import { FieldSchema } from 'fusefx-modeldescription'
-import { RelationElement, LogicalExpression } from 'fusefx-repositorycontract'
+import { LogicalExpression } from 'fusefx-repositorycontract'
 import TrashIcon from '../../../_Icons/TrashIcon'
 import { getEmptyRelationElement, isRelationValid } from '../ExpressionService'
+import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 
 const LogicalExpressionTree: React.FC<{
   expression: LogicalExpression
   onUpdateExpression: (e: LogicalExpression) => void
   fields: FieldSchema[]
 }> = ({ expression, fields, onUpdateExpression }) => {
-  function onRelationUpdated(r: RelationElement, index: number) {
-    expression.atomArguments[index] = r
+  function onRelationUpdated(r: FieldPredicate, index: number) {
+    expression.predicates[index] = r
     onUpdateExpression({ ...expression })
     console.log('expression', expression)
     console.log('valid?', r)
   }
 
   function deleteRelation(index: number) {
-    const newAtomArguments: RelationElement[] = []
-    expression.atomArguments.forEach((r, i) => {
+    const newAtomArguments: FieldPredicate[] = []
+    expression.predicates.forEach((r, i) => {
       if (i !== index) {
         newAtomArguments.push(r)
       }
     })
-    expression.atomArguments = newAtomArguments
+    expression.predicates = newAtomArguments
     onUpdateExpression(expression)
   }
 
   function onExpressionUpdated(e: LogicalExpression, index: number) {
-    expression.expressionArguments[index] = e
+    expression.subTree[index] = e
     onUpdateExpression({ ...expression })
     console.log('expression', expression)
   }
 
-  function appendRelation(r: RelationElement, index: number, operator: 'or' | 'and' | 'not' | 'atom' | '') {
-    if (expression.operator == operator) {
-      expression.atomArguments.push(getEmptyRelationElement())
+  function appendRelation(r: FieldPredicate, index: number, operator: 'or' | 'and' | 'not' | 'atom' | '') {
+    if ((expression.matchAll ? 'and' : 'or') == operator) {
+      expression.predicates.push(getEmptyRelationElement())
       onUpdateExpression({ ...expression })
     } else {
       const newExpressionArgument: LogicalExpression = {
-        expressionArguments: [],
-        atomArguments: [r, getEmptyRelationElement()],
-        operator: operator,
+        subTree: [],
+        predicates: [r, getEmptyRelationElement()],
+        matchAll: operator == 'and',
+        negate: operator == 'not',
       }
-      const newAtomArguments: RelationElement[] = []
-      expression.atomArguments.forEach((r, i) => {
+      const newAtomArguments: FieldPredicate[] = []
+      expression.predicates.forEach((r, i) => {
         if (i !== index) {
           newAtomArguments.push(r)
         }
       })
-      expression.atomArguments = newAtomArguments
-      expression.expressionArguments.push(newExpressionArgument)
+      expression.predicates = newAtomArguments
+      expression.subTree.push(newExpressionArgument)
       onUpdateExpression({ ...expression })
     }
   }
@@ -60,14 +62,14 @@ const LogicalExpressionTree: React.FC<{
 
   return (
     <div className='bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md text-sm'>
-      {expression.atomArguments.map((a, i) => (
+      {expression.predicates.map((a, i) => (
         <div key={i}>
-          {i > 0 && <div>{expression.operator}</div>}
+          {i > 0 && <div>{expression.matchAll ? 'and' : 'or'}</div>}
           <div className='flex gap-1'>
             <RelationEditor
               fields={fields}
               initialRelation={a}
-              onUpdateRelation={(r: RelationElement) => onRelationUpdated(r, i)}
+              onUpdateRelation={(r: FieldPredicate) => onRelationUpdated(r, i)}
             ></RelationEditor>
 
             {isRelationValid(a) && (
@@ -86,12 +88,12 @@ const LogicalExpressionTree: React.FC<{
           </div>
         </div>
       ))}
-      {expression.atomArguments.length >= 0 && expression.expressionArguments.length > 0 && (
-        <div>{expression.operator}</div>
+      {expression.predicates.length >= 0 && expression.subTree.length > 0 && (
+        <div>{expression.matchAll ? 'and' : 'or'}</div>
       )}
-      {expression.expressionArguments.map((e, i) => (
+      {expression.subTree.map((e, i) => (
         <div key={i}>
-          {i > 0 && <div>{expression.operator}</div>}
+          {i > 0 && <div>{expression.matchAll ? 'and' : 'or'}</div>}
           <LogicalExpressionTree
             fields={fields}
             expression={e}

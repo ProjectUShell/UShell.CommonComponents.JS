@@ -1,11 +1,11 @@
 import { LogicalExpression } from 'fusefx-repositorycontract'
 
 export function getSelectedValues(filter: LogicalExpression): any[] {
-  if (!filter || !filter.atomArguments || filter.atomArguments.length == 0) {
+  if (!filter || !filter.predicates || filter.predicates.length == 0) {
     return []
   }
-  if (filter.atomArguments[0].relation != 'in') {
-    return []
-  }
-  return filter.atomArguments[0].value
+  // if (filter.predicates[0].operator != 'in') {
+  return []
+  // }
+  // return filter.predicates[0].value
 }

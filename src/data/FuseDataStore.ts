@@ -11,34 +11,27 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     this._Url = url
   }
 
-  private loadSchemaRoot(): Promise<SchemaRoot> {
+  init(): Promise<void> {
     return FuseConnector.getEntitySchema(this._Url).then((sr) => {
       if (!sr) {
         throw 'no SchemaRoot'
       }
       this._SchemaRoot = sr
-      return sr
     })
   }
 
-  getSchemaRoot(): Promise<SchemaRoot> {
+  getSchemaRoot(): SchemaRoot {
     if (this._SchemaRoot) {
-      return new Promise<SchemaRoot>((resolve, reject) => {
-        resolve(this._SchemaRoot!)
-      })
+      return this._SchemaRoot
     }
-    return this.loadSchemaRoot().then((sr) => sr)
+    throw 'no SchemaRoot'
   }
 
-  tryGetDataSource(enityName: string): Promise<IDataSource | null> {
-    console.log('tryGetDataSource', enityName)
-    return this.getSchemaRoot().then((sr) => {
-      console.log('sr', sr)
-      const es: EntitySchema | undefined = sr.entities.find((e) => e.name == enityName)
-      if (!es) {
-        return null
-      }
-      return GetFuseDatasource(this._Url, es)
-    })
+  tryGetDataSource(enityName: string): IDataSource | null {
+    const es: EntitySchema | undefined = this.getSchemaRoot().entities.find((e) => e.name == enityName)
+    if (!es) {
+      return null
+    }
+    return GetFuseDatasource(this._Url, es)
   }
 }

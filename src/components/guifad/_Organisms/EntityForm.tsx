@@ -1,26 +1,65 @@
-import React, { useState } from 'react'
-import { IDataSource } from 'ushell-modulebase'
+import React, { useEffect, useState } from 'react'
+import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
 import FloppyDiskIcon from '../../../_Icons/FloppyDiskIcon'
 import Group from '../_Atoms/Group'
 import InputField from '../_Atoms/InputField'
-import { lowerFirstLetter } from '../../../utils/StringUtils'
-import { FieldSchema } from 'fusefx-modeldescription'
+import { getForeignKeyValue, getValue, lowerFirstLetter, setValue } from '../../../utils/StringUtils'
+import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import XMarkIcon from '../../../_Icons/XMarkIcon'
+import { IndexSchema } from 'fusefx-modeldescription'
+import { EntitySchemaService } from '../../../data/EntitySchemaService'
+import DropdownSelect from '../../../_Atoms/DropdownSelect'
+import LookUpSelect from '../_Molecules/LookUpSelect'
 
 const EntityForm: React.FC<{
   dataSource: IDataSource
   className?: string
+  dataSourceManager: IDataSourceManagerBase
   entity: any
   dirty: boolean
   setDirty: (d: boolean) => void
   onChange: (updatedEntity: any) => void
-}> = ({ dataSource, className, entity, dirty, setDirty, onChange }) => {
+}> = ({ dataSourceManager, dataSource, className, entity, dirty, setDirty, onChange }) => {
+  console.log('EntityForm entity', entity)
+
+  // states
   const [currentEntity, setCurrentEntity] = useState({ ...entity })
+  const [fkRelations, setFkRelations] = useState<RelationSchema[]>([])
+  const [fieldsToDisplay, setFieldsToDisplay] = useState<FieldSchema[]>([])
+
+  // effects
+  useEffect(() => {
+    const nonLookupfkRelations: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
+      dataSourceManager.getSchemaRoot(),
+      (r: RelationSchema) => r.foreignEntityName == dataSource.entitySchema!.name && !r.isLookupRelation,
+    )
+
+    const fkRelationsToSet: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
+      dataSourceManager.getSchemaRoot(),
+      (r: RelationSchema) => r.foreignEntityName == dataSource.entitySchema!.name && r.isLookupRelation,
+    )
+    setFkRelations(fkRelationsToSet)
+    const fieldsToSet: FieldSchema[] = dataSource.entitySchema!.fields.filter((f) => {
+      const nonLookupfkRelationForField: RelationSchema | undefined = nonLookupfkRelations.find(
+        (r) => r.foreignKeyIndexName == f.name,
+      )
+      const fkRelationForField: RelationSchema | undefined = fkRelationsToSet.find(
+        (r) => r.foreignKeyIndexName == f.name,
+      )
+      const primaryKey: IndexSchema | undefined = dataSource.entitySchema!.indices.find((i) =>
+        i.memberFieldNames.includes(f.name),
+      )
+      return !fkRelationForField && !nonLookupfkRelationForField && !primaryKey && !f.dbGeneratedIdentity
+    })
+    setFieldsToDisplay(fieldsToSet)
+  }, [dataSourceManager, dataSource])
 
   function save() {
+    console.log('EntityForm save', currentEntity)
     dataSource.entityUpdateMethod(currentEntity).then((newEntry: any) => {
-      console.log('new Record', newEntry)
-      onChange(newEntry)
+      if (newEntry) {
+        onChange(newEntry)
+      }
     })
   }
 
@@ -30,15 +69,25 @@ const EntityForm: React.FC<{
     if (field.type == 'Int32') {
       newValue = Number.parseInt(newValue)
     }
-    currentEntity[lowerFirstLetter(lowerFirstLetter(field.name))] = newValue
-    console.log('new entity', currentEntity)
+    setValue(currentEntity, field.name, newValue)
+    setCurrentEntity({ ...currentEntity })
+  }
+
+  function changeLookUpValues(l: RelationSchema, keyValues: any) {
+    setDirty(true)
+
+    currentEntity[l.foreignNavigationName] = { label: '', key: keyValues }
+    setCurrentEntity({ ...currentEntity })
+    console.log('currentEntity after option set', currentEntity)
   }
 
   function cancel() {
     console.log('cancel', entity)
-    setCurrentEntity(entity)
+    setCurrentEntity({ ...entity })
     setDirty(false)
   }
+  console.log('entityform entity', entity)
+  console.log('entityform currentEntity', currentEntity)
 
   return (
     <div className='flex flex-col h-full'>
@@ -60,17 +109,29 @@ const EntityForm: React.FC<{
           <FloppyDiskIcon size={6}></FloppyDiskIcon>
         </button>
       </div>
-      <Group name={dataSource.entitySchema!.name} className='overflow-auto'>
+      <Group name={dataSource.entitySchema!.name} className='overflow-auto h-full'>
         <div className='my-2'>
-          {dataSource.entitySchema!.fields.map((f) => (
+          {fieldsToDisplay.map((f) => (
             <InputField
               className='my-2'
               key={f.name}
               inputType={f.type}
               label={f.name}
-              initialValue={currentEntity[lowerFirstLetter(f.name)]}
+              initialValue={getValue(currentEntity, f.name)}
               onValueChange={(newValue: any) => changeValue(f, newValue)}
             ></InputField>
+          ))}
+          {fkRelations.map((l, i) => (
+            <LookUpSelect
+              key={i}
+              lookUpRelation={l}
+              dataSourceManager={dataSourceManager}
+              // initialValue={currentEntity[lowerFirstLetter(l.foreignKeyIndexName)]}
+              initialValue={getForeignKeyValue(currentEntity, l)}
+              onValueSet={(keyValues: any) => {
+                changeLookUpValues(l, keyValues)
+              }}
+            ></LookUpSelect>
           ))}
         </div>
       </Group>

@@ -3,18 +3,19 @@ import React, { useEffect } from 'react'
 const Dropdown: React.FC<{
   setIsOpen?: (o: boolean) => void
   topOffset?: number
+  bottomOffset?: number
   rightOffset?: number
   leftOffset?: number
   children: any
   className?: string
-}> = ({ setIsOpen, children, topOffset, rightOffset, leftOffset }) => {
+}> = ({ setIsOpen, children, topOffset, bottomOffset, rightOffset, leftOffset }) => {
   useEffect(() => {
     if (!setIsOpen) {
       return
     }
     const handleEscape = (e: any) => {
-      console.log('Escape 2')
       if (e.key == 'Esc' || e.key == 'Escape') {
+        console.log('Escape 2')
         setIsOpen(false)
       }
     }
@@ -36,6 +37,22 @@ const Dropdown: React.FC<{
         <div className='top-6'></div>
         <div className='top-7'></div>
         <div className='top-8'></div>
+        <div className='-top-1'></div>
+        <div className='-top-2'></div>
+        <div className='-top-3'></div>
+        <div className='-top-4'></div>
+        <div className='-top-5'></div>
+        <div className='-top-6'></div>
+        <div className='-top-7'></div>
+        <div className='-top-8'></div>
+        <div className='bottom-1'></div>
+        <div className='bottom-2'></div>
+        <div className='bottom-3'></div>
+        <div className='bottom-4'></div>
+        <div className='bottom-5'></div>
+        <div className='bottom-6'></div>
+        <div className='bottom-7'></div>
+        <div className='bottom-8'></div>
         <div className='-top-1'></div>
         <div className='-top-2'></div>
         <div className='-top-3'></div>
@@ -82,7 +99,12 @@ const Dropdown: React.FC<{
     )
   }
 
-  const topOffsetCss: string = topOffset ? (topOffset > 0 ? `top-${topOffset}` : `-top-${-topOffset}`) : 'top-0'
+  let topOffsetCss: string = topOffset ? (topOffset > 0 ? `top-${topOffset}` : `-top-${-topOffset}`) : 'top-0'
+  let bottomOffsetCss: string = bottomOffset
+    ? bottomOffset > 0
+      ? `bottom-${bottomOffset}`
+      : `-bottom-${-bottomOffset}`
+    : ''
   let rightOffsetCss: string = rightOffset
     ? rightOffset > 0
       ? `right-${rightOffset}`
@@ -97,6 +119,17 @@ const Dropdown: React.FC<{
   if (rightOffset && !leftOffset) {
     leftOffsetCss = ''
   }
+
+  if (bottomOffset && !topOffset) {
+    topOffsetCss = ''
+  }
+
+  if (topOffset && !bottomOffset) {
+    bottomOffsetCss = ''
+  }
+
+  console.log('topOffsetCss', topOffsetCss)
+  console.log('bottomOffsetCss', bottomOffsetCss)
   return (
     <>
       {setIsOpen && (
@@ -107,7 +140,7 @@ const Dropdown: React.FC<{
       )}
       <div className='relative'>
         <div
-          className={`absolute z-40 ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} flex justify-center items-center w-max`}
+          className={`absolute z-40 ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}  flex justify-center items-center w-max`}
         >
           <div className='rounded-md'>{children}</div>
         </div>

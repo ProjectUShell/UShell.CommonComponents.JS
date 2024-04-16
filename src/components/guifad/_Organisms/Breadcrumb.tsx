@@ -1,5 +1,6 @@
 import React from 'react'
 import { ObjectGraphNode } from '../ObjectGraphNode'
+import { EntitySchemaService } from '../../../data/EntitySchemaService'
 
 const Breadcrumb: React.FC<{
   nodes: ObjectGraphNode[]
@@ -8,12 +9,14 @@ const Breadcrumb: React.FC<{
 }> = ({ nodes, onNodeClick, dirty }) => {
   function getLabel(n: ObjectGraphNode, i: number) {
     if (i >= nodes.length - 1) {
-      return n.dataSource.entitySchema!.namePlural
+      return n.dataSource.entitySchema!.name
     }
     const succNode: ObjectGraphNode = nodes[i + 1]
     return succNode.parent?.record
-      ? n.dataSource.entitySchema!.name + ' ' + succNode.parent.record['id']
-      : n.dataSource.entitySchema!.namePlural
+      ? n.dataSource.entitySchema!.name +
+          ' ' +
+          EntitySchemaService.getLabelByEntitySchema(succNode.dataSource.entitySchema!, succNode.parent.record)
+      : n.dataSource.entitySchema!.name
   }
 
   function getCallingRecord(i: number): any {

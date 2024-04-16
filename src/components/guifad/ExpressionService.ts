@@ -1,15 +1,16 @@
-import { LogicalExpression, RelationElement } from 'fusefx-repositorycontract'
+import { LogicalExpression } from 'fusefx-repositorycontract'
+import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 
 export function isExpressionValid(e: LogicalExpression | null | undefined) {
   if (!e) {
     return false
   }
-  for (const r of e.atomArguments) {
+  for (const r of e.predicates) {
     if (!isRelationValid(r)) {
       return false
     }
   }
-  for (const r of e.expressionArguments) {
+  for (const r of e.subTree) {
     if (!isExpressionValid(r)) {
       return false
     }
@@ -17,20 +18,19 @@ export function isExpressionValid(e: LogicalExpression | null | undefined) {
   return true
 }
 
-export function isRelationValid(r: RelationElement) {
+export function isRelationValid(r: FieldPredicate) {
   console.log('valid?', r)
-  return r.propertyName && r.relation
+  return r.fieldName && r.operator
 }
 
-export function getEmptyRelationElement(): RelationElement {
-  const result = new RelationElement()
+export function getEmptyRelationElement(): FieldPredicate {
+  const result = new FieldPredicate()
   result.value = ''
   return result
 }
 export function getEmptyExpression(): LogicalExpression {
   const result = new LogicalExpression()
-  result.expressionArguments = []
-  result.atomArguments = [getEmptyRelationElement()]
-  result.operator = ''
+  result.subTree = []
+  result.predicates = [getEmptyRelationElement()]
   return result
 }

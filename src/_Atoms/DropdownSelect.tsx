@@ -12,29 +12,38 @@ const DropdownSelect: React.FC<{
   onOptionSet?: (o: Option | null) => void
   placeholder?: string
   forceFocus?: boolean
-}> = ({ options, initialOption, onOptionSet, placeholder, forceFocus }) => {
+  topOffset?: number
+  bottomOffset?: number
+}> = ({ options, initialOption, onOptionSet, placeholder, forceFocus, topOffset, bottomOffset }) => {
+  console.log('initalOption', initialOption)
+
   const [open, setOpen] = useState(false)
-  const [currentOption, setCurrentOption] = useState('')
+  const [currentOption, setCurrentOption] = useState<Option | null | undefined>(initialOption)
+  const [currentText, setCurrentText] = useState<string>(initialOption ? initialOption.label : '')
   const [currentMatchingOptions, setcurrentMatchingOptions] = useState<Option[]>([])
-  const [currentMatchingOptionIndex, setCurrentMatchingOptionIndex] = useState<number | null>(0)
+  const [currentMatchingOptionIndex, setCurrentMatchingOptionIndex] = useState<number | null>(null)
 
   useEffect(() => {
     console.log('initial Option changed', initialOption)
     if (!initialOption) {
       return
     }
-    setCurrentOption(initialOption.value)
+    setCurrentOption(initialOption)
+    setCurrentText(initialOption.label)
   }, [initialOption])
 
   useEffect(() => {
+    console.log('options changed', options)
     setcurrentMatchingOptions(options)
   }, [options])
 
   function trySetCurrentOption(fn: string) {
+    console.log('trySetCurrentOption')
+    setCurrentText(fn)
     if (!fn || fn == '') {
       setcurrentMatchingOptions(options)
       setCurrentMatchingOptionIndex(0)
-      setCurrentOption('')
+      setCurrentOption(null)
       notifyOptionSet(null)
       return
     }
@@ -48,7 +57,11 @@ const DropdownSelect: React.FC<{
       return
     }
 
-    setCurrentOption(fn)
+    const singleMatchingOption: Option | undefined = options.find((o) => o.label == fn)
+    if (singleMatchingOption) {
+      setCurrentOption(singleMatchingOption)
+      notifyOptionSet(singleMatchingOption)
+    }
     setCurrentMatchingOptionIndex(0)
   }
 
@@ -61,6 +74,7 @@ const DropdownSelect: React.FC<{
   }
 
   function isCurrentMatchingOption(option: Option) {
+    console.log('currentMatchingOptions', currentMatchingOptions)
     if (currentMatchingOptionIndex == null || currentMatchingOptions.length == 0) {
       return false
     }
@@ -111,27 +125,32 @@ const DropdownSelect: React.FC<{
       if (currentMatchingOptionIndex == null) {
         return
       }
-      setCurrentOption(currentMatchingOptions[currentMatchingOptionIndex].label)
+      setCurrentOption(currentMatchingOptions[currentMatchingOptionIndex])
+      setCurrentText(currentMatchingOptions[currentMatchingOptionIndex].label)
       notifyOptionSet(currentMatchingOptions[currentMatchingOptionIndex])
       setOpen(false)
     }
     if (e.key == 'Escape') {
       e.preventDefault()
       e.stopPropagation()
-      if (currentOption == '') {
+      if (!currentOption) {
         setOpen(false)
         return
       }
-      console.log('Escape 1')
-      setCurrentOption('')
+      setCurrentOption(null)
       setCurrentMatchingOptionIndex(0)
       setcurrentMatchingOptions(options)
       setOpen(true)
     }
+    if (e.key == 'Backspace') {
+      // e.preventDefault()
+      console.log('yeah')
+    }
   }
 
   function onSelectOption(o: Option) {
-    setCurrentOption(o.label)
+    setCurrentOption(o)
+    setCurrentText(o.label)
     notifyOptionSet(o)
     setOpen(false)
   }
@@ -146,7 +165,7 @@ const DropdownSelect: React.FC<{
           autoFocus={forceFocus}
           className='w-full focus:z-50 relative outline-none bg-backgroundonw dark:bg-backgroundonedark'
           onClick={(e) => setOpen(true)}
-          value={currentOption}
+          value={currentText}
           type='text'
           onChange={(e) => trySetCurrentOption(e.target.value)}
           onKeyDown={(e) => onInputKeyDown(e)}
@@ -165,15 +184,19 @@ const DropdownSelect: React.FC<{
       {/* </button> */}
       {open && (
         <div className={`${open ? '' : ''}`}>
-          <Dropdown leftOffset={0} topOffset={1}>
-            <div className='bg-backgroundone dark:bg-backgroundonedark w-64 p-1'>
+          <Dropdown
+            leftOffset={0}
+            bottomOffset={bottomOffset ? bottomOffset : undefined}
+            topOffset={topOffset ? topOffset : undefined}
+          >
+            <div className='bg-backgroundfour dark:bg-backgroundfourdark w-64 p-1 rounded-md'>
               {options
                 .filter((o) => currentMatchingOptions.length == 0 || isMatchingOption(o))
                 .map((o) => (
                   <div
                     className={`cursor-default hover:bg-blue-200 p-0.5 rounded-md  ${
-                      isCurrentMatchingOption(o) && 'bg-green-300'
-                    }`}
+                      isCurrentMatchingOption(o) && 'bg-backgroundtwo dark:bg-backgroundtwodark'
+                    } ${currentOption?.value == o.value ? 'bg-green-300 dark:bg-green-600' : ''}`}
                     key={o.value}
                     onMouseDown={(e) => {
                       e.preventDefault()

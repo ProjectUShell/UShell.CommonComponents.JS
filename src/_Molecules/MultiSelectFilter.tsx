@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import MultiSelect, { Option } from '../_Atoms/MultiSelect'
-import { RelationElement, LogicalExpression } from 'fusefx-repositorycontract'
+import { LogicalExpression } from 'fusefx-repositorycontract'
 import { TableColumn } from '../components/guifad/_Organisms/Table'
+import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 
 const MultiSelectFilter: React.FC<{
   column: TableColumn
@@ -16,16 +17,16 @@ const MultiSelectFilter: React.FC<{
       onFilterChanged(null)
       return
     }
-    const relation: RelationElement = {
-      propertyName: column.fieldName,
-      relation: 'in',
-      propertyType: column.fieldType,
-      value: sv,
+    const relation: FieldPredicate = {
+      fieldName: column.fieldName,
+      operator: 'in',
+      value: sv.toLocaleString(),
     }
     const columnFilter: LogicalExpression = {
-      expressionArguments: [],
-      operator: 'atom',
-      atomArguments: [relation],
+      subTree: [],
+      predicates: [relation],
+      matchAll: true,
+      negate: false,
     }
     onFilterChanged(columnFilter)
   }

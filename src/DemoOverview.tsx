@@ -53,7 +53,7 @@ const Demo = () => {
         }}
       >
         {currentComponent == 'GuifadDemo' && (
-          <GuifadFuse rootEntityName='Employee' fuseUrl='https://localhost:7204/Api/'></GuifadFuse>
+          <GuifadFuse rootEntityName='Person' fuseUrl='https://localhost:7288/AccountManagement/'></GuifadFuse>
         )}
         {currentComponent == 'TableDemo' && <TableDemo></TableDemo>}
         {currentComponent == 'DropdownButtonDemo' && <DropdownButtonDemo></DropdownButtonDemo>}

@@ -10,7 +10,6 @@ import Dropdown from '../../../_Atoms/Dropdown'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import MinusCircleIcon from '../../../_Icons/MinusCircleIcon'
 import PaddingDummy from '../../../_Atoms/PaddingDummy'
-import { Resizable } from 'react-resizable'
 import { TableColumn } from './Table'
 
 export interface ExpandableProps {

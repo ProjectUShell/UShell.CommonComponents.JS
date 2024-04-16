@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { FieldSchema } from 'fusefx-modeldescription'
-import { RelationElement, LogicalExpression } from 'fusefx-repositorycontract'
+import { LogicalExpression } from 'fusefx-repositorycontract'
 import TrashIcon from '../../../_Icons/TrashIcon'
 import LogicalExpressionTree from './LogicalExpressionTree'
 import { getEmptyExpression, isExpressionValid } from '../ExpressionService'
+import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 
 function getCopy(e: LogicalExpression | null): LogicalExpression {
   if (e == null) {
     return getEmptyExpression()
   }
   const result: LogicalExpression = new LogicalExpression()
-  result.atomArguments = []
-  result.expressionArguments = []
-  result.operator = e.operator
-  for (let i = 0; i < e.atomArguments.length; i++) {
-    const atomArgument = new RelationElement()
-    atomArgument.propertyName = e.atomArguments[i].propertyName
-    atomArgument.propertyType = e.atomArguments[i].propertyType
-    atomArgument.relation = e.atomArguments[i].relation
-    atomArgument.value = e.atomArguments[i].value
-    result.atomArguments.push(atomArgument)
+  result.predicates = []
+  result.subTree = []
+
+  for (let i = 0; i < e.predicates.length; i++) {
+    const atomArgument = new FieldPredicate()
+    atomArgument.fieldName = e.predicates[i].fieldName
+    atomArgument.operator = e.predicates[i].operator
+    atomArgument.value = e.predicates[i].value
+    result.predicates.push(atomArgument)
   }
-  for (let i = 0; i < e.expressionArguments.length; i++) {
-    result.expressionArguments.push(getCopy(e.expressionArguments[i]))
+  for (let i = 0; i < e.subTree.length; i++) {
+    result.subTree.push(getCopy(e.subTree[i]))
   }
   return result
 }

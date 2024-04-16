@@ -21,7 +21,7 @@ const PreviewTable: React.FC<{
     //   return { label: f.name }
     // })
     const newColumns: TableColumn[] = [
-      { label: 'Label', fieldName: 'id', fieldType: 'number', key: 'label', maxCellLength: 30 },
+      { label: 'Label', fieldName: 'label', fieldType: 'text', key: 'label', maxCellLength: 40 },
     ]
     setColumns(newColumns)
     const parentFilter: LogicalExpression | null =
@@ -29,20 +29,21 @@ const PreviewTable: React.FC<{
         ? getParentFilter(schemaRoot, parentSchema, dataSource.entitySchema!, parent)
         : null
     console.log('parentFilter', parentFilter)
-    dataSource.getRecords(parentFilter ? parentFilter : undefined).then((r) => {
+    dataSource.getEntityRefs(parentFilter ? parentFilter : undefined, { pageNumber: 1, pageSize: 10 }).then((r) => {
+      console.log('preview records', r.page)
       setRecords(r.page)
     })
   }, [dataSource, parentSchema, parent, schemaRoot])
 
   return (
-    <div className='h-full w-64 pr-1 mt-1'>
+    <div className='h-full w-full max-w-full pr-1 mt-1'>
       <Table
         columns={columns}
         records={records}
         onRecordEnter={onRecordEnter}
-        className=''
+        className='overflow-auto'
         pagingParams={{ pageSize: 10, pageNumber: 1 }}
-        totalCount={0}
+        totalCount={10}
       ></Table>
     </div>
   )

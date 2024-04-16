@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { RelationElement } from 'fusefx-repositorycontract'
+
 import Dropdown from '../../../_Atoms/Dropdown'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import { FieldSchema } from 'fusefx-modeldescription'
+import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 
 export interface IFieldInfo {
   name: string
@@ -10,8 +11,8 @@ export interface IFieldInfo {
 }
 
 const RelationEditor: React.FC<{
-  initialRelation: RelationElement
-  onUpdateRelation: (r: RelationElement) => void
+  initialRelation: FieldPredicate
+  onUpdateRelation: (r: FieldPredicate) => void
   fields: IFieldInfo[]
 }> = ({ initialRelation, fields, onUpdateRelation }) => {
   console.log('initialRelation', initialRelation)
@@ -21,8 +22,8 @@ const RelationEditor: React.FC<{
   const [currrentValue, setCurrentValue] = useState<string>('')
 
   useEffect(() => {
-    setCurrentField({ name: initialRelation.propertyName, type: initialRelation.propertyType })
-    setCurrentOperator(initialRelation.relation)
+    setCurrentField({ name: initialRelation.fieldName, type: 'string' })
+    setCurrentOperator(initialRelation.operator)
     setCurrentValue(initialRelation.value)
   }, [initialRelation])
 
@@ -38,9 +39,8 @@ const RelationEditor: React.FC<{
     console.log('notifyRelationUpdate', { field: field, operator: operator, value: value })
     if (field && operator && value) {
       onUpdateRelation({
-        propertyName: field.name,
-        propertyType: field.type,
-        relation: operator,
+        fieldName: field.name,
+        operator: operator,
         value: value,
       })
     }
