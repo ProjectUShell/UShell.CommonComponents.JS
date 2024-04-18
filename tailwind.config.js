@@ -34,8 +34,8 @@ module.exports = {
     },
   },
   variants: {
-    backgroundColor: ({ after }) => after(['disabled', 'enabled']),
-    textColor: ({ after }) => after(['disabled', 'enabled']),
+    backgroundColor: ({ after }) => after(['disabled']),
+    textColor: ({ after }) => after(['disabled']),
   },
   plugins: [],
 }

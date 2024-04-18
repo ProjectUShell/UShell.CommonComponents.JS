@@ -41,7 +41,7 @@ const StructureNavigation: React.FC<{
       </h1>
       <button
         disabled={dirty}
-        className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 enabled:hover:cursor-pointer rounded-md p-1 ${
+        className={`w-full flex gap-1 disabled:text-gray-400  disabled:hover:cursor-default hover:cursor-pointer rounded-md p-1 ${
           mode == 'list' ? 'bg-blue-300 dark:bg-blue-400' : ''
         }`}
         onClick={(e) => setMode('list')}
@@ -50,9 +50,9 @@ const StructureNavigation: React.FC<{
       </button>
       <button
         disabled={!currentRecord}
-        className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-blue-200 enabled:dark:hover:bg-blue-300 ${
+        className={`w-full flex gap-1 disabled:text-gray-400  ${
           mode == 'details' ? 'bg-blue-300 dark:bg-blue-400' : ''
-        } enabled:hover:cursor-pointer rounded-md p-1`}
+        } disabled:hover:cursor-default hover:cursor-pointer rounded-md p-1`}
         onClick={(e) => setMode('details')}
       >
         <PencilIcon></PencilIcon>Details
@@ -62,9 +62,9 @@ const StructureNavigation: React.FC<{
         <button
           key={er.primaryNavigationName}
           disabled={!currentRecord || dirty}
-          className={`w-full flex gap-1 disabled:text-gray-400 enabled:hover:bg-green-200 enabled:dark:hover:bg-blue-300 enabled:hover:cursor-pointer rounded-md p-1 ${
+          className={`w-full flex gap-1 disabled:text-gray-400 disabled:hover:cursor-default hover:cursor-pointer rounded-md p-1 ${
             relation?.primaryNavigationName == er.primaryNavigationName
-              ? 'enabled:bg-blue-300 enabled:dark:bg-blue-400'
+              ? 'disabled:bg-backgroundone bg-blue-300 disabled:dark:bg-backgroundonedark dark:bg-blue-400'
               : ''
           }`}
           onClick={() => onRelationSelected(er)}

@@ -95,7 +95,9 @@ const EntityForm: React.FC<{
         {dirty && (
           <button
             disabled={!dirty}
-            className='rounded-md p-1 enabled:text-red-400 enabled:dark:text-red-400 enabled:hover:bg-backgroundone enabled:dark:hover:bg-backgroundonedark'
+            className='rounded-md p-1
+              text-red-400 dark:text-red-400 disabled:text-textone disabled:dark:text-textonedark
+               hover:bg-backgroundone dark:hover:bg-backgroundonedark disabled:bg-backgroundtwo disabeld:dark:bg-backgroundtwodark'
             onClick={(e) => cancel()}
           >
             <XMarkIcon size={6}></XMarkIcon>
@@ -103,7 +105,8 @@ const EntityForm: React.FC<{
         )}
         <button
           disabled={!dirty}
-          className='rounded-md p-1 enabled:text-blue-400 enabled:dark:text-blue-400 enabled:hover:bg-backgroundone enabled:dark:hover:bg-backgroundonedark'
+          className='rounded-md p-1 disabled:text-textone disabled:dark:text-textonedark text-blue-400
+           dark:text-blue-400 disabled:hover:bg-backgroundtwo hover:bg-backgroundone disabled:dark:hover:bg-backgroundtwodark dark:hover:bg-backgroundonedark'
           onClick={(e) => save()}
         >
           <FloppyDiskIcon size={6}></FloppyDiskIcon>

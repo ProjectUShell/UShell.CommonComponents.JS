@@ -34,7 +34,9 @@ const Breadcrumb: React.FC<{
           {i > 0 && <span className='py-1 m-1'>/</span>}
           <button
             disabled={dirty}
-            className='rounded-md py-1 m-1 enabled:hover:bg-backgroundone enabled:dark:hover:bg-backgroundonedark'
+            className='rounded-md p-1 m-1
+             disabled:hover:bg-backgroundthree hover:bg-backgroundone
+              disabled:dark:hover:bg-backgroundthreedark dark:hover:bg-backgroundonedark'
             onClick={() => onNodeClick(nodes.slice(0, i + 1), getCallingRecord(i))}
           >
             {getLabel(n, i)}
