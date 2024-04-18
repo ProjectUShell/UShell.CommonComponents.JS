@@ -1,26 +1,48 @@
-import { GetFuseDatasource } from '../components/guifad/FuseDatasource'
 import { IDataSource, IDataStore, IDataSourceManagerBase } from 'ushell-modulebase'
-import { FuseConnector } from './FuseConnector'
 import { SchemaRoot, EntitySchema } from 'fusefx-modeldescription'
+import { FuseDataSourceBody } from './FuseDataSourceBody'
+import { FuseDataSourceRoute } from './FuseDataSourceRoute'
 
 export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
-  private _Url: string
-  private _SchemaRoot: SchemaRoot | null = null
+  public static async post(url: string, bodyParams: any = null): Promise<any> {
+    const rawResponse = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: bodyParams ? JSON.stringify(bodyParams) : null,
+    })
+    const content = await rawResponse.json()
 
-  constructor(url: string) {
+    return content
+  }
+
+  private _Url: string
+  private _EntitySchemaUrl: string
+  private _SchemaRoot: SchemaRoot | null = null
+  private _RoutePattern = 'body'
+
+  constructor(url: string, routePattern: string, entitySchemaUrl?: string) {
     this._Url = url
+    this._EntitySchemaUrl = entitySchemaUrl ? entitySchemaUrl : url
+    this._RoutePattern = routePattern == 'body' ? 'body' : 'route'
   }
 
   init(): Promise<void> {
-    return FuseConnector.getEntitySchema(this._Url).then((sr) => {
-      if (!sr) {
-        throw 'no SchemaRoot'
-      }
-      this._SchemaRoot = sr
-    })
+    return FuseDataStore.post(this._EntitySchemaUrl + `GetSchemaRoot`)
+      .then((r) => r.return)
+      .catch((e) => null)
+      .then((sr) => {
+        if (!sr) {
+          throw 'no SchemaRoot'
+        }
+        this._SchemaRoot = sr
+      })
   }
 
   getSchemaRoot(): SchemaRoot {
+    console.log('getSchemaRoot', this._SchemaRoot)
     if (this._SchemaRoot) {
       return this._SchemaRoot
     }
@@ -32,6 +54,10 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     if (!es) {
       return null
     }
-    return GetFuseDatasource(this._Url, es)
+    if (this._RoutePattern == 'body') {
+      return new FuseDataSourceBody(this._Url, es)
+    } else {
+      return new FuseDataSourceRoute(this._Url, es)
+    }
   }
 }

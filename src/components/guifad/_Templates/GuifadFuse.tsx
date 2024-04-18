@@ -5,13 +5,17 @@ import { FuseDataStore } from '../../../data/FuseDataStore'
 
 const queryClient = new QueryClient()
 
-const GuifadFuse: React.FC<{ fuseUrl: string; rootEntityName: string }> = ({ fuseUrl, rootEntityName }) => {
+const GuifadFuse: React.FC<{ fuseUrl: string; routePattern: string; rootEntityName: string }> = ({
+  fuseUrl,
+  routePattern,
+  rootEntityName,
+}) => {
   const [dataStore, setDataStore] = useState<FuseDataStore | null | undefined>(undefined)
 
   useEffect(() => {
-    const ds: FuseDataStore = new FuseDataStore(fuseUrl)
+    const ds: FuseDataStore = new FuseDataStore(fuseUrl, routePattern)
     ds.init().then(() => setDataStore(ds))
-  }, [fuseUrl])
+  }, [fuseUrl, routePattern])
 
   if (dataStore == null) return <div>No Entity Schema!</div>
   if (dataStore == undefined) return <div>Loading...</div>

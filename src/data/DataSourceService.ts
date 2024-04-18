@@ -31,14 +31,16 @@ export function getParentFilter(
   const parentIdName: string = parentIdFieldName || 'id'
   console.log('parentIdName', parentIdName)
   console.log('parent', parent)
-  const parentKeyValue = parent[parentIdName]
+  const parentKeyValue =
+    parentIdName in Object.keys(parent) ? parent[parentIdName] : parent[lowerFirstLetter(parentIdName)]
+  console.log('parentKeyValue', parentIdName)
   if (!parentKeyValue) return result
   result.predicates.push({
     operator: '=',
     fieldName: childToParentRelation.foreignKeyIndexName,
-    value: parent[parentIdName],
+    value: parentKeyValue,
   })
-  console.log('result', result)
+  console.log('parentfilter result', result)
   return result
 }
 
@@ -62,10 +64,18 @@ export function setParentId(
 
   const pk: IndexSchema | null = pks.length > 0 ? pks[0] : null
 
+  //TODO_RWE support multiple key fields
   const parentIdFieldName: string | null = !pk || pk.memberFieldNames.length !== 1 ? null : pk.memberFieldNames[0]
 
   const parentIdName: string = parentIdFieldName || 'id'
   console.log('parentIdName', parentIdName)
   console.log('parent', parent)
-  child[childToParentRelation.foreignKeyIndexName] = parent[parentIdName]
+  const foreignKeyIndexField: FieldSchema | undefined = childSchema.fields.find(
+    (f) => f.name == childToParentRelation.foreignKeyIndexName,
+  )
+  if (foreignKeyIndexField) {
+    child[foreignKeyIndexField.name] = parent[parentIdName]
+  } else {
+    child[childToParentRelation.foreignNavigationName] = parent
+  }
 }
