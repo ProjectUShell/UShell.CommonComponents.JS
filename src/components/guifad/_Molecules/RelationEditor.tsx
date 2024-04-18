@@ -15,8 +15,6 @@ const RelationEditor: React.FC<{
   onUpdateRelation: (r: FieldPredicate) => void
   fields: IFieldInfo[]
 }> = ({ initialRelation, fields, onUpdateRelation }) => {
-  console.log('initialRelation', initialRelation)
-
   const [currrentField, setCurrentField] = useState<IFieldInfo | null>(null)
   const [currentOperator, setCurrentOperator] = useState<string>('')
   const [currrentValue, setCurrentValue] = useState<string>('')
@@ -64,11 +62,7 @@ const RelationEditor: React.FC<{
   function onValueSet(v: string) {
     setCurrentValue(v)
     notifyRelationUpdated(currrentField, currentOperator, v)
-    console.log('value set', v)
   }
-
-  console.log('initialRelation RE', initialRelation)
-  console.log('currrentOperator', currentOperator)
 
   return (
     <div className='flex p-2 gap-1 bg-backgroundthree dark:bg-backgroundthreedark rounded-sm'>

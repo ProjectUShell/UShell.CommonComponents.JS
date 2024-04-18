@@ -15,8 +15,6 @@ const DropdownSelect: React.FC<{
   topOffset?: number
   bottomOffset?: number
 }> = ({ options, initialOption, onOptionSet, placeholder, forceFocus, topOffset, bottomOffset }) => {
-  console.log('initalOption', initialOption)
-
   const [open, setOpen] = useState(false)
   const [currentOption, setCurrentOption] = useState<Option | null | undefined>(initialOption)
   const [currentText, setCurrentText] = useState<string>(initialOption ? initialOption.label : '')
@@ -24,7 +22,6 @@ const DropdownSelect: React.FC<{
   const [currentMatchingOptionIndex, setCurrentMatchingOptionIndex] = useState<number | null>(null)
 
   useEffect(() => {
-    console.log('initial Option changed', initialOption)
     if (!initialOption) {
       return
     }
@@ -33,12 +30,10 @@ const DropdownSelect: React.FC<{
   }, [initialOption])
 
   useEffect(() => {
-    console.log('options changed', options)
     setcurrentMatchingOptions(options)
   }, [options])
 
   function trySetCurrentOption(fn: string) {
-    console.log('trySetCurrentOption')
     setCurrentText(fn)
     if (!fn || fn == '') {
       setcurrentMatchingOptions(options)
@@ -74,7 +69,6 @@ const DropdownSelect: React.FC<{
   }
 
   function isCurrentMatchingOption(option: Option) {
-    console.log('currentMatchingOptions', currentMatchingOptions)
     if (currentMatchingOptionIndex == null || currentMatchingOptions.length == 0) {
       return false
     }
@@ -144,7 +138,6 @@ const DropdownSelect: React.FC<{
     }
     if (e.key == 'Backspace') {
       // e.preventDefault()
-      console.log('yeah')
     }
   }
 
@@ -154,8 +147,6 @@ const DropdownSelect: React.FC<{
     notifyOptionSet(o)
     setOpen(false)
   }
-
-  console.log('current Match Index', currentMatchingOptionIndex)
 
   return (
     <div onBlur={(e) => setOpen(false)}>

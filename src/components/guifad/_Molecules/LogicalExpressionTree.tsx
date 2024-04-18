@@ -14,8 +14,6 @@ const LogicalExpressionTree: React.FC<{
   function onRelationUpdated(r: FieldPredicate, index: number) {
     expression.predicates[index] = r
     onUpdateExpression({ ...expression })
-    console.log('expression', expression)
-    console.log('valid?', r)
   }
 
   function deleteRelation(index: number) {

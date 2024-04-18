@@ -59,8 +59,6 @@ const EntityTable: React.FC<{
 
   useEffect(() => {
     const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
-      console.log('f', f)
-      console.log('schemaRoot', schemaRoot)
       const foreignKeyRelations: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
         schemaRoot,
         (r) => r.foreignEntityName == entitySchema.name && r.foreignKeyIndexName == f.name,
@@ -68,7 +66,6 @@ const EntityTable: React.FC<{
 
       if (foreignKeyRelations.length > 0) {
         const fkRelation: RelationSchema = foreignKeyRelations[0]
-        console.log('foreignKeyRelations', foreignKeyRelations)
         if (fkRelation.foreignNavigationName && fkRelation.foreignNavigationName != '') {
           return {
             label: fkRelation.foreignNavigationName,
@@ -76,7 +73,6 @@ const EntityTable: React.FC<{
             fieldType: f.type,
             key: fkRelation.foreignNavigationName,
             onRenderCell: (cellValue) => {
-              console.log('cellValue', cellValue)
               return <div>{EntitySchemaService.getLabel(schemaRoot, fkRelation.primaryEntityName, cellValue)}</div>
             },
           }
@@ -103,7 +99,6 @@ const EntityTable: React.FC<{
         result.subTree.push(parentFilter)
       }
     }
-    console.log('filter result', result)
     return result
   }
 
@@ -157,7 +152,6 @@ const EntityTable: React.FC<{
               fields={dataSource.entitySchema!.fields}
               onUpdateExpression={(e) => {
                 setFilter((f) => [...f, e])
-                console.log('filter', e)
               }}
             ></LogicalExpressionEditor>
           </DropdownButton>

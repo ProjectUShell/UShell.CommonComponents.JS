@@ -29,18 +29,13 @@ export function getParentFilter(
 
   const parentIdFieldType: string = parentField ? parentField.type : 'int'
   const parentIdName: string = parentIdFieldName || 'id'
-  console.log('parentIdName', parentIdName)
-  console.log('parent', parent)
-  const parentKeyValue =
-    parentIdName in Object.keys(parent) ? parent[parentIdName] : parent[lowerFirstLetter(parentIdName)]
-  console.log('parentKeyValue', parentIdName)
+  const parentKeyValue = parentIdName in parent ? parent[parentIdName] : parent[lowerFirstLetter(parentIdName)]
   if (!parentKeyValue) return result
   result.predicates.push({
     operator: '=',
     fieldName: childToParentRelation.foreignKeyIndexName,
     value: parentKeyValue,
   })
-  console.log('parentfilter result', result)
   return result
 }
 
@@ -51,9 +46,7 @@ export function setParentId(
   childSchema: EntitySchema,
   parent: any,
 ): void {
-  console.log('setParentId parentSchema', parentSchema)
   const pks: IndexSchema[] = parentSchema.indices.filter((i) => i.name === parentSchema.primaryKeyIndexName)
-  console.log('setParentId pks', pks)
   const childToParentRelations: RelationSchema[] = schemaRoot.relations.filter(
     (r) => r.primaryEntityName === parentSchema.name && r.foreignEntityName === childSchema.name,
   )
@@ -68,13 +61,13 @@ export function setParentId(
   const parentIdFieldName: string | null = !pk || pk.memberFieldNames.length !== 1 ? null : pk.memberFieldNames[0]
 
   const parentIdName: string = parentIdFieldName || 'id'
-  console.log('parentIdName', parentIdName)
-  console.log('parent', parent)
+
   const foreignKeyIndexField: FieldSchema | undefined = childSchema.fields.find(
     (f) => f.name == childToParentRelation.foreignKeyIndexName,
   )
   if (foreignKeyIndexField) {
-    child[foreignKeyIndexField.name] = parent[parentIdName]
+    child[foreignKeyIndexField.name] =
+      parentIdName in parent ? parent[parentIdName] : parent[lowerFirstLetter(parentIdName)]
   } else {
     child[childToParentRelation.foreignNavigationName] = parent
   }

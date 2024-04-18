@@ -30,8 +30,6 @@ const StructureNavigation: React.FC<{
   className,
   dirty,
 }) => {
-  console.log('StructureNav schemaRoot', schemaRoot)
-
   return (
     <div className={`text-md ${className}`}>
       <h1 className='mb-2 font-bold'>

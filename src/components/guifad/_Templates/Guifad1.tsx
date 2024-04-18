@@ -66,7 +66,6 @@ const Guifad1: React.FC<{
 
   function createRecord(): void {
     const newRecord: any = node.dataSource.entityFactoryMethod()
-    console.log('createRecord node', node)
     if (node.parent) {
       setParentId(
         newRecord,
@@ -76,7 +75,6 @@ const Guifad1: React.FC<{
         node.parent.record,
       )
     }
-    console.log('new Record', newRecord)
     setCurrentRecord(newRecord)
     setCurrentMode('details')
     // return dataSource.entityUpdateMethod(dataSource.entityFactoryMethod()).then((newEntry: any) => {
@@ -108,7 +106,6 @@ const Guifad1: React.FC<{
             <PreviewTable
               dataSource={dataSourceManager.tryGetDataSource(currentRelation.foreignEntityName)!}
               onRecordEnter={(r: any) => {
-                console.log('record enter')
                 enterRelation(currentRelation, r)
               }}
               onSelectedRecordsChange={(sr: any[]) => {

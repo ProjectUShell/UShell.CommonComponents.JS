@@ -19,7 +19,6 @@ export function isExpressionValid(e: LogicalExpression | null | undefined) {
 }
 
 export function isRelationValid(r: FieldPredicate) {
-  console.log('valid?', r)
   return r.fieldName && r.operator
 }
 

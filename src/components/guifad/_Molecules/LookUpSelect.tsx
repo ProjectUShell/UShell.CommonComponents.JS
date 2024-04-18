@@ -12,8 +12,6 @@ const LookUpSelect: React.FC<{
 }> = ({ dataSourceManager, lookUpRelation, initialValue, onValueSet }) => {
   const [lookUpList, setLookUpList] = useState<{ label: string; value: string }[]>([])
 
-  console.log('initialValue lookup', initialValue)
-
   useEffect(() => {
     const dataSource: IDataSource | null = dataSourceManager.tryGetDataSource(lookUpRelation.primaryEntityName)
     if (!dataSource) {
@@ -21,7 +19,6 @@ const LookUpSelect: React.FC<{
       return
     }
     dataSource.getEntityRefs().then((r: PaginatedList) => {
-      console.log('lookups', r)
       setLookUpList(
         r.page.map((e: any) => {
           return { value: e.key, label: e.label }

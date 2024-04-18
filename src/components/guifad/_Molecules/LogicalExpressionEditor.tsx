@@ -48,7 +48,6 @@ const LogicalExpressionEditor: React.FC<{
       className='bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md shadow-md'
       onKeyDown={(e) => {
         if (e.key == 'Enter' && isExpressionValid(expression)) {
-          console.log('finish LE1')
           onUpdateExpression(expression!)
         }
       }}
@@ -56,7 +55,6 @@ const LogicalExpressionEditor: React.FC<{
       <LogicalExpressionTree
         fields={fields}
         onUpdateExpression={(e) => {
-          console.log('onUpdateExpression LE1', e)
           setExpression(e)
         }}
         expression={expression}
@@ -65,7 +63,6 @@ const LogicalExpressionEditor: React.FC<{
         <button
           className='bg-backgroundthree dark:bg-backgroundthreedark p-1 rounded-md disabled:text-gray-400'
           onClick={(e) => {
-            console.log('cancel LE1', originalExpression)
             setExpression(originalExpression ? getCopy(originalExpression) : getEmptyExpression())
           }}
         >
@@ -75,7 +72,6 @@ const LogicalExpressionEditor: React.FC<{
           className='bg-backgroundthree dark:bg-backgroundthreedark p-1 rounded-md disabled:text-gray-400'
           disabled={!isExpressionValid(expression)}
           onClick={(e) => {
-            console.log('finish LE1')
             onUpdateExpression(expression!)
           }}
         >

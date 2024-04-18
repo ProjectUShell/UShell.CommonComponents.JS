@@ -12,9 +12,7 @@ const InputField: React.FC<{
   useEffect(() => {
     function getInitialValue(initialValue: any): any {
       if (inputType == 'DateTime') {
-        const r = new Date('2024-04-12').toISOString().replace(/T.*/, '')
-        // const r = '2024-04-12'
-        console.log('getInitialValue', r)
+        const r = new Date(initialValue).toISOString().replace(/T.*/, '')
         return r
       }
       return initialValue
@@ -32,8 +30,6 @@ const InputField: React.FC<{
     return 'text'
   }
 
-  console.log('currentValue label', label)
-  console.log('currentValue', currentValue)
   return (
     <div className={className}>
       <label className='block mb-2 text-xs font-medium'>{label}</label>

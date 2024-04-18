@@ -20,8 +20,6 @@ const EntityForm: React.FC<{
   setDirty: (d: boolean) => void
   onChange: (updatedEntity: any) => void
 }> = ({ dataSourceManager, dataSource, className, entity, dirty, setDirty, onChange }) => {
-  console.log('EntityForm entity', entity)
-
   // states
   const [currentEntity, setCurrentEntity] = useState({ ...entity })
   const [fkRelations, setFkRelations] = useState<RelationSchema[]>([])
@@ -55,7 +53,6 @@ const EntityForm: React.FC<{
   }, [dataSourceManager, dataSource])
 
   function save() {
-    console.log('EntityForm save', currentEntity)
     dataSource.entityUpdateMethod(currentEntity).then((newEntry: any) => {
       if (newEntry) {
         onChange(newEntry)
@@ -77,17 +74,14 @@ const EntityForm: React.FC<{
     setDirty(true)
 
     currentEntity[l.foreignNavigationName] = { label: '', key: keyValues }
+    currentEntity[l.foreignKeyIndexName] = keyValues
     setCurrentEntity({ ...currentEntity })
-    console.log('currentEntity after option set', currentEntity)
   }
 
   function cancel() {
-    console.log('cancel', entity)
     setCurrentEntity({ ...entity })
     setDirty(false)
   }
-  console.log('entityform entity', entity)
-  console.log('entityform currentEntity', currentEntity)
 
   return (
     <div className='flex flex-col h-full'>

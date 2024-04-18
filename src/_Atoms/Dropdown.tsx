@@ -15,7 +15,6 @@ const Dropdown: React.FC<{
     }
     const handleEscape = (e: any) => {
       if (e.key == 'Esc' || e.key == 'Escape') {
-        console.log('Escape 2')
         setIsOpen(false)
       }
     }
@@ -128,8 +127,6 @@ const Dropdown: React.FC<{
     bottomOffsetCss = ''
   }
 
-  console.log('topOffsetCss', topOffsetCss)
-  console.log('bottomOffsetCss', bottomOffsetCss)
   return (
     <>
       {setIsOpen && (

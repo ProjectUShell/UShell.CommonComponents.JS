@@ -28,9 +28,7 @@ const PreviewTable: React.FC<{
       parentSchema && parent && schemaRoot
         ? getParentFilter(schemaRoot, parentSchema, dataSource.entitySchema!, parent)
         : null
-    console.log('parentFilter', parentFilter)
     dataSource.getEntityRefs(parentFilter ? parentFilter : undefined, { pageNumber: 1, pageSize: 10 }).then((r) => {
-      console.log('preview records', r.page)
       setRecords(r.page)
     })
   }, [dataSource, parentSchema, parent, schemaRoot])
