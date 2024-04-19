@@ -42,7 +42,6 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   }
 
   getSchemaRoot(): SchemaRoot {
-    console.log('getSchemaRoot', this._SchemaRoot)
     if (this._SchemaRoot) {
       return this._SchemaRoot
     }

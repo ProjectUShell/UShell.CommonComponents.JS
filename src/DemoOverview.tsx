@@ -15,7 +15,7 @@ const queryClient = new QueryClient()
 const Demo = () => {
   const [currentComponent, setCurrentComponent] = useState<string>('TableDemo')
 
-  const demoComponents: string[] = ['TableDemo', 'GuifadDemo', 'DropdownButtonDemo']
+  const demoComponents: string[] = ['TableDemo', 'GuifadDemo', 'GuifadDemo2', 'DropdownButtonDemo']
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -52,9 +52,9 @@ const Demo = () => {
           ],
         }}
       >
-        {currentComponent == 'GuifadDemo' && (
+        {(currentComponent == 'GuifadDemo' || currentComponent == 'GuifadDemo2') && (
           <GuifadFuse
-            rootEntityName='Depot'
+            rootEntityName={currentComponent == 'GuifadDemo' ? 'Depot' : 'Fund'}
             routePattern='route'
             fuseUrl='https://localhost:7288/FundsManagement/'
           ></GuifadFuse>

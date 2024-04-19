@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 import Breadcrumb from '../_Organisms/Breadcrumb'
 import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
@@ -19,6 +19,11 @@ const Guifad1: React.FC<{
   const [currentRelation, setCurrentRelation] = useState<RelationSchema | null>(null)
   const [currentMode, setCurrentMode] = useState<'list' | 'details'>('list')
   const [dirty, setDirty] = useState(false)
+
+  // useEffects
+  useEffect(() => {
+    setCurrentNodes([rootNode])
+  }, [rootNode])
 
   // guards
   if (!rootNode.dataSource) {

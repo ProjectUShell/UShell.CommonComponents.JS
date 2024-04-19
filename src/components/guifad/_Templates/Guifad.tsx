@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
 import Guifad1 from './Guifad1'
 import { ObjectGraphNode } from '../ObjectGraphNode'
@@ -12,15 +12,20 @@ const Guifad: React.FC<{
   rootEntityName: string
 }> = ({ dataSourceManager, rootEntityName }) => {
   const [rootDataSource, setRootDataSource] = useState<IDataSource | null>(null)
-  useEffect(() => {
-    setRootDataSource(dataSourceManager.tryGetDataSource(rootEntityName))
+
+  // useEffect(() => {
+  //   setRootDataSource(dataSourceManager.tryGetDataSource(rootEntityName))
+  // }, [rootEntityName, dataSourceManager])
+
+  const rootDataSource2 = useMemo(() => {
+    return dataSourceManager.tryGetDataSource(rootEntityName)
   }, [rootEntityName, dataSourceManager])
 
-  if (!rootDataSource) {
+  if (!rootDataSource2) {
     return <div>No Root Entity</div>
   }
   const rootNode: ObjectGraphNode = {
-    dataSource: rootDataSource,
+    dataSource: rootDataSource2,
     parent: null,
     record: null,
   }

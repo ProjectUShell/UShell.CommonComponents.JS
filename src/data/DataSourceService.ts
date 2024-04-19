@@ -13,7 +13,6 @@ export function getParentFilter(
     (r) => r.primaryEntityName === parentSchema.name && r.foreignEntityName === childSchema.name,
   )
   if (childToParentRelations.length <= 0) {
-    console.log('no childToParentRelations')
     return null
   }
   const childToParentRelation: RelationSchema = childToParentRelations[0]

@@ -125,8 +125,6 @@ const EntityTable: React.FC<{
 
   if (error) return <div>An error has occurred: {error.toString()}</div> //+ error.message
 
-  console.warn('data1', data!)
-
   function addRecord() {
     onCreateRecord()
   }

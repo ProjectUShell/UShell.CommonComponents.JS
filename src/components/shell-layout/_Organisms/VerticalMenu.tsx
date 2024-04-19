@@ -29,7 +29,6 @@ const VerticalMenuInternal: React.FC<{
 }> = ({ menuItems, depth, triggerRerender, shellMenuState }) => {
   function onToggleFolderCollapse(itemId: string) {
     toggleFolderCollapse(shellMenuState!, itemId).then((newState: ShellMenuState) => {
-      console.log('toggleFolderCollapse', newState)
       // setShellMenuState(newState);
       triggerRerender()
     })

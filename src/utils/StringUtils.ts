@@ -9,7 +9,6 @@ export function lowerFirstLetter(s: string) {
 }
 
 export function getValue(entity: any, fieldName: string): any | undefined {
-  console.log('getValue', { e: entity, fn: fieldName })
   if (Object.keys(entity).find((k) => k == fieldName) !== undefined) {
     return entity[fieldName]
   }

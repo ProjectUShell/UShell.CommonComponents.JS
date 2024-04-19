@@ -72,7 +72,6 @@ export class FuseConnector {
 
   static async deleteEntities(url: string, entityName: string, idsToDelete: any[][]): Promise<any> {
     return this.post(url + `DeleteEntities`, { entityName: entityName, idsToDelete: idsToDelete }).then((r) => {
-      console.log('res del', r)
       return r
     })
   }
