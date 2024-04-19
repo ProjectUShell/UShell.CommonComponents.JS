@@ -28,7 +28,7 @@ export function getParentFilter(
     : undefined
 
   const parentIdFieldType: string = parentField ? parentField.type : 'int'
-  const parentIdName: string = parentIdFieldName || 'id'
+  const parentIdName: string = parentIdFieldName || 'Id'
   const parentKeyValue = parentIdName in parent ? parent[parentIdName] : parent[lowerFirstLetter(parentIdName)]
   if (!parentKeyValue) return result
   result.predicates.push({

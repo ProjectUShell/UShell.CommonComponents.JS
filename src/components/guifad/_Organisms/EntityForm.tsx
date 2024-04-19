@@ -44,8 +44,11 @@ const EntityForm: React.FC<{
       const fkRelationForField: RelationSchema | undefined = fkRelationsToSet.find(
         (r) => r.foreignKeyIndexName == f.name,
       )
-      const primaryKey: IndexSchema | undefined = dataSource.entitySchema!.indices.find((i) =>
-        i.memberFieldNames.includes(f.name),
+      const primaryKey: IndexSchema | undefined = dataSource.entitySchema!.indices.find(
+        (i) =>
+          i.name == dataSource.entitySchema!.primaryKeyIndexName &&
+          i.memberFieldNames.includes(f.name) &&
+          (f.name == 'Id' || f.name == 'id'),
       )
       return !fkRelationForField && !nonLookupfkRelationForField && !primaryKey && !f.dbGeneratedIdentity
     })
