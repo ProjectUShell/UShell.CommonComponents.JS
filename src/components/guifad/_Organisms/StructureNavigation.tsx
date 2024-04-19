@@ -39,7 +39,7 @@ const StructureNavigation: React.FC<{
       </h1>
       <button
         disabled={dirty}
-        className={`w-full flex gap-1 disabled:text-gray-400  disabled:hover:cursor-default hover:cursor-pointer rounded-md p-1 ${
+        className={`w-full flex gap-1 ${dirty ? 'hover:cursor-pointer text-gray-400' : ''} rounded-md p-1 ${
           mode == 'list' ? 'bg-blue-300 dark:bg-blue-400' : ''
         }`}
         onClick={(e) => setMode('list')}
@@ -48,9 +48,9 @@ const StructureNavigation: React.FC<{
       </button>
       <button
         disabled={!currentRecord}
-        className={`w-full flex gap-1 disabled:text-gray-400  ${
-          mode == 'details' ? 'bg-blue-300 dark:bg-blue-400' : ''
-        } disabled:hover:cursor-default hover:cursor-pointer rounded-md p-1`}
+        className={`w-full flex gap-1 ${
+          !currentRecord ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
+        } ${mode == 'details' ? 'bg-blue-300 dark:bg-blue-400' : ''} rounded-md p-1`}
         onClick={(e) => setMode('details')}
       >
         <PencilIcon></PencilIcon>Details
@@ -60,15 +60,20 @@ const StructureNavigation: React.FC<{
         <button
           key={er.primaryNavigationName}
           disabled={!currentRecord || dirty}
-          className={`w-full flex gap-1 disabled:text-gray-400 disabled:hover:cursor-default hover:cursor-pointer rounded-md p-1 ${
+          className={`w-full flex gap-1 ${
+            !currentRecord || dirty ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
+          } rounded-md p-1 ${
             relation?.primaryNavigationName == er.primaryNavigationName
-              ? 'disabled:bg-backgroundone bg-blue-300 disabled:dark:bg-backgroundonedark dark:bg-blue-400'
+              ? !currentRecord || dirty
+                ? ''
+                : 'bg-blue-300 dark:bg-blue-400'
               : ''
           }`}
           onClick={() => onRelationSelected(er)}
           onDoubleClick={() => onRelationEnter(er)}
         >
-          <FolderIcon></FolderIcon> {er.primaryNavigationName}
+          <FolderIcon></FolderIcon>{' '}
+          {er.primaryNavigationName && er.primaryNavigationName != '' ? er.primaryNavigationName : er.foreignEntityName}
         </button>
       ))}
     </div>
