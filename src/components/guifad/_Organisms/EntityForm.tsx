@@ -102,9 +102,11 @@ const EntityForm: React.FC<{
         )}
         {!dirty && (
           <button
-            disabled={!dirty}
+            disabled={dirty}
             className={`rounded-md p-1
-              ${dirty ? 'text-red-400 dark:text-red-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark' : ''}`}
+              ${
+                !dirty ? 'text-blue-400 dark:text-blue-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark' : ''
+              }`}
             onClick={(e) => setDirty(true)}
           >
             <BoltIcon size={6}></BoltIcon>
