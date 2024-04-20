@@ -10,6 +10,7 @@ import { IndexSchema } from 'fusefx-modeldescription'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import LookUpSelect from '../_Molecules/LookUpSelect'
+import BoltIcon from '../../../_Icons/BoltIcon'
 
 const EntityForm: React.FC<{
   dataSource: IDataSource
@@ -97,6 +98,16 @@ const EntityForm: React.FC<{
             onClick={(e) => cancel()}
           >
             <XMarkIcon size={6}></XMarkIcon>
+          </button>
+        )}
+        {!dirty && (
+          <button
+            disabled={!dirty}
+            className={`rounded-md p-1
+              ${dirty ? 'text-red-400 dark:text-red-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark' : ''}`}
+            onClick={(e) => setDirty(true)}
+          >
+            <BoltIcon size={6}></BoltIcon>
           </button>
         )}
         <button

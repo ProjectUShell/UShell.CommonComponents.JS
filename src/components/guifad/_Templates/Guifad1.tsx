@@ -23,6 +23,9 @@ const Guifad1: React.FC<{
   // useEffects
   useEffect(() => {
     setCurrentNodes([rootNode])
+    setCurrentRecord(null)
+    setCurrentRelation(null)
+    setCurrentMode('list')
   }, [rootNode])
 
   // guards

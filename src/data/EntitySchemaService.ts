@@ -12,6 +12,8 @@ export class EntitySchemaService {
     if (!entitySchema) return '???'
     const labelField: FieldSchema | undefined = entitySchema.fields.find((f: FieldSchema) => f.identityLabel)
     if (labelField) return getValue(entity, labelField.name)
+    if (entity.name) return entity.name
+    if (entity.Name) return entity.Name
     if (entity.id) return entity.id
     if (entity.Id) return entity.Id
 
