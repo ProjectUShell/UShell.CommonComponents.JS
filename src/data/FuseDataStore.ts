@@ -38,7 +38,7 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   }
 
   init(): Promise<void> {
-    return FuseDataStore.post(this._Url, this._EntitySchemaUrl + `GetSchemaRoot`)
+    return FuseDataStore.post(this._TokenSourceUid, this._EntitySchemaUrl + `GetSchemaRoot`)
       .then((r) => r.return)
       .catch((e) => null)
       .then((sr) => {
