@@ -4,15 +4,15 @@ import { FuseDataSourceBody } from './FuseDataSourceBody'
 import { FuseDataSourceRoute } from './FuseDataSourceRoute'
 
 export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
-  public static getTokenMethod: ((dataSourceUid: string) => string) | null = null
+  public static getTokenMethod: ((tokenSourceUid: string) => string) | null = null
 
-  public static async post(dataSourceUid: string, url: string, bodyParams: any = null): Promise<any> {
+  public static async post(tokenSourceUid: string, url: string, bodyParams: any = null): Promise<any> {
     const headers: any = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     }
     if (FuseDataStore.getTokenMethod) {
-      headers['Authorization'] = FuseDataStore.getTokenMethod(dataSourceUid)
+      headers['Authorization'] = FuseDataStore.getTokenMethod(tokenSourceUid)
     }
     const rawResponse = await fetch(url, {
       method: 'POST',
@@ -28,11 +28,13 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   private _EntitySchemaUrl: string
   private _SchemaRoot: SchemaRoot | null = null
   private _RoutePattern = 'body'
+  private _TokenSourceUid = ''
 
-  constructor(url: string, routePattern: string, entitySchemaUrl?: string) {
+  constructor(url: string, routePattern: string, entitySchemaUrl?: string, tokenSourceUid?: string) {
     this._Url = url
     this._EntitySchemaUrl = entitySchemaUrl ? entitySchemaUrl : url
     this._RoutePattern = routePattern == 'body' ? 'body' : 'route'
+    this._TokenSourceUid = tokenSourceUid ? tokenSourceUid : ''
   }
 
   init(): Promise<void> {
@@ -60,9 +62,9 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
       return null
     }
     if (this._RoutePattern == 'body') {
-      return new FuseDataSourceBody(this._Url, es)
+      return new FuseDataSourceBody(this._Url, es, this._TokenSourceUid)
     } else {
-      return new FuseDataSourceRoute(this._Url, es)
+      return new FuseDataSourceRoute(this._Url, es, this._TokenSourceUid)
     }
   }
 }

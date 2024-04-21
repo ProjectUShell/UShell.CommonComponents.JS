@@ -6,32 +6,21 @@ import { FuseDataStore } from './FuseDataStore'
 export class FuseDataSourceBody implements IDataSource {
   private url: string
 
-  constructor(url: string, entitySchema: EntitySchema) {
+  constructor(url: string, entitySchema: EntitySchema, tokenSourceUid?: string) {
     this.url = url
     this.entitySchema = entitySchema
-  }
-
-  private async post(url: string, bodyParams: any = null): Promise<any> {
-    const rawResponse = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: bodyParams ? JSON.stringify(bodyParams) : null,
-    })
-    const content = await rawResponse.json()
-
-    return content
+    this.dataSourceUid = `${this.url}_${this.entitySchema?.name}`
+    this.tokenSourceUid = tokenSourceUid ? tokenSourceUid : ''
   }
 
   dataSourceUid = ''
+  tokenSourceUid = ''
   entitySchema?: EntitySchema | undefined
   entityFactoryMethod(): any {
     return {}
   }
   entityUpdateMethod(entity: any[]): Promise<boolean> {
-    return FuseDataStore.post(this.dataSourceUid, this.url + `AddOrUpdateEntity`, {
+    return FuseDataStore.post(this.tokenSourceUid, this.url + `AddOrUpdateEntity`, {
       entityName: this.entitySchema!.name,
       entity: entity,
     }).then((r) => {
@@ -42,7 +31,7 @@ export class FuseDataSourceBody implements IDataSource {
     })
   }
   entityInsertMethod(entity: any[]): Promise<boolean> {
-    return FuseDataStore.post(this.dataSourceUid, this.url + `AddOrUpdateEntity`, {
+    return FuseDataStore.post(this.tokenSourceUid, this.url + `AddOrUpdateEntity`, {
       entityName: this.entitySchema!.name,
       entity: entity,
     }).then((r) => {
@@ -54,7 +43,7 @@ export class FuseDataSourceBody implements IDataSource {
   }
   entityDeleteMethod(entity: any[]): Promise<boolean> {
     //TODO_RWE
-    return FuseDataStore.post(this.dataSourceUid, this.url + `DeleteEntities`, {
+    return FuseDataStore.post(this.tokenSourceUid, this.url + `DeleteEntities`, {
       entityName: this.entitySchema!.name,
       idsToDelete: entity,
     }).then((r) => {
@@ -73,7 +62,7 @@ export class FuseDataSourceBody implements IDataSource {
     pagingParams?: PagingParams | undefined,
     sortingParams?: SortingField[] | undefined,
   ): Promise<PaginatedList> {
-    return FuseDataStore.post(this.dataSourceUid, this.url + `GetEntities`, {
+    return FuseDataStore.post(this.tokenSourceUid, this.url + `GetEntities`, {
       entityName: this.entitySchema!.name,
       filter: filter,
       limit: pagingParams?.pageSize,
@@ -91,7 +80,7 @@ export class FuseDataSourceBody implements IDataSource {
     pagingParams?: PagingParams | undefined,
     sortingParams?: SortingField[] | undefined,
   ): Promise<PaginatedList> {
-    return FuseDataStore.post(this.dataSourceUid, this.url + `GetEntityRefs`, {
+    return FuseDataStore.post(this.tokenSourceUid, this.url + `GetEntityRefs`, {
       entityName: this.entitySchema!.name,
       filter: filter,
       skip: pagingParams ? (pagingParams.pageNumber - 1) * pagingParams.pageSize : 0,
