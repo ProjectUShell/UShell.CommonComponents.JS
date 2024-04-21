@@ -31,7 +31,7 @@ export class FuseDataSourceBody implements IDataSource {
     return {}
   }
   entityUpdateMethod(entity: any[]): Promise<boolean> {
-    return FuseDataStore.post(this.url + `AddOrUpdateEntity`, {
+    return FuseDataStore.post(this.dataSourceUid, this.url + `AddOrUpdateEntity`, {
       entityName: this.entitySchema!.name,
       entity: entity,
     }).then((r) => {
@@ -42,7 +42,7 @@ export class FuseDataSourceBody implements IDataSource {
     })
   }
   entityInsertMethod(entity: any[]): Promise<boolean> {
-    return FuseDataStore.post(this.url + `AddOrUpdateEntity`, {
+    return FuseDataStore.post(this.dataSourceUid, this.url + `AddOrUpdateEntity`, {
       entityName: this.entitySchema!.name,
       entity: entity,
     }).then((r) => {
@@ -54,7 +54,7 @@ export class FuseDataSourceBody implements IDataSource {
   }
   entityDeleteMethod(entity: any[]): Promise<boolean> {
     //TODO_RWE
-    return FuseDataStore.post(this.url + `DeleteEntities`, {
+    return FuseDataStore.post(this.dataSourceUid, this.url + `DeleteEntities`, {
       entityName: this.entitySchema!.name,
       idsToDelete: entity,
     }).then((r) => {
@@ -73,7 +73,7 @@ export class FuseDataSourceBody implements IDataSource {
     pagingParams?: PagingParams | undefined,
     sortingParams?: SortingField[] | undefined,
   ): Promise<PaginatedList> {
-    return FuseDataStore.post(this.url + `GetEntities`, {
+    return FuseDataStore.post(this.dataSourceUid, this.url + `GetEntities`, {
       entityName: this.entitySchema!.name,
       filter: filter,
       limit: pagingParams?.pageSize,
@@ -91,7 +91,7 @@ export class FuseDataSourceBody implements IDataSource {
     pagingParams?: PagingParams | undefined,
     sortingParams?: SortingField[] | undefined,
   ): Promise<PaginatedList> {
-    return FuseDataStore.post(this.url + `GetEntityRefs`, {
+    return FuseDataStore.post(this.dataSourceUid, this.url + `GetEntityRefs`, {
       entityName: this.entitySchema!.name,
       filter: filter,
       skip: pagingParams ? (pagingParams.pageNumber - 1) * pagingParams.pageSize : 0,

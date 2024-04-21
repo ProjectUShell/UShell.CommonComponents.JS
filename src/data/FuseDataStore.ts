@@ -4,13 +4,19 @@ import { FuseDataSourceBody } from './FuseDataSourceBody'
 import { FuseDataSourceRoute } from './FuseDataSourceRoute'
 
 export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
-  public static async post(url: string, bodyParams: any = null): Promise<any> {
+  public static getTokenMethod: ((dataSourceUid: string) => string) | null = null
+
+  public static async post(dataSourceUid: string, url: string, bodyParams: any = null): Promise<any> {
+    const headers: any = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    }
+    if (FuseDataStore.getTokenMethod) {
+      headers['Authorization'] = FuseDataStore.getTokenMethod(dataSourceUid)
+    }
     const rawResponse = await fetch(url, {
       method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
+      headers: headers,
       body: bodyParams ? JSON.stringify(bodyParams) : null,
     })
     const content = await rawResponse.json()
@@ -30,7 +36,7 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   }
 
   init(): Promise<void> {
-    return FuseDataStore.post(this._EntitySchemaUrl + `GetSchemaRoot`)
+    return FuseDataStore.post(this._Url, this._EntitySchemaUrl + `GetSchemaRoot`)
       .then((r) => r.return)
       .catch((e) => null)
       .then((sr) => {

@@ -10,9 +10,12 @@ import { TableDemo, DropdownButtonDemo } from './demo'
 import TrashIcon from './_Icons/TrashIcon'
 import CogWheelIcon from './components/shell-layout/_Icons/CogWheelIcon'
 import XMarkIcon from './_Icons/XMarkIcon'
+import { FuseDataStore } from './data/FuseDataStore'
 
 const queryClient = new QueryClient()
 const Demo = () => {
+  FuseDataStore.getTokenMethod = () =>
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3MTM2OTg3NjYsImV4cCI6MTc0NTIzNDc2NiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.C-c7FWta-4pyjSZL1tnOlLdI6fFHM6d11VpWVrtJwqA'
   const [currentComponent, setCurrentComponent] = useState<string>('TableDemo')
 
   const demoComponents: string[] = ['TableDemo', 'GuifadDemo', 'GuifadDemo2', 'DropdownButtonDemo']
