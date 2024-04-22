@@ -18,7 +18,7 @@ const LookUpSelect: React.FC<{
       console.error('No DataSource for LookUps', lookUpRelation)
       return
     }
-    dataSource.getEntityRefs().then((r: PaginatedList) => {
+    dataSource.getEntityRefs(undefined, { pageNumber: 1, pageSize: 200 }, undefined).then((r: PaginatedList) => {
       setLookUpList(
         r.page.map((e: any) => {
           return { value: e.key, label: e.label }
