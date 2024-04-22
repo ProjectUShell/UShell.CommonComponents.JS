@@ -36,7 +36,7 @@ const LookUpSelect: React.FC<{
           onValueSet(o?.value)
         }}
         initialOption={lookUpList.find((li) => li.value == initialValue)}
-        bottomOffset={8}
+        topOffset={8}
       ></DropdownSelect>
     </div>
   )

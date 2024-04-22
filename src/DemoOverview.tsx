@@ -18,7 +18,7 @@ const Demo = () => {
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3MTM2OTg3NjYsImV4cCI6MTc0NTIzNDc2NiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.C-c7FWta-4pyjSZL1tnOlLdI6fFHM6d11VpWVrtJwqA'
   const [currentComponent, setCurrentComponent] = useState<string>('TableDemo')
 
-  const demoComponents: string[] = ['TableDemo', 'GuifadDemo', 'GuifadDemo2', 'DropdownButtonDemo']
+  const demoComponents: string[] = ['TableDemo', 'GuifadDemo', 'GuifadDemo2', 'GuifadDemo3', 'DropdownButtonDemo']
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -60,6 +60,13 @@ const Demo = () => {
             rootEntityName={currentComponent == 'GuifadDemo' ? 'Depot' : 'Fund'}
             routePattern='route'
             fuseUrl='https://localhost:7288/FundsManagement/'
+          ></GuifadFuse>
+        )}
+        {currentComponent == 'GuifadDemo3' && (
+          <GuifadFuse
+            rootEntityName='Person'
+            routePattern='body'
+            fuseUrl='https://localhost:7288/AccountManagement/'
           ></GuifadFuse>
         )}
         {currentComponent == 'TableDemo' && <TableDemo></TableDemo>}
