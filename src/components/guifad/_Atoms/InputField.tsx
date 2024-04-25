@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { EntitySchemaService } from '../../../data/EntitySchemaService'
 
 const InputField: React.FC<{
   className?: string
@@ -11,7 +12,7 @@ const InputField: React.FC<{
 
   useEffect(() => {
     function getInitialValue(initialValue: any): any {
-      const htmlType: string = getInputType(inputType)
+      const htmlType: string = EntitySchemaService.getHtmlInputType(inputType)
       if (htmlType == 'date') return new Date(initialValue).toISOString().replace(/T.*/, '')
       if (initialValue) return initialValue
 
@@ -23,22 +24,12 @@ const InputField: React.FC<{
     setCurrentValue(getInitialValue(initialValue))
   }, [initialValue, inputType])
 
-  function getInputType(propertyType: string) {
-    switch (propertyType) {
-      case 'Int32':
-        return 'number'
-      case 'DateTime':
-        return 'date'
-    }
-    return 'text'
-  }
-
   return (
     <div className={className}>
       <label className='block mb-2 text-xs font-medium'>{label}</label>
       <input
         className='text-sm rounded-md bg-backgroundone dark:bg-backgroundonedark focus:ring-blue-400 block w-full p-2.5'
-        type={getInputType(inputType)}
+        type={EntitySchemaService.getHtmlInputType(inputType)}
         value={currentValue}
         onChange={(e) => {
           onValueChange(e.target.value)

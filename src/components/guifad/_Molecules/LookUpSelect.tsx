@@ -43,7 +43,11 @@ const LookUpSelect: React.FC<{
   }
   return (
     <div>
-      <label className='block mb-2 text-xs font-medium'>{lookUpRelation.foreignNavigationName}</label>
+      <label className='block mb-2 text-xs font-medium'>
+        {lookUpRelation.foreignNavigationName && lookUpRelation.foreignNavigationName != ''
+          ? lookUpRelation.foreignNavigationName
+          : lookUpRelation.foreignEntityName}
+      </label>
       <DropdownSelect
         options={lookUpList}
         onOptionSet={(o) => {

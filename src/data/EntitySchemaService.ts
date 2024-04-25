@@ -96,4 +96,14 @@ export class EntitySchemaService {
       })
     })
   }
+
+  static getHtmlInputType(propertyType: string) {
+    switch (propertyType.toLocaleLowerCase()) {
+      case 'int32':
+        return 'number'
+      case 'datetime':
+        return 'date'
+    }
+    return 'text'
+  }
 }

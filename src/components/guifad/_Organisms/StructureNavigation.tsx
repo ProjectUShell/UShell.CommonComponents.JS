@@ -72,7 +72,7 @@ const StructureNavigation: React.FC<{
           onClick={() => onRelationSelected(er)}
           onDoubleClick={() => onRelationEnter(er)}
         >
-          <FolderIcon></FolderIcon>{' '}
+          <FolderIcon></FolderIcon>
           {er.primaryNavigationName && er.primaryNavigationName != '' ? er.primaryNavigationName : er.foreignEntityName}
         </button>
       ))}

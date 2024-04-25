@@ -55,7 +55,7 @@ const FilterTag: React.FC<{
         <div className='group rounded-md p-1 bg-backgroundone dark:bg-backgroundonedark flex gap-1'>
           <button className=''>{getLabel(filter)}</button>
           <button
-            className='hover:bg-backgroundtwo hover:dark:bg-backgroundtwodark invisible w-0 group-hover:visible group-hover:w-auto '
+            className='hover:bg-backgroundtwo hover:dark:bg-backgroundtwodark w-auto group-hover:visible group-hover:w-auto '
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()

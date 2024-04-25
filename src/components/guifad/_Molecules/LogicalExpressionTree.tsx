@@ -5,6 +5,7 @@ import { LogicalExpression } from 'fusefx-repositorycontract'
 import TrashIcon from '../../../_Icons/TrashIcon'
 import { getEmptyRelationElement, isRelationValid } from '../ExpressionService'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
+import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
 
 const LogicalExpressionTree: React.FC<{
   expression: LogicalExpression
@@ -28,7 +29,15 @@ const LogicalExpressionTree: React.FC<{
   }
 
   function onExpressionUpdated(e: LogicalExpression, index: number) {
-    expression.subTree[index] = e
+    if (e.predicates.length == 0 && e.subTree.length == 0) {
+      expression.subTree.splice(index, 1)
+    } else {
+      expression.subTree[index] = e
+    }
+    if (expression.predicates.length == 0 && expression.subTree.length == 1) {
+      expression.predicates = expression.subTree[0].predicates
+      expression.subTree = []
+    }
     onUpdateExpression({ ...expression })
     console.log('expression', expression)
   }
@@ -51,15 +60,19 @@ const LogicalExpressionTree: React.FC<{
         }
       })
       expression.predicates = newAtomArguments
-      expression.subTree.push(newExpressionArgument)
+      expression.subTree.unshift(newExpressionArgument)
       onUpdateExpression({ ...expression })
     }
   }
 
-  console.log('expression LE', expression)
+  // console.log('expression LE', expression)
 
   return (
     <div className='bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md text-sm'>
+      <div className='-ml-3'>
+        <ChevrodnDownIcon rotate={135}></ChevrodnDownIcon>
+      </div>
+
       {expression.predicates.map((a, i) => (
         <div key={i}>
           {i > 0 && <div>{expression.matchAll ? 'and' : 'or'}</div>}
@@ -86,7 +99,7 @@ const LogicalExpressionTree: React.FC<{
           </div>
         </div>
       ))}
-      {expression.predicates.length >= 0 && expression.subTree.length > 0 && (
+      {expression.predicates.length > 0 && expression.subTree.length > 0 && (
         <div>{expression.matchAll ? 'and' : 'or'}</div>
       )}
       {expression.subTree.map((e, i) => (
@@ -99,6 +112,9 @@ const LogicalExpressionTree: React.FC<{
           ></LogicalExpressionTree>
         </div>
       ))}
+      <div className='-ml-3'>
+        <ChevrodnDownIcon rotate={45}></ChevrodnDownIcon>
+      </div>
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ChevrodnDownIcon = () => {
+const ChevrodnDownIcon: React.FC<{ rotate?: number }> = ({ rotate }) => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -8,6 +8,7 @@ const ChevrodnDownIcon = () => {
       viewBox='0 0 24 24'
       strokeWidth={1.5}
       stroke='currentColor'
+      style={rotate ? { rotate: `${rotate}deg` } : {}}
       className='w-6 h-6'
     >
       <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />

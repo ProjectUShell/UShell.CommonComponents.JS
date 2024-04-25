@@ -11,6 +11,8 @@ function getCopy(e: LogicalExpression | null): LogicalExpression {
     return getEmptyExpression()
   }
   const result: LogicalExpression = new LogicalExpression()
+  result.matchAll = e.matchAll
+  result.negate = e.negate
   result.predicates = []
   result.subTree = []
 
@@ -41,7 +43,7 @@ const LogicalExpressionEditor: React.FC<{
 
   if (!expression) return <div>Nein</div>
 
-  // console.log('expression LE1', expression)
+  console.log('expression LE1', expression)
   // console.log('initialExpression LE1', intialExpression)
   return (
     <div
