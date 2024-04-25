@@ -2,6 +2,7 @@ import { EntitySchema } from 'fusefx-modeldescription'
 import { LogicalExpression, PagingParams, SortingField, PaginatedList } from 'fusefx-repositorycontract'
 import { IDataSource } from 'ushell-modulebase'
 import { FuseDataStore } from './FuseDataStore'
+import { EntitySchemaService } from './EntitySchemaService'
 
 export class FuseDataSourceBody implements IDataSource {
   private url: string
@@ -41,11 +42,12 @@ export class FuseDataSourceBody implements IDataSource {
       return r.return
     })
   }
-  entityDeleteMethod(entity: any[]): Promise<boolean> {
-    //TODO_RWE
-    return FuseDataStore.post(this.tokenSourceUid, this.url + `DeleteEntities`, {
+  entityDeleteMethod(entities: any[]): Promise<boolean> {
+    console.log('delete', entities)
+    const idsToDelete: any[] = entities.map((e) => EntitySchemaService.getPrimaryKey(this.entitySchema!, e))
+    return FuseDataStore.post(this.tokenSourceUid, this.url + `TryDeleteEntities`, {
       entityName: this.entitySchema!.name,
-      idsToDelete: entity,
+      keysToDelete: idsToDelete,
     }).then((r) => {
       console.log('res del', r)
       return r

@@ -7,14 +7,17 @@ const InputField: React.FC<{
   initialValue: any
   onValueChange: (newValue: any) => void
 }> = ({ className, label, inputType, initialValue, onValueChange }) => {
-  const [currentValue, setCurrentValue] = useState<any>(null)
+  const [currentValue, setCurrentValue] = useState<any>(initialValue)
 
   useEffect(() => {
     function getInitialValue(initialValue: any): any {
-      if (inputType == 'DateTime') {
-        const r = new Date(initialValue).toISOString().replace(/T.*/, '')
-        return r
-      }
+      const htmlType: string = getInputType(inputType)
+      if (htmlType == 'date') return new Date(initialValue).toISOString().replace(/T.*/, '')
+      if (initialValue) return initialValue
+
+      if (htmlType == 'text') return ''
+      if (htmlType == 'number') return 0
+
       return initialValue
     }
     setCurrentValue(getInitialValue(initialValue))
@@ -36,7 +39,7 @@ const InputField: React.FC<{
       <input
         className='text-sm rounded-md bg-backgroundone dark:bg-backgroundonedark focus:ring-blue-400 block w-full p-2.5'
         type={getInputType(inputType)}
-        value={currentValue || undefined}
+        value={currentValue}
         onChange={(e) => {
           onValueChange(e.target.value)
           setCurrentValue(e.target.value)

@@ -56,7 +56,7 @@ const EntityTable: React.FC<{
   }
 
   useEffect(() => {
-    setSelectedRecords([])
+    setSelectedRecords([selectedRecord])
   }, [selectedRecord])
 
   useEffect(() => {
@@ -135,10 +135,11 @@ const EntityTable: React.FC<{
   }
 
   function deleteRecords() {
+    console.log('deleteRecords', selectedRecords)
     if (selectedRecords.length == 0) {
       return
     }
-    dataSource.entityDeleteMethod(selectedRecords[0]).then((r) => {
+    dataSource.entityDeleteMethod(selectedRecords).then((r) => {
       setSelectedRecords([])
       onSelectedRecordsChange([])
       forceReload()
@@ -204,8 +205,9 @@ const EntityTable: React.FC<{
           getId={getId}
           onRecordEnter={onRecordEnter}
           onSelectedRecordsChange={(sr) => {
-            setSelectedRecords(sr)
+            console.log('selected change', sr)
             onSelectedRecordsChange(sr)
+            setSelectedRecords(sr)
           }}
           selectedRecord={selectedRecords.length > 1 ? null : selectedRecord}
           pagingParams={pagingParams}
