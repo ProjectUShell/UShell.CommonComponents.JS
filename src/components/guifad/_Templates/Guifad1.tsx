@@ -8,6 +8,7 @@ import EntityTable from '../_Organisms/EntityTable'
 import EntityForm from '../_Organisms/EntityForm'
 import { setParentId } from '../../../data/DataSourceService'
 import PreviewTable from '../_Organisms/PreviewTable'
+import ErrorPage from '../../../_Molecules/ErrorScreen'
 
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
@@ -30,11 +31,11 @@ const Guifad1: React.FC<{
 
   // guards
   if (!rootNode.dataSource) {
-    return <div>No DataSource</div>
+    return <ErrorPage messages={['No DataSource']}></ErrorPage>
   }
 
   if (!rootNode.dataSource.entitySchema) {
-    return <div>No EntitySchema</div>
+    return <ErrorPage messages={['No EntitySchema']}></ErrorPage>
   }
 
   const node: ObjectGraphNode = nodes[nodes.length - 1]
@@ -85,11 +86,7 @@ const Guifad1: React.FC<{
     }
     setCurrentRecord(newRecord)
     setCurrentMode('details')
-    // return dataSource.entityUpdateMethod(dataSource.entityFactoryMethod()).then((newEntry: any) => {
-    //   console.log('new Record', newEntry)
-    // })
   }
-
   return (
     <div className='w-full h-full flex overflow-hidden'>
       <aside

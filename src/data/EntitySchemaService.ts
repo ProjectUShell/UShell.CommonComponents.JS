@@ -1,6 +1,6 @@
-import { EntitySchema, SchemaRoot, RelationSchema, FieldSchema } from 'fusefx-modeldescription'
+import { EntitySchema, SchemaRoot, RelationSchema, FieldSchema, IndexSchema } from 'fusefx-modeldescription'
 import { IDataSource } from 'ushell-modulebase'
-import { getValue } from '../utils/StringUtils'
+import { capitalizeFirstLetter, getValue, lowerFirstLetter } from '../utils/StringUtils'
 
 export class EntitySchemaService {
   static getLabel(schemaRoot: SchemaRoot, primaryEntityName: string, entity: any): string {
@@ -30,6 +30,41 @@ export class EntitySchemaService {
     if (entity.Id) return entity.Id
 
     return '???'
+  }
+
+  static getPrimaryKeyProps(entitySchema: EntitySchema): string[] {
+    const primaryIndex: IndexSchema | undefined = entitySchema.indices.find(
+      (i) => i.name == entitySchema.primaryKeyIndexName,
+    )
+    if (!primaryIndex) {
+      return [entitySchema.primaryKeyIndexName]
+    }
+    return primaryIndex.memberFieldNames
+  }
+
+  static getPrimaryKey(entitySchema: EntitySchema, entity: any): any {
+    const props: string[] = this.getPrimaryKeyProps(entitySchema)
+    if (props.length == 0) return undefined
+    if (props.length == 1) {
+      const id: string = props[0]
+      if (id in entity) return entity[id]
+      if (capitalizeFirstLetter(id) in entity) return entity[capitalizeFirstLetter(id)]
+      if (lowerFirstLetter(id) in entity) return entity[lowerFirstLetter(id)]
+      return undefined
+    }
+    const result: any = {}
+    props.forEach((p, i) => {
+      let v: any = undefined
+      if (p in entity) {
+        v = entity[p]
+      } else if (capitalizeFirstLetter(p) in entity) {
+        v = entity(capitalizeFirstLetter(p))
+      } else if (lowerFirstLetter(p) in entity) {
+        v = entity(lowerFirstLetter(p))
+      }
+      result['key' + i + 1] = v
+    })
+    return result
   }
 
   static getRelations(schemaRoot: SchemaRoot, entitySchema: EntitySchema, includeLookups: boolean) {

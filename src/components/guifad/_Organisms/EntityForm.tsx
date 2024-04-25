@@ -11,6 +11,7 @@ import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import LookUpSelect from '../_Molecules/LookUpSelect'
 import BoltIcon from '../../../_Icons/BoltIcon'
+import ErrorPage from '../../../_Molecules/ErrorScreen'
 
 const EntityForm: React.FC<{
   dataSource: IDataSource
@@ -25,36 +26,45 @@ const EntityForm: React.FC<{
   const [currentEntity, setCurrentEntity] = useState({ ...entity })
   const [fkRelations, setFkRelations] = useState<RelationSchema[]>([])
   const [fieldsToDisplay, setFieldsToDisplay] = useState<FieldSchema[]>([])
+  const [error, setError] = useState<any>(null)
 
   // effects
   useEffect(() => {
-    const nonLookupfkRelations: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
-      dataSourceManager.getSchemaRoot(),
-      (r: RelationSchema) => r.foreignEntityName == dataSource.entitySchema!.name && !r.isLookupRelation,
-    )
+    try {
+      const nonLookupfkRelations: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
+        dataSourceManager.getSchemaRoot(),
+        (r: RelationSchema) => r.foreignEntityName == dataSource.entitySchema!.name && !r.isLookupRelation,
+      )
 
-    const fkRelationsToSet: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
-      dataSourceManager.getSchemaRoot(),
-      (r: RelationSchema) => r.foreignEntityName == dataSource.entitySchema!.name && r.isLookupRelation,
-    )
-    setFkRelations(fkRelationsToSet)
-    const fieldsToSet: FieldSchema[] = dataSource.entitySchema!.fields.filter((f) => {
-      const nonLookupfkRelationForField: RelationSchema | undefined = nonLookupfkRelations.find(
-        (r) => r.foreignKeyIndexName == f.name,
+      const fkRelationsToSet: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
+        dataSourceManager.getSchemaRoot(),
+        (r: RelationSchema) => r.foreignEntityName == dataSource.entitySchema!.name && r.isLookupRelation,
       )
-      const fkRelationForField: RelationSchema | undefined = fkRelationsToSet.find(
-        (r) => r.foreignKeyIndexName == f.name,
-      )
-      const primaryKey: IndexSchema | undefined = dataSource.entitySchema!.indices.find(
-        (i) =>
-          i.name == dataSource.entitySchema!.primaryKeyIndexName &&
-          i.memberFieldNames.includes(f.name) &&
-          (f.name == 'Id' || f.name == 'id'),
-      )
-      return !fkRelationForField && !nonLookupfkRelationForField && !primaryKey && !f.dbGeneratedIdentity
-    })
-    setFieldsToDisplay(fieldsToSet)
+      setFkRelations(fkRelationsToSet)
+      const fieldsToSet: FieldSchema[] = dataSource.entitySchema!.fields.filter((f) => {
+        const nonLookupfkRelationForField: RelationSchema | undefined = nonLookupfkRelations.find(
+          (r) => r.foreignKeyIndexName == f.name,
+        )
+        const fkRelationForField: RelationSchema | undefined = fkRelationsToSet.find(
+          (r) => r.foreignKeyIndexName == f.name,
+        )
+        const primaryKey: IndexSchema | undefined = dataSource.entitySchema!.indices.find(
+          (i) =>
+            i.name == dataSource.entitySchema!.primaryKeyIndexName &&
+            i.memberFieldNames.includes(f.name) &&
+            (f.name == 'Id' || f.name == 'id'),
+        )
+        return !fkRelationForField && !nonLookupfkRelationForField && !primaryKey && !f.dbGeneratedIdentity
+      })
+      setFieldsToDisplay(fieldsToSet)
+    } catch (err) {
+      setError(err)
+    }
   }, [dataSourceManager, dataSource])
+
+  if (error) {
+    return <ErrorPage messages={[error]}></ErrorPage>
+  }
 
   function save() {
     dataSource.entityUpdateMethod(currentEntity).then((newEntry: any) => {

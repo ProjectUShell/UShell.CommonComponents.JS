@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { IDataSource } from 'ushell-modulebase'
 import Table, { TableColumn } from './Table'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
@@ -16,6 +16,8 @@ import FilterTagBar from '../_Molecules/FilterTagBar'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import ArrowUturnUpd from '../../../_Icons/ArrowUturnUpd'
 import Tooltip from '../../../_Atoms/Tooltip'
+import ErrorPage from '../../../_Molecules/ErrorScreen'
+import LoadingScreen from '../../../_Molecules/LoadingScreen'
 
 const EntityTable: React.FC<{
   dataSource: IDataSource
@@ -87,6 +89,8 @@ const EntityTable: React.FC<{
     // })
   }, [dataSource, schemaRoot, entitySchema])
 
+  const getId = useCallback((e: any) => EntitySchemaService.getPrimaryKey(entitySchema, e), [entitySchema])
+
   function buildFilterExpression(): LogicalExpression | undefined {
     const result: LogicalExpression = new LogicalExpression()
     filter.forEach((f) => result.subTree.push(f))
@@ -115,16 +119,17 @@ const EntityTable: React.FC<{
       useParentFilter,
     ],
     queryFn: () => {
-      return dataSource.getRecords(buildFilterExpression(), pagingParams, sortingParams)
+      try {
+        return dataSource.getRecords(buildFilterExpression(), pagingParams, sortingParams)
+      } catch (error) {
+        return null
+      }
     },
   })
 
   const data1: any = data
 
-  if (isLoading) return <div>Loading...</div>
-
-  if (error) return <div>An error has occurred: {error.toString()}</div> //+ error.message
-
+  if (error) return <ErrorPage messages={['An error has occurred', error.toString()]}></ErrorPage>
   function addRecord() {
     onCreateRecord()
   }
@@ -189,25 +194,30 @@ const EntityTable: React.FC<{
           onUpdateFilters={(uf) => setFilter(uf)}
         ></FilterTagBar>
       </div>
-      <Table
-        className='overflow-auto h-full'
-        columns={columns}
-        records={data1.page}
-        onRecordEnter={onRecordEnter}
-        onSelectedRecordsChange={(sr) => {
-          setSelectedRecords(sr)
-          onSelectedRecordsChange(sr)
-        }}
-        selectedRecord={selectedRecords.length > 1 ? null : selectedRecord}
-        pagingParams={pagingParams}
-        totalCount={data1!.total}
-        onPagingParamsChange={(pp) => setPagingParams(pp)}
-        initialSortingParams={sortingParams}
-        onSortingParamsChange={(sp) => {
-          setSortingParams(sp)
-        }}
-        rowHeight={2}
-      ></Table>
+      {isLoading ? (
+        <LoadingScreen message={'loading ' + entitySchema.name}></LoadingScreen>
+      ) : (
+        <Table
+          className='overflow-auto h-full'
+          columns={columns}
+          records={data1.page}
+          getId={getId}
+          onRecordEnter={onRecordEnter}
+          onSelectedRecordsChange={(sr) => {
+            setSelectedRecords(sr)
+            onSelectedRecordsChange(sr)
+          }}
+          selectedRecord={selectedRecords.length > 1 ? null : selectedRecord}
+          pagingParams={pagingParams}
+          totalCount={data1!.total}
+          onPagingParamsChange={(pp) => setPagingParams(pp)}
+          initialSortingParams={sortingParams}
+          onSortingParamsChange={(sp) => {
+            setSortingParams(sp)
+          }}
+          rowHeight={2}
+        ></Table>
+      )}
     </div>
   )
 }

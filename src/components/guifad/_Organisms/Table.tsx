@@ -34,6 +34,7 @@ export interface ExpandableProps {
 const Table: React.FC<{
   columns: TableColumn[]
   records: any[]
+  getId?: (e: any) => any
   className?: string
   onRecordEnter?: (r: any) => void
   onSelectedRecordsChange?: (selectedRecords: any[]) => void
@@ -50,6 +51,7 @@ const Table: React.FC<{
 }> = ({
   columns,
   records,
+  getId,
   className,
   onRecordEnter,
   onSelectedRecordsChange,
@@ -91,17 +93,30 @@ const Table: React.FC<{
   }, [initialSortingParams])
 
   useEffect(() => {
+    function getIdInternal(e: any): any {
+      let res: any = null
+      if (getId) {
+        res = getId(e)
+      } else {
+        let idField = 'id'
+        if (!(idField in e)) {
+          idField = 'Id'
+        }
+        res = e[idField]
+      }
+      return res
+    }
     function getIntialSelectedRows(): { [index: number]: boolean } {
       if (!initialSelectedRecord) {
         return []
       }
-      const i: number = records.findIndex((r) => r.id == initialSelectedRecord?.id)
+      const i: number = records.findIndex((r) => getIdInternal(r) == getIdInternal(initialSelectedRecord))
       const newSr: { [index: number]: boolean } = {}
       newSr[i] = true
       return newSr
     }
     setSelectedRows(getIntialSelectedRows())
-  }, [records, initialSelectedRecord])
+  }, [records, initialSelectedRecord, getId])
 
   useEffect(() => {
     let timeOutFunctionId: any = null
