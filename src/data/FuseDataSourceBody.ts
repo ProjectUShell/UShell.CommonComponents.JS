@@ -69,7 +69,7 @@ export class FuseDataSourceBody implements IDataSource {
       filter: filter,
       limit: pagingParams?.pageSize,
       skip: pagingParams ? (pagingParams?.pageNumber - 1) * pagingParams?.pageSize : 0,
-      sortingParams: sortingParams,
+      sortedBy: sortingParams?.map((sp) => (sp.descending ? '^' + sp.fieldName : sp.fieldName)),
     }).then((r) => {
       return { page: r.return, total: 1000 }
     })
@@ -87,7 +87,7 @@ export class FuseDataSourceBody implements IDataSource {
       filter: filter,
       skip: pagingParams ? (pagingParams.pageNumber - 1) * pagingParams.pageSize : 0,
       limit: pagingParams ? pagingParams.pageSize + 2 : 10,
-      sortingParams: sortingParams,
+      sortedBy: sortingParams?.map((sp) => (sp.descending ? '^' + sp.fieldName : sp.fieldName)),
     }).then((r) => {
       return {
         page: r.return,

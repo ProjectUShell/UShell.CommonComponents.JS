@@ -88,7 +88,7 @@ const Guifad1: React.FC<{
     setCurrentMode('details')
   }
   return (
-    <div className='w-full h-full flex overflow-hidden'>
+    <div className='w-full h-full flex overflow-hidden text-sm'>
       <aside
         style={{ minWidth: '72px' }}
         className='flex flex-col justify-start bg-backgroundthree 

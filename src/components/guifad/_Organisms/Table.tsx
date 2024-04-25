@@ -132,11 +132,14 @@ const Table: React.FC<{
   }, [])
 
   function onRowClick(i: number, e: any) {
+    e.preventDefault()
+    e.stopPropagation()
     if (e.target.tagName == 'path' || e.target.tagName == 'svg') {
       return
     }
 
     const newSelectedValue = !selectedRows[i]
+    if (!e.ctrlKey && !newSelectedValue) return
     const newSr = e.ctrlKey ? { ...selectedRows } : {}
     newSr[i] = newSelectedValue
     setSelectedRows((sr) => {
@@ -150,6 +153,7 @@ const Table: React.FC<{
   }
 
   function onRowDoubleClick(i: number, e: any) {
+    console.log('dbl click')
     if (!onRecordEnter) {
       return
     }
@@ -290,16 +294,26 @@ const Table: React.FC<{
 
   return (
     <div
-      className={`relative overflow-auto shadow-md sm:rounded-lg h-full w-full flex flex-col justify-between ${className}`}
+      className={`relative overflow-auto shadow-md rounded-sm 
+      border border-backgroundfour dark:border-backgroundfourdark h-full w-full flex flex-col justify-between ${className}`}
     >
       <div className='flex flex-col h-full w-full overflow-auto'>
         <table className='w-full max-h-full text-sm text-left'>
-          <thead className='text-xs bg-backgroundfour dark:bg-backgroundfourdark sticky top-0'>
+          <thead className='text-xs border-backgroundfour bg-backgroundone dark:bg-backgroundonedark sticky top-0'>
             <tr className=''>
               {expandableRowProps && <th className='flex items-center gap-1'></th>}
               {columns.map((c: TableColumn) => (
-                <th key={c.label} className='px-6 py-3'>
-                  <div className='flex items-center gap-1'>
+                <th
+                  key={c.label}
+                  className='px-6 py-3 border-b border-backgroundfour dark:border-backgroundfourdark 
+                  hover:bg-backgroundtwo dark:hover:bg-backgroundtwodark cursor-pointer'
+                  onClick={(e) => {
+                    if (c.sortable) {
+                      toggleSorting(c.key)
+                    }
+                  }}
+                >
+                  <div className='flex items-center gap-1 '>
                     {c.label}
                     {onSortingParamsChange && c.sortable && (
                       <button onClick={(e) => toggleSorting(c.key)} className='pl-2'>
@@ -344,8 +358,8 @@ const Table: React.FC<{
               const renderRow = (
                 <tr
                   key={i}
-                  className={`border-b dark:border-gray-700 ${
-                    selectedRows[i] ? 'bg-blue-300 dark:bg-blue-400' : 'bg-backgroundthree dark:bg-backgroundthreedark'
+                  className={`border-b border-backgroundfour dark:border-backgroundfourdark ${
+                    selectedRows[i] ? 'bg-blue-300 dark:bg-blue-400' : 'bg-backgroundtwo dark:bg-backgroundtwodark'
                   } text-sm`}
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}

@@ -39,16 +39,16 @@ const StructureNavigation: React.FC<{
       </h1>
       <button
         disabled={dirty}
-        className={`w-full flex gap-1 ${dirty ? 'hover:cursor-pointer text-gray-400' : ''} rounded-md p-1 ${
-          mode == 'list' ? 'bg-blue-300 dark:bg-blue-400' : ''
-        }`}
+        className={`w-full flex gap-1 items-center ${
+          dirty ? 'hover:cursor-pointer text-gray-400' : ''
+        } rounded-md p-1 ${mode == 'list' ? 'bg-blue-300 dark:bg-blue-400' : ''}`}
         onClick={(e) => setMode('list')}
       >
         <ListIcon></ListIcon>List
       </button>
       <button
         disabled={!currentRecord}
-        className={`w-full flex gap-1 ${
+        className={`w-full flex gap-1 items-center ${
           !currentRecord ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
         } ${mode == 'details' ? 'bg-blue-300 dark:bg-blue-400' : ''} rounded-md p-1`}
         onClick={(e) => setMode('details')}
@@ -60,7 +60,7 @@ const StructureNavigation: React.FC<{
         <button
           key={er.primaryNavigationName}
           disabled={!currentRecord || dirty}
-          className={`w-full flex gap-1 ${
+          className={`w-full flex gap-1 items-center ${
             !currentRecord || dirty ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
           } rounded-md p-1 ${
             relation?.primaryNavigationName == er.primaryNavigationName

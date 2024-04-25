@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { IDataSource } from 'ushell-modulebase'
 import Table, { TableColumn } from './Table'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
@@ -18,6 +18,7 @@ import ArrowUturnUpd from '../../../_Icons/ArrowUturnUpd'
 import Tooltip from '../../../_Atoms/Tooltip'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
 import LoadingScreen from '../../../_Molecules/LoadingScreen'
+import { filter } from 'rxjs'
 
 const EntityTable: React.FC<{
   dataSource: IDataSource
@@ -44,10 +45,12 @@ const EntityTable: React.FC<{
 }) => {
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
-  const [columns, setColumns] = useState<TableColumn[]>([])
+  // const [columns, setColumns] = useState<TableColumn[]>([])
   const [pagingParams, setPagingParams] = useState<PagingParams>({ pageNumber: 1, pageSize: 10 })
-  const [sortingParams, setSortingParams] = useState<SortingField[]>([])
-  const [filter, setFilter] = useState<LogicalExpression[]>([])
+  const [sortingParamsByEntityName, setSortingParamsByEntityName] = useState<{ [entityName: string]: SortingField[] }>(
+    {},
+  )
+  const [filterByEntityName, setFilterByEntityName] = useState<{ [entityName: string]: LogicalExpression[] }>({})
   const [useParentFilter, setUseParentFilter] = useState(true)
   const [reloadTrigger, setReloadTrigger] = useState(0)
 
@@ -59,7 +62,7 @@ const EntityTable: React.FC<{
     setSelectedRecords([selectedRecord])
   }, [selectedRecord])
 
-  useEffect(() => {
+  const columns: TableColumn[] = useMemo(() => {
     const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
       const foreignKeyRelations: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
         schemaRoot,
@@ -81,9 +84,10 @@ const EntityTable: React.FC<{
         }
       }
 
-      return { label: f.name, fieldName: f.name, fieldType: f.type, key: f.name }
+      return { label: f.name, fieldName: f.name, fieldType: f.type, key: f.name, sortable: true }
     })
-    setColumns(newColumns)
+    return newColumns
+    // setColumns(newColumns)
     // dataSource.getRecords().then((r) => {
     //   setRecords(r)
     // })
@@ -93,7 +97,8 @@ const EntityTable: React.FC<{
 
   function buildFilterExpression(): LogicalExpression | undefined {
     const result: LogicalExpression = new LogicalExpression()
-    filter.forEach((f) => result.subTree.push(f))
+    const filters: LogicalExpression[] = filterByEntityName[entitySchema.name] || []
+    filters.forEach((f) => result.subTree.push(f))
     if (useParentFilter) {
       const parentFilter: LogicalExpression | null =
         parentSchema && parent && schemaRoot
@@ -110,9 +115,9 @@ const EntityTable: React.FC<{
     queryKey: [
       dataSource.entitySchema!.name,
       pagingParams,
-      sortingParams,
+      sortingParamsByEntityName,
       reloadTrigger,
-      filter,
+      filterByEntityName,
       parent,
       parentSchema,
       schemaRoot,
@@ -120,7 +125,12 @@ const EntityTable: React.FC<{
     ],
     queryFn: () => {
       try {
-        return dataSource.getRecords(buildFilterExpression(), pagingParams, sortingParams)
+        console.log('getting data', sortingParamsByEntityName)
+        return dataSource.getRecords(
+          buildFilterExpression(),
+          pagingParams,
+          sortingParamsByEntityName[entitySchema.name],
+        )
       } catch (error) {
         return null
       }
@@ -155,7 +165,16 @@ const EntityTable: React.FC<{
               intialExpression={null}
               fields={dataSource.entitySchema!.fields}
               onUpdateExpression={(e) => {
-                setFilter((f) => [...f, e])
+                setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
+                  const newF: any = { ...ofi }
+                  if (newF[entitySchema.name]) {
+                    newF[entitySchema.name] = [...newF[entitySchema.name], e]
+                  } else {
+                    newF[entitySchema.name] = [e]
+                  }
+                  return newF
+                })
+                // setFilter((f) => [...f, e])
               }}
             ></LogicalExpressionEditor>
           </DropdownButton>
@@ -190,12 +209,19 @@ const EntityTable: React.FC<{
       <div>
         <FilterTagBar
           className='mb-1 rounded-md'
-          filters={filter}
+          filters={filterByEntityName[entitySchema.name] || []}
           fields={dataSource.entitySchema!.fields}
-          onUpdateFilters={(uf) => setFilter(uf)}
+          onUpdateFilters={(uf) => {
+            setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
+              const newF: any = { ...ofi }
+              newF[entitySchema.name] = uf
+              return newF
+            })
+            // setFilter(uf)
+          }}
         ></FilterTagBar>
       </div>
-      {isLoading ? (
+      {!data ? (
         <LoadingScreen message={'loading ' + entitySchema.name}></LoadingScreen>
       ) : (
         <Table
@@ -213,9 +239,13 @@ const EntityTable: React.FC<{
           pagingParams={pagingParams}
           totalCount={data1!.total}
           onPagingParamsChange={(pp) => setPagingParams(pp)}
-          initialSortingParams={sortingParams}
+          initialSortingParams={sortingParamsByEntityName[entitySchema.name]}
           onSortingParamsChange={(sp) => {
-            setSortingParams(sp)
+            setSortingParamsByEntityName((o) => {
+              const newSp: any = { ...o }
+              newSp[entitySchema.name] = sp
+              return newSp
+            })
           }}
           rowHeight={2}
         ></Table>
