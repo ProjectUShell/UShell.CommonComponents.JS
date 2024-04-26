@@ -8,7 +8,8 @@ const DropdownButton: React.FC<{
   leftOffset?: number
   children: any
   initialOpen?: { o: boolean }
-}> = ({ buttonContent, children, topOffset, rightOffset, leftOffset, initialOpen }) => {
+  className?: string
+}> = ({ buttonContent, children, topOffset, rightOffset, leftOffset, initialOpen, className }) => {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -16,11 +17,9 @@ const DropdownButton: React.FC<{
   }, [initialOpen])
 
   return (
-    <div>
+    <div className={className}>
       <button
-        className={`rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark relative ${
-          open && 'z-50'
-        }`}
+        className={`rounded-md p-1  hover:bg-backgroundone dark:hover:bg-backgroundonedark relative ${open && 'z-50'}`}
         onClick={(e) => setOpen((o) => !o)}
       >
         {buttonContent}

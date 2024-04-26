@@ -1,8 +1,39 @@
 import { EntitySchema, SchemaRoot, RelationSchema, FieldSchema, IndexSchema } from 'fusefx-modeldescription'
 import { IDataSource } from 'ushell-modulebase'
 import { capitalizeFirstLetter, getValue, lowerFirstLetter } from '../utils/StringUtils'
+import { LogicalExpression } from 'fusefx-repositorycontract'
 
 export class EntitySchemaService {
+  static getUniversalSearchExpression(
+    entitySchema: EntitySchema,
+    universalSearchText: string,
+  ): LogicalExpression | null {
+    const fieldNames: string[] = []
+    const indices: IndexSchema[] = entitySchema.indices
+    indices.forEach((i) => {
+      i.memberFieldNames.forEach((fn) => {
+        if (!fieldNames.includes(fn)) {
+          const fs: FieldSchema | undefined = entitySchema.fields.find((f) => f.name == fn)
+          if (fs && fs.type.toLocaleLowerCase() == 'string') {
+            fieldNames.push(fn)
+          }
+        }
+      })
+    })
+    if (fieldNames.length == 0) return null
+    const result: LogicalExpression = new LogicalExpression()
+    result.matchAll = false
+    result.subTree = []
+    result.predicates = []
+    fieldNames.forEach((fn) => {
+      result.predicates.push({
+        fieldName: fn,
+        operator: '>=',
+        value: universalSearchText,
+      })
+    })
+    return result
+  }
   static getLabel(schemaRoot: SchemaRoot, primaryEntityName: string, entity: any): string {
     if (!entity) return 'Nope'
 

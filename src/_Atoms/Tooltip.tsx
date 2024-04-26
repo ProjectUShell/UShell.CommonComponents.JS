@@ -26,11 +26,13 @@ const Tooltip: React.FC<{ targetId: string; children: any }> = ({ targetId, chil
   return (
     <>
       {show && (
-        <div
-          className='absolute z-40 rounded-md p-1 
-            bg-backgroundone dark:bg-backgroundonedark'
-        >
-          {children}
+        <div className='relative'>
+          <div
+            className='absolute z-40 rounded-md p-1 
+          bg-backgroundone dark:bg-backgroundonedark right-0 top-1'
+          >
+            {children}
+          </div>
         </div>
       )}
     </>

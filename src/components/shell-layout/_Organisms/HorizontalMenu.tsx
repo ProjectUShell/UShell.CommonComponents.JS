@@ -53,7 +53,13 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
                 }}
               >
                 <div className='bg-backgroundone dark:bg-backgroundonedark rounded-sm border border-backgroundtfour dark:border-backgroundfourdark'>
-                  <VerticalMenu menuItems={mi.children}></VerticalMenu>
+                  <div
+                    onClick={() => {
+                      openStateById[mi.id] = false
+                    }}
+                  >
+                    <VerticalMenu menuItems={mi.children}></VerticalMenu>
+                  </div>
                 </div>
               </Dropdown>
             )}

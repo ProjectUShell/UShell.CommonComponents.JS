@@ -19,6 +19,8 @@ import Tooltip from '../../../_Atoms/Tooltip'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
 import LoadingScreen from '../../../_Molecules/LoadingScreen'
 import { filter } from 'rxjs'
+import SearchBar from '../../../_Molecules/SearchBar'
+import AdjustmentsHorizontalIcon from '../../../_Icons/AdjustmentsHorizontalIcon'
 
 const EntityTable: React.FC<{
   dataSourceManager: IDataSourceManagerBase
@@ -57,6 +59,9 @@ const EntityTable: React.FC<{
   const [useParentFilter, setUseParentFilter] = useState(true)
   const [reloadTrigger, setReloadTrigger] = useState(0)
 
+  const [universalSearchText, setUniversalSearchText] = useState('')
+  const [filterTagsVisible, setFilterTagsVisible] = useState(false)
+
   function forceReload() {
     setReloadTrigger((r) => r + 1)
   }
@@ -64,6 +69,24 @@ const EntityTable: React.FC<{
   useEffect(() => {
     setSelectedRecords([selectedRecord])
   }, [selectedRecord])
+
+  useEffect(() => {
+    if (universalSearchText == '') return
+    const searchExpression: LogicalExpression | null = EntitySchemaService.getUniversalSearchExpression(
+      dataSource.entitySchema!,
+      universalSearchText,
+    )
+    if (!searchExpression) return
+    setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
+      const newF: any = { ...ofi }
+      if (newF[entitySchema.name]) {
+        newF[entitySchema.name] = [...newF[entitySchema.name], searchExpression]
+      } else {
+        newF[entitySchema.name] = [searchExpression]
+      }
+      return newF
+    })
+  }, [universalSearchText, entitySchema.name])
 
   const columns: TableColumn[] = useMemo(() => {
     const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
@@ -128,7 +151,6 @@ const EntityTable: React.FC<{
     ],
     queryFn: () => {
       try {
-        console.log('getting data', sortingParamsByEntityName)
         return dataSource.getRecords(
           buildFilterExpression(),
           pagingParams,
@@ -162,8 +184,34 @@ const EntityTable: React.FC<{
   return (
     <div className='flex flex-col h-full'>
       <div className='flex justify-between items-center'>
+        <div className={`flex justify-end p-1 ${className} rounded-md bg-backgroundtwo dark:bg-backgroundtwodark `}>
+          <button
+            className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark'
+            onClick={(e) => addRecord()}
+          >
+            <PlusCircleIcon></PlusCircleIcon>
+          </button>
+          <button
+            className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark'
+            onClick={(e) => deleteRecords()}
+          >
+            <TrashIcon></TrashIcon>
+          </button>
+        </div>
         <div className={`flex p-1 ${className} rounded-md bg-backgroundtwo dark:bg-backgroundtwodark `}>
-          <DropdownButton leftOffset={1} topOffset={-1} buttonContent={<FunnelIcon size={5}></FunnelIcon>}>
+          <div className='p-1'>
+            <SearchBar
+              onSearch={(searchText: string) => {
+                setUniversalSearchText(searchText)
+              }}
+            ></SearchBar>
+          </div>
+          <DropdownButton
+            className='p-1'
+            rightOffset={1}
+            topOffset={-1}
+            buttonContent={<FunnelIcon size={5}></FunnelIcon>}
+          >
             <LogicalExpressionEditor
               intialExpression={null}
               fields={dataSource.entitySchema!.fields}
@@ -195,44 +243,48 @@ const EntityTable: React.FC<{
           >
             <ArrowUturnUpd size={5}></ArrowUturnUpd>
             <Tooltip targetId='ParentFilterButton'>
-              <div>{useParentFilter ? 'Disable Parent Filter' : 'Activate Parent Filter'}</div>
+              <div className='text-textone dark:text-textonedark'>
+                {useParentFilter ? 'Disable Parent Filter' : 'Activate Parent Filter'}
+              </div>
             </Tooltip>
           </button>
-        </div>
-        <div className={`flex justify-end p-1 ${className} rounded-md bg-backgroundtwo dark:bg-backgroundtwodark `}>
           <button
-            className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark'
-            onClick={(e) => addRecord()}
+            id='ShowFilterTagsButton'
+            className={`hover:bg-backgroundthree hover:dark:bg-backgroundthreedark p-1 rounded-md ${
+              filterByEntityName[dataSource.entitySchema!.name]?.length > 0 ? 'text-green-600' : ''
+            }`}
+            onClick={() => setFilterTagsVisible((x) => !x)}
           >
-            <PlusCircleIcon></PlusCircleIcon>
-          </button>
-          <button
-            className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark'
-            onClick={(e) => deleteRecords()}
-          >
-            <TrashIcon></TrashIcon>
+            <AdjustmentsHorizontalIcon size={5}></AdjustmentsHorizontalIcon>
+            <Tooltip targetId='ShowFilterTagsButton'>
+              <div className='text-textone dark:text-textonedark'>
+                {filterTagsVisible ? 'Hide Filters' : 'Show Filters'}
+              </div>
+            </Tooltip>
           </button>
         </div>
       </div>
       <div>
-        <FilterTagBar
-          dataSourceManager={dataSourceManager}
-          className='mb-1 rounded-md'
-          filters={filterByEntityName[entitySchema.name] || []}
-          fkRelations={EntitySchemaService.getRelationsByFilter(
-            schemaRoot,
-            (r) => r.foreignEntityName == dataSource.entitySchema!.name,
-          )}
-          fields={dataSource.entitySchema!.fields}
-          onUpdateFilters={(uf) => {
-            setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
-              const newF: any = { ...ofi }
-              newF[entitySchema.name] = uf
-              return newF
-            })
-            // setFilter(uf)
-          }}
-        ></FilterTagBar>
+        {filterTagsVisible && filterByEntityName[dataSource.entitySchema!.name]?.length > 0 && (
+          <FilterTagBar
+            dataSourceManager={dataSourceManager}
+            className='mb-1 rounded-md'
+            filters={filterByEntityName[entitySchema.name] || []}
+            fkRelations={EntitySchemaService.getRelationsByFilter(
+              schemaRoot,
+              (r) => r.foreignEntityName == dataSource.entitySchema!.name,
+            )}
+            fields={dataSource.entitySchema!.fields}
+            onUpdateFilters={(uf) => {
+              setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
+                const newF: any = { ...ofi }
+                newF[entitySchema.name] = uf
+                return newF
+              })
+              // setFilter(uf)
+            }}
+          ></FilterTagBar>
+        )}
       </div>
       {!data ? (
         <LoadingScreen message={'loading ' + entitySchema.name}></LoadingScreen>
