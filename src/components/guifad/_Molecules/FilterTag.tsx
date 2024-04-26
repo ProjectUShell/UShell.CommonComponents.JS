@@ -2,16 +2,19 @@ import React, { useState } from 'react'
 import { LogicalExpression } from 'fusefx-repositorycontract'
 import DropdownButton from '../../../_Atoms/DropdownButton'
 import LogicalExpressionEditor from './LogicalExpressionEditor'
-import { FieldSchema } from 'fusefx-modeldescription'
+import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import XMarkIcon from '../../../_Icons/XMarkIcon'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
+import { IDataSourceManagerBase } from 'ushell-modulebase'
 
 const FilterTag: React.FC<{
   filter: LogicalExpression
   fields: FieldSchema[]
+  fkRelations: RelationSchema[]
   onUpdateFilter: (f: LogicalExpression) => void
   onDelete: () => void
-}> = ({ filter, fields, onUpdateFilter, onDelete }) => {
+  dataSourceManager: IDataSourceManagerBase
+}> = ({ filter, fields, fkRelations, onUpdateFilter, onDelete, dataSourceManager }) => {
   const [open, setOpen] = useState(false)
 
   function getLabel(f: LogicalExpression) {
@@ -69,11 +72,13 @@ const FilterTag: React.FC<{
     >
       <LogicalExpressionEditor
         fields={fields}
+        fkRelations={fkRelations}
         onUpdateExpression={(e) => {
           onUpdateFilter(e)
           setOpen(false)
         }}
         intialExpression={filter}
+        dataSourceManager={dataSourceManager}
       ></LogicalExpressionEditor>
     </DropdownButton>
   )

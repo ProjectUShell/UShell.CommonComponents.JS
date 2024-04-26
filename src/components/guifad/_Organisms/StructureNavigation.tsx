@@ -31,7 +31,7 @@ const StructureNavigation: React.FC<{
   dirty,
 }) => {
   return (
-    <div className={`text-md ${className}`}>
+    <div className={`pl-2 text-md ${className}`}>
       <h1 className='mb-2 font-bold'>
         {currentRecord
           ? entitySchema.name + ' ' + EntitySchemaService.getLabel(schemaRoot, entitySchema.name, currentRecord)
@@ -39,18 +39,18 @@ const StructureNavigation: React.FC<{
       </h1>
       <button
         disabled={dirty}
-        className={`w-full flex gap-1 items-center ${
+        className={`w-full flex gap-1 items-center hover:bg-backgroundtwo dark:hover:bg-backgroundtwodark ${
           dirty ? 'hover:cursor-pointer text-gray-400' : ''
-        } rounded-md p-1 ${mode == 'list' ? 'bg-blue-300 dark:bg-blue-400' : ''}`}
+        } rounded-l-md p-1 ${mode == 'list' ? 'bg-backgroundtwo dark:bg-backgroundtwodark' : ''}`}
         onClick={(e) => setMode('list')}
       >
         <ListIcon></ListIcon>List
       </button>
       <button
         disabled={!currentRecord}
-        className={`w-full flex gap-1 items-center ${
+        className={`w-full flex gap-1 items-center hover:bg-backgroundtwo dark:hover:bg-backgroundtwodark ${
           !currentRecord ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
-        } ${mode == 'details' ? 'bg-blue-300 dark:bg-blue-400' : ''} rounded-md p-1`}
+        } ${mode == 'details' ? 'bg-backgroundtwo dark:bg-backgroundtwodark' : ''} rounded-l-md p-1`}
         onClick={(e) => setMode('details')}
       >
         <PencilIcon></PencilIcon>Details
@@ -60,13 +60,13 @@ const StructureNavigation: React.FC<{
         <button
           key={er.primaryNavigationName}
           disabled={!currentRecord || dirty}
-          className={`w-full flex gap-1 items-center ${
+          className={`w-full flex gap-1 items-center hover:text-blue-600 dark:hover:text-blue-200  ${
             !currentRecord || dirty ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
           } rounded-md p-1 ${
             relation?.primaryNavigationName == er.primaryNavigationName
               ? !currentRecord || dirty
                 ? ''
-                : 'bg-blue-300 dark:bg-blue-400'
+                : 'underline'
               : ''
           }`}
           onClick={() => onRelationSelected(er)}

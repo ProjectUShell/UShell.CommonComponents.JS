@@ -92,7 +92,7 @@ const Guifad1: React.FC<{
       <aside
         style={{ minWidth: '72px' }}
         className='flex flex-col justify-start bg-backgroundthree 
-          dark:bg-backgroundthreedark w-72 p-2'
+          dark:bg-backgroundthreedark w-72 py-2'
       >
         <StructureNavigation
           schemaRoot={dataSourceManager.getSchemaRoot()}
@@ -142,6 +142,7 @@ const Guifad1: React.FC<{
         <div className='p-2 h-full overflow-auto'>
           {currentMode == 'list' && (
             <EntityTable
+              dataSourceManager={dataSourceManager}
               dataSource={node.dataSource}
               onRecordEnter={(r: any) => {
                 console.log('record enter', r)

@@ -101,6 +101,7 @@ const TableDemo = () => {
       <Table
         columns={columns}
         records={records}
+        //records={[]}
         totalCount={records.length}
         pagingParams={{ pageNumber: 1, pageSize: 20 }}
         onPagingParamsChange={(p: PagingParams) => {

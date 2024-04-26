@@ -11,6 +11,9 @@ import TrashIcon from './_Icons/TrashIcon'
 import CogWheelIcon from './components/shell-layout/_Icons/CogWheelIcon'
 import XMarkIcon from './_Icons/XMarkIcon'
 import { FuseDataStore } from './data/FuseDataStore'
+import ResizableTable from './components/guifad/_Organisms/ResizableTable'
+import ResizableTable2 from './components/guifad/_Organisms/ResizeableTable'
+import ColorDemo from './demo/ColorDemo'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -18,7 +21,12 @@ const Demo = () => {
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3MTM2OTg3NjYsImV4cCI6MTc0NTIzNDc2NiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.C-c7FWta-4pyjSZL1tnOlLdI6fFHM6d11VpWVrtJwqA'
   const [currentComponent, setCurrentComponent] = useState<string>('TableDemo')
 
-  const demoComponents: string[] = ['TableDemo', 'GuifadDemo', 'GuifadDemo2', 'GuifadDemo3', 'DropdownButtonDemo']
+  const demoComponents: string[] = ['Guifad', 'Table', 'Common']
+  const subComponents: { [key: string]: string[] } = {
+    Guifad: ['GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
+    Table: ['TableDemo', 'ResizeTable', 'ResizeTable2'],
+    Common: ['ColorDemo', 'DropdownButtonDemo'],
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -29,10 +37,20 @@ const Demo = () => {
             return {
               label: dc,
               id: dc,
-              type: 'Command',
+              type: subComponents[dc] ? 'Group' : 'Command',
               command: (e) => {
                 setCurrentComponent(dc)
               },
+              children: subComponents[dc]?.map((sc) => {
+                return {
+                  label: sc,
+                  id: sc,
+                  type: 'Command',
+                  command: (e) => {
+                    setCurrentComponent(sc)
+                  },
+                }
+              }),
             }
           }),
           topBarItems: [
@@ -71,6 +89,25 @@ const Demo = () => {
         )}
         {currentComponent == 'TableDemo' && <TableDemo></TableDemo>}
         {currentComponent == 'DropdownButtonDemo' && <DropdownButtonDemo></DropdownButtonDemo>}
+        {currentComponent == 'ResizeTable' && (
+          <ResizableTable
+            columns={[
+              { key: 'p1', title: 'test1' },
+              { key: 'p2', title: 'test2' },
+            ]}
+            data={[{ p1: 'dasdsdsdasds', p2: 'dfafasfsdf' }]}
+          ></ResizableTable>
+        )}
+        {currentComponent == 'ResizeTable2' && (
+          <ResizableTable2
+            columns={[
+              { key: 'p1', name: 'test1', width: 100 },
+              { key: 'p2', name: 'test2', width: 100 },
+            ]}
+            data={[{ p1: 'dasdsdsdasds', p2: 'dfafasfsdf' }]}
+          ></ResizableTable2>
+        )}
+        {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
       </ShellLayout>
     </QueryClientProvider>
   )

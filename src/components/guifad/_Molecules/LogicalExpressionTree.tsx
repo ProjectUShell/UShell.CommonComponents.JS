@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import RelationEditor from './RelationEditor'
-import { FieldSchema } from 'fusefx-modeldescription'
+import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import { LogicalExpression } from 'fusefx-repositorycontract'
 import TrashIcon from '../../../_Icons/TrashIcon'
 import { getEmptyRelationElement, isRelationValid } from '../ExpressionService'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
+import { IDataSourceManagerBase } from 'ushell-modulebase'
 
 const LogicalExpressionTree: React.FC<{
   expression: LogicalExpression
   onUpdateExpression: (e: LogicalExpression) => void
   fields: FieldSchema[]
-}> = ({ expression, fields, onUpdateExpression }) => {
+  fkRelations: RelationSchema[]
+  dataSourceManager: IDataSourceManagerBase
+}> = ({ expression, fields, fkRelations, onUpdateExpression, dataSourceManager }) => {
   function onRelationUpdated(r: FieldPredicate, index: number) {
     expression.predicates[index] = r
     onUpdateExpression({ ...expression })
@@ -79,8 +82,10 @@ const LogicalExpressionTree: React.FC<{
           <div className='flex gap-1'>
             <RelationEditor
               fields={fields}
+              fkRelations={fkRelations}
               initialRelation={a}
               onUpdateRelation={(r: FieldPredicate) => onRelationUpdated(r, i)}
+              dataSourceManager={dataSourceManager}
             ></RelationEditor>
 
             {isRelationValid(a) && (
@@ -107,8 +112,10 @@ const LogicalExpressionTree: React.FC<{
           {i > 0 && <div>{expression.matchAll ? 'and' : 'or'}</div>}
           <LogicalExpressionTree
             fields={fields}
+            fkRelations={fkRelations}
             expression={e}
             onUpdateExpression={(e: LogicalExpression) => onExpressionUpdated(e, i)}
+            dataSourceManager={dataSourceManager}
           ></LogicalExpressionTree>
         </div>
       ))}

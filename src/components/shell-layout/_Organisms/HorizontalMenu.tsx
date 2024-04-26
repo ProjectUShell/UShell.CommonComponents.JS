@@ -22,7 +22,7 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
         .map((mi) => (
           <div key={mi.id}>
             <div
-              className='flex items-center justify-between px-2 py-1 rounded-md hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer'
+              className='flex items-center justify-between px-2 py-3 hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer'
               onClick={(e) => activateItem(mi, shellMenuState)}
             >
               <div className='px-1'>{mi.label}</div>
@@ -34,7 +34,9 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
         .map((mi: MenuItem) => (
           <div key={mi.id}>
             <div
-              className='flex items-center justify-between px-2 py-1 rounded-md hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer'
+              className={`flex items-center justify-between px-2 py-3  hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer ${
+                mi.children && openStateById[mi.id] ? 'bg-backgroundfour dark:bg-backgroundfourdark' : ''
+              }`}
               onClick={() => {
                 setiIsOpen(mi.id, true)
               }}
@@ -44,13 +46,13 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
             </div>
             {mi.children && openStateById[mi.id] && (
               <Dropdown
-                topOffset={0}
+                topOffset={1}
                 rightOffset={0}
                 setIsOpen={() => {
                   setiIsOpen(mi.id, false)
                 }}
               >
-                <div className='p-2 bg-backgroundone dark:bg-backgroundonedark rounded-md border-2 border-solid border-black'>
+                <div className='bg-backgroundone dark:bg-backgroundonedark rounded-sm border border-backgroundtfour dark:border-backgroundfourdark'>
                   <VerticalMenu menuItems={mi.children}></VerticalMenu>
                 </div>
               </Dropdown>

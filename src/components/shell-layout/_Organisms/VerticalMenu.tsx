@@ -37,15 +37,17 @@ const VerticalMenuInternal: React.FC<{
   const depthCssClass = getDepthCssClass(depth)
 
   return (
-    <ul className='pt-2 select-none text-sm bg-backgroundone dark:bg-backgroundonedark rounded-md'>
+    <ul className='select-none text-sm bg-backgroundone dark:bg-backgroundonedark rounded-md'>
       {menuItems.map((mi: MenuItem) => (
         <div key={mi.id}>
           <li
             key={mi.id}
-            className={`flex items-center gap-x-4 p-1 rounded-md ${depthCssClass} ${
+            className={`flex items-center gap-x-4 p-1 rounded-as ${depthCssClass} ${
               mi.type !== 'Group' ? 'hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer' : ''
             } ${mi.type == 'Command' ? 'mt-0 font-light' : 'mt-4 font-bold'} ${
-              shellMenuState.activeItemId == mi.id ? 'bg-backgroundfour dark:bg-backgroundfourdark' : ''
+              shellMenuState.activeItemId == mi.id
+                ? 'bg-backgroundfour dark:bg-backgroundfourdark border-r-2 border-textone dark:border-textonedark'
+                : ''
             }`}
             onClick={() => {
               if (mi.type == 'Folder') {
@@ -58,7 +60,7 @@ const VerticalMenuInternal: React.FC<{
             }}
           >
             {mi.icon && <span className='text-2xl block float-left'>{mi.icon}</span>}
-            <span className={`flex-1 `}>{mi.label}</span>
+            <span className={`flex-1`}>{mi.label}</span>
             {mi.type == 'Folder' && <ChevronDown />}
           </li>
 

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 
 import Dropdown from '../../../_Atoms/Dropdown'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
-import { FieldSchema } from 'fusefx-modeldescription'
+import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 import InputField from '../_Atoms/InputField'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
+import LookUpSelect from './LookUpSelect'
+import { IDataSourceManagerBase } from 'ushell-modulebase'
 
 // export interface IFieldInfo {
 //   name: string
@@ -16,18 +18,41 @@ const RelationEditor: React.FC<{
   initialRelation: FieldPredicate
   onUpdateRelation: (r: FieldPredicate) => void
   fields: FieldSchema[]
-}> = ({ initialRelation, fields, onUpdateRelation }) => {
+  fkRelations: RelationSchema[]
+  dataSourceManager: IDataSourceManagerBase
+}> = ({ initialRelation, fields, fkRelations, onUpdateRelation, dataSourceManager }) => {
+  console.log('RelationEditor render', initialRelation)
   const [currrentField, setCurrentField] = useState<FieldSchema | null>(null)
+  const [currentFkRelation, setCurrentFkRelation] = useState<RelationSchema | null>(null)
   const [currentOperator, setCurrentOperator] = useState<string>('')
-  const [currrentValue, setCurrentValue] = useState<string>('')
+  const [currentValue, setCurrentValue] = useState<string>('')
 
   useEffect(() => {
-    console.log('intialField', initialRelation.fieldName)
+    console.log('RelationEditor init', initialRelation)
     setCurrentField(fields.find((f) => f.name.toLocaleLowerCase() == initialRelation.fieldName.toLocaleLowerCase())!)
+
+    setCurrentFkRelation((cfk) => {
+      if (cfk && cfk.foreignKeyIndexName == initialRelation.fieldName) {
+        return cfk
+      }
+      return fkRelations.find(
+        (f) => f.foreignNavigationName.toLocaleLowerCase() == initialRelation.fieldName.toLocaleLowerCase(),
+      )!
+    })
+
     setCurrentOperator(initialRelation.operator)
     setCurrentValue(initialRelation.value)
-  }, [initialRelation, fields])
+  }, [initialRelation, fields, fkRelations])
 
+  function getFieldOptions(): { label: string; value: any }[] {
+    const result = fields.map((f) => {
+      return { label: f.name, value: f.name }
+    })
+    for (const fkRelation of fkRelations) {
+      result.push({ label: fkRelation.foreignNavigationName, value: fkRelation.foreignNavigationName })
+    }
+    return result
+  }
   function getOperatorLabel(operator: string) {
     if (operator == '|*') return 'starts with'
     if (operator == '*|') return 'ends with'
@@ -42,7 +67,6 @@ const RelationEditor: React.FC<{
     if (!fieldType) {
       return []
     }
-    console.log('fieldType', fields)
     switch (fieldType.toLocaleLowerCase()) {
       case 'string':
         // ['=', '!='] //, '<', '<=', '>', '>=', '|*', '*|']
@@ -67,7 +91,6 @@ const RelationEditor: React.FC<{
   }
 
   function notifyRelationUpdated(field: FieldSchema | null, operator: string | null, value: string) {
-    console.log('notifyRelationUpdate', { field: field, operator: operator, value: value })
     if (field && operator && value) {
       onUpdateRelation({
         fieldName: field.name,
@@ -78,24 +101,40 @@ const RelationEditor: React.FC<{
   }
 
   function onFieldSet(fieldName: string) {
-    const fieldToSet: FieldSchema | undefined = fields.find(
+    let fieldToSet: FieldSchema | undefined = fields.find(
       (f) => f.name.toLocaleLowerCase() == fieldName.toLocaleLowerCase(),
     )
+    const fkRelationToSet: RelationSchema | undefined = fkRelations.find(
+      (r) => r.foreignNavigationName.toLocaleLowerCase() == fieldName.toLocaleLowerCase(),
+    )
+    if (fkRelationToSet) {
+      console.log('fkRelationToSet', fkRelationToSet)
+      fieldToSet = fields.find(
+        (f) => f.name.toLocaleLowerCase() == fkRelationToSet.foreignKeyIndexName.toLocaleLowerCase(),
+      )
+      if (!fieldToSet) {
+        setCurrentField(null)
+        return
+      }
+      setCurrentFkRelation(fkRelationToSet)
+      setCurrentField(fieldToSet)
+      notifyRelationUpdated(fieldToSet, currentOperator, currentValue)
+      return
+    }
     if (!fieldToSet) {
       setCurrentField(null)
       return
     }
-    console.log('setCurrentField', fieldToSet)
     setCurrentField(fieldToSet)
-    notifyRelationUpdated(fieldToSet, currentOperator, currrentValue)
+    notifyRelationUpdated(fieldToSet, currentOperator, currentValue)
   }
 
   function onOperatorSet(o: string) {
     setCurrentOperator(o)
-    notifyRelationUpdated(currrentField, o, currrentValue)
+    notifyRelationUpdated(currrentField, o, currentValue)
   }
 
-  function onValueSet(v: string) {
+  function onValueSet(v: any) {
     setCurrentValue(v)
     notifyRelationUpdated(currrentField, currentOperator, v)
   }
@@ -105,10 +144,12 @@ const RelationEditor: React.FC<{
     <div className='flex p-2 gap-1  rounded-sm'>
       <DropdownSelect
         forceFocus
-        options={fields.map((f) => {
-          return { label: f.name, value: f.name }
-        })}
-        initialOption={currrentField && { label: currrentField.name, value: currrentField.name }}
+        options={getFieldOptions()}
+        initialOption={
+          currentFkRelation
+            ? { label: currentFkRelation.foreignNavigationName, value: currentFkRelation.foreignNavigationName }
+            : currrentField && { label: currrentField.name, value: currrentField.name }
+        }
         onOptionSet={(o) => onFieldSet(o?.value)}
         placeholder='Select a field'
       ></DropdownSelect>
@@ -118,12 +159,22 @@ const RelationEditor: React.FC<{
         onOptionSet={(o) => onOperatorSet(o?.value)}
         placeholder={currrentField ? 'Select a operator' : 'Select a field first'}
       ></DropdownSelect>
-      <input
-        value={currrentValue}
-        type={EntitySchemaService.getHtmlInputType(currrentField?.type || 'string')}
-        onChange={(e) => onValueSet(e.target.value)}
-        className='p-0.5 outline-1 outline-gray-400 outline rounded-sm w-64 focus:z-50 relative bg-backgroundonw dark:bg-backgroundonedark'
-      ></input>
+      {currentFkRelation ? (
+        <LookUpSelect
+          showLabel={false}
+          dataSourceManager={dataSourceManager}
+          initialValue={null}
+          lookUpRelation={currentFkRelation}
+          onValueSet={(keyValues: any[]) => onValueSet(keyValues)}
+        ></LookUpSelect>
+      ) : (
+        <input
+          value={currentValue}
+          type={EntitySchemaService.getHtmlInputType(currrentField?.type || 'string')}
+          onChange={(e) => onValueSet(e.target.value)}
+          className='p-0.5 outline-1 outline-gray-400 outline rounded-sm w-64 focus:z-50 relative bg-backgroundonw dark:bg-backgroundonedark'
+        ></input>
+      )}
     </div>
   )
 }

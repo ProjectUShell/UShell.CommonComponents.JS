@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { FieldSchema } from 'fusefx-modeldescription'
+import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import { LogicalExpression } from 'fusefx-repositorycontract'
 import TrashIcon from '../../../_Icons/TrashIcon'
 import LogicalExpressionTree from './LogicalExpressionTree'
 import { getEmptyExpression, isExpressionValid } from '../ExpressionService'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
+import { IDataSourceManagerBase } from 'ushell-modulebase'
 
 function getCopy(e: LogicalExpression | null): LogicalExpression {
   if (e == null) {
@@ -33,7 +34,10 @@ const LogicalExpressionEditor: React.FC<{
   intialExpression: LogicalExpression | null
   onUpdateExpression: (e: LogicalExpression) => void
   fields: FieldSchema[]
-}> = ({ intialExpression, fields, onUpdateExpression }) => {
+  fkRelations: RelationSchema[]
+  dataSourceManager: IDataSourceManagerBase
+}> = ({ intialExpression, fields, fkRelations, onUpdateExpression, dataSourceManager }) => {
+  console.log('LogicalExpressionEditor dataSourceManager', dataSourceManager)
   const [originalExpression, setOriginalExpression] = useState<LogicalExpression | null>(getCopy(intialExpression))
   const [expression, setExpression] = useState<LogicalExpression>()
 
@@ -56,10 +60,12 @@ const LogicalExpressionEditor: React.FC<{
     >
       <LogicalExpressionTree
         fields={fields}
+        fkRelations={fkRelations}
         onUpdateExpression={(e) => {
           setExpression(e)
         }}
         expression={expression}
+        dataSourceManager={dataSourceManager}
       ></LogicalExpressionTree>
       <div className='flex gap-1 justify-end border-t pt-1 border-gray-400'>
         <button

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { IDataSource } from 'ushell-modulebase'
+import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
 import Table, { TableColumn } from './Table'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import TrashIcon from '../../../_Icons/TrashIcon'
@@ -21,6 +21,7 @@ import LoadingScreen from '../../../_Molecules/LoadingScreen'
 import { filter } from 'rxjs'
 
 const EntityTable: React.FC<{
+  dataSourceManager: IDataSourceManagerBase
   dataSource: IDataSource
   parentSchema: EntitySchema | undefined
   parent: any | undefined
@@ -32,6 +33,7 @@ const EntityTable: React.FC<{
   selectedRecord: any | null
   onCreateRecord: () => void
 }> = ({
+  dataSourceManager,
   dataSource,
   schemaRoot,
   entitySchema,
@@ -43,6 +45,7 @@ const EntityTable: React.FC<{
   selectedRecord,
   onCreateRecord,
 }) => {
+  console.log('EntityTable dataSourceManager', dataSourceManager)
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
   // const [columns, setColumns] = useState<TableColumn[]>([])
@@ -164,6 +167,11 @@ const EntityTable: React.FC<{
             <LogicalExpressionEditor
               intialExpression={null}
               fields={dataSource.entitySchema!.fields}
+              fkRelations={EntitySchemaService.getRelationsByFilter(
+                schemaRoot,
+                (r) => r.foreignEntityName == dataSource.entitySchema!.name,
+              )}
+              dataSourceManager={dataSourceManager}
               onUpdateExpression={(e) => {
                 setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
                   const newF: any = { ...ofi }
@@ -208,8 +216,13 @@ const EntityTable: React.FC<{
       </div>
       <div>
         <FilterTagBar
+          dataSourceManager={dataSourceManager}
           className='mb-1 rounded-md'
           filters={filterByEntityName[entitySchema.name] || []}
+          fkRelations={EntitySchemaService.getRelationsByFilter(
+            schemaRoot,
+            (r) => r.foreignEntityName == dataSource.entitySchema!.name,
+          )}
           fields={dataSource.entitySchema!.fields}
           onUpdateFilters={(uf) => {
             setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {

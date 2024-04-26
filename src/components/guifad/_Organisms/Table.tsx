@@ -75,6 +75,16 @@ const Table: React.FC<{
   const [sortingParams, setSortingParams] = useState<SortingField[]>([])
   const [rowExpanded, setRowExpanded] = useState<{ [r: number]: boolean }>({})
   const [reRender, setReRender] = useState(0)
+  const [lastWidth, setLastWidth] = useState(window.innerWidth)
+  const [widthDelta, setWidthDelta] = useState(0)
+
+  // column resize
+  const [columnWidths, setColumnWidths] = useState<{ [key: string]: number }>({})
+  const [dragStartWidth, setDragStartWidth] = useState(0)
+  const [dragStartWidthNext, setDragStartWidthNext] = useState(0)
+  const [dragStartX, setDragStartX] = useState(0)
+
+  const currentWidth = window.innerWidth
 
   useEffect(() => {
     if (!initialFilters) {
@@ -208,10 +218,6 @@ const Table: React.FC<{
     return `${fontWeight} ${fontSize} ${fontFamily}`
   }
 
-  const [lastWidth, setLastWidth] = useState(window.innerWidth)
-  const [widthDelta, setWidthDelta] = useState(0)
-  const currentWidth = window.innerWidth
-
   if (currentWidth !== lastWidth) {
     setWidthDelta(currentWidth - lastWidth)
     setLastWidth(currentWidth)
@@ -292,62 +298,161 @@ const Table: React.FC<{
     })
   }
 
+  const handleResize = (key: string, widthDelta: number) => {
+    const newWidths = { ...columnWidths }
+    const newWidth: number = dragStartWidth + widthDelta
+    if (newWidth < 150) return
+    newWidths[key] = Math.max(dragStartWidth + widthDelta, 150)
+    // setColumnWidths({ ...columnWidths, [key]: dragStartWidth + newWidth })
+    const idx: number = columns.findIndex((c) => c.key == key)
+    if (idx >= 0 && idx < columns.length - 1) {
+      const nextKey: string = columns[idx + 1].key
+      const newNextWidth: number = Math.max(dragStartWidthNext - widthDelta, 150)
+      console.log('newNextWidth', newNextWidth)
+      newWidths[nextKey] = newNextWidth
+      // setColumnWidths({ ...columnWidths, [nextKey]: oldNextWidth - newWidth })
+    }
+    setColumnWidths(newWidths)
+  }
+
+  const getColumnWidth = (key: string) => {
+    return columnWidths[key] || 150 // Default width if not defined
+  }
+
+  const getColumnWidthNext = (key: string) => {
+    const idx: number = columns.findIndex((c) => c.key == key)
+    if (idx >= 0 && idx < columns.length - 1) {
+      const nextKey: string = columns[idx + 1].key
+      return columnWidths[nextKey] || 150 // Default width if not defined
+    }
+    return 0
+  }
+
+  function getTableWidth() {
+    let result = 0
+    columns.forEach((c) => (result += getColumnWidth(c.key)))
+    if ('column_expand' in columnWidths) {
+      result += getColumnWidth('column_expand')
+    }
+    return result
+  }
+
+  function initColumnWidth() {
+    // columnWidths[key] = document.getElementById(`column_${key}`)!.clientWidth
+    if (expandableRowProps && !('column_expand' in columnWidths)) {
+      const el: any = document.getElementById('column_expand')
+      if (el) {
+        columnWidths['column_expand'] = document.getElementById('column_expand')!.clientWidth
+      }
+    }
+    columns.forEach((c) => {
+      if (!(c.key in columnWidths)) {
+        console.log(`columnwidth ${c.key}`, document.getElementById(`column_${c.key}`)?.clientWidth)
+        columnWidths[c.key] = document.getElementById(`column_${c.key}`)!.clientWidth
+      }
+    })
+  }
+
+  // return (
+  //   <div
+  //     className={`bg-red-400 relative overflow-hidden shadow-md rounded-sm
+  //     border border-backgroundfour dark:border-backgroundfourdark h-full w-full flex flex-col justify-between ${className}`}
+  //   >
+  //     <div className='flex flex-col h-full w-full overflow-auto bg-blue-300 border-2'></div>
+  //   </div>
+  // )
+
   return (
     <div
-      className={`relative overflow-auto shadow-md rounded-sm 
+      className={`relative overflow-hidden shadow-md rounded-sm
       border border-backgroundfour dark:border-backgroundfourdark h-full w-full flex flex-col justify-between ${className}`}
     >
       <div className='flex flex-col h-full w-full overflow-auto'>
-        <table className='w-full max-h-full text-sm text-left'>
+        <table
+          className='w-full max-h-full text-sm text-left'
+          style={Object.keys(columnWidths).length > 0 ? { width: getTableWidth() } : {}}
+        >
           <thead className='text-xs border-backgroundfour bg-backgroundone dark:bg-backgroundonedark sticky top-0'>
             <tr className=''>
-              {expandableRowProps && <th className='flex items-center gap-1'></th>}
+              {expandableRowProps && (
+                <th
+                  id={'column_expand'}
+                  className='border-y border-backgroundfour dark:border-backgroundfourdark'
+                  style={'column_expand' in columnWidths ? { width: getColumnWidth('column_expand') } : {}}
+                ></th>
+              )}
               {columns.map((c: TableColumn) => (
                 <th
+                  id={`column_${c.key}`}
+                  // onMouseEnter={() => initColumnWidth(c.key)}
                   key={c.label}
-                  className='px-6 py-3 border-b border-backgroundfour dark:border-backgroundfourdark 
+                  className='border-y border-backgroundfour dark:border-backgroundfourdark
                   hover:bg-backgroundtwo dark:hover:bg-backgroundtwodark cursor-pointer'
                   onClick={(e) => {
                     if (c.sortable) {
                       toggleSorting(c.key)
                     }
                   }}
+                  style={c.key in columnWidths ? { width: getColumnWidth(c.key) } : {}}
                 >
-                  <div className='flex items-center gap-1 '>
-                    {c.label}
-                    {onSortingParamsChange && c.sortable && (
-                      <button onClick={(e) => toggleSorting(c.key)} className='pl-2'>
-                        {!sortingParams.find((sf) => sf.fieldName == c.key) && <SwitchIcon></SwitchIcon>}
-                        {sortingParams.find((sf) => sf.fieldName == c.key)?.descending && (
-                          <BarsArrowDownIcon className='text-blue-600 dark:text-blue-400'></BarsArrowDownIcon>
-                        )}
-                        {sortingParams.find((sf) => sf.fieldName == c.key) &&
-                          !sortingParams?.find((sf) => sf.fieldName == c.key)!.descending && (
-                            <BarsArrowUpIcon className='text-blue-600 dark:text-blue-400'></BarsArrowUpIcon>
+                  <div className='flex items-center justify-between '>
+                    <div className='flex items-center gap-1 px-4 py-2'>
+                      {c.label}
+                      {onSortingParamsChange && c.sortable && (
+                        <button onClick={(e) => toggleSorting(c.key)} className='pl-2'>
+                          {!sortingParams.find((sf) => sf.fieldName == c.key) && <SwitchIcon></SwitchIcon>}
+                          {sortingParams.find((sf) => sf.fieldName == c.key)?.descending && (
+                            <BarsArrowDownIcon className='text-blue-600 dark:text-blue-400'></BarsArrowDownIcon>
                           )}
-                      </button>
-                    )}
-                    <div className=''>
-                      {c.renderFilter && onFilterChanged && (
-                        <>
-                          {filterVisible[c.fieldName] && (
-                            <Dropdown setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}>
-                              <div className='w-40 bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md'>
-                                {c.renderFilter(filterByColumn[c.fieldName], (f) => onColumnFilterChange(f, c), c)}
-                              </div>
-                            </Dropdown>
-                          )}
-                          <button
-                            onClick={(e) => onSetFilterVisible(c.fieldName, true)}
-                            className={`${
-                              filterByColumn[c.fieldName] ? 'bg-green-200 dark:bg-green-600' : ''
-                            }  rounded-lg p-1`}
-                          >
-                            <FunnelIcon size={4}></FunnelIcon>
-                          </button>
-                        </>
+                          {sortingParams.find((sf) => sf.fieldName == c.key) &&
+                            !sortingParams?.find((sf) => sf.fieldName == c.key)!.descending && (
+                              <BarsArrowUpIcon className='text-blue-600 dark:text-blue-400'></BarsArrowUpIcon>
+                            )}
+                        </button>
                       )}
+                      <div className=''>
+                        {c.renderFilter && onFilterChanged && (
+                          <>
+                            {filterVisible[c.fieldName] && (
+                              <Dropdown setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}>
+                                <div className='w-40 bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md'>
+                                  {c.renderFilter(filterByColumn[c.fieldName], (f) => onColumnFilterChange(f, c), c)}
+                                </div>
+                              </Dropdown>
+                            )}
+                            <button
+                              onClick={(e) => onSetFilterVisible(c.fieldName, true)}
+                              className={`${
+                                filterByColumn[c.fieldName] ? 'bg-green-200 dark:bg-green-600' : ''
+                              }  rounded-lg p-1`}
+                            >
+                              <FunnelIcon size={4}></FunnelIcon>
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </div>
+                    <div
+                      draggable
+                      className='resize-handle hover:cursor-w-resize p-4 '
+                      onDragStart={(e) => {
+                        initColumnWidth()
+                        setDragStartWidth(getColumnWidth(c.key))
+                        setDragStartWidthNext(getColumnWidthNext(c.key))
+                        setDragStartX(e.clientX)
+                      }}
+                      onDragEnd={(e) => {
+                        setDragStartWidth(0)
+                        setDragStartX(0)
+                      }}
+                      onDrag={(e) => {
+                        if (e.clientX == 0) {
+                          return
+                        }
+                        const widhtDelta = e.clientX - dragStartX
+                        handleResize(c.key, widhtDelta)
+                      }}
+                    ></div>
                   </div>
                 </th>
               ))}
@@ -359,7 +464,7 @@ const Table: React.FC<{
                 <tr
                   key={i}
                   className={`border-b border-backgroundfour dark:border-backgroundfourdark ${
-                    selectedRows[i] ? 'bg-blue-300 dark:bg-blue-400' : 'bg-backgroundtwo dark:bg-backgroundtwodark'
+                    selectedRows[i] ? 'bg-blue-100 dark:bg-gray-700' : 'bg-backgroundtwo dark:bg-backgroundtwodark'
                   } text-sm`}
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}
@@ -378,9 +483,10 @@ const Table: React.FC<{
                         </td> */}
                   {expandableRowProps && expandableRowProps.rowExpandable(r) && (
                     <td
-                      className={`px-6 py-${
+                      className={`px-4 py-${
                         rowHeight !== undefined ? rowHeight : 4
                       } font-medium text-gray-900 whitespace-nowrap dark:text-white`}
+                      style={'column_expand' in columnWidths ? { width: getColumnWidth('column_expand') } : {}}
                     >
                       <button
                         id={`expand_${i}`}
@@ -395,9 +501,10 @@ const Table: React.FC<{
                     <td
                       id={`table_cell_${j}_${i}`}
                       key={j}
-                      className={`px-6 py-${
+                      className={`border-y border-backgroundfour dark:border-backgroundfourdark px-4 py-${
                         rowHeight !== undefined ? rowHeight : 4
-                      } font-normal text-gray-900 whitespace-nowrap dark:text-white`}
+                      } font-normal text-gray-900 whitespace-nowrap dark:text-white `}
+                      style={c.key in columnWidths ? { width: getColumnWidth(c.key) } : {}}
                     >
                       {c.onRenderCell ? (
                         c.onRenderCell(c.fieldName in r ? r[c.fieldName] : r[lowerFirstLetter(c.fieldName)])

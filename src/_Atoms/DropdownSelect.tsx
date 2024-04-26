@@ -15,6 +15,7 @@ const DropdownSelect: React.FC<{
   topOffset?: number
   bottomOffset?: number
 }> = ({ options, initialOption, onOptionSet, placeholder, forceFocus, topOffset, bottomOffset }) => {
+  console.log('DropdownSelect render', initialOption)
   const [open, setOpen] = useState(false)
   const [currentOption, setCurrentOption] = useState<Option | null | undefined>(initialOption)
   const [currentText, setCurrentText] = useState<string>(initialOption ? initialOption.label : '')
@@ -23,6 +24,8 @@ const DropdownSelect: React.FC<{
 
   useEffect(() => {
     if (!initialOption) {
+      setCurrentOption(undefined)
+      setCurrentText('')
       return
     }
     setCurrentOption(initialOption)
