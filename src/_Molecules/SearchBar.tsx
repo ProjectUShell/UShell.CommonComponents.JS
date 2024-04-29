@@ -16,7 +16,7 @@ const SearchBar: React.FC<{ onSearch: (searchText: string) => void }> = ({ onSea
         }}
         onKeyUp={onKeyUp}
         placeholder='search'
-        className='px-1 rounded-sm outline-none  p-1 bg-inherit
+        className='px-1 rounded-sm outline-none  p-1 bg-backgroundfour dark:bg-backgroundfourdark
       w-56  focus:w-80 transition-all'
       ></input>
     </div>
