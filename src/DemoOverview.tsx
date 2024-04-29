@@ -14,6 +14,7 @@ import { FuseDataStore } from './data/FuseDataStore'
 import ResizableTable from './components/guifad/_Organisms/ResizableTable'
 import ResizableTable2 from './components/guifad/_Organisms/ResizeableTable'
 import ColorDemo from './demo/ColorDemo'
+import SchemaEditor from './components/schema-editor/components/SchemaEditor'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -21,11 +22,12 @@ const Demo = () => {
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3MTM2OTg3NjYsImV4cCI6MTc0NTIzNDc2NiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.C-c7FWta-4pyjSZL1tnOlLdI6fFHM6d11VpWVrtJwqA'
   const [currentComponent, setCurrentComponent] = useState<string>('TableDemo')
 
-  const demoComponents: string[] = ['Guifad', 'Table', 'Common']
+  const demoComponents: string[] = ['Guifad', 'Table', 'Common', 'SchemaEditor']
   const subComponents: { [key: string]: string[] } = {
     Guifad: ['GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
     Table: ['TableDemo', 'ResizeTable', 'ResizeTable2'],
     Common: ['ColorDemo', 'DropdownButtonDemo'],
+    SchemaEditor: ['SchemaEditor'],
   }
 
   return (
@@ -108,6 +110,7 @@ const Demo = () => {
           ></ResizableTable2>
         )}
         {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
+        {currentComponent == 'SchemaEditor' && <SchemaEditor></SchemaEditor>}
       </ShellLayout>
     </QueryClientProvider>
   )

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { createRef, useState } from 'react'
 import { MenuItem } from '../ShellMenu'
 import ChevronDown from '../_Icons/ChevronDown'
 import Dropdown from '../../../_Atoms/Dropdown'
@@ -31,40 +31,52 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
         ))}
       {menuItems
         .filter((mi) => mi.type != 'Command')
-        .map((mi: MenuItem) => (
-          <div key={mi.id}>
-            <div
-              className={`flex items-center justify-between px-2 py-3  hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer ${
-                mi.children && openStateById[mi.id] ? 'bg-backgroundfour dark:bg-backgroundfourdark' : ''
-              }`}
-              onClick={() => {
-                setiIsOpen(mi.id, true)
-              }}
-            >
-              <div className='px-1'> {mi.label}</div>
-              {mi.children && <ChevronDown size={4}></ChevronDown>}
-            </div>
-            {mi.children && openStateById[mi.id] && (
-              <Dropdown
-                topOffset={1}
-                rightOffset={0}
-                setIsOpen={() => {
-                  setiIsOpen(mi.id, false)
+        .map((mi: MenuItem) => {
+          const buttonRef: any = createRef()
+          return (
+            <div key={mi.id}>
+              <div
+                ref={buttonRef}
+                className={`flex items-center justify-between 
+                px-2 py-3  hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer ${
+                  mi.children && openStateById[mi.id]
+                    ? 'bg-backgroundfour dark:bg-backgroundfourdark'
+                    : ''
+                }`}
+                onClick={() => {
+                  setiIsOpen(mi.id, true)
                 }}
               >
-                <div className='bg-backgroundone dark:bg-backgroundonedark rounded-sm border border-backgroundtfour dark:border-backgroundfourdark'>
+                <div className='px-1'> {mi.label}</div>
+                {mi.children && <ChevronDown size={4}></ChevronDown>}
+              </div>
+              {mi.children && openStateById[mi.id] && (
+                <Dropdown
+                  topOffset={1}
+                  rightOffset={0}
+                  setIsOpen={() => {
+                    setiIsOpen(mi.id, false)
+                  }}
+                  className='bg-red-400'
+                  minWidthRef={buttonRef}
+                >
                   <div
-                    onClick={() => {
-                      openStateById[mi.id] = false
-                    }}
+                    className='bg-backgroundone dark:bg-backgroundonedark
+                  rounded-sm border border-backgroundfour dark:border-backgroundfourdark'
                   >
-                    <VerticalMenu menuItems={mi.children}></VerticalMenu>
+                    <div
+                      onClick={() => {
+                        openStateById[mi.id] = false
+                      }}
+                    >
+                      <VerticalMenu menuItems={mi.children}></VerticalMenu>
+                    </div>
                   </div>
-                </div>
-              </Dropdown>
-            )}
-          </div>
-        ))}
+                </Dropdown>
+              )}
+            </div>
+          )
+        })}
     </div>
   )
 }

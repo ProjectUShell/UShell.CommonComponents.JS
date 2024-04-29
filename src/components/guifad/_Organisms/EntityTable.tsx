@@ -21,6 +21,8 @@ import LoadingScreen from '../../../_Molecules/LoadingScreen'
 import { filter } from 'rxjs'
 import SearchBar from '../../../_Molecules/SearchBar'
 import AdjustmentsHorizontalIcon from '../../../_Icons/AdjustmentsHorizontalIcon'
+import BookmarkSquareIcon from '../../../_Icons/BookmarkSquareIcon'
+import QueryLibrary from './QueryLibrary'
 
 const EntityTable: React.FC<{
   dataSourceManager: IDataSourceManagerBase
@@ -121,6 +123,12 @@ const EntityTable: React.FC<{
 
   const getId = useCallback((e: any) => EntitySchemaService.getPrimaryKey(entitySchema, e), [entitySchema])
 
+  function applyQuery(queries: LogicalExpression[]) {
+    const newF: any = { ...filterByEntityName }
+    newF[entitySchema.name] = queries
+    setFilterByEntityName(newF)
+  }
+
   function buildFilterExpression(): LogicalExpression | undefined {
     const result: LogicalExpression = new LogicalExpression()
     const filters: LogicalExpression[] = filterByEntityName[entitySchema.name] || []
@@ -207,7 +215,7 @@ const EntityTable: React.FC<{
             ></SearchBar>
           </div>
           <DropdownButton
-            className='p-1'
+            className=''
             rightOffset={1}
             topOffset={-1}
             buttonContent={<FunnelIcon size={5}></FunnelIcon>}
@@ -234,23 +242,14 @@ const EntityTable: React.FC<{
               }}
             ></LogicalExpressionEditor>
           </DropdownButton>
-          <button
-            id='ParentFilterButton'
-            className={`hover:bg-backgroundthree hover:dark:bg-backgroundthreedark p-1 rounded-md ${
-              useParentFilter ? 'text-green-600' : ''
-            }`}
-            onClick={() => setUseParentFilter((x) => !x)}
-          >
-            <ArrowUturnUpd size={5}></ArrowUturnUpd>
-            <Tooltip targetId='ParentFilterButton'>
-              <div className='text-textone dark:text-textonedark'>
-                {useParentFilter ? 'Disable Parent Filter' : 'Activate Parent Filter'}
-              </div>
-            </Tooltip>
-          </button>
+          <QueryLibrary
+            expressions={filterByEntityName[dataSource.entitySchema!.name] || []}
+            entityName={dataSource.entitySchema!.name}
+            applySavedQuery={(q: LogicalExpression[]) => applyQuery(q)}
+          ></QueryLibrary>
           <button
             id='ShowFilterTagsButton'
-            className={`hover:bg-backgroundthree hover:dark:bg-backgroundthreedark p-1 rounded-md ${
+            className={`hover:bg-backgroundone dark:hover:bg-backgroundonedark p-1 rounded-md ${
               filterByEntityName[dataSource.entitySchema!.name]?.length > 0 ? 'text-green-600' : ''
             }`}
             onClick={() => setFilterTagsVisible((x) => !x)}
@@ -262,10 +261,24 @@ const EntityTable: React.FC<{
               </div>
             </Tooltip>
           </button>
+          <button
+            id='ParentFilterButton'
+            className={`hover:bg-backgroundone dark:hover:bg-backgroundonedark p-1 rounded-md ${
+              useParentFilter ? 'text-green-600' : ''
+            }`}
+            onClick={() => setUseParentFilter((x) => !x)}
+          >
+            <ArrowUturnUpd size={5}></ArrowUturnUpd>
+            <Tooltip targetId='ParentFilterButton'>
+              <div className='text-textone dark:text-textonedark'>
+                {useParentFilter ? 'Disable Parent Filter' : 'Activate Parent Filter'}
+              </div>
+            </Tooltip>
+          </button>
         </div>
       </div>
       <div>
-        {filterTagsVisible && filterByEntityName[dataSource.entitySchema!.name]?.length > 0 && (
+        {filterTagsVisible && (
           <FilterTagBar
             dataSourceManager={dataSourceManager}
             className='mb-1 rounded-md'

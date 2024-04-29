@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 
 const Dropdown: React.FC<{
   setIsOpen?: (o: boolean) => void
@@ -8,7 +8,24 @@ const Dropdown: React.FC<{
   leftOffset?: number
   children: any
   className?: string
-}> = ({ setIsOpen, children, topOffset, bottomOffset, rightOffset, leftOffset }) => {
+  minWidthRef?: any
+}> = ({
+  setIsOpen,
+  children,
+  topOffset,
+  bottomOffset,
+  rightOffset,
+  leftOffset,
+  className,
+  minWidthRef,
+}) => {
+  const [render, setRender] = useState(0)
+
+  useEffect(() => {
+    console.log('minWidth', minWidthRef)
+    setRender((r) => r + 1)
+  }, [minWidthRef])
+
   useEffect(() => {
     if (!setIsOpen) {
       return
@@ -98,7 +115,11 @@ const Dropdown: React.FC<{
     )
   }
 
-  let topOffsetCss: string = topOffset ? (topOffset > 0 ? `top-${topOffset}` : `-top-${-topOffset}`) : 'top-0'
+  let topOffsetCss: string = topOffset
+    ? topOffset > 0
+      ? `top-${topOffset}`
+      : `-top-${-topOffset}`
+    : 'top-0'
   let bottomOffsetCss: string = bottomOffset
     ? bottomOffset > 0
       ? `bottom-${bottomOffset}`
@@ -109,7 +130,11 @@ const Dropdown: React.FC<{
       ? `right-${rightOffset}`
       : `-right-${-rightOffset}`
     : 'right-0'
-  let leftOffsetCss: string = leftOffset ? (leftOffset > 0 ? `left-${leftOffset}` : `-left-${-leftOffset}`) : 'left-0'
+  let leftOffsetCss: string = leftOffset
+    ? leftOffset > 0
+      ? `left-${leftOffset}`
+      : `-left-${-leftOffset}`
+    : 'left-0'
 
   if (leftOffset && !rightOffset) {
     rightOffsetCss = ''
@@ -131,15 +156,23 @@ const Dropdown: React.FC<{
     <>
       {setIsOpen && (
         <button
+          id='button1'
           className='fixed z-40 cursor-default inset-0 bg-black bg-opacity-0'
           onClick={() => setIsOpen(false)}
         ></button>
       )}
       <div className='relative'>
         <div
-          className={`absolute z-40 ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}  flex justify-center items-center w-max`}
+          className={`absolute z-40
+           ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
+             flex justify-center items-center w-max ${className}`}
         >
-          <div className='rounded-md'>{children}</div>
+          <div
+            style={{ minWidth: `${minWidthRef?.current?.clientWidth}px` }}
+            className='rounded-md'
+          >
+            {children}
+          </div>
         </div>
       </div>
     </>

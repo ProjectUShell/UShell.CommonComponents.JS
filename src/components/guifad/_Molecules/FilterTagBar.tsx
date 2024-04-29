@@ -34,6 +34,7 @@ const FilterTagBar: React.FC<{
           ></FilterTag>
         </div>
       ))}
+      {filters.length == 0 && <div className='p-2.5'>Showing All</div>}
     </div>
   )
 }
