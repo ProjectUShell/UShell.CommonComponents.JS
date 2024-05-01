@@ -7,11 +7,11 @@ import LoadingScreen from '../../../_Molecules/LoadingScreen'
 
 const queryClient = new QueryClient()
 
-const GuifadFuse: React.FC<{ fuseUrl: string; routePattern: string; rootEntityName: string }> = ({
-  fuseUrl,
-  routePattern,
-  rootEntityName,
-}) => {
+const GuifadFuse: React.FC<{
+  fuseUrl: string
+  routePattern: 'body' | 'route' | 'method'
+  rootEntityName: string
+}> = ({ fuseUrl, routePattern, rootEntityName }) => {
   const [dataStore, setDataStore] = useState<FuseDataStore | null | undefined>(undefined)
   const [error, setError] = useState<any>(null)
 
