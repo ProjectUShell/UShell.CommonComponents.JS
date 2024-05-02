@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react'
 import TopBar from '../_Organisms/TopBar'
 import VerticalShellLayout from './VerticalShellLayout'
 import HorizontalShellLayout from './HorizontalShellLayout'
-import { ColorMode, LayoutMode, loadShellSettings, saveShellSettings, ShellSettings } from '../ShellSettings'
+import {
+  ColorMode,
+  LayoutMode,
+  loadShellSettings,
+  saveShellSettings,
+  ShellSettings,
+} from '../ShellSettings'
 import { ShellMenu, TopBarItem } from '../ShellMenu'
 
 // import '../../../tailwind.css'
@@ -45,9 +51,10 @@ const ShellLayout: React.FC<{
   return (
     <div className={`${shellSettings.colorMode == ColorMode.Dark && 'dark'}`}>
       <div
-        className={`h-screen w-screen flex flex-col overflow-hidden font-custom antialiased text-textone dark:text-textonedark ${
-          shellSettings.colorMode == ColorMode.Dark ? 'dark' : ''
-        }`}
+        className={`h-screen w-screen flex flex-col overflow-hidden font-custom antialiased 
+          text-textone dark:text-textonedark ${
+            shellSettings.colorMode == ColorMode.Dark ? 'dark' : ''
+          }`}
       >
         <TopBar
           layoutMode={shellSettings.layoutMode}

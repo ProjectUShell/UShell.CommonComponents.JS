@@ -28,7 +28,7 @@ const InputField: React.FC<{
     <div className={className}>
       <label className='block mb-2 text-xs font-medium'>{label}</label>
       <input
-        className='text-sm rounded-md bg-backgroundone dark:bg-backgroundonedark focus:ring-blue-400 block w-full p-2.5'
+        className='text-sm rounded-md bg-bg2 dark:bg-bg2dark block w-full p-2.5'
         type={EntitySchemaService.getHtmlInputType(inputType)}
         value={currentValue}
         onChange={(e) => {

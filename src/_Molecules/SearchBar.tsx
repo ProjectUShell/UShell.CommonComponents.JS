@@ -8,7 +8,7 @@ const SearchBar: React.FC<{ onSearch: (searchText: string) => void }> = ({ onSea
   }
 
   return (
-    <div className='bg-backgroundfour dark:bg-backgroundfourdark'>
+    <div className='bg-bg3 dark:bg-bg3dark'>
       <input
         onBlur={(e) => {
           onSearch(e.target.value)
@@ -16,7 +16,7 @@ const SearchBar: React.FC<{ onSearch: (searchText: string) => void }> = ({ onSea
         }}
         onKeyUp={onKeyUp}
         placeholder='search'
-        className='px-1 rounded-sm outline-none  p-1 bg-backgroundfour dark:bg-backgroundfourdark
+        className='px-1 rounded-sm outline-none  p-1 bg-bg2 dark:bg-bg3dark
       w-56  focus:w-80 transition-all'
       ></input>
     </div>

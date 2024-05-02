@@ -3,7 +3,12 @@ import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
 import FloppyDiskIcon from '../../../_Icons/FloppyDiskIcon'
 import Group from '../_Atoms/Group'
 import InputField from '../_Atoms/InputField'
-import { getForeignKeyValue, getValue, lowerFirstLetter, setValue } from '../../../utils/StringUtils'
+import {
+  getForeignKeyValue,
+  getValue,
+  lowerFirstLetter,
+  setValue,
+} from '../../../utils/StringUtils'
 import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import XMarkIcon from '../../../_Icons/XMarkIcon'
 import { IndexSchema } from 'fusefx-modeldescription'
@@ -33,12 +38,14 @@ const EntityForm: React.FC<{
     try {
       const nonLookupfkRelations: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
         dataSourceManager.getSchemaRoot(),
-        (r: RelationSchema) => r.foreignEntityName == dataSource.entitySchema!.name && !r.isLookupRelation,
+        (r: RelationSchema) =>
+          r.foreignEntityName == dataSource.entitySchema!.name && !r.isLookupRelation,
       )
 
       const fkRelationsToSet: RelationSchema[] = EntitySchemaService.getRelationsByFilter(
         dataSourceManager.getSchemaRoot(),
-        (r: RelationSchema) => r.foreignEntityName == dataSource.entitySchema!.name && r.isLookupRelation,
+        (r: RelationSchema) =>
+          r.foreignEntityName == dataSource.entitySchema!.name && r.isLookupRelation,
       )
       setFkRelations(fkRelationsToSet)
       const fieldsToSet: FieldSchema[] = dataSource.entitySchema!.fields.filter((f) => {
@@ -54,7 +61,12 @@ const EntityForm: React.FC<{
             i.memberFieldNames.includes(f.name) &&
             (f.name == 'Id' || f.name == 'id'),
         )
-        return !fkRelationForField && !nonLookupfkRelationForField && !primaryKey && !f.dbGeneratedIdentity
+        return (
+          !fkRelationForField &&
+          !nonLookupfkRelationForField &&
+          !primaryKey &&
+          !f.dbGeneratedIdentity
+        )
       })
       setFieldsToDisplay(fieldsToSet)
     } catch (err) {
@@ -99,12 +111,12 @@ const EntityForm: React.FC<{
 
   return (
     <div className='flex flex-col h-full'>
-      <div className={`flex justify-end p-1 ${className} bg-backgroundtwo dark:bg-backgroundtwodark rounded-md mb-2`}>
+      <div className={`flex justify-end p-1 ${className} bg-bg1 dark:bg-bg1dark rounded-md mb-2`}>
         {dirty && (
           <button
             disabled={!dirty}
             className={`rounded-md p-1
-              ${dirty ? 'text-red-400 dark:text-red-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark' : ''}`}
+              ${dirty ? 'text-red-400 dark:text-red-400 hover:bg-bg2 dark:hover:bg-bg2dark' : ''}`}
             onClick={(e) => cancel()}
           >
             <XMarkIcon size={6}></XMarkIcon>
@@ -115,7 +127,7 @@ const EntityForm: React.FC<{
             disabled={dirty}
             className={`rounded-md p-1
               ${
-                !dirty ? 'text-blue-400 dark:text-blue-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark' : ''
+                !dirty ? 'text-blue-400 dark:text-blue-400 hover:bg-bg2 dark:hover:bg-bg2dark' : ''
               }`}
             onClick={(e) => setDirty(true)}
           >
@@ -125,7 +137,7 @@ const EntityForm: React.FC<{
         <button
           disabled={!dirty}
           className={`rounded-md p-1 
-            ${dirty ? 'text-blue-400 dark:text-blue-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark' : ''}`}
+            ${dirty ? 'text-blue-400 dark:text-blue-400 hover:bg-bg2 dark:hover:bg-bg2dark' : ''}`}
           onClick={(e) => save()}
         >
           <FloppyDiskIcon size={6}></FloppyDiskIcon>

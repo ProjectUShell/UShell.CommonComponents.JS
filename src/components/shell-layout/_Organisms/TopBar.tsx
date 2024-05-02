@@ -11,9 +11,20 @@ const TopBar: React.FC<{
   toggleSidebarOpen: () => void
   title: JSX.Element | string
   topBarElements?: TopBarItem[]
-}> = ({ layoutMode, setLayoutMode, setColorMode, toggleSidebarOpen, topBarElements, title, shellSettings }) => {
+}> = ({
+  layoutMode,
+  setLayoutMode,
+  setColorMode,
+  toggleSidebarOpen,
+  topBarElements,
+  title,
+  shellSettings,
+}) => {
   return (
-    <header className='static top-0 flex flex-col z-20 px-6 bg-backgroundone dark:bg-backgroundonedark text-textone dark:text-textonedark shadow-lg'>
+    <header
+      className='static top-0 flex flex-col z-20 px-6 
+      bg-backgroundone dark:bg-bg1dark text-textone dark:text-textonedark shadow-lg '
+    >
       <div className='flex justify-between items-center py-1'>
         <div className='flex items-center py-2'>
           <h1>{title}</h1>
@@ -27,7 +38,11 @@ const TopBar: React.FC<{
                 stroke='currentColor'
                 className='w-6 h-6'
               >
-                <path strokeLinecap='round' strokeLinejoin='round' d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5' />
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5'
+                />
               </svg>
             </button>
           )}

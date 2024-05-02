@@ -6,35 +6,43 @@ const ColorDemo = () => {
       <div className='w-full h-full flex flex-col p-2'>
         <h1>Backgrounds</h1>
         <div
-          className='h-full flex gap-1 items-start justify-start 
-          bg-backgroundonedark dark:bg-backgroundfour text-textonedark dark:text-textone'
+          className='h-full flex  items-start justify-start 
+          bg-bg4dark dark:bg-bg4 text-textonedark dark:text-textone'
         >
-          <div className=' m-auto'>
-            <h2>backgoundone</h2>
-            <div className='bg-backgroundone dark:bg-backgroundonedark w-60 h-60'></div>
+          <div className=' '>
+            <h2>bg1</h2>
+            <div className='bg-bg1 dark:bg-bg1dark w-60 h-60'></div>
           </div>
-          <div className='m-auto'>
-            <h2>backgoundtwo</h2>
-            <div className='bg-backgroundtwo dark:bg-backgroundtwodark w-60 h-60'></div>
+          <div className=''>
+            <h2>bg2</h2>
+            <div className='bg-bg2 dark:bg-bg2dark w-60 h-60'></div>
           </div>
-          <div className='m-auto'>
-            <h2>backgoundthree</h2>
-            <div className='bg-backgroundthree dark:bg-backgroundthreedark w-60 h-60'></div>
+          <div className=''>
+            <h2>bg3</h2>
+            <div className='bg-bg3 dark:bg-bg3dark w-60 h-60'></div>
           </div>
-          <div className='m-auto'>
-            <h2>backgoundfour</h2>
-            <div className='bg-backgroundfour dark:bg-backgroundfourdark w-60 h-60'></div>
+          <div className=''>
+            <h2>bg4</h2>
+            <div className='bg-bg4 dark:bg-bg4dark w-60 h-60'></div>
+          </div>
+          <div className=''>
+            <h2>bg5</h2>
+            <div className='bg-bg5 dark:bg-bg5dark w-60 h-60'></div>
+          </div>
+          <div className=''>
+            <h2>bg6</h2>
+            <div className='bg-bg6 dark:bg-bg6dark w-60 h-60'></div>
           </div>
         </div>
       </div>
       <div className='w-full h-full p-2'>
         <h1>Text</h1>
-        <div className='h-full flex gap-1 items-start justify-start'>
-          <div className=' m-auto'>
+        <div className='h-full flex items-start justify-start'>
+          <div className=''>
             <h2>textone</h2>
             <div className='bg-textone dark:bg-textonedark w-60 h-60'></div>
           </div>
-          <div className=' m-auto'>
+          <div className=''>
             <h2>texttwo</h2>
             <div className='bg-texttwo dark:bg-texttwodark w-60 h-60'></div>
           </div>

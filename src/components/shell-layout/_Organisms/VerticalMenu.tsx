@@ -1,9 +1,19 @@
 import React, { useState } from 'react'
 import { MenuItem } from '../ShellMenu'
 import ChevronDown from '../_Icons/ChevronDown'
-import { ShellMenuState, activateItem, getItemState, loadShellMenuState, toggleFolderCollapse } from '../ShellMenuState'
+import {
+  ShellMenuState,
+  activateItem,
+  getItemState,
+  loadShellMenuState,
+  toggleFolderCollapse,
+} from '../ShellMenuState'
 
-const VerticalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
+const VerticalMenu: React.FC<{
+  menuItems: MenuItem[]
+  className?: string
+  menuItemHoverClassName?: string
+}> = ({ menuItems, className, menuItemHoverClassName }) => {
   const [, setRerenderTrigger] = useState(0)
   const [shellMenuState] = useState<ShellMenuState>(loadShellMenuState())
 
@@ -17,6 +27,8 @@ const VerticalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
       depth={0}
       triggerRerender={triggerRerender}
       shellMenuState={shellMenuState}
+      className={className}
+      menuItemHoverClassName={menuItemHoverClassName}
     ></VerticalMenuInternal>
   )
 }
@@ -26,7 +38,9 @@ const VerticalMenuInternal: React.FC<{
   depth: number
   triggerRerender: () => void
   shellMenuState: ShellMenuState
-}> = ({ menuItems, depth, triggerRerender, shellMenuState }) => {
+  className?: string
+  menuItemHoverClassName?: string
+}> = ({ menuItems, depth, triggerRerender, shellMenuState, className, menuItemHoverClassName }) => {
   function onToggleFolderCollapse(itemId: string) {
     toggleFolderCollapse(shellMenuState!, itemId).then((newState: ShellMenuState) => {
       // setShellMenuState(newState);
@@ -37,16 +51,24 @@ const VerticalMenuInternal: React.FC<{
   const depthCssClass = getDepthCssClass(depth)
 
   return (
-    <ul className='select-none text-sm bg-backgroundone dark:bg-backgroundonedark rounded-md'>
+    <ul
+      className={`select-none text-sm  rounded-md ${
+        className ? '' : 'bg-backgroundone dark:bg-backgroundonedark'
+      }`}
+    >
       {menuItems.map((mi: MenuItem) => (
         <div key={mi.id}>
           <li
             key={mi.id}
-            className={`flex items-center gap-x-4 p-1 rounded-as ${depthCssClass} ${
-              mi.type !== 'Group' ? 'hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer' : ''
+            className={`flex items-center gap-x-4 p-1 px-2 rounded-as ${depthCssClass} ${
+              mi.type !== 'Group'
+                ? (menuItemHoverClassName && menuItemHoverClassName !== ''
+                    ? menuItemHoverClassName
+                    : 'hover:bg-bg2 dark:hover:bg-bg2dark ') + ' cursor-pointer'
+                : ''
             } ${mi.type == 'Command' ? 'mt-0 font-light' : 'mt-4 font-bold'} ${
               shellMenuState.activeItemId == mi.id
-                ? 'bg-backgroundfour dark:bg-backgroundfourdark border-r-2 border-textone dark:border-textonedark'
+                ? 'bg-prim6 dark:bg-prim1 border-r-2 border-textone dark:border-textonedark'
                 : ''
             }`}
             onClick={() => {

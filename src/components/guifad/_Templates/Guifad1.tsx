@@ -88,11 +88,11 @@ const Guifad1: React.FC<{
     setCurrentMode('details')
   }
   return (
-    <div className='w-full h-full flex overflow-hidden text-sm'>
+    <div className='w-full h-full flex overflow-hidden text-sm bg-bg1 dark:bg-bg1dark'>
       <aside
         style={{ minWidth: '72px' }}
-        className='flex flex-col justify-start bg-backgroundthree 
-          dark:bg-backgroundthreedark w-72 py-2'
+        className='flex flex-col justify-start bg-bg3 
+          dark:bg-bg2dark w-72 py-2'
       >
         <StructureNavigation
           schemaRoot={dataSourceManager.getSchemaRoot()}
@@ -126,7 +126,7 @@ const Guifad1: React.FC<{
         {/* {!currentRelation && <div className='h-full w-64 pr-1 mt-1'></div>} */}
       </aside>
       <div className='h-full w-full flex flex-col min-w-0'>
-        <header className='flex flex-col bg-backgroundthree dark:bg-backgroundthreedark'>
+        <header className='flex flex-col bg-backgroundthree dark:bg-bg2dark'>
           <Breadcrumb
             nodes={nodes}
             onNodeClick={(n: ObjectGraphNode[], r: any) => {
@@ -147,7 +147,9 @@ const Guifad1: React.FC<{
               onRecordEnter={(r: any) => {
                 console.log('record enter', r)
               }}
-              onSelectedRecordsChange={(selectedRecords) => onSelectedRecordsChange(selectedRecords)}
+              onSelectedRecordsChange={(selectedRecords) =>
+                onSelectedRecordsChange(selectedRecords)
+              }
               selectedRecord={currentRecord}
               onCreateRecord={createRecord}
               parentSchema={node.parent?.dataSource?.entitySchema}

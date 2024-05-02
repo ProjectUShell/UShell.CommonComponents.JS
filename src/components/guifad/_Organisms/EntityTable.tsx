@@ -54,10 +54,12 @@ const EntityTable: React.FC<{
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
   // const [columns, setColumns] = useState<TableColumn[]>([])
   const [pagingParams, setPagingParams] = useState<PagingParams>({ pageNumber: 1, pageSize: 10 })
-  const [sortingParamsByEntityName, setSortingParamsByEntityName] = useState<{ [entityName: string]: SortingField[] }>(
-    {},
-  )
-  const [filterByEntityName, setFilterByEntityName] = useState<{ [entityName: string]: LogicalExpression[] }>({})
+  const [sortingParamsByEntityName, setSortingParamsByEntityName] = useState<{
+    [entityName: string]: SortingField[]
+  }>({})
+  const [filterByEntityName, setFilterByEntityName] = useState<{
+    [entityName: string]: LogicalExpression[]
+  }>({})
   const [useParentFilter, setUseParentFilter] = useState(true)
   const [reloadTrigger, setReloadTrigger] = useState(0)
 
@@ -74,10 +76,11 @@ const EntityTable: React.FC<{
 
   useEffect(() => {
     if (universalSearchText == '') return
-    const searchExpression: LogicalExpression | null = EntitySchemaService.getUniversalSearchExpression(
-      dataSource.entitySchema!,
-      universalSearchText,
-    )
+    const searchExpression: LogicalExpression | null =
+      EntitySchemaService.getUniversalSearchExpression(
+        dataSource.entitySchema!,
+        universalSearchText,
+      )
     if (!searchExpression) return
     setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
       const newF: any = { ...ofi }
@@ -106,7 +109,15 @@ const EntityTable: React.FC<{
             fieldType: f.type,
             key: fkRelation.foreignNavigationName,
             onRenderCell: (cellValue) => {
-              return <div>{EntitySchemaService.getLabel(schemaRoot, fkRelation.primaryEntityName, cellValue)}</div>
+              return (
+                <div>
+                  {EntitySchemaService.getLabel(
+                    schemaRoot,
+                    fkRelation.primaryEntityName,
+                    cellValue,
+                  )}
+                </div>
+              )
             },
           }
         }
@@ -121,7 +132,10 @@ const EntityTable: React.FC<{
     // })
   }, [dataSource, schemaRoot, entitySchema])
 
-  const getId = useCallback((e: any) => EntitySchemaService.getPrimaryKey(entitySchema, e), [entitySchema])
+  const getId = useCallback(
+    (e: any) => EntitySchemaService.getPrimaryKey(entitySchema, e),
+    [entitySchema],
+  )
 
   function applyQuery(queries: LogicalExpression[]) {
     const newF: any = { ...filterByEntityName }
@@ -192,7 +206,7 @@ const EntityTable: React.FC<{
   return (
     <div className='flex flex-col h-full'>
       <div className='flex justify-between items-center'>
-        <div className={`flex justify-end p-1 ${className} rounded-md bg-backgroundtwo dark:bg-backgroundtwodark `}>
+        <div className={`flex justify-end p-1 ${className} rounded-md bg-bg1 dark:bg-bg1dark `}>
           <button
             className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark'
             onClick={(e) => addRecord()}
@@ -206,7 +220,7 @@ const EntityTable: React.FC<{
             <TrashIcon></TrashIcon>
           </button>
         </div>
-        <div className={`flex p-1 ${className} rounded-md bg-backgroundtwo dark:bg-backgroundtwodark `}>
+        <div className={`flex p-1 ${className} rounded-md bg-bg1 dark:bg-bg1dark `}>
           <div className='p-1'>
             <SearchBar
               onSearch={(searchText: string) => {

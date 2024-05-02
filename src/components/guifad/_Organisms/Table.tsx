@@ -120,7 +120,9 @@ const Table: React.FC<{
       if (!initialSelectedRecord) {
         return []
       }
-      const i: number = records.findIndex((r) => getIdInternal(r) == getIdInternal(initialSelectedRecord))
+      const i: number = records.findIndex(
+        (r) => getIdInternal(r) == getIdInternal(initialSelectedRecord),
+      )
       const newSr: { [index: number]: boolean } = {}
       newSr[i] = true
       return newSr
@@ -175,7 +177,9 @@ const Table: React.FC<{
       return
     }
     const newSortingParams = [...sortingParams]
-    const currentSortingField: SortingField | undefined = newSortingParams?.find((sf) => sf.fieldName == colKey)
+    const currentSortingField: SortingField | undefined = newSortingParams?.find(
+      (sf) => sf.fieldName == colKey,
+    )
     if (!currentSortingField) {
       newSortingParams.push({ fieldName: colKey, descending: false })
     } else if (currentSortingField.descending) {
@@ -364,10 +368,10 @@ const Table: React.FC<{
 
   return (
     <div
-      className={`relative overflow-hidden shadow-md rounded-sm
-      border border-backgroundfour dark:border-backgroundfourdark h-full w-full flex flex-col justify-between ${className}`}
+      className={`relative overflow-hidden shadow-lg1 drop-shadow-md1 rounded-md bg-bg1 dark:bg-bg1dark
+      border-0 border-backgroundfour dark:border-backgroundfourdark h-full w-full flex flex-col justify-between ${className} `}
     >
-      <div className='flex flex-col h-full w-full overflow-auto'>
+      <div className='flex flex-col h-full w-full overflow-auto '>
         <table
           className='w-full max-h-full text-sm text-left'
           style={Object.keys(columnWidths).length > 0 ? { width: getTableWidth() } : {}}
@@ -378,7 +382,11 @@ const Table: React.FC<{
                 <th
                   id={'column_expand'}
                   className='border-y border-backgroundfour dark:border-backgroundfourdark'
-                  style={'column_expand' in columnWidths ? { width: getColumnWidth('column_expand') } : {}}
+                  style={
+                    'column_expand' in columnWidths
+                      ? { width: getColumnWidth('column_expand') }
+                      : {}
+                  }
                 ></th>
               )}
               {columns.map((c: TableColumn) => (
@@ -386,8 +394,8 @@ const Table: React.FC<{
                   id={`column_${c.key}`}
                   // onMouseEnter={() => initColumnWidth(c.key)}
                   key={c.label}
-                  className='border-y border-backgroundfour dark:border-backgroundfourdark
-                  hover:bg-backgroundtwo dark:hover:bg-backgroundtwodark cursor-pointer'
+                  className='border-y-0 border-backgroundfour dark:border-backgroundfourdark
+                  hover:bg-bg2 dark:hover:bg-bg2dark cursor-pointer'
                   onClick={(e) => {
                     if (c.sortable) {
                       toggleSorting(c.key)
@@ -400,7 +408,9 @@ const Table: React.FC<{
                       {c.label}
                       {onSortingParamsChange && c.sortable && (
                         <button onClick={(e) => toggleSorting(c.key)} className='pl-2'>
-                          {!sortingParams.find((sf) => sf.fieldName == c.key) && <SwitchIcon></SwitchIcon>}
+                          {!sortingParams.find((sf) => sf.fieldName == c.key) && (
+                            <SwitchIcon></SwitchIcon>
+                          )}
                           {sortingParams.find((sf) => sf.fieldName == c.key)?.descending && (
                             <BarsArrowDownIcon className='text-blue-600 dark:text-blue-400'></BarsArrowDownIcon>
                           )}
@@ -416,7 +426,11 @@ const Table: React.FC<{
                             {filterVisible[c.fieldName] && (
                               <Dropdown setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}>
                                 <div className='w-40 bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md'>
-                                  {c.renderFilter(filterByColumn[c.fieldName], (f) => onColumnFilterChange(f, c), c)}
+                                  {c.renderFilter(
+                                    filterByColumn[c.fieldName],
+                                    (f) => onColumnFilterChange(f, c),
+                                    c,
+                                  )}
                                 </div>
                               </Dropdown>
                             )}
@@ -463,8 +477,10 @@ const Table: React.FC<{
               const renderRow = (
                 <tr
                   key={i}
-                  className={`border-b border-backgroundfour dark:border-backgroundfourdark ${
-                    selectedRows[i] ? 'bg-blue-100 dark:bg-gray-700' : 'bg-backgroundtwo dark:bg-backgroundtwodark'
+                  className={`border-y border-bg3 dark:border-bg3dark  ${
+                    selectedRows[i]
+                      ? 'bg-prim6 dark:bg-prim1 text-textonedark'
+                      : 'bg-bg1 dark:bg-bg1dark'
                   } text-sm`}
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}
@@ -486,14 +502,22 @@ const Table: React.FC<{
                       className={`px-4 py-${
                         rowHeight !== undefined ? rowHeight : 4
                       } font-medium text-gray-900 whitespace-nowrap dark:text-white`}
-                      style={'column_expand' in columnWidths ? { width: getColumnWidth('column_expand') } : {}}
+                      style={
+                        'column_expand' in columnWidths
+                          ? { width: getColumnWidth('column_expand') }
+                          : {}
+                      }
                     >
                       <button
                         id={`expand_${i}`}
                         className='rounded-md hover:text-blue-600'
                         onClick={(e) => onToggleRowExpand(i)}
                       >
-                        {rowExpanded[i] ? <MinusCircleIcon></MinusCircleIcon> : <PlusCircleIcon></PlusCircleIcon>}
+                        {rowExpanded[i] ? (
+                          <MinusCircleIcon></MinusCircleIcon>
+                        ) : (
+                          <PlusCircleIcon></PlusCircleIcon>
+                        )}
                       </button>
                     </td>
                   )}
@@ -501,17 +525,23 @@ const Table: React.FC<{
                     <td
                       id={`table_cell_${j}_${i}`}
                       key={j}
-                      className={`border-y border-backgroundfour dark:border-backgroundfourdark px-4 py-${
+                      className={`border-y-0 border-backgroundfour dark:border-backgroundfourdark px-4 py-${
                         rowHeight !== undefined ? rowHeight : 4
                       } font-normal text-gray-900 whitespace-nowrap dark:text-white `}
                       style={c.key in columnWidths ? { width: getColumnWidth(c.key) } : {}}
                     >
                       {c.onRenderCell ? (
-                        c.onRenderCell(c.fieldName in r ? r[c.fieldName] : r[lowerFirstLetter(c.fieldName)])
+                        c.onRenderCell(
+                          c.fieldName in r ? r[c.fieldName] : r[lowerFirstLetter(c.fieldName)],
+                        )
                       ) : (
                         <>
                           {c.fieldName in r
-                            ? getDisplay(r[c.fieldName], c, document.getElementById(`table_cell_${j}_${i}`))
+                            ? getDisplay(
+                                r[c.fieldName],
+                                c,
+                                document.getElementById(`table_cell_${j}_${i}`),
+                              )
                             : getDisplay(
                                 r[lowerFirstLetter(c.fieldName)],
                                 c,

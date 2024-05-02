@@ -38,10 +38,8 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
               <div
                 ref={buttonRef}
                 className={`flex items-center justify-between 
-                px-2 py-3  hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer ${
-                  mi.children && openStateById[mi.id]
-                    ? 'bg-backgroundfour dark:bg-backgroundfourdark'
-                    : ''
+                px-2 py-3  hover:bg-bg2 dark:hover:bg-bg3dark cursor-pointer ${
+                  mi.children && openStateById[mi.id] ? 'bg-bg2 dark:bg-bg3dark' : ''
                 }`}
                 onClick={() => {
                   setiIsOpen(mi.id, true)
@@ -52,24 +50,28 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
               </div>
               {mi.children && openStateById[mi.id] && (
                 <Dropdown
-                  topOffset={1}
+                  topOffset={0}
                   rightOffset={0}
                   setIsOpen={() => {
                     setiIsOpen(mi.id, false)
                   }}
-                  className='bg-red-400'
+                  className='bg-bg2 dark:bg-bg3dark rounded-sm'
                   minWidthRef={buttonRef}
                 >
                   <div
-                    className='bg-backgroundone dark:bg-backgroundonedark
-                  rounded-sm border border-backgroundfour dark:border-backgroundfourdark'
+                    className='bg-bg2 dark:bg-bg3dark
+                     border-0 border-backgroundfour dark:border-backgroundfourdark rounded-sm shadow-lg'
                   >
                     <div
                       onClick={() => {
                         openStateById[mi.id] = false
                       }}
                     >
-                      <VerticalMenu menuItems={mi.children}></VerticalMenu>
+                      <VerticalMenu
+                        menuItems={mi.children}
+                        className='bg-bg2 dark:bg-bg3dark'
+                        menuItemHoverClassName='hover:bg-bg3 dark:hover:bg-bg4dark'
+                      ></VerticalMenu>
                     </div>
                   </div>
                 </Dropdown>

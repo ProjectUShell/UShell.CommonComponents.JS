@@ -34,23 +34,25 @@ const StructureNavigation: React.FC<{
     <div className={`pl-2 text-md ${className}`}>
       <h1 className='mb-2 font-bold'>
         {currentRecord
-          ? entitySchema.name + ' ' + EntitySchemaService.getLabel(schemaRoot, entitySchema.name, currentRecord)
+          ? entitySchema.name +
+            ' ' +
+            EntitySchemaService.getLabel(schemaRoot, entitySchema.name, currentRecord)
           : entitySchema.name}
       </h1>
       <button
         disabled={dirty}
-        className={`w-full flex gap-1 items-center hover:bg-backgroundtwo dark:hover:bg-backgroundtwodark ${
+        className={`w-full flex gap-1 items-center hover:bg-bg1 dark:hover:bg-bg1dark ${
           dirty ? 'hover:cursor-pointer text-gray-400' : ''
-        } rounded-l-md p-1 ${mode == 'list' ? 'bg-backgroundtwo dark:bg-backgroundtwodark' : ''}`}
+        } rounded-l-md p-1 ${mode == 'list' ? 'bg-bg1 dark:bg-bg1dark' : ''}`}
         onClick={(e) => setMode('list')}
       >
         <ListIcon></ListIcon>List
       </button>
       <button
         disabled={!currentRecord}
-        className={`w-full flex gap-1 items-center hover:bg-backgroundtwo dark:hover:bg-backgroundtwodark ${
+        className={`w-full flex gap-1 items-center hover:bg-bg1 dark:hover:bg-bg1dark ${
           !currentRecord ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
-        } ${mode == 'details' ? 'bg-backgroundtwo dark:bg-backgroundtwodark' : ''} rounded-l-md p-1`}
+        } ${mode == 'details' ? 'bg-bg1 dark:bg-bg1dark' : ''} rounded-l-md p-1`}
         onClick={(e) => setMode('details')}
       >
         <PencilIcon></PencilIcon>Details
@@ -73,7 +75,9 @@ const StructureNavigation: React.FC<{
           onDoubleClick={() => onRelationEnter(er)}
         >
           <FolderIcon></FolderIcon>
-          {er.primaryNavigationName && er.primaryNavigationName != '' ? er.primaryNavigationName : er.foreignEntityName}
+          {er.primaryNavigationName && er.primaryNavigationName != ''
+            ? er.primaryNavigationName
+            : er.foreignEntityName}
         </button>
       ))}
     </div>
