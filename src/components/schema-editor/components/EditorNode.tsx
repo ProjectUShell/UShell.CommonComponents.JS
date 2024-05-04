@@ -1,10 +1,12 @@
 import React, { createRef, useEffect, useState } from 'react'
+import { Camera } from '../Camera'
 
 const EditorNode: React.FC<{
   id: string
   x: number
   y: number
   selected: boolean
+  camera: Camera
   onMouseDown: (id: string, e: any) => void
   onMouseDownOutput: (posX: number, posY: number, nodeId: string, outputIndex: number) => void
   onMouseEnterInput: (posX: number, posY: number, nodeId: string, outputIndex: number) => void
@@ -17,6 +19,7 @@ const EditorNode: React.FC<{
     x,
     y,
     selected,
+    camera,
     onMouseDown,
     onMouseDownOutput,
     onMouseEnterInput,
@@ -24,21 +27,14 @@ const EditorNode: React.FC<{
     numInputs,
     numOutputs,
   }) => {
-    // const [x, setX] = useState(initialX)
-    // const [y, setY] = useState(initialY)
-
-    // useEffect(() => {
-    //   setX(initialX)
-    //   setY(initialY)
-    // }, [initialX, initialY])
-
     function handleMouseDownOutput(ref: any, e: any, index: number) {
       e.preventDefault()
       e.stopPropagation()
       if (!ref) return
-      console.log('output down', ref)
+      console.log('output down e', e)
       e.stopPropagation()
       const el: any = ref.current
+      console.log('output down el', el.getBoundingClientRect())
       const centerX =
         el.getBoundingClientRect().left +
         Math.abs(el.getBoundingClientRect().right - el.getBoundingClientRect().left) / 2
@@ -47,7 +43,10 @@ const EditorNode: React.FC<{
         el.getBoundingClientRect().top +
         Math.abs(el.getBoundingClientRect().bottom - el.getBoundingClientRect().top) / 2
 
-      onMouseDownOutput(centerX, centerY, id, index)
+      // onMouseDownOutput(centerX, el.getBoundingClientRect().bottom, id, index)
+      onMouseDownOutput(centerX + camera.posX, centerY + camera.posY, id, index)
+      // onMouseDownOutput(e.clientX, e.clientY - 100, id, index)
+      // onMouseDownOutput(e.clientX, ref.current.clientY, id, index)
     }
 
     function handleMouseEnterInput(ref: any, inputIndex: number) {
@@ -63,10 +62,21 @@ const EditorNode: React.FC<{
 
       onMouseEnterInput(centerX, centerY, id, inputIndex)
     }
+
+    const worldX: number = camera.scale * x - camera.scale * camera.posX
+    const worldY: number = camera.scale * y - camera.scale * camera.posY
+    const worldWidth: number = camera.scale * 120
+    const worldHeight: number = camera.scale * 120
+
+    // console.log('worldX', worldX)
     // transform: `translate(${x}px ${y}px`
     return (
       <div
-        style={{ width: '120px', height: '120px', transform: `translate(${x}px, ${y}px` }}
+        style={{
+          width: `${worldWidth}px`,
+          height: `${worldHeight}px`,
+          transform: `translate(${worldX}px, ${worldY}px`,
+        }}
         onMouseDown={(e: any) => {
           e.stopPropagation()
 
@@ -103,7 +113,7 @@ const EditorNode: React.FC<{
                 key={i}
                 ref={outputRef}
                 className='w-3 h-3 rounded-full bg-yellow-300 
-                  cursor-crosshair hover:bg-red-400 pointer-events-auto'
+                  cursor-crosshair hover:bg-red-400 pointer-events-auto border-4 border-red-600'
                 onMouseDown={(e) => handleMouseDownOutput(outputRef, e, i)}
               ></div>
             )

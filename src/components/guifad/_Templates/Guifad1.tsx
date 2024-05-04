@@ -126,7 +126,7 @@ const Guifad1: React.FC<{
         {/* {!currentRelation && <div className='h-full w-64 pr-1 mt-1'></div>} */}
       </aside>
       <div className='h-full w-full flex flex-col min-w-0'>
-        <header className='flex flex-col bg-backgroundthree dark:bg-bg2dark'>
+        <header className='flex flex-col bg-bg3 dark:bg-bg2dark'>
           <Breadcrumb
             nodes={nodes}
             onNodeClick={(n: ObjectGraphNode[], r: any) => {

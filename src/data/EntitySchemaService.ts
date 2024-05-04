@@ -1,4 +1,10 @@
-import { EntitySchema, SchemaRoot, RelationSchema, FieldSchema, IndexSchema } from 'fusefx-modeldescription'
+import {
+  EntitySchema,
+  SchemaRoot,
+  RelationSchema,
+  FieldSchema,
+  IndexSchema,
+} from 'fusefx-modeldescription'
 import { IDataSource } from 'ushell-modulebase'
 import { capitalizeFirstLetter, getValue, lowerFirstLetter } from '../utils/StringUtils'
 import { LogicalExpression } from 'fusefx-repositorycontract'
@@ -39,9 +45,13 @@ export class EntitySchemaService {
 
     if (entity.label) return entity.label
     if (entity.label) return entity.label
-    const entitySchema: EntitySchema | undefined = schemaRoot.entities.find((e) => e.name == primaryEntityName)
+    const entitySchema: EntitySchema | undefined = schemaRoot.entities.find(
+      (e) => e.name == primaryEntityName,
+    )
     if (!entitySchema) return '???'
-    const labelField: FieldSchema | undefined = entitySchema.fields.find((f: FieldSchema) => f.identityLabel)
+    const labelField: FieldSchema | undefined = entitySchema.fields.find(
+      (f: FieldSchema) => f.identityLabel,
+    )
     if (labelField) return getValue(entity, labelField.name)
     if (entity.name) return entity.name
     if (entity.Name) return entity.Name
@@ -55,7 +65,9 @@ export class EntitySchemaService {
     if (!entity) return 'Nope'
     if (entity.label) return entity.label
     if (entity.label) return entity.label
-    const labelField: FieldSchema | undefined = entitySchema.fields.find((f: FieldSchema) => f.identityLabel)
+    const labelField: FieldSchema | undefined = entitySchema.fields.find(
+      (f: FieldSchema) => f.identityLabel,
+    )
     if (labelField) return getValue(entity, labelField.name)
     if (entity.id) return entity.id
     if (entity.Id) return entity.Id
@@ -103,7 +115,10 @@ export class EntitySchemaService {
       (r) => r.primaryEntityName == entitySchema.name && (includeLookups || !r.isLookupRelation),
     )
   }
-  static getRelationsByFilter(schemaRoot: SchemaRoot, filter: (r: RelationSchema) => boolean): RelationSchema[] {
+  static getRelationsByFilter(
+    schemaRoot: SchemaRoot,
+    filter: (r: RelationSchema) => boolean,
+  ): RelationSchema[] {
     return schemaRoot.relations.filter((r) => filter(r))
   }
 
@@ -134,6 +149,9 @@ export class EntitySchemaService {
         return 'number'
       case 'datetime':
         return 'date'
+      case 'bool':
+      case 'boolean':
+        return 'checkbox'
     }
     return 'text'
   }

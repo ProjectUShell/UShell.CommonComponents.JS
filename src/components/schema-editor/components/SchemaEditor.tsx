@@ -3,12 +3,13 @@ import { NodeData } from '../NodeData'
 import EditorNode from './EditorNode'
 import { EdgeData } from '../EdgeData'
 import EditorEdge from './EditorEdge'
+import { Camera } from '../Camera'
 
 const SchemaEditor: React.FC = () => {
   const boardElement = document.getElementById('board')
 
   const [grabbingBoard, setGrabbingBoard] = useState(false)
-  const [scale, setScale] = useState<number>(1)
+  const [camera, setCamera] = useState(new Camera())
   const [clickedPosition, setClickedPosition] = useState<any>({ x: -1, y: -1 })
   const [nodes, setNodes] = useState<NodeData[]>([createNode(), createNode2()])
   const [edges, setEdges] = useState<EdgeData[]>([])
@@ -41,8 +42,8 @@ const SchemaEditor: React.FC = () => {
       id: 'test',
       numInputs: 2,
       numOutputs: 2,
-      currentPosition: { x: 160, y: 160 },
-      previousPosition: { x: 160, y: 160 },
+      currentPosition: { x: 0, y: 0 },
+      previousPosition: { x: 0, y: 0 },
       inputEdgeIds: [],
       outputEdgeIds: [],
     }
@@ -61,18 +62,19 @@ const SchemaEditor: React.FC = () => {
     return result
   }
 
-  function applyScale2(e: any) {
+  function applyScale(e: any) {
     if (!boardElement) return
-    let newScale = scale + e.deltaY * -0.0005
-    if (newScale > 2) newScale = 2
-    if (newScale < 1) newScale = 1
-    setScale(newScale)
-    boardElement.style.transform = `scale(${newScale})`
-    boardElement.style.marginTop = `${(newScale - 1) * 50}vh`
-    boardElement.style.marginLeft = `${(newScale - 1) * 50}vw`
+    const currentScale = camera.scale
+    let newScale = currentScale + e.deltaY * -0.0005
+    if (newScale > 3) newScale = 3
+    if (newScale < 0.5) newScale = 0.5
+    setCamera({ ...camera, scale: newScale })
+    // boardElement.style.transform = `scale(${newScale})`
+    // boardElement.style.marginTop = `${(newScale - 1) * 50}vh`
+    // boardElement.style.marginLeft = `${(newScale - 1) * 50}vw`
   }
 
-  function onMouseDownBoard(e: any) {
+  function handleMouseDown(e: any) {
     setSelectedNode(null)
 
     e.preventDefault()
@@ -80,7 +82,7 @@ const SchemaEditor: React.FC = () => {
     setClickedPosition({ x: e.clientX, y: e.clientY })
   }
 
-  function onMouseUp(e: any) {
+  function handleMouseUp(e: any) {
     e.preventDefault()
     setGrabbingBoard(false)
     setClickedPosition({ x: -1, y: -1 })
@@ -101,18 +103,19 @@ const SchemaEditor: React.FC = () => {
         const edgeId: string = `edge_${nodeStart.id}_${newEdge.outputIndex}_${nodeEnd.id}_${inInput.inputIndex}`
         nodeStart.outputEdgeIds = [...nodeStart.outputEdgeIds, edgeId]
         nodeEnd.inputEdgeIds = [...nodeEnd.inputEdgeIds, edgeId]
+        console.log('nodeEnd.inputEdgeIds', nodeEnd.inputEdgeIds)
 
         newEdge.previousStartPosition = {
-          x: newEdge.currentStartPosition.x / scale,
-          y: newEdge.currentStartPosition.y / scale,
+          x: newEdge.currentStartPosition.x,
+          y: newEdge.currentStartPosition.y,
         }
         newEdge.previousEndPosition = {
-          x: inInput.posX / scale,
-          y: inInput.posY / scale,
+          x: inInput.posX + camera.posX,
+          y: inInput.posY + camera.posY,
         }
         newEdge.currentEndPosition = {
-          x: inInput.posX / scale,
-          y: inInput.posY / scale,
+          x: inInput.posX + camera.posX,
+          y: inInput.posY + camera.posY,
         }
         setEdges([
           ...edges,
@@ -128,11 +131,12 @@ const SchemaEditor: React.FC = () => {
     }
   }
 
-  function onMouseMove(e: any) {
+  function handleMouseMove(e: any) {
     if (newEdge) {
-      newEdge.currentEndPosition = { x: e.clientX / scale, y: e.clientY / scale }
+      newEdge.currentEndPosition = { x: e.clientX + camera.posX, y: e.clientY + camera.posY }
       setNewEdge({ ...newEdge })
     }
+
     if (!(clickedPosition.x >= 0 && clickedPosition.y >= 0)) return
     const deltaX = e.clientX - clickedPosition.x
     const deltaY = e.clientY - clickedPosition.y
@@ -141,8 +145,8 @@ const SchemaEditor: React.FC = () => {
       if (node) {
         // Update node position
         node.currentPosition = {
-          x: (node.previousPosition.x + deltaX) / scale,
-          y: (node.previousPosition.y + deltaY) / scale,
+          x: node.previousPosition.x + deltaX,
+          y: node.previousPosition.y + deltaY,
         }
         setNodes([...nodes])
 
@@ -152,8 +156,8 @@ const SchemaEditor: React.FC = () => {
           const edge = edges.find((edge) => edge.id === edgeId)
           if (!edge) continue
           edge.currentEndPosition = {
-            x: (edge.previousEndPosition.x + deltaX) / scale,
-            y: (edge.previousEndPosition.y + deltaY) / scale,
+            x: edge.previousEndPosition.x + deltaX,
+            y: edge.previousEndPosition.y + deltaY,
           }
         }
 
@@ -162,56 +166,65 @@ const SchemaEditor: React.FC = () => {
           const edge = edges.find((edge) => edge.id === edgeId)
           if (!edge) continue
           edge.currentStartPosition = {
-            x: (edge.previousStartPosition.x + deltaX) / scale,
-            y: (edge.previousStartPosition.y + deltaY) / scale,
+            x: edge.previousStartPosition.x + deltaX,
+            y: edge.previousStartPosition.y + deltaY,
           }
         }
       }
     } else {
       const boardWrapperElement = document.getElementById('boardWrapper')
       if (!boardWrapperElement) return
-      boardWrapperElement.scrollBy(-deltaX, -deltaY)
+      // boardWrapperElement.scrollBy(-deltaX, -deltaY)
       setClickedPosition({ x: e.clientX, y: e.clientY })
+      camera.posX = camera.posX - deltaX
+      camera.posY = camera.posY - deltaY
+      setCamera({ ...camera })
     }
   }
 
-  const handleMouseDownNode = useCallback((id: string, e: any) => {
-    setSelectedNode(id)
+  const handleMouseDownNode = useCallback(
+    (id: string, e: any) => {
+      setSelectedNode(id)
 
-    setClickedPosition({ x: e.clientX, y: e.clientY })
+      setClickedPosition({ x: e.clientX, y: e.clientY })
 
-    const node = nodes.find((n) => n.id === id)
-    if (node) {
-      node.previousPosition = {
-        x: node.currentPosition.x * scale,
-        y: node.currentPosition.y * scale,
-      }
+      const node = nodes.find((n) => n.id === id)
+      if (node) {
+        node.previousPosition = {
+          x: node.currentPosition.x,
+          y: node.currentPosition.y,
+        }
 
-      // Update input edges positions
-      for (let i = 0; i < node.inputEdgeIds.length; i++) {
-        const edgeId = node.inputEdgeIds[i]
-        const edge = edges.find((edge) => edge.id === edgeId)
-        if (edge) {
-          edge.previousEndPosition = {
-            x: edge.currentEndPosition.x * scale,
-            y: edge.currentEndPosition.y * scale,
+        // Update input edges positions
+        for (let i = 0; i < node.inputEdgeIds.length; i++) {
+          const edgeId = node.inputEdgeIds[i]
+          const edge = edges.find((edge) => edge.id === edgeId)
+          console.log('update input edges', edges)
+          console.log('update input nodes', nodes)
+          console.log('update input', node)
+          if (edge) {
+            edge.previousEndPosition = {
+              x: edge.currentEndPosition.x,
+              y: edge.currentEndPosition.y,
+            }
+          }
+        }
+
+        // Update output edges positions
+        for (let i = 0; i < node.outputEdgeIds.length; i++) {
+          const edgeId = node.outputEdgeIds[i]
+          const edge = edges.find((edge) => edge.id === edgeId)
+          if (edge) {
+            edge.previousStartPosition = {
+              x: edge.currentStartPosition.x,
+              y: edge.currentStartPosition.y,
+            }
           }
         }
       }
-
-      // Update output edges positions
-      for (let i = 0; i < node.outputEdgeIds.length; i++) {
-        const edgeId = node.outputEdgeIds[i]
-        const edge = edges.find((edge) => edge.id === edgeId)
-        if (edge) {
-          edge.previousStartPosition = {
-            x: edge.currentStartPosition.x * scale,
-            y: edge.currentStartPosition.y * scale,
-          }
-        }
-      }
-    }
-  }, [])
+    },
+    [nodes, edges],
+  )
 
   const handleMouseEnterInput = useCallback(
     (posX: number, posY: number, nodeId: string, inputIndex: number) => {
@@ -223,10 +236,10 @@ const SchemaEditor: React.FC = () => {
 
   const handleMouseDownOutput = useCallback(
     (posX: number, posY: number, nodeId: string, outputIndex: number) => {
-      const prevStartPos = { x: posX / scale, y: posY / scale }
-      const prevEndPos = { x: posX / scale, y: posY / scale }
-      const curStartPos = { x: posX / scale, y: posY / scale }
-      const curEndPos = { x: posX / scale, y: posY / scale }
+      const prevStartPos = { x: posX, y: posY }
+      const prevEndPos = { x: posX, y: posY }
+      const curStartPos = { x: posX, y: posY }
+      const curEndPos = { x: posX, y: posY }
       console.log('new edge', curStartPos)
       setNewEdge({
         id: '',
@@ -249,28 +262,38 @@ const SchemaEditor: React.FC = () => {
     }
   }, [])
 
-  // function handle
-  // console.log('render board', nodes)
+  const backgroundWorldX: number = -camera.scale * camera.posX
+  const backgroundWorldY: number = -camera.scale * camera.posY
+  const backgroundWorldWidth: number = camera.scale * 30
+  const backgroundWorldHeight: number = camera.scale * 30
+
+  if (edges.length > 0) {
+    // console.log('edge', edges[0].previousEndPosition)
+    console.log('nodes', nodes)
+    console.log('edges', edges)
+  }
+
   return (
-    <div className='relative w-full h-full overflow-auto border-0 border-red-400'>
+    <div className='relative w-full h-full overflow-hidden border-0 border-red-400'>
       <div
         id='boardWrapper'
-        className='absolute w-full h-full overflow-auto top-0 left-0 border-0 border-blue-400'
+        className='absolute w-full h-full overflow-hidden top-0 left-0 border-0 border-blue-400'
       >
         <div
           id='board'
-          onWheel={applyScale2}
-          onMouseMove={onMouseMove}
-          onMouseDown={onMouseDownBoard}
-          onMouseUp={onMouseUp}
+          onWheel={applyScale}
+          onMouseMove={handleMouseMove}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
           onMouseLeave={(e) => {
             e.preventDefault()
             setGrabbingBoard(false)
           }}
-          className='relative w-full  h-full   border-0 border-black overflow-auto'
+          className='relative w-full  h-full   border-0 border-black overflow-hidden'
           style={{
             backgroundImage: 'radial-gradient(circle, #b8b8b8bf 1px, rgba(0,0,0,0) 1px',
-            backgroundSize: '30px 30px',
+            backgroundPosition: `${backgroundWorldX}px ${backgroundWorldY}px`,
+            backgroundSize: `${backgroundWorldWidth}px ${backgroundWorldHeight}px`,
             cursor: grabbingBoard ? 'grab' : 'default',
           }}
         >
@@ -282,6 +305,7 @@ const SchemaEditor: React.FC = () => {
               numInputs={n.numInputs}
               numOutputs={n.numOutputs}
               selected={selectedNode ? selectedNode == n.id : false}
+              camera={camera}
               onMouseDown={handleMouseDownNode}
               onMouseEnterInput={handleMouseEnterInput}
               onMouseDownOutput={handleMouseDownOutput}
@@ -298,6 +322,7 @@ const SchemaEditor: React.FC = () => {
                 x1: newEdge.currentEndPosition.x,
                 y1: newEdge.currentEndPosition.y,
               }}
+              camera={camera}
               onClickDelete={() => {}}
               onMouseDownEdge={() => {}}
             ></EditorEdge>
@@ -313,6 +338,7 @@ const SchemaEditor: React.FC = () => {
                 x1: edge.currentEndPosition.x,
                 y1: edge.currentEndPosition.y,
               }}
+              camera={camera}
               onMouseDownEdge={() => {}}
               onClickDelete={() => {}}
             ></EditorEdge>

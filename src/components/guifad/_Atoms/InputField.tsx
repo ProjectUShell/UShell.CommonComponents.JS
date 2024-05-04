@@ -13,7 +13,12 @@ const InputField: React.FC<{
   useEffect(() => {
     function getInitialValue(initialValue: any): any {
       const htmlType: string = EntitySchemaService.getHtmlInputType(inputType)
-      if (htmlType == 'date') return new Date(initialValue).toISOString().replace(/T.*/, '')
+      if (htmlType == 'date') {
+        if (!initialValue) {
+          return new Date().toISOString().replace(/T.*/, '')
+        }
+        return new Date(initialValue).toISOString().replace(/T.*/, '')
+      }
       if (initialValue) return initialValue
 
       if (htmlType == 'text') return ''
