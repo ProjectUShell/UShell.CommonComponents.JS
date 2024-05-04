@@ -1,5 +1,6 @@
+import { Position } from './Position'
+
 export class Camera {
-  posX: number = 0
-  posY: number = 0
+  pos: Position = { x: 0, y: 0 }
   scale: number = 1
 }

@@ -1,5 +1,7 @@
 import React from 'react'
 import { Camera } from '../Camera'
+import { Position } from '../Position'
+import { getBoardPosFromWindowPos } from '../BoardUtils'
 
 const EditorEdge: React.FC<{
   selected: boolean
@@ -19,19 +21,27 @@ const EditorEdge: React.FC<{
     return value / 2
   }
 
+  const startPos: Position = getBoardPosFromWindowPos({ x: position.x0, y: position.y0 })
+  const endPos: Position = getBoardPosFromWindowPos({ x: position.x1, y: position.y1 })
+
   const boardEl: HTMLElement | null = document.getElementById('board')
   const widthDiff: number = boardEl!.clientWidth - window.innerWidth
   const heightDiff: number = boardEl!.clientHeight - window.innerHeight
 
-  let x0 = position.x0 + widthDiff
-  let x1 = position.x1 + widthDiff
-  let y0 = position.y0 + heightDiff
-  let y1 = position.y1 + heightDiff
+  // let x0 = position.x0 + widthDiff
+  // let x1 = position.x1 + widthDiff
+  // let y0 = position.y0 + heightDiff
+  // let y1 = position.y1 + heightDiff
 
-  x0 = camera.scale * x0 - camera.scale * camera.posX
-  x1 = camera.scale * x1 - camera.scale * camera.posX
-  y0 = camera.scale * y0 - camera.scale * camera.posY
-  y1 = camera.scale * y1 - camera.scale * camera.posY
+  let x0 = position.x0
+  let x1 = position.x1
+  let y0 = position.y0
+  let y1 = position.y1
+
+  x0 = camera.scale * x0 - camera.scale * camera.pos.x
+  x1 = camera.scale * x1 - camera.scale * camera.pos.x
+  y0 = camera.scale * y0 - camera.scale * camera.pos.y
+  y1 = camera.scale * y1 - camera.scale * camera.pos.y
 
   return (
     <svg className='absolute top-0 left-0 w-full h-full pointer-events-none border-0'>

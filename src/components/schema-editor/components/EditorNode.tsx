@@ -1,6 +1,12 @@
 import React, { createRef, useEffect, useState } from 'react'
 import { Camera } from '../Camera'
 import { NodeData } from '../NodeData'
+import { Position } from '../Position'
+import {
+  getBoardPosFromWindowPos,
+  getViewPosFromWorldPos,
+  getWorldPosFromViewPos,
+} from '../BoardUtils'
 
 const EditorNode: React.FC<{
   id: string
@@ -48,15 +54,25 @@ const EditorNode: React.FC<{
         el.getBoundingClientRect().top +
         Math.abs(el.getBoundingClientRect().bottom - el.getBoundingClientRect().top) / 2
 
+      const windowPos: Position = { x: centerX, y: centerY }
+      const viewPos = getBoardPosFromWindowPos(windowPos)
+      const worldPos = getWorldPosFromViewPos(viewPos, camera)
+
       // onMouseDownOutput(centerX, el.getBoundingClientRect().bottom, id, index)
-      onMouseDownOutput(centerX + camera.posX, centerY + camera.posY, id, index)
+      // onMouseDownOutput(centerX + camera.pos.x, centerY + camera.pos.y, id, index)
+      onMouseDownOutput(worldPos.x, worldPos.y, id, index)
       // onMouseDownOutput(e.clientX, e.clientY - 100, id, index)
       // onMouseDownOutput(e.clientX, ref.current.clientY, id, index)
     }
 
-    function handleMouseEnterInput(ref: any, inputIndex: number) {
+    function handleMouseEnterInput(ref: any, e: any, inputIndex: number) {
+      e.preventDefault()
+      e.stopPropagation()
       if (!ref) return
+      console.log('output down e', e)
+      e.stopPropagation()
       const el: any = ref.current
+      console.log('output down el', el.getBoundingClientRect())
       const centerX =
         el.getBoundingClientRect().left +
         Math.abs(el.getBoundingClientRect().right - el.getBoundingClientRect().left) / 2
@@ -65,11 +81,14 @@ const EditorNode: React.FC<{
         el.getBoundingClientRect().top +
         Math.abs(el.getBoundingClientRect().bottom - el.getBoundingClientRect().top) / 2
 
-      onMouseEnterInput(centerX, centerY, id, inputIndex)
+      const windowPos: Position = { x: centerX, y: centerY }
+      const viewPos = getBoardPosFromWindowPos(windowPos)
+      const worldPos = getWorldPosFromViewPos(viewPos, camera)
+
+      onMouseEnterInput(worldPos.x, worldPos.y, id, inputIndex)
     }
 
-    const worldX: number = camera.scale * x - camera.scale * camera.posX
-    const worldY: number = camera.scale * y - camera.scale * camera.posY
+    const viewPos: Position = getViewPosFromWorldPos({ x: x, y: y }, camera)
     const worldWidth: number = camera.scale * 120
     const worldHeight: number = camera.scale * 120
 
@@ -80,7 +99,7 @@ const EditorNode: React.FC<{
         style={{
           width: `${worldWidth}px`,
           height: `${worldHeight}px`,
-          transform: `translate(${worldX}px, ${worldY}px`,
+          transform: `translate(${viewPos.x}px, ${viewPos.y}px`,
         }}
         onMouseDown={(e: any) => {
           e.stopPropagation()
@@ -99,7 +118,7 @@ const EditorNode: React.FC<{
 
             onMouseDown(id, e)
           }}
-          // disabled={!selected}
+          disabled={!selected}
           placeholder='EntityName'
           className='bg-bg3 dark:bg-bg3dark text-center p-1 border-1 mb-1'
         ></input>
@@ -109,7 +128,7 @@ const EditorNode: React.FC<{
 
             onMouseDown(id, e)
           }}
-          // disabled={!selected}
+          disabled={!selected}
           placeholder='New Field'
           className='bg-bg3 dark:bg-bg3dark text-center p-1'
         ></input>
@@ -124,7 +143,7 @@ const EditorNode: React.FC<{
                 key={i}
                 ref={inputRef}
                 className='w-3 h-3 rounded-full bg-yellow-300 cursor-crosshair pointer-events-auto'
-                onMouseEnter={() => handleMouseEnterInput(inputRef, i)}
+                onMouseEnter={(e) => handleMouseEnterInput(inputRef, e, i)}
                 onMouseLeave={() => onMouseLeaveInput(id, i)}
               ></div>
             )

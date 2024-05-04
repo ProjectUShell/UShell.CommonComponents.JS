@@ -80,10 +80,10 @@ const SchemaEditor: React.FC = () => {
     const mouseWindowPos = { x: e.clientX, y: e.clientY }
     const mouseBoardPos = getBoardPosFromWindowPos(mouseWindowPos)
 
-    const cam2X = mouseBoardPos.x / camera.scale + camera.posX - mouseBoardPos.x / newScale
-    const cam2Y = mouseBoardPos.y / camera.scale + camera.posY - mouseBoardPos.y / newScale
+    const cam2X = mouseBoardPos.x / camera.scale + camera.pos.x - mouseBoardPos.x / newScale
+    const cam2Y = mouseBoardPos.y / camera.scale + camera.pos.y - mouseBoardPos.y / newScale
 
-    setCamera({ ...camera, scale: newScale, posX: cam2X, posY: cam2Y })
+    setCamera({ ...camera, scale: newScale, pos: { x: cam2X, y: cam2Y } })
   }
 
   function handleMouseDown(e: any) {
@@ -129,12 +129,12 @@ const SchemaEditor: React.FC = () => {
           y: newEdge.currentStartPosition.y,
         }
         newEdge.previousEndPosition = {
-          x: inInput.posX + camera.posX,
-          y: inInput.posY + camera.posY,
+          x: inInput.posX,
+          y: inInput.posY,
         }
         newEdge.currentEndPosition = {
-          x: inInput.posX + camera.posX,
-          y: inInput.posY + camera.posY,
+          x: inInput.posX,
+          y: inInput.posY,
         }
         setEdges([
           ...edges,
@@ -152,7 +152,10 @@ const SchemaEditor: React.FC = () => {
 
   function handleMouseMove(e: any) {
     if (newEdge) {
-      newEdge.currentEndPosition = { x: e.clientX + camera.posX, y: e.clientY + camera.posY }
+      const windowPos: Position = { x: e.clientX, y: e.clientY }
+      const boardPos: Position = getBoardPosFromWindowPos(windowPos)
+      const worldPos: Position = getWorldPosFromViewPos(boardPos, camera)
+      newEdge.currentEndPosition = { x: worldPos.x, y: worldPos.y }
       setNewEdge({ ...newEdge })
     }
 
@@ -195,8 +198,8 @@ const SchemaEditor: React.FC = () => {
       if (!boardWrapperElement) return
       // boardWrapperElement.scrollBy(-deltaX, -deltaY)
       setClickedPosition({ x: e.clientX, y: e.clientY })
-      camera.posX = camera.posX - deltaX
-      camera.posY = camera.posY - deltaY
+      camera.pos.x = camera.pos.x - deltaX
+      camera.pos.y = camera.pos.y - deltaY
       setCamera({ ...camera })
     }
   }
@@ -281,8 +284,8 @@ const SchemaEditor: React.FC = () => {
     }
   }, [])
 
-  const backgroundWorldX: number = -camera.scale * camera.posX
-  const backgroundWorldY: number = -camera.scale * camera.posY
+  const backgroundWorldX: number = -camera.scale * camera.pos.x
+  const backgroundWorldY: number = -camera.scale * camera.pos.y
   const backgroundWorldWidth: number = camera.scale * 30
   const backgroundWorldHeight: number = camera.scale * 30
 

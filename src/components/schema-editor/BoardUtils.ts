@@ -14,14 +14,14 @@ export function getBoardPosFromWindowPos(windowPos: Position): Position {
 
 export function getViewPosFromWorldPos(boardPos: Position, cam: Camera): Position {
   return {
-    x: cam.scale * (boardPos.x + cam.posX),
-    y: cam.scale * (boardPos.y + cam.posY),
+    x: cam.scale * (boardPos.x - cam.pos.x),
+    y: cam.scale * (boardPos.y - cam.pos.y),
   }
 }
 
 export function getWorldPosFromViewPos(boardPos: Position, cam: Camera): Position {
   return {
-    x: boardPos.x / cam.scale + cam.posX,
-    y: boardPos.y / cam.scale + cam.posY,
+    x: boardPos.x / cam.scale + cam.pos.x,
+    y: boardPos.y / cam.scale + cam.pos.y,
   }
 }
