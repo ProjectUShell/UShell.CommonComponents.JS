@@ -76,14 +76,14 @@ const SchemaEditor: React.FC = () => {
     let newScale = currentScale + e.deltaY * -0.0005
     if (newScale > 3) newScale = 3
     if (newScale < 0.5) newScale = 0.5
-    // const x = (newScale / camera.scale) * camera.posX //TODO_RWE apply translation so that zoom is always centered
-    // const y = (newScale / camera.scale) * camera.posY
-    const x = camera.posX
-    const y = camera.posY
-    setCamera({ ...camera, scale: newScale })
-    // boardElement.style.transform = `scale(${newScale})`
-    // boardElement.style.marginTop = `${(newScale - 1) * 50}vh`
-    // boardElement.style.marginLeft = `${(newScale - 1) * 50}vw`
+
+    const mouseWindowPos = { x: e.clientX, y: e.clientY }
+    const mouseBoardPos = getBoardPosFromWindowPos(mouseWindowPos)
+
+    const cam2X = mouseBoardPos.x / camera.scale + camera.posX - mouseBoardPos.x / newScale
+    const cam2Y = mouseBoardPos.y / camera.scale + camera.posY - mouseBoardPos.y / newScale
+
+    setCamera({ ...camera, scale: newScale, posX: cam2X, posY: cam2Y })
   }
 
   function handleMouseDown(e: any) {
@@ -285,12 +285,6 @@ const SchemaEditor: React.FC = () => {
   const backgroundWorldY: number = -camera.scale * camera.posY
   const backgroundWorldWidth: number = camera.scale * 30
   const backgroundWorldHeight: number = camera.scale * 30
-
-  if (edges.length > 0) {
-    // console.log('edge', edges[0].previousEndPosition)
-    console.log('nodes', nodes)
-    console.log('edges', edges)
-  }
 
   return (
     <div className='relative w-full h-full overflow-hidden border-2 border-red-400'>
