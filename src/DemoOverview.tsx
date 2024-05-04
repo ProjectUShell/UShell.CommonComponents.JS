@@ -27,7 +27,7 @@ const Demo = () => {
     Guifad: ['GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
     Table: ['TableDemo', 'ResizeTable', 'ResizeTable2'],
     Common: ['ColorDemo', 'DropdownButtonDemo'],
-    SchemaEditor: ['SchemaEditor'],
+    SchemaEditor: ['Editor Demo'],
   }
 
   return (
@@ -110,7 +110,7 @@ const Demo = () => {
           ></ResizableTable2>
         )}
         {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
-        {currentComponent == 'SchemaEditor' && <SchemaEditor></SchemaEditor>}
+        {currentComponent == 'Editor Demo' && <SchemaEditor></SchemaEditor>}
       </ShellLayout>
     </QueryClientProvider>
   )

@@ -1,8 +1,10 @@
 import React, { createRef, useEffect, useState } from 'react'
 import { Camera } from '../Camera'
+import { NodeData } from '../NodeData'
 
 const EditorNode: React.FC<{
   id: string
+  nodeData: NodeData
   x: number
   y: number
   selected: boolean
@@ -16,6 +18,7 @@ const EditorNode: React.FC<{
 }> = React.memo(
   ({
     id,
+    nodeData,
     x,
     y,
     selected,
@@ -27,6 +30,8 @@ const EditorNode: React.FC<{
     numInputs,
     numOutputs,
   }) => {
+    const [entityName, setEntityName] = useState(nodeData.entitySchema.name)
+
     function handleMouseDownOutput(ref: any, e: any, index: number) {
       e.preventDefault()
       e.stopPropagation()
@@ -82,9 +87,32 @@ const EditorNode: React.FC<{
 
           onMouseDown(id, e)
         }}
-        className={`flex flex-col absolute cursor-grab bg-red-400 border-4 z-10 
+        className={`flex flex-col absolute cursor-grab bg-bg2 dark:bg-bg2dark border-2 z-10 
         shadow-md hover:shadow-2xl selection:bg-blue-400 ${selected ? 'border-orange-400' : ''}`}
       >
+        <input
+          id='test123'
+          value={entityName}
+          onChange={(e) => setEntityName(e.target.value)}
+          onMouseDown={(e: any) => {
+            e.stopPropagation()
+
+            onMouseDown(id, e)
+          }}
+          // disabled={!selected}
+          placeholder='EntityName'
+          className='bg-bg3 dark:bg-bg3dark text-center p-1 border-1 mb-1'
+        ></input>
+        <input
+          onMouseDown={(e: any) => {
+            e.stopPropagation()
+
+            onMouseDown(id, e)
+          }}
+          // disabled={!selected}
+          placeholder='New Field'
+          className='bg-bg3 dark:bg-bg3dark text-center p-1'
+        ></input>
         <div
           className='absolute top-0 -left-8 flex flex-col items-center justify-center gap-3 w-3 h-full
          pointer-events-none'

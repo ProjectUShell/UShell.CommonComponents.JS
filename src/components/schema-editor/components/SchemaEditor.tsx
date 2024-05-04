@@ -1,17 +1,26 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { NodeData } from '../NodeData'
+import { EntitySchema } from 'fusefx-modeldescription'
 import EditorNode from './EditorNode'
 import { EdgeData } from '../EdgeData'
 import EditorEdge from './EditorEdge'
 import { Camera } from '../Camera'
+import BoardContextMenu from './BoardContextMenu'
+import {
+  getBoardPosFromWindowPos,
+  getViewPosFromWorldPos,
+  getWorldPosFromViewPos,
+} from '../BoardUtils'
+import { Position } from '../Position'
 
 const SchemaEditor: React.FC = () => {
   const boardElement = document.getElementById('board')
 
+  const [currentId, setCurrentId] = useState(0)
   const [grabbingBoard, setGrabbingBoard] = useState(false)
   const [camera, setCamera] = useState(new Camera())
   const [clickedPosition, setClickedPosition] = useState<any>({ x: -1, y: -1 })
-  const [nodes, setNodes] = useState<NodeData[]>([createNode(), createNode2()])
+  const [nodes, setNodes] = useState<NodeData[]>([])
   const [edges, setEdges] = useState<EdgeData[]>([])
   const [selectedNode, setSelectedNode] = useState<string | null>(null)
 
@@ -23,43 +32,42 @@ const SchemaEditor: React.FC = () => {
     posY: number
   } | null>(null)
 
-  function createEdge(): EdgeData {
-    return {
-      currentStartPosition: { x: 20, y: 20 },
-      currentEndPosition: { x: 240, y: 240 },
-      id: 'testEdge1',
-      inputIndex: 0,
-      nodeEndId: 'Test2',
-      nodeStartId: 'Test',
-      outputIndex: 0,
-      previousStartPosition: { x: 20, y: 20 },
-      previousEndPosition: { x: 240, y: 240 },
+  const [contextMenuPos, setContextMenuPos] = useState<{ x: number; y: number } | null>(null)
+
+  useEffect(() => {
+    const pd = (e: any) => e.preventDefault()
+    document.addEventListener('contextmenu', pd)
+    return () => {
+      document.removeEventListener('contextmenu', pd)
     }
+  }, [])
+
+  function save() {
+    const boardState: any = {
+      nodes: nodes,
+      edges: edges,
+    }
+    localStorage.setItem('boardState', JSON.stringify(boardState))
   }
 
-  function createNode(): NodeData {
+  function createNewEntity(pos: Position): void {
+    setContextMenuPos(null)
+    const worldPos = getWorldPosFromViewPos(pos, camera)
+    console.log('new Entity')
+    const entitySchema = new EntitySchema()
+    entitySchema.name = 'Entity ' + currentId
     const result: NodeData = {
-      id: 'test',
+      id: currentId.toLocaleString(),
       numInputs: 2,
       numOutputs: 2,
-      currentPosition: { x: 0, y: 0 },
-      previousPosition: { x: 0, y: 0 },
+      currentPosition: { x: worldPos.x, y: worldPos.y },
+      previousPosition: { x: worldPos.x, y: worldPos.y },
       inputEdgeIds: [],
       outputEdgeIds: [],
+      entitySchema: entitySchema,
     }
-    return result
-  }
-  function createNode2(): NodeData {
-    const result: NodeData = {
-      id: 'test2',
-      numInputs: 2,
-      numOutputs: 2,
-      currentPosition: { x: 360, y: 360 },
-      previousPosition: { x: 360, y: 360 },
-      inputEdgeIds: [],
-      outputEdgeIds: [],
-    }
-    return result
+    setCurrentId((i) => i + 1)
+    setNodes([...nodes, result])
   }
 
   function applyScale(e: any) {
@@ -68,6 +76,10 @@ const SchemaEditor: React.FC = () => {
     let newScale = currentScale + e.deltaY * -0.0005
     if (newScale > 3) newScale = 3
     if (newScale < 0.5) newScale = 0.5
+    // const x = (newScale / camera.scale) * camera.posX //TODO_RWE apply translation so that zoom is always centered
+    // const y = (newScale / camera.scale) * camera.posY
+    const x = camera.posX
+    const y = camera.posY
     setCamera({ ...camera, scale: newScale })
     // boardElement.style.transform = `scale(${newScale})`
     // boardElement.style.marginTop = `${(newScale - 1) * 50}vh`
@@ -76,10 +88,17 @@ const SchemaEditor: React.FC = () => {
 
   function handleMouseDown(e: any) {
     setSelectedNode(null)
-
     e.preventDefault()
-    setGrabbingBoard(true)
-    setClickedPosition({ x: e.clientX, y: e.clientY })
+    e.stopPropagation()
+
+    if (e.button == 0) {
+      setClickedPosition({ x: e.clientX, y: e.clientY })
+      setContextMenuPos(null)
+      setGrabbingBoard(true)
+    }
+    if (e.button == 2) {
+      setContextMenuPos(getBoardPosFromWindowPos({ x: e.clientX, y: e.clientY }))
+    }
   }
 
   function handleMouseUp(e: any) {
@@ -274,7 +293,7 @@ const SchemaEditor: React.FC = () => {
   }
 
   return (
-    <div className='relative w-full h-full overflow-hidden border-0 border-red-400'>
+    <div className='relative w-full h-full overflow-hidden border-2 border-red-400'>
       <div
         id='boardWrapper'
         className='absolute w-full h-full overflow-hidden top-0 left-0 border-0 border-blue-400'
@@ -300,6 +319,7 @@ const SchemaEditor: React.FC = () => {
           {nodes.map((n: NodeData) => (
             <EditorNode
               id={n.id}
+              nodeData={n}
               x={n.currentPosition.x}
               y={n.currentPosition.y}
               numInputs={n.numInputs}
@@ -343,6 +363,19 @@ const SchemaEditor: React.FC = () => {
               onClickDelete={() => {}}
             ></EditorEdge>
           ))}
+          {contextMenuPos && (
+            <div
+              style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
+              className='absolute border-0 rounded-md z-40'
+            >
+              <BoardContextMenu
+                onNewEntity={() => {
+                  console.log('new Entity')
+                  createNewEntity(contextMenuPos)
+                }}
+              ></BoardContextMenu>
+            </div>
+          )}
         </div>
       </div>
     </div>

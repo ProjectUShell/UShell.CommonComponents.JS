@@ -1,3 +1,5 @@
+import { EntitySchema } from 'fusefx-modeldescription'
+
 export interface NodeData {
   id: string
   numInputs: number
@@ -6,4 +8,5 @@ export interface NodeData {
   currentPosition: { x: number; y: number }
   inputEdgeIds: string[]
   outputEdgeIds: string[]
+  entitySchema: EntitySchema
 }
