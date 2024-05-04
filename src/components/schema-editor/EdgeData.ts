@@ -1,7 +1,7 @@
 export interface EdgeData {
   id: string
-  nodeStartId: string
-  nodeEndId: string
+  nodeStartId: number
+  nodeEndId: number
   inputIndex: number
   outputIndex: number
   previousStartPosition: { x: number; y: number }

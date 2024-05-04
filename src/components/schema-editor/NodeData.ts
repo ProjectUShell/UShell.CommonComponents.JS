@@ -1,7 +1,7 @@
 import { EntitySchema } from 'fusefx-modeldescription'
 
 export interface NodeData {
-  id: string
+  id: number
   numInputs: number
   numOutputs: number
   previousPosition: { x: number; y: number }

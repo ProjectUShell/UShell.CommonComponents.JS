@@ -1,4 +1,5 @@
 import React, { createRef, useEffect, useState } from 'react'
+import { FieldSchema } from 'fusefx-modeldescription'
 import { Camera } from '../Camera'
 import { NodeData } from '../NodeData'
 import { Position } from '../Position'
@@ -9,16 +10,18 @@ import {
 } from '../BoardUtils'
 
 const EditorNode: React.FC<{
-  id: string
+  id: number
   nodeData: NodeData
   x: number
   y: number
   selected: boolean
   camera: Camera
-  onMouseDown: (id: string, e: any) => void
-  onMouseDownOutput: (posX: number, posY: number, nodeId: string, outputIndex: number) => void
-  onMouseEnterInput: (posX: number, posY: number, nodeId: string, outputIndex: number) => void
-  onMouseLeaveInput: (nodeId: string, outputIndex: number) => void
+  onMouseDown: (id: number, e: any) => void
+  onMouseDownOutput: (posX: number, posY: number, nodeId: number, outputIndex: number) => void
+  onMouseEnterInput: (posX: number, posY: number, nodeId: number, outputIndex: number) => void
+  onMouseLeaveInput: (nodeId: number, outputIndex: number) => void
+  onCommitField: (f: FieldSchema, value: any) => void
+  onCommitEntityName: (entityName: string) => void
   numInputs: number
   numOutputs: number
 }> = React.memo(
@@ -33,10 +36,25 @@ const EditorNode: React.FC<{
     onMouseDownOutput,
     onMouseEnterInput,
     onMouseLeaveInput,
+    onCommitField,
+    onCommitEntityName,
     numInputs,
     numOutputs,
   }) => {
     const [entityName, setEntityName] = useState(nodeData.entitySchema.name)
+
+    function handleCommitField(f: FieldSchema | null, value: any) {
+      if (!f) {
+        f = new FieldSchema()
+        f.name = value
+      }
+      onCommitField(f, value)
+    }
+
+    function handleCommitEntityName(value: any) {
+      nodeData.entitySchema.name = value
+      onCommitEntityName(value)
+    }
 
     function handleMouseDownOutput(ref: any, e: any, index: number) {
       e.preventDefault()
@@ -90,15 +108,13 @@ const EditorNode: React.FC<{
 
     const viewPos: Position = getViewPosFromWorldPos({ x: x, y: y }, camera)
     const worldWidth: number = camera.scale * 120
-    const worldHeight: number = camera.scale * 120
+    const worldHeightField: number = camera.scale * 40
 
-    // console.log('worldX', worldX)
-    // transform: `translate(${x}px ${y}px`
     return (
       <div
         style={{
           width: `${worldWidth}px`,
-          height: `${worldHeight}px`,
+          height: `${worldHeightField * 3}px`,
           transform: `translate(${viewPos.x}px, ${viewPos.y}px`,
         }}
         onMouseDown={(e: any) => {
@@ -118,18 +134,37 @@ const EditorNode: React.FC<{
 
             onMouseDown(id, e)
           }}
-          disabled={!selected}
+          onKeyDown={(e: any) => {
+            if (e.key == 'Enter') onCommitEntityName(e.target.value)
+          }}
+          onBlur={(e) => onCommitEntityName(e.target.value)}
           placeholder='EntityName'
-          className='bg-bg3 dark:bg-bg3dark text-center p-1 border-1 mb-1'
+          style={{
+            width: `${worldWidth - 3}px`,
+            height: `${worldHeightField}px`,
+            fontSize: worldHeightField / 4,
+          }}
+          className='bg-bg3 dark:bg-bg3dark text-center p-1 border-2 mb-1'
         ></input>
+        {nodeData.entitySchema.fields.map((f) => (
+          <input onBlur={(e) => handleCommitField(f, e.target.value)}></input>
+        ))}
         <input
           onMouseDown={(e: any) => {
             e.stopPropagation()
 
             onMouseDown(id, e)
           }}
-          disabled={!selected}
+          onKeyDown={(e: any) => {
+            if (e.key == 'Enter') handleCommitField(null, e.target.value)
+          }}
+          onBlur={(e) => handleCommitField(null, e.target.value)}
           placeholder='New Field'
+          style={{
+            width: `${worldWidth - 3}px`,
+            height: `${worldHeightField}px`,
+            fontSize: worldHeightField / 4,
+          }}
           className='bg-bg3 dark:bg-bg3dark text-center p-1'
         ></input>
         <div

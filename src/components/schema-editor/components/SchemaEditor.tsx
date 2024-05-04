@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { NodeData } from '../NodeData'
-import { EntitySchema } from 'fusefx-modeldescription'
+import { EntitySchema, FieldSchema } from 'fusefx-modeldescription'
 import EditorNode from './EditorNode'
 import { EdgeData } from '../EdgeData'
 import EditorEdge from './EditorEdge'
@@ -16,17 +16,17 @@ import { Position } from '../Position'
 const SchemaEditor: React.FC = () => {
   const boardElement = document.getElementById('board')
 
-  const [currentId, setCurrentId] = useState(0)
+  const [currentId, setCurrentId] = useState(1)
   const [grabbingBoard, setGrabbingBoard] = useState(false)
   const [camera, setCamera] = useState(new Camera())
   const [clickedPosition, setClickedPosition] = useState<any>({ x: -1, y: -1 })
   const [nodes, setNodes] = useState<NodeData[]>([])
   const [edges, setEdges] = useState<EdgeData[]>([])
-  const [selectedNode, setSelectedNode] = useState<string | null>(null)
+  const [selectedNode, setSelectedNode] = useState<number | null>(null)
 
   const [newEdge, setNewEdge] = useState<EdgeData | null>(null)
   const [inInput, setInInput] = useState<{
-    nodeId: string
+    nodeId: number
     inputIndex: number
     posX: number
     posY: number
@@ -37,6 +37,20 @@ const SchemaEditor: React.FC = () => {
   useEffect(() => {
     const pd = (e: any) => e.preventDefault()
     document.addEventListener('contextmenu', pd)
+
+    const boardStateString: string | null = localStorage.getItem('boardState')
+    if (boardStateString) {
+      const boardState: any = JSON.parse(boardStateString)
+      setNodes(boardState.nodes)
+      setEdges(boardState.edges)
+      let maxId: number = 0
+      boardState.nodes.forEach((n: NodeData) => {
+        if (n.id > maxId) {
+          maxId = n.id
+        }
+      })
+      setCurrentId(maxId + 1)
+    }
     return () => {
       document.removeEventListener('contextmenu', pd)
     }
@@ -57,7 +71,7 @@ const SchemaEditor: React.FC = () => {
     const entitySchema = new EntitySchema()
     entitySchema.name = 'Entity ' + currentId
     const result: NodeData = {
-      id: currentId.toLocaleString(),
+      id: currentId,
       numInputs: 2,
       numOutputs: 2,
       currentPosition: { x: worldPos.x, y: worldPos.y },
@@ -68,6 +82,16 @@ const SchemaEditor: React.FC = () => {
     }
     setCurrentId((i) => i + 1)
     setNodes([...nodes, result])
+  }
+
+  function handleCommitField(f: FieldSchema | null, value: any) {
+    console.log('commit field', value)
+  }
+
+  function handleCommitEntityName(nodeData: NodeData, entityName: string) {
+    nodeData.entitySchema.name = entityName
+    save()
+    console.log('commit entity name', nodes)
   }
 
   function applyScale(e: any) {
@@ -88,7 +112,7 @@ const SchemaEditor: React.FC = () => {
 
   function handleMouseDown(e: any) {
     setSelectedNode(null)
-    e.preventDefault()
+    // e.preventDefault()
     e.stopPropagation()
 
     if (e.button == 0) {
@@ -205,7 +229,7 @@ const SchemaEditor: React.FC = () => {
   }
 
   const handleMouseDownNode = useCallback(
-    (id: string, e: any) => {
+    (id: number, e: any) => {
       setSelectedNode(id)
 
       setClickedPosition({ x: e.clientX, y: e.clientY })
@@ -249,7 +273,7 @@ const SchemaEditor: React.FC = () => {
   )
 
   const handleMouseEnterInput = useCallback(
-    (posX: number, posY: number, nodeId: string, inputIndex: number) => {
+    (posX: number, posY: number, nodeId: number, inputIndex: number) => {
       setInInput({ nodeId, inputIndex, posX: posX, posY: posY })
       console.log('in input')
     },
@@ -257,7 +281,7 @@ const SchemaEditor: React.FC = () => {
   )
 
   const handleMouseDownOutput = useCallback(
-    (posX: number, posY: number, nodeId: string, outputIndex: number) => {
+    (posX: number, posY: number, nodeId: number, outputIndex: number) => {
       const prevStartPos = { x: posX, y: posY }
       const prevEndPos = { x: posX, y: posY }
       const curStartPos = { x: posX, y: posY }
@@ -267,7 +291,7 @@ const SchemaEditor: React.FC = () => {
         id: '',
         nodeStartId: nodeId,
         outputIndex: outputIndex,
-        nodeEndId: '',
+        nodeEndId: 0,
         inputIndex: -1,
         previousStartPosition: prevStartPos,
         previousEndPosition: prevEndPos,
@@ -278,7 +302,7 @@ const SchemaEditor: React.FC = () => {
     [],
   )
 
-  const handleMouseLeaveInput = useCallback((nodeId: string, inputIndex: number) => {
+  const handleMouseLeaveInput = useCallback((nodeId: number, inputIndex: number) => {
     if (inInput?.nodeId === nodeId && inInput.inputIndex === inputIndex) {
       setInInput(null)
     }
@@ -327,6 +351,8 @@ const SchemaEditor: React.FC = () => {
               onMouseEnterInput={handleMouseEnterInput}
               onMouseDownOutput={handleMouseDownOutput}
               onMouseLeaveInput={handleMouseLeaveInput}
+              onCommitField={handleCommitField}
+              onCommitEntityName={(entityName: string) => handleCommitEntityName(n, entityName)}
             ></EditorNode>
           ))}
           {newEdge && (
