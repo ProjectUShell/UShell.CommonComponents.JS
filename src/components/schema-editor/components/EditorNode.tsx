@@ -8,6 +8,7 @@ import {
   getViewPosFromWorldPos,
   getWorldPosFromViewPos,
 } from '../BoardUtils'
+import EditorNodeField from './EditorNodeField'
 
 const EditorNode: React.FC<{
   id: number
@@ -42,8 +43,11 @@ const EditorNode: React.FC<{
     numOutputs,
   }) => {
     const [entityName, setEntityName] = useState(nodeData.entitySchema.name)
+    const [activeField, setActiveField] = useState('')
+    const [inputMode, setInputMode] = useState(false)
 
     function handleCommitField(f: FieldSchema | null, value: any) {
+      if (!value || value == '') return
       if (!f) {
         f = new FieldSchema()
         f.name = value
@@ -106,15 +110,32 @@ const EditorNode: React.FC<{
       onMouseEnterInput(worldPos.x, worldPos.y, id, inputIndex)
     }
 
+    function handleKeyDownInput(field: FieldSchema | null, e: any) {
+      if (e.key == 'Enter') {
+        handleCommitField(field, e.target.value)
+        const el: any = document.getElementById(nodeData.entitySchema.name + '_new')
+        el.value = ''
+        el.focus()
+        if (!field) {
+          setInputMode((i) => !i)
+        }
+      }
+      if (!inputMode && field) {
+        setInputMode(true)
+      }
+    }
+
     const viewPos: Position = getViewPosFromWorldPos({ x: x, y: y }, camera)
     const worldWidth: number = camera.scale * 120
-    const worldHeightField: number = camera.scale * 40
+    const worldHeightField: number = camera.scale * 30
+
+    // console.log('active field', activeField)
 
     return (
       <div
         style={{
           width: `${worldWidth}px`,
-          height: `${worldHeightField * 3}px`,
+          height: `${worldHeightField * (3 + nodeData.entitySchema.fields.length)}px`,
           transform: `translate(${viewPos.x}px, ${viewPos.y}px`,
         }}
         onMouseDown={(e: any) => {
@@ -122,7 +143,11 @@ const EditorNode: React.FC<{
 
           onMouseDown(id, e)
         }}
-        className={`flex flex-col absolute cursor-grab bg-bg2 dark:bg-bg2dark border-2 z-10 
+        onBlur={() => {
+          setInputMode(false)
+          setActiveField('')
+        }}
+        className={`flex flex-col absolute cursor-grab bg-bg2 dark:bg-prim1 border-2 z-10 
         shadow-md hover:shadow-2xl selection:bg-blue-400 ${selected ? 'border-orange-400' : ''}`}
       >
         <input
@@ -142,30 +167,63 @@ const EditorNode: React.FC<{
           style={{
             width: `${worldWidth - 3}px`,
             height: `${worldHeightField}px`,
-            fontSize: worldHeightField / 4,
+            fontSize: worldHeightField / 2.5,
           }}
-          className='bg-bg3 dark:bg-bg3dark text-center p-1 border-2 mb-1'
+          className='bg-bg3 dark:bg-prim1 text-center p-1 border-2 mb-1'
         ></input>
         {nodeData.entitySchema.fields.map((f) => (
-          <input onBlur={(e) => handleCommitField(f, e.target.value)}></input>
+          <input
+            onMouseDown={(e: any) => {
+              e.stopPropagation()
+              console.log('mouse down field')
+              if (f.name != activeField) {
+                setInputMode(false)
+              }
+              setActiveField(f.name)
+              // onMouseDown(id, e)
+            }}
+            onFocus={() => setActiveField(f.name)}
+            readOnly={f.name != activeField || !inputMode}
+            defaultValue={f.name}
+            onKeyDown={(e: any) => handleKeyDownInput(f, e)}
+            onBlur={(e) => {
+              console.log('blur field')
+              e.preventDefault()
+              // e.stopPropagation()
+              handleCommitField(f, e.target.value)
+            }}
+            placeholder='New Field'
+            style={{
+              width: `${worldWidth - 3}px`,
+              height: `${worldHeightField}px`,
+              fontSize: worldHeightField / 2.5,
+            }}
+            className={` text-center p-1 rounded-none outline-none cursor-default ${
+              activeField == f.name ? 'bg-red-400' : 'bg-bg3 dark:bg-prim1 select-none'
+            }`}
+          ></input>
         ))}
         <input
+          id={nodeData.entitySchema.name + '_new'}
           onMouseDown={(e: any) => {
             e.stopPropagation()
 
             onMouseDown(id, e)
           }}
           onKeyDown={(e: any) => {
-            if (e.key == 'Enter') handleCommitField(null, e.target.value)
+            handleKeyDownInput(null, e)
           }}
-          onBlur={(e) => handleCommitField(null, e.target.value)}
+          onBlur={(e) => {
+            handleCommitField(null, e.target.value)
+            e.target.value = ''
+          }}
           placeholder='New Field'
           style={{
             width: `${worldWidth - 3}px`,
             height: `${worldHeightField}px`,
-            fontSize: worldHeightField / 4,
+            fontSize: worldHeightField / 2.5,
           }}
-          className='bg-bg3 dark:bg-bg3dark text-center p-1'
+          className='bg-bg3 dark:bg-prim1 text-center p-1 rounded-none outline-none'
         ></input>
         <div
           className='absolute top-0 -left-8 flex flex-col items-center justify-center gap-3 w-3 h-full

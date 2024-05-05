@@ -84,8 +84,17 @@ const SchemaEditor: React.FC = () => {
     setNodes([...nodes, result])
   }
 
-  function handleCommitField(f: FieldSchema | null, value: any) {
+  function handleCommitField(nodeData: NodeData, fieldSchema: FieldSchema, value: any) {
     console.log('commit field', value)
+    const existingF: FieldSchema | undefined = nodeData.entitySchema.fields.find(
+      (f: FieldSchema) => f.name == fieldSchema.name,
+    )
+    if (existingF) {
+      existingF.name = value
+    } else {
+      nodeData.entitySchema.fields.push(fieldSchema)
+    }
+    save()
   }
 
   function handleCommitEntityName(nodeData: NodeData, entityName: string) {
@@ -184,8 +193,8 @@ const SchemaEditor: React.FC = () => {
     }
 
     if (!(clickedPosition.x >= 0 && clickedPosition.y >= 0)) return
-    const deltaX = e.clientX - clickedPosition.x
-    const deltaY = e.clientY - clickedPosition.y
+    const deltaX = (e.clientX - clickedPosition.x) / camera.scale
+    const deltaY = (e.clientY - clickedPosition.y) / camera.scale
     if (selectedNode) {
       const node: NodeData | undefined = nodes.find((n) => n.id === selectedNode)
       if (node) {
@@ -351,7 +360,7 @@ const SchemaEditor: React.FC = () => {
               onMouseEnterInput={handleMouseEnterInput}
               onMouseDownOutput={handleMouseDownOutput}
               onMouseLeaveInput={handleMouseLeaveInput}
-              onCommitField={handleCommitField}
+              onCommitField={(f: FieldSchema, v: any) => handleCommitField(n, f, v)}
               onCommitEntityName={(entityName: string) => handleCommitEntityName(n, entityName)}
             ></EditorNode>
           ))}
