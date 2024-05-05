@@ -125,6 +125,22 @@ const EditorNode: React.FC<{
       }
     }
 
+    function handleKeyDownEntityName(e: any) {
+      if (e.key == 'Enter') {
+        let el: any = document.getElementById(nodeData.entitySchema.name + '_new')
+        if (!el) {
+          el = document.getElementById(e.target.value + '_new')
+        }
+        el.value = ''
+        el.focus()
+        setInputMode((i) => !i)
+        onCommitEntityName(e.target.value)
+      }
+      if (!inputMode) {
+        setInputMode(true)
+      }
+    }
+
     const viewPos: Position = getViewPosFromWorldPos({ x: x, y: y }, camera)
     const worldWidth: number = camera.scale * 120
     const worldHeightField: number = camera.scale * 30
@@ -159,9 +175,8 @@ const EditorNode: React.FC<{
 
             onMouseDown(id, e)
           }}
-          onKeyDown={(e: any) => {
-            if (e.key == 'Enter') onCommitEntityName(e.target.value)
-          }}
+          onKeyDown={(e: any) => handleKeyDownEntityName(e)}
+          readOnly={!(activeField == '' && inputMode)}
           onBlur={(e) => onCommitEntityName(e.target.value)}
           placeholder='EntityName'
           style={{
@@ -169,40 +184,69 @@ const EditorNode: React.FC<{
             height: `${worldHeightField}px`,
             fontSize: worldHeightField / 2.5,
           }}
-          className='bg-bg3 dark:bg-prim1 text-center p-1 border-2 mb-1'
+          className={`bg-bg3 dark:bg-prim1 text-center p-1 border-0 cursor-grab border-b-2`}
         ></input>
-        {nodeData.entitySchema.fields.map((f) => (
-          <input
-            onMouseDown={(e: any) => {
-              e.stopPropagation()
-              console.log('mouse down field')
-              if (f.name != activeField) {
-                setInputMode(false)
-              }
-              setActiveField(f.name)
-              // onMouseDown(id, e)
-            }}
-            onFocus={() => setActiveField(f.name)}
-            readOnly={f.name != activeField || !inputMode}
-            defaultValue={f.name}
-            onKeyDown={(e: any) => handleKeyDownInput(f, e)}
-            onBlur={(e) => {
-              console.log('blur field')
-              e.preventDefault()
-              // e.stopPropagation()
-              handleCommitField(f, e.target.value)
-            }}
-            placeholder='New Field'
-            style={{
-              width: `${worldWidth - 3}px`,
-              height: `${worldHeightField}px`,
-              fontSize: worldHeightField / 2.5,
-            }}
-            className={` text-center p-1 rounded-none outline-none cursor-default ${
-              activeField == f.name ? 'bg-red-400' : 'bg-bg3 dark:bg-prim1 select-none'
-            }`}
-          ></input>
-        ))}
+        {nodeData.entitySchema.fields.map((f) => {
+          const inputRef: any = React.createRef()
+          const outputRef: any = createRef()
+          return (
+            <div key={f.name} className='relative w-fit'>
+              <input
+                onMouseDown={(e: any) => {
+                  e.stopPropagation()
+                  console.log('mouse down field')
+                  if (f.name != activeField) {
+                    setInputMode(false)
+                  }
+                  setActiveField(f.name)
+                  // onMouseDown(id, e)
+                }}
+                onFocus={() => setActiveField(f.name)}
+                readOnly={f.name != activeField || !inputMode}
+                defaultValue={f.name}
+                onKeyDown={(e: any) => handleKeyDownInput(f, e)}
+                onBlur={(e) => {
+                  console.log('blur field')
+                  e.preventDefault()
+                  // e.stopPropagation()
+                  handleCommitField(f, e.target.value)
+                }}
+                placeholder='New Field'
+                style={{
+                  width: `${worldWidth - 3}px`,
+                  height: `${worldHeightField}px`,
+                  fontSize: worldHeightField / 2.5,
+                }}
+                className={` text-center p-1 rounded-none outline-none cursor-default ${
+                  activeField == f.name ? 'bg-red-400' : 'bg-bg3 dark:bg-prim1 select-none'
+                }`}
+              ></input>
+              <div
+                style={{
+                  top: worldHeightField / 2 - worldHeightField / 6,
+                  width: worldHeightField / 3,
+                  height: worldHeightField / 3,
+                }}
+                ref={inputRef}
+                className='absolute left-0 rounded-r-full bg-green-300 
+                  cursor-crosshair hover:bg-red-400 pointer-events-auto'
+                onMouseEnter={(e) => handleMouseEnterInput(inputRef, e, 0)}
+                onMouseLeave={() => onMouseLeaveInput(id, 0)}
+              ></div>
+              <div
+                style={{
+                  top: worldHeightField / 2 - worldHeightField / 6,
+                  width: worldHeightField / 3,
+                  height: worldHeightField / 3,
+                }}
+                ref={outputRef}
+                className='absolute right-0 rounded-l-full bg-yellow-300 
+                  cursor-crosshair hover:bg-red-400 pointer-events-auto'
+                onMouseDown={(e) => handleMouseDownOutput(outputRef, e, 0)}
+              ></div>
+            </div>
+          )
+        })}
         <input
           id={nodeData.entitySchema.name + '_new'}
           onMouseDown={(e: any) => {
@@ -225,7 +269,7 @@ const EditorNode: React.FC<{
           }}
           className='bg-bg3 dark:bg-prim1 text-center p-1 rounded-none outline-none'
         ></input>
-        <div
+        {/* <div
           className='absolute top-0 -left-8 flex flex-col items-center justify-center gap-3 w-3 h-full
          pointer-events-none'
         >
@@ -241,8 +285,8 @@ const EditorNode: React.FC<{
               ></div>
             )
           })}
-        </div>
-        <div
+        </div> */}
+        {/* <div
           className='absolute top-0 -right-8 flex flex-col items-center justify-center
          gap-3 w-3 h-full pointer-events-none'
         >
@@ -258,7 +302,7 @@ const EditorNode: React.FC<{
               ></div>
             )
           })}
-        </div>
+        </div> */}
       </div>
     )
   },
