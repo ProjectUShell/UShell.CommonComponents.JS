@@ -3,12 +3,14 @@ import { Position } from './Position'
 
 export function getBoardPosFromWindowPos(windowPos: Position): Position {
   const boardEl: HTMLElement | null = document.getElementById('board')
-  const widthDiff: number = boardEl!.clientWidth - window.innerWidth
-  const heightDiff: number = boardEl!.clientHeight - window.innerHeight
+  console.log('boardEl', boardEl?.getBoundingClientRect())
+  console.log('windowPos', windowPos)
+  const widthDiff: number = boardEl!.getBoundingClientRect().x
+  const heightDiff: number = boardEl!.getBoundingClientRect().y
 
   return {
-    x: windowPos.x + widthDiff,
-    y: windowPos.y + heightDiff,
+    x: windowPos.x - widthDiff,
+    y: windowPos.y - heightDiff,
   }
 }
 
