@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { NodeData } from '../NodeData'
-import { EntitySchema, FieldSchema } from 'fusefx-modeldescription'
+import { EntitySchema, FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import EditorNode from './EditorNode'
 import { EdgeData } from '../EdgeData'
 import EditorEdge from './EditorEdge'
@@ -12,9 +12,13 @@ import {
   getWorldPosFromViewPos,
 } from '../BoardUtils'
 import { Position } from '../Position'
+import EditorToolbar from './EditorToolbar'
+import EditorProperties from './EditorProperties'
 
 const SchemaEditor: React.FC = () => {
   const boardElement = document.getElementById('board')
+
+  const [showProperties, setShowProperties] = useState(false)
 
   const [currentId, setCurrentId] = useState(1)
   const [grabbingBoard, setGrabbingBoard] = useState(false)
@@ -23,11 +27,13 @@ const SchemaEditor: React.FC = () => {
   const [nodes, setNodes] = useState<NodeData[]>([])
   const [edges, setEdges] = useState<EdgeData[]>([])
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
+  const [selectedField, setSelectedField] = useState<FieldSchema | null>(null)
+  const [selectedEdge, setSelectedEdge] = useState<EdgeData | null>(null)
 
   const [newEdge, setNewEdge] = useState<EdgeData | null>(null)
   const [inInput, setInInput] = useState<{
     nodeId: number
-    inputIndex: number
+    fieldName: string
     posX: number
     posY: number
   } | null>(null)
@@ -55,6 +61,10 @@ const SchemaEditor: React.FC = () => {
       document.removeEventListener('contextmenu', pd)
     }
   }, [])
+
+  useEffect(() => {
+    save()
+  }, [nodes, edges])
 
   function save() {
     const boardState: any = {
@@ -121,6 +131,8 @@ const SchemaEditor: React.FC = () => {
 
   function handleMouseDown(e: any) {
     setSelectedNode(null)
+    setSelectedEdge(null)
+    setSelectedField(null)
     // e.preventDefault()
     e.stopPropagation()
 
@@ -152,7 +164,7 @@ const SchemaEditor: React.FC = () => {
       const boardWrapperEl = document.getElementById('boardWrapper')
 
       if (nodeStart && nodeEnd && boardWrapperEl) {
-        const edgeId: string = `edge_${nodeStart.id}_${newEdge.outputIndex}_${nodeEnd.id}_${inInput.inputIndex}`
+        const edgeId: string = `edge_${nodeStart.id}_${newEdge.outputFieldName}_${nodeEnd.id}_${inInput.fieldName}`
         nodeStart.outputEdgeIds = [...nodeStart.outputEdgeIds, edgeId]
         nodeEnd.inputEdgeIds = [...nodeEnd.inputEdgeIds, edgeId]
         console.log('nodeEnd.inputEdgeIds', nodeEnd.inputEdgeIds)
@@ -169,13 +181,15 @@ const SchemaEditor: React.FC = () => {
           x: inInput.posX,
           y: inInput.posY,
         }
+
+        newEdge.relation.primaryEntityName = nodeEnd.entitySchema.name
         setEdges([
           ...edges,
           {
             ...newEdge,
             id: edgeId,
             nodeEndId: nodeEnd.id,
-            inputIndex: inInput.inputIndex,
+            inputFieldName: inInput.fieldName,
           },
         ])
         setNewEdge(null)
@@ -240,6 +254,7 @@ const SchemaEditor: React.FC = () => {
   const handleMouseDownNode = useCallback(
     (id: number, e: any) => {
       setSelectedNode(id)
+      setSelectedEdge(null)
 
       setClickedPosition({ x: e.clientX, y: e.clientY })
 
@@ -282,37 +297,44 @@ const SchemaEditor: React.FC = () => {
   )
 
   const handleMouseEnterInput = useCallback(
-    (posX: number, posY: number, nodeId: number, inputIndex: number) => {
-      setInInput({ nodeId, inputIndex, posX: posX, posY: posY })
+    (posX: number, posY: number, nodeId: number, fieldName: string) => {
+      setInInput({ nodeId, fieldName, posX: posX, posY: posY })
       console.log('in input')
     },
     [],
   )
 
   const handleMouseDownOutput = useCallback(
-    (posX: number, posY: number, nodeId: number, outputIndex: number) => {
+    (posX: number, posY: number, nodeId: number, fieldName: string) => {
       const prevStartPos = { x: posX, y: posY }
       const prevEndPos = { x: posX, y: posY }
       const curStartPos = { x: posX, y: posY }
       const curEndPos = { x: posX, y: posY }
       console.log('new edge', curStartPos)
+      const node: NodeData | undefined = nodes.find((n) => n.id == nodeId)
+      console.log('nodes', nodes)
+      if (!node) throw `No Node with id ${nodeId}`
+      const relation: RelationSchema = new RelationSchema()
+      relation.foreignEntityName = node.entitySchema.name
+      relation.foreignKeyIndexName = fieldName
       setNewEdge({
         id: '',
         nodeStartId: nodeId,
-        outputIndex: outputIndex,
+        outputFieldName: fieldName,
         nodeEndId: 0,
-        inputIndex: -1,
+        inputFieldName: '',
         previousStartPosition: prevStartPos,
         previousEndPosition: prevEndPos,
         currentStartPosition: curStartPos,
         currentEndPosition: curEndPos,
+        relation: relation,
       })
     },
-    [],
+    [nodes],
   )
 
-  const handleMouseLeaveInput = useCallback((nodeId: number, inputIndex: number) => {
-    if (inInput?.nodeId === nodeId && inInput.inputIndex === inputIndex) {
+  const handleMouseLeaveInput = useCallback((nodeId: number, fieldName: string) => {
+    if (inInput?.nodeId === nodeId && inInput.fieldName === fieldName) {
       setInInput(null)
     }
   }, [])
@@ -323,91 +345,115 @@ const SchemaEditor: React.FC = () => {
   const backgroundWorldHeight: number = camera.scale * 30
 
   return (
-    <div className='relative w-full h-full overflow-hidden border-2 border-red-400'>
-      <div
-        id='boardWrapper'
-        className='absolute w-full h-full overflow-hidden top-0 left-0 border-0 border-blue-400'
-      >
+    <div className='flex flex-col w-full h-full overflow-hidden border-0 border-green-400'>
+      <EditorToolbar
+        showProperties={showProperties}
+        setShowProperties={setShowProperties}
+      ></EditorToolbar>
+      <div className='relative w-full h-full overflow-hidden border-0 border-red-400'>
         <div
-          id='board'
-          onWheel={applyScale}
-          onMouseMove={handleMouseMove}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={(e) => {
-            e.preventDefault()
-            setGrabbingBoard(false)
-          }}
-          className='relative w-full  h-full   border-0 border-black overflow-hidden'
-          style={{
-            backgroundImage: 'radial-gradient(circle, #b8b8b8bf 1px, rgba(0,0,0,0) 1px',
-            backgroundPosition: `${backgroundWorldX}px ${backgroundWorldY}px`,
-            backgroundSize: `${backgroundWorldWidth}px ${backgroundWorldHeight}px`,
-            cursor: grabbingBoard ? 'grab' : 'default',
-          }}
+          className={`absolute right-0 top-0 border-t  border-bg5 dark:border-bg5dark bg-bg3 dark:bg-bg3dark z-10 transition-all ${
+            showProperties ? 'w-40 h-full border-l pl-2 ' : 'w-0 h-full'
+          }`}
         >
-          {nodes.map((n: NodeData) => (
-            <EditorNode
-              id={n.id}
-              nodeData={n}
-              x={n.currentPosition.x}
-              y={n.currentPosition.y}
-              numInputs={n.numInputs}
-              numOutputs={n.numOutputs}
-              selected={selectedNode ? selectedNode == n.id : false}
-              camera={camera}
-              onMouseDown={handleMouseDownNode}
-              onMouseEnterInput={handleMouseEnterInput}
-              onMouseDownOutput={handleMouseDownOutput}
-              onMouseLeaveInput={handleMouseLeaveInput}
-              onCommitField={(f: FieldSchema, v: any) => handleCommitField(n, f, v)}
-              onCommitEntityName={(entityName: string) => handleCommitEntityName(n, entityName)}
-            ></EditorNode>
-          ))}
-          {newEdge && (
-            <EditorEdge
-              selected={false}
-              isNew={true}
-              position={{
-                x0: newEdge.currentStartPosition.x,
-                y0: newEdge.currentStartPosition.y,
-                x1: newEdge.currentEndPosition.x,
-                y1: newEdge.currentEndPosition.y,
-              }}
-              camera={camera}
-              onClickDelete={() => {}}
-              onMouseDownEdge={() => {}}
-            ></EditorEdge>
-          )}
-          {edges.map((edge: EdgeData, i) => (
-            <EditorEdge
-              key={i}
-              selected={false}
-              isNew={false}
-              position={{
-                x0: edge.currentStartPosition.x,
-                y0: edge.currentStartPosition.y,
-                x1: edge.currentEndPosition.x,
-                y1: edge.currentEndPosition.y,
-              }}
-              camera={camera}
-              onMouseDownEdge={() => {}}
-              onClickDelete={() => {}}
-            ></EditorEdge>
-          ))}
-          {contextMenuPos && (
-            <div
-              style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
-              className='absolute border-0 rounded-md z-40'
-            >
-              <BoardContextMenu
-                onNewEntity={() => {
-                  console.log('new Entity')
-                  createNewEntity(contextMenuPos)
+          <EditorProperties
+            entity={nodes.find((n) => n.id == selectedNode)?.entitySchema}
+            field={selectedField}
+            relation={selectedEdge?.relation}
+          ></EditorProperties>
+        </div>
+        <div
+          id='boardWrapper'
+          className='absolute w-full h-full overflow-hidden top-0 left-0 border-0 border-blue-400'
+        >
+          <div
+            id='board'
+            onWheel={applyScale}
+            onMouseMove={handleMouseMove}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={(e) => {
+              console.log('mouse leave')
+              e.preventDefault()
+              setGrabbingBoard(false)
+            }}
+            className='relative w-full  h-full   border-0 border-black overflow-hidden'
+            style={{
+              backgroundImage: 'radial-gradient(circle, #b8b8b8bf 1px, rgba(0,0,0,0) 1px',
+              backgroundPosition: `${backgroundWorldX}px ${backgroundWorldY}px`,
+              backgroundSize: `${backgroundWorldWidth}px ${backgroundWorldHeight}px`,
+              cursor: grabbingBoard ? 'grab' : 'default',
+            }}
+          >
+            {nodes.map((n: NodeData) => (
+              <EditorNode
+                key={n.id}
+                id={n.id}
+                nodeData={n}
+                x={n.currentPosition.x}
+                y={n.currentPosition.y}
+                numInputs={n.numInputs}
+                numOutputs={n.numOutputs}
+                selected={selectedNode ? selectedNode == n.id : false}
+                camera={camera}
+                onFieldSelected={(f: FieldSchema) => setSelectedField(f)}
+                onMouseDown={handleMouseDownNode}
+                onMouseEnterInput={handleMouseEnterInput}
+                onMouseDownOutput={handleMouseDownOutput}
+                onMouseLeaveInput={handleMouseLeaveInput}
+                onCommitField={(f: FieldSchema, v: any) => handleCommitField(n, f, v)}
+                onCommitEntityName={(entityName: string) => handleCommitEntityName(n, entityName)}
+              ></EditorNode>
+            ))}
+            {newEdge && (
+              <EditorEdge
+                selected={false}
+                isNew={true}
+                position={{
+                  x0: newEdge.currentStartPosition.x,
+                  y0: newEdge.currentStartPosition.y,
+                  x1: newEdge.currentEndPosition.x,
+                  y1: newEdge.currentEndPosition.y,
                 }}
-              ></BoardContextMenu>
-            </div>
-          )}
+                camera={camera}
+                onClickDelete={() => {}}
+                onMouseDownEdge={() => {}}
+              ></EditorEdge>
+            )}
+            {edges.map((edge: EdgeData, i) => (
+              <EditorEdge
+                key={i}
+                selected={selectedEdge ? selectedEdge.id == edge.id : false}
+                isNew={false}
+                position={{
+                  x0: edge.currentStartPosition.x,
+                  y0: edge.currentStartPosition.y,
+                  x1: edge.currentEndPosition.x,
+                  y1: edge.currentEndPosition.y,
+                }}
+                camera={camera}
+                onMouseDownEdge={() => {
+                  setSelectedField(null)
+                  setSelectedNode(null)
+                  setSelectedEdge(edge)
+                }}
+                onClickDelete={() => {}}
+              ></EditorEdge>
+            ))}
+            {contextMenuPos && (
+              <div
+                style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
+                className='absolute border-0 rounded-md z-40'
+              >
+                <BoardContextMenu
+                  onNewEntity={() => {
+                    console.log('new Entity')
+                    createNewEntity(contextMenuPos)
+                  }}
+                ></BoardContextMenu>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

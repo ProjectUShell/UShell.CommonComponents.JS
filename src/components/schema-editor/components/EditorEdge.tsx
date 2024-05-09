@@ -46,8 +46,8 @@ const EditorEdge: React.FC<{
   return (
     <svg className='absolute top-0 left-0 w-full h-full pointer-events-none border-0'>
       <path
-        className={`pointer-events-auto stroke-2 stroke-pink-500 fill-transparent cursor-pointer
-         ${selected ? 'stroke-orange-400' : ''}`}
+        className={`pointer-events-auto stroke-2  fill-transparent cursor-pointer
+         ${selected ? 'stroke-orange-400' : 'stroke-pink-500'}`}
         d={`M ${x0} ${y0} C ${x0 + calculateOffset(Math.abs(x1 - x0))} ${y0}, ${
           x1 - calculateOffset(Math.abs(x1 - x0))
         } ${y1}, ${x1} ${y1}`}

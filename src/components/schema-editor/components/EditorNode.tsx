@@ -17,10 +17,11 @@ const EditorNode: React.FC<{
   y: number
   selected: boolean
   camera: Camera
+  onFieldSelected: (field: FieldSchema) => void
   onMouseDown: (id: number, e: any) => void
-  onMouseDownOutput: (posX: number, posY: number, nodeId: number, outputIndex: number) => void
-  onMouseEnterInput: (posX: number, posY: number, nodeId: number, outputIndex: number) => void
-  onMouseLeaveInput: (nodeId: number, outputIndex: number) => void
+  onMouseDownOutput: (posX: number, posY: number, nodeId: number, fieldName: string) => void
+  onMouseEnterInput: (posX: number, posY: number, nodeId: number, fieldName: string) => void
+  onMouseLeaveInput: (nodeId: number, fieldName: string) => void
   onCommitField: (f: FieldSchema, value: any) => void
   onCommitEntityName: (entityName: string) => void
   numInputs: number
@@ -33,6 +34,7 @@ const EditorNode: React.FC<{
     y,
     selected,
     camera,
+    onFieldSelected,
     onMouseDown,
     onMouseDownOutput,
     onMouseEnterInput,
@@ -60,7 +62,7 @@ const EditorNode: React.FC<{
       onCommitEntityName(value)
     }
 
-    function handleMouseDownOutput(ref: any, e: any, index: number) {
+    function handleMouseDownOutput(ref: any, e: any, fieldName: string) {
       e.preventDefault()
       e.stopPropagation()
       if (!ref) return
@@ -82,12 +84,12 @@ const EditorNode: React.FC<{
 
       // onMouseDownOutput(centerX, el.getBoundingClientRect().bottom, id, index)
       // onMouseDownOutput(centerX + camera.pos.x, centerY + camera.pos.y, id, index)
-      onMouseDownOutput(worldPos.x, worldPos.y, id, index)
+      onMouseDownOutput(worldPos.x, worldPos.y, id, fieldName)
       // onMouseDownOutput(e.clientX, e.clientY - 100, id, index)
       // onMouseDownOutput(e.clientX, ref.current.clientY, id, index)
     }
 
-    function handleMouseEnterInput(ref: any, e: any, inputIndex: number) {
+    function handleMouseEnterInput(ref: any, e: any, fieldName: string) {
       e.preventDefault()
       e.stopPropagation()
       if (!ref) return
@@ -107,15 +109,17 @@ const EditorNode: React.FC<{
       const viewPos = getBoardPosFromWindowPos(windowPos)
       const worldPos = getWorldPosFromViewPos(viewPos, camera)
 
-      onMouseEnterInput(worldPos.x, worldPos.y, id, inputIndex)
+      onMouseEnterInput(worldPos.x, worldPos.y, id, fieldName)
     }
 
     function handleKeyDownInput(field: FieldSchema | null, e: any) {
       if (e.key == 'Enter') {
         handleCommitField(field, e.target.value)
         const el: any = document.getElementById(nodeData.entitySchema.name + '_new')
-        el.value = ''
-        el.focus()
+        if (el) {
+          el.value = ''
+          el.focus()
+        }
         if (!field) {
           setInputMode((i) => !i)
         }
@@ -198,6 +202,7 @@ const EditorNode: React.FC<{
                   if (f.name != activeField) {
                     setInputMode(false)
                   }
+                  onFieldSelected(f)
                   setActiveField(f.name)
                   // onMouseDown(id, e)
                 }}
@@ -230,8 +235,8 @@ const EditorNode: React.FC<{
                 ref={inputRef}
                 className='absolute left-0 rounded-r-full bg-green-300 
                   cursor-crosshair hover:bg-red-400 pointer-events-auto'
-                onMouseEnter={(e) => handleMouseEnterInput(inputRef, e, 0)}
-                onMouseLeave={() => onMouseLeaveInput(id, 0)}
+                onMouseEnter={(e) => handleMouseEnterInput(inputRef, e, f.name)}
+                onMouseLeave={() => onMouseLeaveInput(id, f.name)}
               ></div>
               <div
                 style={{
@@ -242,7 +247,7 @@ const EditorNode: React.FC<{
                 ref={outputRef}
                 className='absolute right-0 rounded-l-full bg-yellow-300 
                   cursor-crosshair hover:bg-red-400 pointer-events-auto'
-                onMouseDown={(e) => handleMouseDownOutput(outputRef, e, 0)}
+                onMouseDown={(e) => handleMouseDownOutput(outputRef, e, f.name)}
               ></div>
             </div>
           )
