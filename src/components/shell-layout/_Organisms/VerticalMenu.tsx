@@ -60,7 +60,7 @@ const VerticalMenuInternal: React.FC<{
         <div key={mi.id}>
           <li
             key={mi.id}
-            className={`flex items-center gap-x-4 p-1 px-2 rounded-as ${depthCssClass} ${
+            className={`flex items-center gap-x-4 py-2 px-6 rounded-as ${depthCssClass} ${
               mi.type !== 'Group'
                 ? (menuItemHoverClassName && menuItemHoverClassName !== ''
                     ? menuItemHoverClassName

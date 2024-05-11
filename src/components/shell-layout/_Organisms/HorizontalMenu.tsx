@@ -10,7 +10,7 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
   const [shellMenuState] = useState<ShellMenuState>(loadShellMenuState())
 
   function setiIsOpen(id: string, isOpen: boolean) {
-    const newIsOpenState = { ...openStateById }
+    const newIsOpenState: { [id: string]: boolean } = {}
     newIsOpenState[id] = isOpen
     setOpenStateById(newIsOpenState)
   }
@@ -37,12 +37,26 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
             <div key={mi.id}>
               <div
                 ref={buttonRef}
-                className={`flex items-center justify-between 
+                className={`relative flex items-center justify-between z-50 
                 px-2 py-3  hover:bg-bg2 dark:hover:bg-bg3dark cursor-pointer ${
-                  mi.children && openStateById[mi.id] ? 'bg-bg2 dark:bg-bg3dark' : ''
+                  mi.children && openStateById[mi.id]
+                    ? 'bg-bg2 dark:bg-bg3dark border-l-2 border-prim1 dark:border-prim1dark'
+                    : ''
                 }`}
                 onClick={() => {
                   setiIsOpen(mi.id, true)
+                }}
+                onMouseEnter={() => {
+                  let oneIsOpen: boolean = false
+                  for (let k in openStateById) {
+                    if (openStateById[k]) {
+                      oneIsOpen = true
+                      break
+                    }
+                  }
+                  if (oneIsOpen) {
+                    setiIsOpen(mi.id, true)
+                  }
                 }}
               >
                 <div className='px-1'> {mi.label}</div>
@@ -60,7 +74,7 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
                 >
                   <div
                     className='bg-bg2 dark:bg-bg3dark
-                     border-0 border-backgroundfour dark:border-backgroundfourdark rounded-sm shadow-lg'
+                     border-l-2 border-prim1 dark:border-prim1dark rounded-sm shadow-lg shadow-bg6 dark:shadow-bg1dark ronded-b-md'
                   >
                     <div
                       onClick={() => {
