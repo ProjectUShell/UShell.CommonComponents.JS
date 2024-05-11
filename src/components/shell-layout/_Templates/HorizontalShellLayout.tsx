@@ -9,7 +9,7 @@ const HorizontalShellLayout: React.FC<{
   return (
     <div className={`h-screen flex flex-col overflow-hidden`}>
       <header
-        className='flex flex-col z-10 px-6 bg-backgroundone dark:bg-bg1dark
+        className='flex flex-col z-20 px-6 bg-backgroundone dark:bg-bg1dark
           text-textone dark:text-textonedark shadow-md dark:shadow-none1 dark:border-b1 dark:border-bg3dark1'
       >
         {shellMenu.items.length > 0 && (

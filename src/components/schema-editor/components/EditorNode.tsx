@@ -24,6 +24,7 @@ const EditorNode: React.FC<{
   onMouseLeaveInput: (nodeId: number, fieldName: string) => void
   onCommitField: (f: FieldSchema, value: any) => void
   onCommitEntityName: (entityName: string) => void
+  onDeleteField: (f: FieldSchema) => void
   numInputs: number
   numOutputs: number
 }> = React.memo(
@@ -41,6 +42,7 @@ const EditorNode: React.FC<{
     onMouseLeaveInput,
     onCommitField,
     onCommitEntityName,
+    onDeleteField,
     numInputs,
     numOutputs,
   }) => {
@@ -53,6 +55,7 @@ const EditorNode: React.FC<{
       if (!f) {
         f = new FieldSchema()
         f.name = value
+        f.type = 'String'
       }
       onCommitField(f, value)
     }
@@ -113,6 +116,7 @@ const EditorNode: React.FC<{
     }
 
     function handleKeyDownInput(field: FieldSchema | null, e: any) {
+      e.stopPropagation()
       if (e.key == 'Enter') {
         handleCommitField(field, e.target.value)
         const el: any = document.getElementById(nodeData.entitySchema.name + '_new')
@@ -123,6 +127,12 @@ const EditorNode: React.FC<{
         if (!field) {
           setInputMode((i) => !i)
         }
+      }
+      if (e.key == 'Delete' && field) {
+        onDeleteField(field)
+        // nodeData.entitySchema.fields = nodeData.entitySchema.fields.filter(
+        //   (f) => f.name != field.name,
+        // )
       }
       if (!inputMode && field) {
         setInputMode(true)
@@ -167,8 +177,10 @@ const EditorNode: React.FC<{
           setInputMode(false)
           setActiveField('')
         }}
-        className={`flex flex-col absolute cursor-grab bg-bg2 dark:bg-prim1 border-2 z-10 
-        shadow-md hover:shadow-2xl selection:bg-blue-400 ${selected ? 'border-orange-400' : ''}`}
+        className={`flex flex-col absolute rounded-md cursor-grab bg-bg2 dark:bg-bg3dark border-2 z-10 
+        shadow-md hover:shadow-2xl ${
+          selected ? 'border-orange-400' : 'border-bg5 dark:border-bg5dark'
+        }`}
       >
         <input
           id='test123'
@@ -184,17 +196,17 @@ const EditorNode: React.FC<{
           onBlur={(e) => onCommitEntityName(e.target.value)}
           placeholder='EntityName'
           style={{
-            width: `${worldWidth - 3}px`,
+            width: `${worldWidth - 4}px`,
             height: `${worldHeightField}px`,
             fontSize: worldHeightField / 2.5,
           }}
-          className={`bg-bg3 dark:bg-prim1 text-center p-1 border-0 cursor-grab border-b-2`}
+          className={`bg-bg2 dark:bg-bg3dark text-center p-1 border-0 cursor-grab border-b-2 border-bg5 dark:border-bg5dark outline-none rounded-t-md`}
         ></input>
         {nodeData.entitySchema.fields.map((f) => {
           const inputRef: any = React.createRef()
           const outputRef: any = createRef()
           return (
-            <div key={f.name} className='relative w-fit'>
+            <div key={f.name} className='relative'>
               <input
                 onMouseDown={(e: any) => {
                   e.stopPropagation()
@@ -204,7 +216,7 @@ const EditorNode: React.FC<{
                   }
                   onFieldSelected(f)
                   setActiveField(f.name)
-                  // onMouseDown(id, e)
+                  onMouseDown(id, e)
                 }}
                 onFocus={() => setActiveField(f.name)}
                 readOnly={f.name != activeField || !inputMode}
@@ -218,12 +230,14 @@ const EditorNode: React.FC<{
                 }}
                 placeholder='New Field'
                 style={{
-                  width: `${worldWidth - 3}px`,
+                  width: `${worldWidth - 4}px`,
                   height: `${worldHeightField}px`,
                   fontSize: worldHeightField / 2.5,
                 }}
                 className={` text-center p-1 rounded-none outline-none cursor-default ${
-                  activeField == f.name ? 'bg-red-400' : 'bg-bg3 dark:bg-prim1 select-none'
+                  activeField == f.name
+                    ? 'bg-bg3 dark:bg-bg4dark'
+                    : 'bg-bg2 dark:bg-bg3dark select-none'
                 }`}
               ></input>
               <div
@@ -268,11 +282,11 @@ const EditorNode: React.FC<{
           }}
           placeholder='New Field'
           style={{
-            width: `${worldWidth - 3}px`,
+            width: `${worldWidth - 4}px`,
             height: `${worldHeightField}px`,
             fontSize: worldHeightField / 2.5,
           }}
-          className='bg-bg3 dark:bg-prim1 text-center p-1 rounded-none outline-none'
+          className='bg-bg2 dark:bg-bg3dark text-center p-1 rounded-none outline-none'
         ></input>
         {/* <div
           className='absolute top-0 -left-8 flex flex-col items-center justify-center gap-3 w-3 h-full

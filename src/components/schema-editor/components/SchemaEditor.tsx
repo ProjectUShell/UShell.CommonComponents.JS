@@ -107,6 +107,13 @@ const SchemaEditor: React.FC = () => {
     save()
   }
 
+  function handleDeleteField(nodeData: NodeData, fieldSchema: FieldSchema) {
+    nodeData.entitySchema.fields = nodeData.entitySchema.fields.filter(
+      (f) => f.name != fieldSchema.name,
+    )
+    save()
+  }
+
   function handleCommitEntityName(nodeData: NodeData, entityName: string) {
     nodeData.entitySchema.name = entityName
     save()
@@ -340,6 +347,19 @@ const SchemaEditor: React.FC = () => {
     }
   }, [])
 
+  const handleKeyDown = (e: any) => {
+    console.log('key down', e)
+    if (e.key == 'Delete') {
+      if (selectedNode) {
+        setNodes(nodes.filter((n) => n.id != selectedNode))
+        setSelectedNode(null)
+      }
+      if (selectedEdge) {
+        setEdges(edges.filter((e) => e.id != selectedEdge.id))
+      }
+    }
+  }
+
   const backgroundWorldX: number = -camera.scale * camera.pos.x
   const backgroundWorldY: number = -camera.scale * camera.pos.y
   const backgroundWorldWidth: number = camera.scale * 30
@@ -359,6 +379,7 @@ const SchemaEditor: React.FC = () => {
           >
             <div
               id='board'
+              tabIndex={0}
               onWheel={applyScale}
               onMouseMove={handleMouseMove}
               onMouseDown={handleMouseDown}
@@ -368,6 +389,7 @@ const SchemaEditor: React.FC = () => {
                 e.preventDefault()
                 setGrabbingBoard(false)
               }}
+              onKeyDown={(e) => handleKeyDown(e)}
               className='relative w-full  h-full   border-0 border-black overflow-hidden'
               style={{
                 backgroundImage: 'radial-gradient(circle, #b8b8b8bf 1px, rgba(0,0,0,0) 1px',
@@ -394,6 +416,7 @@ const SchemaEditor: React.FC = () => {
                   onMouseLeaveInput={handleMouseLeaveInput}
                   onCommitField={(f: FieldSchema, v: any) => handleCommitField(n, f, v)}
                   onCommitEntityName={(entityName: string) => handleCommitEntityName(n, entityName)}
+                  onDeleteField={(f) => handleDeleteField(n, f)}
                 ></EditorNode>
               ))}
               {newEdge && (
@@ -448,14 +471,15 @@ const SchemaEditor: React.FC = () => {
           </div>
         </div>
         <div
-          className={`right-0 top-0 border-t  border-bg5 dark:border-bg5dark bg-bg3 dark:bg-bg3dark z-10 transition-all ${
-            showProperties ? 'w-40 h-full border-l pl-2 ' : 'w-0 h-full'
+          className={` ight-0 top-0 border-t text-sm py-2 border-bg5 dark:border-bg5dark bg-bg3 dark:bg-bg3dark z-0 transition-all ${
+            showProperties ? 'w-64 h-full border-l px-2 ' : 'w-0 h-full'
           }`}
         >
           <EditorProperties
             entity={nodes.find((n) => n.id == selectedNode)?.entitySchema}
             field={selectedField}
             relation={selectedEdge?.relation}
+            onChange={() => save()}
           ></EditorProperties>
         </div>
       </div>

@@ -22,7 +22,7 @@ const TopBar: React.FC<{
 }) => {
   return (
     <header
-      className='static top-0 flex flex-col z-20 px-6 
+      className='static top-0 flex flex-col z-30 px-6 
       bg-backgroundone dark:bg-bg1dark text-textone dark:text-textonedark shadow-lg '
     >
       <div className='flex justify-between items-center py-1'>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Option } from './MultiSelect'
 import Dropdown from './Dropdown'
 import FunnelIcon from '../_Icons/FunnelIcon'
@@ -14,7 +14,15 @@ const DropdownSelect: React.FC<{
   forceFocus?: boolean
   topOffset?: number
   bottomOffset?: number
-}> = ({ options, initialOption, onOptionSet, placeholder, forceFocus, topOffset, bottomOffset }) => {
+}> = ({
+  options,
+  initialOption,
+  onOptionSet,
+  placeholder,
+  forceFocus,
+  topOffset,
+  bottomOffset,
+}) => {
   console.log('DropdownSelect render', initialOption)
   const [open, setOpen] = useState(false)
   const [currentOption, setCurrentOption] = useState<Option | null | undefined>(initialOption)
@@ -67,7 +75,9 @@ const DropdownSelect: React.FC<{
     if (currentMatchingOptions.length == 0) {
       return false
     }
-    const matchingOption: Option | undefined = currentMatchingOptions.find((o) => o.label == option.label)
+    const matchingOption: Option | undefined = currentMatchingOptions.find(
+      (o) => o.label == option.label,
+    )
     return matchingOption
   }
 
@@ -76,7 +86,8 @@ const DropdownSelect: React.FC<{
       return false
     }
     return (
-      option.label.toLocaleLowerCase() == currentMatchingOptions[currentMatchingOptionIndex].label.toLocaleLowerCase()
+      option.label.toLocaleLowerCase() ==
+      currentMatchingOptions[currentMatchingOptionIndex].label.toLocaleLowerCase()
     )
   }
 
@@ -151,13 +162,17 @@ const DropdownSelect: React.FC<{
     setOpen(false)
   }
 
+  const ref: any = useRef()
   return (
     <div onBlur={(e) => setOpen(false)}>
       {/* <button onClick={(e) => setOpen(true)}> */}
-      <div className='p-0.5 outline-1 outline-gray-400 outline rounded-sm w-64 focus:z-50 relative flex bg-backgroundone dark:bg-backgroundonedark'>
+      <div
+        ref={ref}
+        className='p-0.5 w-full rounded-sm focus:z-50 relative flex bg-bg2 dark:bg-bg2dark'
+      >
         <input
           autoFocus={forceFocus}
-          className='w-full focus:z-50 relative outline-none bg-backgroundonw dark:bg-backgroundonedark'
+          className='w-full focus:z-50 relative outline-none bg-bg2 dark:bg-bg2dark'
           onClick={(e) => setOpen(true)}
           value={currentText}
           type='text'
@@ -182,8 +197,9 @@ const DropdownSelect: React.FC<{
             leftOffset={0}
             bottomOffset={bottomOffset ? bottomOffset : undefined}
             topOffset={topOffset ? topOffset : undefined}
+            minWidthRef={ref}
           >
-            <div className='bg-backgroundfour dark:bg-backgroundfourdark w-64 p-1 rounded-md'>
+            <div className='bg-bg2 dark:bg-bg2dark w-full p-1 rounded-b-md border-0'>
               {options
                 .filter((o) => currentMatchingOptions.length == 0 || isMatchingOption(o))
                 .map((o) => (
