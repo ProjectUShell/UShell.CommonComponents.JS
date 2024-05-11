@@ -10,14 +10,16 @@ import {
   ShellSettings,
 } from '../ShellSettings'
 import { ShellMenu, TopBarItem } from '../ShellMenu'
+import { ShellMenuState } from '../ShellMenuState'
 
 // import '../../../tailwind.css'
 
 const ShellLayout: React.FC<{
   shellMenu: ShellMenu
+  shellMenuState: ShellMenuState
   children: any
   title: JSX.Element | string
-}> = ({ shellMenu, children, title }) => {
+}> = ({ shellMenu, shellMenuState, children, title }) => {
   const [shellSettings, setShellSettings] = useState<ShellSettings>({
     colorMode: ColorMode.Light,
     layoutMode: LayoutMode.Vertical,
@@ -66,11 +68,17 @@ const ShellLayout: React.FC<{
           title={title}
         ></TopBar>
         {shellSettings.layoutMode == LayoutMode.Vertical ? (
-          <VerticalShellLayout sidebarOpen={sidebarOpen} shellMenu={shellMenu}>
+          <VerticalShellLayout
+            sidebarOpen={sidebarOpen}
+            shellMenu={shellMenu}
+            shellMenuState={shellMenuState}
+          >
             {children}
           </VerticalShellLayout>
         ) : (
-          <HorizontalShellLayout shellMenu={shellMenu}>{children}</HorizontalShellLayout>
+          <HorizontalShellLayout shellMenu={shellMenu} shellMenuState={shellMenuState}>
+            {children}
+          </HorizontalShellLayout>
         )}
       </div>
     </div>

@@ -15,6 +15,10 @@ import ResizableTable from './components/guifad/_Organisms/ResizableTable'
 import ResizableTable2 from './components/guifad/_Organisms/ResizeableTable'
 import ColorDemo from './demo/ColorDemo'
 import SchemaEditor from './components/schema-editor/components/SchemaEditor'
+import SchemaManager from './components/schema-editor/components/SchemaManager'
+import { LocalStorageSchemaProvider } from './components/schema-editor/LocalStorageSchemaProvider'
+import { activateItem, loadShellMenuState } from './components/shell-layout/ShellMenuState'
+import { MenuItem } from './components/shell-layout/ShellMenu'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -27,34 +31,38 @@ const Demo = () => {
     Guifad: ['GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
     Table: ['TableDemo', 'ResizeTable', 'ResizeTable2'],
     Common: ['ColorDemo', 'DropdownButtonDemo'],
-    SchemaEditor: ['Editor Demo'],
+    SchemaEditor: ['Schema Manager', 'Editor', 'Schema Guifad'],
   }
+
+  const menuItems: MenuItem[] = demoComponents.map((dc) => {
+    return {
+      label: dc,
+      id: dc,
+      type: subComponents[dc] ? 'Group' : 'Command',
+      command: (e) => {
+        setCurrentComponent(dc)
+      },
+      children: subComponents[dc]?.map((sc) => {
+        return {
+          label: sc,
+          id: sc,
+          type: 'Command',
+          command: (e) => {
+            setCurrentComponent(sc)
+          },
+        }
+      }),
+    }
+  })
+
+  console.log('menuState', loadShellMenuState())
 
   return (
     <QueryClientProvider client={queryClient}>
       <ShellLayout
         title='Demo'
         shellMenu={{
-          items: demoComponents.map((dc) => {
-            return {
-              label: dc,
-              id: dc,
-              type: subComponents[dc] ? 'Group' : 'Command',
-              command: (e) => {
-                setCurrentComponent(dc)
-              },
-              children: subComponents[dc]?.map((sc) => {
-                return {
-                  label: sc,
-                  id: sc,
-                  type: 'Command',
-                  command: (e) => {
-                    setCurrentComponent(sc)
-                  },
-                }
-              }),
-            }
-          }),
+          items: menuItems,
           topBarItems: [
             {
               icon: (
@@ -74,6 +82,7 @@ const Demo = () => {
             },
           ],
         }}
+        shellMenuState={loadShellMenuState()}
       >
         {(currentComponent == 'GuifadDemo' || currentComponent == 'GuifadDemo2') && (
           <GuifadFuse
@@ -110,7 +119,19 @@ const Demo = () => {
           ></ResizableTable2>
         )}
         {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
-        {currentComponent == 'Editor Demo' && <SchemaEditor></SchemaEditor>}
+        {currentComponent == 'Schema Manager' && (
+          <SchemaManager
+            schemaProvider={new LocalStorageSchemaProvider()}
+            enterSchema={(sn: string) => {
+              activateItem(
+                menuItems
+                  .find((mi) => mi.id == 'SchemaEditor')!
+                  .children?.find((c) => c.id == 'Editor')!,
+              )
+            }}
+          ></SchemaManager>
+        )}
+        {currentComponent == 'Editor' && <SchemaEditor></SchemaEditor>}
       </ShellLayout>
     </QueryClientProvider>
   )

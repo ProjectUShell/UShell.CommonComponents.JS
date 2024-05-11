@@ -1,12 +1,14 @@
 import React from 'react'
 import { ShellMenu } from '../ShellMenu'
 import Menu from '../_Organisms/Menu'
+import { ShellMenuState } from '../ShellMenuState'
 
 const VerticalShellLayout: React.FC<{
   sidebarOpen: boolean
   shellMenu: ShellMenu
+  shellMenuState: ShellMenuState
   children: any
-}> = ({ sidebarOpen, shellMenu, children }) => {
+}> = ({ sidebarOpen, shellMenu, shellMenuState, children }) => {
   return (
     <div className={`flex overflow-hidden h-screen`}>
       {/* Sidebar */}
@@ -19,7 +21,11 @@ const VerticalShellLayout: React.FC<{
               : '-translate-x-0 w-0 ease-in transition-all duration-20'
           }`}
         >
-          <Menu menuItems={shellMenu.items} direction='Vertical'></Menu>
+          <Menu
+            menuItems={shellMenu.items}
+            shellMenuState={shellMenuState}
+            direction='Vertical'
+          ></Menu>
         </div>
       )}
       {/* Content */}

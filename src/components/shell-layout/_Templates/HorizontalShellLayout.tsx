@@ -1,11 +1,13 @@
 import React from 'react'
 import { ShellMenu } from '../ShellMenu'
 import Menu from '../_Organisms/Menu'
+import { ShellMenuState } from '../ShellMenuState'
 
 const HorizontalShellLayout: React.FC<{
   shellMenu: ShellMenu
+  shellMenuState: ShellMenuState
   children: any
-}> = ({ shellMenu, children }) => {
+}> = ({ shellMenu, shellMenuState, children }) => {
   return (
     <div className={`h-screen flex flex-col overflow-hidden`}>
       <header
@@ -14,7 +16,11 @@ const HorizontalShellLayout: React.FC<{
       >
         {shellMenu.items.length > 0 && (
           <div className='flex justify-between items-center'>
-            <Menu direction='Horizontal' menuItems={shellMenu.items}></Menu>
+            <Menu
+              direction='Horizontal'
+              menuItems={shellMenu.items}
+              shellMenuState={shellMenuState}
+            ></Menu>
           </div>
         )}
       </header>

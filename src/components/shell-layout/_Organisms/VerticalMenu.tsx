@@ -11,15 +11,18 @@ import {
 
 const VerticalMenu: React.FC<{
   menuItems: MenuItem[]
+  shellMenuState: ShellMenuState
   className?: string
   menuItemHoverClassName?: string
-}> = ({ menuItems, className, menuItemHoverClassName }) => {
+}> = ({ menuItems, shellMenuState, className, menuItemHoverClassName }) => {
   const [, setRerenderTrigger] = useState(0)
-  const [shellMenuState] = useState<ShellMenuState>(loadShellMenuState())
+  // const [shellMenuState] = useState<ShellMenuState>(loadShellMenuState())
 
   function triggerRerender() {
     setRerenderTrigger((t) => t + 1)
   }
+
+  console.log('shellMenuState v', shellMenuState)
 
   return (
     <VerticalMenuInternal

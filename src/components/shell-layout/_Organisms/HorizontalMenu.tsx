@@ -5,9 +5,12 @@ import Dropdown from '../../../_Atoms/Dropdown'
 import VerticalMenu from './VerticalMenu'
 import { ShellMenuState, activateItem, loadShellMenuState } from '../ShellMenuState'
 
-const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
+const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMenuState }> = ({
+  menuItems,
+  shellMenuState,
+}) => {
   const [openStateById, setOpenStateById] = useState<{ [id: string]: boolean }>({})
-  const [shellMenuState] = useState<ShellMenuState>(loadShellMenuState())
+  // const [shellMenuState] = useState<ShellMenuState>(loadShellMenuState())
 
   function setiIsOpen(id: string, isOpen: boolean) {
     const newIsOpenState: { [id: string]: boolean } = {}
@@ -83,6 +86,7 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[] }> = ({ menuItems }) => {
                     >
                       <VerticalMenu
                         menuItems={mi.children}
+                        shellMenuState={shellMenuState}
                         className='bg-bg2 dark:bg-bg3dark'
                         menuItemHoverClassName='hover:bg-bg3 dark:hover:bg-bg4dark'
                       ></VerticalMenu>

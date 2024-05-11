@@ -149,7 +149,9 @@ const Table: React.FC<{
     if (e.target.tagName == 'path' || e.target.tagName == 'svg') {
       return
     }
-
+    if (!onSelectedRecordsChange) {
+      return
+    }
     const newSelectedValue = !selectedRows[i]
     if (!e.ctrlKey && !newSelectedValue) return
     const newSr = e.ctrlKey ? { ...selectedRows } : {}
@@ -158,9 +160,7 @@ const Table: React.FC<{
       return newSr
     })
     const selectedRecords: any[] = records.filter((r, i) => newSr[i])
-    if (!onSelectedRecordsChange) {
-      return
-    }
+
     onSelectedRecordsChange(selectedRecords)
   }
 
@@ -368,8 +368,10 @@ const Table: React.FC<{
 
   return (
     <div
-      className={`relative overflow-hidden shadow-lg1 drop-shadow-md1 rounded-md bg-bg1 dark:bg-bg1dark
-      border-0 border-backgroundfour dark:border-backgroundfourdark h-full w-full flex flex-col justify-between ${className} `}
+      className={`relative overflow-hidden shadow-lg1 drop-shadow-md1 
+      h-full w-full flex flex-col justify-between ${
+        className ? className : 'bg-bg1 dark:bg-bg1dark rounded-md '
+      } `}
     >
       <div className='flex flex-col h-full w-full overflow-auto '>
         <table
