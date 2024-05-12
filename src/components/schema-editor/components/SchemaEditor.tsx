@@ -370,6 +370,7 @@ const SchemaEditor: React.FC = () => {
       <EditorToolbar
         showProperties={showProperties}
         setShowProperties={setShowProperties}
+        schemaName={'Test'}
       ></EditorToolbar>
       <div className='flex w-full h-full overflow-hidden border-0 border-red-400'>
         <div className='relative w-full h-full overflow-hidden border-0 border-red-400'>
