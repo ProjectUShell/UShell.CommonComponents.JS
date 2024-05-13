@@ -15,7 +15,7 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     if (FuseDataStore.getTokenMethod) {
       headers['Authorization'] = FuseDataStore.getTokenMethod(this._TokenSourceUid)
     }
-    if (this._AdditionalBodyArgs) {
+    if (this._AdditionalBodyArgs && bodyParams) {
       for (let additionalKey in this._AdditionalBodyArgs) {
         bodyParams[additionalKey] = this._AdditionalBodyArgs[additionalKey]
       }
