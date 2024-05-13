@@ -7,17 +7,18 @@ import { FuseDataSourceMethod } from './FuseDataSourceMethod'
 export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   public static getTokenMethod: ((tokenSourceUid: string) => string) | null = null
 
-  public static async post(
-    tokenSourceUid: string,
-    url: string,
-    bodyParams: any = null,
-  ): Promise<any> {
+  public async post(url: string, bodyParams: any = null): Promise<any> {
     const headers: any = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     }
     if (FuseDataStore.getTokenMethod) {
-      headers['Authorization'] = FuseDataStore.getTokenMethod(tokenSourceUid)
+      headers['Authorization'] = FuseDataStore.getTokenMethod(this._TokenSourceUid)
+    }
+    if (this._AdditionalBodyArgs) {
+      for (let additionalKey in this._AdditionalBodyArgs) {
+        bodyParams[additionalKey] = this._AdditionalBodyArgs[additionalKey]
+      }
     }
     const rawResponse = await fetch(url, {
       method: 'POST',
@@ -34,21 +35,24 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   private _SchemaRoot: SchemaRoot | null = null
   private _RoutePattern: 'body' | 'route' | 'method' = 'body'
   private _TokenSourceUid = ''
+  private _AdditionalBodyArgs: any | null = null
 
   constructor(
     url: string,
     routePattern: 'body' | 'route' | 'method',
     entitySchemaUrl?: string,
     tokenSourceUid?: string,
+    additionalBodyArgs?: any,
   ) {
     this._Url = url
     this._EntitySchemaUrl = entitySchemaUrl ? entitySchemaUrl : url
     this._RoutePattern = routePattern
     this._TokenSourceUid = tokenSourceUid ? tokenSourceUid : ''
+    this._AdditionalBodyArgs = additionalBodyArgs ? additionalBodyArgs : null
   }
 
   init(): Promise<void> {
-    return FuseDataStore.post(this._TokenSourceUid, this._EntitySchemaUrl + `GetSchemaRoot`)
+    return this.post(this._EntitySchemaUrl + `GetSchemaRoot`)
       .then((r) => r.return)
       .catch((e) => null)
       .then((sr) => {
@@ -75,11 +79,11 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     }
     switch (this._RoutePattern) {
       case 'body':
-        return new FuseDataSourceBody(this._Url, es, this._TokenSourceUid)
+        return new FuseDataSourceBody(this._Url, es, this)
       case 'route':
-        return new FuseDataSourceRoute(this._Url, es, this._TokenSourceUid)
+        return new FuseDataSourceRoute(this._Url, es, this)
       case 'method':
-        return new FuseDataSourceMethod(this._Url, es, this._TokenSourceUid)
+        return new FuseDataSourceMethod(this._Url, es, this)
     }
   }
 }
