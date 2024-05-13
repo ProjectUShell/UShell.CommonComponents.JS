@@ -383,7 +383,7 @@ const Table: React.FC<{
               {expandableRowProps && (
                 <th
                   id={'column_expand'}
-                  className='border-y border-backgroundfour dark:border-backgroundfourdark'
+                  className='border-t border-b border-backgroundfour dark:border-backgroundfourdark'
                   style={
                     'column_expand' in columnWidths
                       ? { width: getColumnWidth('column_expand') }
@@ -479,7 +479,7 @@ const Table: React.FC<{
               const renderRow = (
                 <tr
                   key={i}
-                  className={`border-y border-bg3 dark:border-bg3dark  ${
+                  className={`border-t border-b border-bg3 dark:border-bg3dark  ${
                     selectedRows[i]
                       ? 'bg-prim6 dark:bg-prim1 text-textonedark'
                       : 'bg-bg1 dark:bg-bg1dark'
