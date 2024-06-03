@@ -21,7 +21,11 @@ export class LocalStorageSchemaProvider implements ISchemaProvider {
   }
 
   loadSchema(schemaName: string): SchemaRoot {
-    throw new Error('Method not implemented.')
+    return new SchemaRoot()
+    // const schemasJson: string | null = localStorage.getItem('schema_lib')
+    // if (!schemasJson) return new SchemaRoot()
+    // const schemas: { [schemaName: string]: SchemaRoot } = JSON.parse(schemasJson)
+    // return schemas[schemaName]
   }
 
   saveSchema(schemaName: string, schema: SchemaRoot): Promise<void> {
@@ -34,5 +38,15 @@ export class LocalStorageSchemaProvider implements ISchemaProvider {
 
   deleteSchema(schemaName: string): void {
     throw new Error('Method not implemented.')
+  }
+
+  updateName(oldName: string, newName: string): void {
+    const schemasJson: string | null = localStorage.getItem('schema_lib')
+    const schemas: { [schemaName: string]: SchemaRoot } = schemasJson ? JSON.parse(schemasJson) : {}
+    if (!(oldName in schemas)) return
+    const s: SchemaRoot = { ...schemas[oldName] }
+    delete schemas[oldName]
+    schemas[newName] = s
+    localStorage.setItem('schema_lib', JSON.stringify(schemas))
   }
 }

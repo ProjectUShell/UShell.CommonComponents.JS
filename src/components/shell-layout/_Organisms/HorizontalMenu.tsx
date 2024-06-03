@@ -41,10 +41,10 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
               <div
                 ref={buttonRef}
                 className={`relative flex items-center justify-between z-50 
-                px-2 py-3  hover:bg-bg2 dark:hover:bg-bg3dark cursor-pointer ${
+                px-2 py-2  hover:text-textone   hover:bg-bg1 dark:hover:bg-bg3dark cursor-pointer ${
                   mi.children && openStateById[mi.id]
-                    ? 'bg-bg2 dark:bg-bg3dark border-l-2 border-prim1 dark:border-prim1dark'
-                    : ''
+                    ? 'bg-bg1 dark:bg-bg3dark text-textone dark:text-textonedark border-l-2 border-prim1 dark:border-prim6'
+                    : 'border-l-2 border-menu dark:border-bg0dark text-texttwo dark:text-textonedark'
                 }`}
                 onClick={() => {
                   setiIsOpen(mi.id, true)
@@ -76,8 +76,8 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
                   minWidthRef={buttonRef}
                 >
                   <div
-                    className='bg-bg2 dark:bg-bg3dark
-                     border-l-2 border-prim1 dark:border-prim1dark rounded-sm shadow-lg shadow-bg6 dark:shadow-bg1dark ronded-b-md'
+                    className='bg-bg1 dark:bg-bg3dark
+                     border-l-2 border-prim1 dark:border-prim6 rounded-sm shadow-lg shadow-bg6 dark:shadow-black ronded-b-md'
                   >
                     <div
                       onClick={() => {

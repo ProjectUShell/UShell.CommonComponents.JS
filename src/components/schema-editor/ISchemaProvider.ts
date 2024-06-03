@@ -6,4 +6,5 @@ export interface ISchemaProvider {
   loadSchema(schemaName: string): SchemaRoot
   saveSchema(schemaName: string, schema: SchemaRoot): Promise<void>
   deleteSchema(schemaName: string): void
+  updateName(oldName: string, newName: string): void
 }

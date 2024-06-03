@@ -41,7 +41,7 @@ export class EntitySchemaService {
     return result
   }
   static getLabel(schemaRoot: SchemaRoot, primaryEntityName: string, entity: any): string {
-    if (!entity) return 'Nope'
+    if (!entity) return 'No Entity'
 
     if (entity.label) return entity.label
     if (entity.label) return entity.label

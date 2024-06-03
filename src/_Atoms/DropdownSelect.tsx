@@ -14,6 +14,7 @@ const DropdownSelect: React.FC<{
   forceFocus?: boolean
   topOffset?: number
   bottomOffset?: number
+  inputClassname?: string
 }> = ({
   options,
   initialOption,
@@ -22,6 +23,7 @@ const DropdownSelect: React.FC<{
   forceFocus,
   topOffset,
   bottomOffset,
+  inputClassname,
 }) => {
   console.log('DropdownSelect render', initialOption)
   const [open, setOpen] = useState(false)
@@ -168,11 +170,11 @@ const DropdownSelect: React.FC<{
       {/* <button onClick={(e) => setOpen(true)}> */}
       <div
         ref={ref}
-        className='p-0.5 w-full rounded-sm focus:z-50 relative flex bg-bg2 dark:bg-bg2dark'
+        className='p-0.5 w-full rounded-sm focus:z-50 relative flex bg-bg1 dark:bg-bg2dark'
       >
         <input
           autoFocus={forceFocus}
-          className='w-full focus:z-50 relative outline-none bg-bg2 dark:bg-bg2dark'
+          className={`w-full focus:z-50 relative outline-none bg-bg1 dark:bg-bg2dark dark:border-bg4dark p-1 rounded-md ${inputClassname}`}
           onClick={(e) => setOpen(true)}
           value={currentText}
           type='text'
@@ -199,7 +201,7 @@ const DropdownSelect: React.FC<{
             topOffset={topOffset ? topOffset : undefined}
             minWidthRef={ref}
           >
-            <div className='bg-bg2 dark:bg-bg2dark w-full p-1 rounded-b-md border-0'>
+            <div className='bg-bg2 dark:bg-bg3dark w-full p-1 rounded-b-md border-0 dark:border dark:border-bg4dark'>
               {options
                 .filter((o) => currentMatchingOptions.length == 0 || isMatchingOption(o))
                 .map((o) => (

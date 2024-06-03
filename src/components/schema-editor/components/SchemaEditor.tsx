@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { NodeData } from '../NodeData'
-import { EntitySchema, FieldSchema, RelationSchema } from 'fusefx-modeldescription'
+import { EntitySchema, FieldSchema, RelationSchema, SchemaRoot } from 'fusefx-modeldescription'
 import EditorNode from './EditorNode'
 import { EdgeData } from '../EdgeData'
 import EditorEdge from './EditorEdge'
@@ -8,14 +8,21 @@ import { Camera } from '../Camera'
 import BoardContextMenu from './BoardContextMenu'
 import {
   getBoardPosFromWindowPos,
+  getBoardStateFromSchema,
   getViewPosFromWorldPos,
   getWorldPosFromViewPos,
 } from '../BoardUtils'
 import { Position } from '../Position'
 import EditorToolbar from './EditorToolbar'
 import EditorProperties from './EditorProperties'
+import { BoardState } from '../BoardState'
 
-const SchemaEditor: React.FC = () => {
+const SchemaEditor: React.FC<{
+  schemaName: string
+  schema: SchemaRoot
+  onChangeSchemaName: (newName: string) => void
+  onChangeSchema: (newSchema: SchemaRoot) => void
+}> = ({ schemaName, schema, onChangeSchemaName, onChangeSchema }) => {
   const boardElement = document.getElementById('board')
 
   const [showProperties, setShowProperties] = useState(false)
@@ -44,23 +51,20 @@ const SchemaEditor: React.FC = () => {
     const pd = (e: any) => e.preventDefault()
     document.addEventListener('contextmenu', pd)
 
-    const boardStateString: string | null = localStorage.getItem('boardState')
-    if (boardStateString) {
-      const boardState: any = JSON.parse(boardStateString)
-      setNodes(boardState.nodes)
-      setEdges(boardState.edges)
-      let maxId: number = 0
-      boardState.nodes.forEach((n: NodeData) => {
-        if (n.id > maxId) {
-          maxId = n.id
-        }
-      })
-      setCurrentId(maxId + 1)
-    }
+    const boardState: BoardState = getBoardStateFromSchema(schema)
+    setNodes(boardState.nodes)
+    setEdges(boardState.edges)
+    let maxId: number = 0
+    boardState.nodes.forEach((n: NodeData) => {
+      if (n.id > maxId) {
+        maxId = n.id
+      }
+    })
+    setCurrentId(maxId + 1)
     return () => {
       document.removeEventListener('contextmenu', pd)
     }
-  }, [])
+  }, [schema])
 
   useEffect(() => {
     save()

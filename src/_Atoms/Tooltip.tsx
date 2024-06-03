@@ -28,8 +28,8 @@ const Tooltip: React.FC<{ targetId: string; children: any }> = ({ targetId, chil
       {show && (
         <div className='relative'>
           <div
-            className='absolute w-40 z-40 rounded-md p-2 
-          bg-backgroundone dark:bg-backgroundonedark right-0 top-1'
+            className='absolute flex z-40 rounded-md p-1
+              bg-bg1 dark:bg-bg1dark right-0 top-1 shadow-md border dark:border-bg3dark'
           >
             {children}
           </div>

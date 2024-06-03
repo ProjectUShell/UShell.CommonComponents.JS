@@ -19,7 +19,7 @@ const DropdownButton: React.FC<{
   return (
     <>
       <button
-        className={`rounded-md p-1  hover:bg-backgroundone dark:hover:bg-backgroundonedark relative ${open && 'z-50'}`}
+        className={`rounded-md p-1  relative ${open && 'z-50'}`}
         onClick={(e) => setOpen((o) => !o)}
       >
         {buttonContent}

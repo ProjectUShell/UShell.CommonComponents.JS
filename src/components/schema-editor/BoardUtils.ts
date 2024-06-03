@@ -1,5 +1,7 @@
+import { SchemaRoot } from 'fusefx-modeldescription'
 import { Camera } from './Camera'
 import { Position } from './Position'
+import { BoardState } from './BoardState'
 
 export function getBoardPosFromWindowPos(windowPos: Position): Position {
   const boardEl: HTMLElement | null = document.getElementById('board')
@@ -24,4 +26,15 @@ export function getWorldPosFromViewPos(boardPos: Position, cam: Camera): Positio
     x: boardPos.x / cam.scale + cam.pos.x,
     y: boardPos.y / cam.scale + cam.pos.y,
   }
+}
+
+export function getBoardStateFromSchema(schema: SchemaRoot): BoardState {
+  const result: BoardState = new BoardState()
+  const boardStateString: string | null = schema.designerData
+  if (boardStateString && boardStateString != '') {
+    const boardState: any = JSON.parse(boardStateString)
+    result.nodes.push(boardState.nodes)
+    result.edges.push(boardState.edges)
+  }
+  return result
 }

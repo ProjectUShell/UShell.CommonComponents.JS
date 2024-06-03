@@ -5,28 +5,38 @@
 
 @layer base {
   :root {
-    --color-background-one: rgb(253 254 255);
-    --color-background-two: rgb(231 240 247);
-    --color-background-three: rgb(218 227 234);
-    --color-background-four: rgb(196 201 212);
-    --color-background-five: rgb(180 185 190);
-    --color-background-six: rgb(164 168 174);
-    --color-background-one-dark: rgb(41, 49, 56);
-    --color-background-two-dark: rgb(67, 75, 84);
-    --color-background-three-dark: rgb(87, 95, 104);
-    --color-background-four-dark: rgb(104, 111, 121);
-    --color-background-five-dark: rgb(119, 126, 136);
-    --color-background-six-dark: rgb(134, 141, 151);
-    --color-text-one: 81 92 102;
-    --color-text-two: 52 58 64;
+    --color-background-one: rgb(255 255 255);
+    --color-background-two: rgb(248, 248, 248);
+    --color-background-two1: rgb(243 243 243);
+    --color-background-three: rgb(242 242 242);
+    --color-background-three1: rgb(236 236 236);
+    --color-background-four: rgb(235 235 235);
+    --color-background-four11: rgb(232 232 232);
+    --color-background-four1: rgb(232 232 237);
+    --color-background-five: rgb(232 232 232);
+    --color-background-five11: rgb(221 221 221);
+    --color-background-five1: rgb(224 221 231);
+    --color-background-six: rgb(213 213 213);
+    --color-background-six1: rgb(210 210 210);
+    --color-background-seven: rgb(189 189 189);
+    --color-background-zero-dark: rgb(31, 34, 35);
+    --color-background-one-dark: rgb(41, 46, 50);
+    --color-background-two-dark: rgb(52, 55, 60);
+    --color-background-three-dark: rgb(72, 76, 84);
+    --color-background-four-dark: rgb(87, 90, 95);
+    --color-background-five-dark: rgb(104, 106, 111);
+    --color-background-six-dark: rgb(119, 126, 136);
+    --color-background-seven-dark: rgb(134, 141, 151);
+    --color-text-one: rgb(20, 20, 20);
+    --color-text-two: rgb(139, 139, 139);
     --color-text-one-dark: rgb(255, 255, 255);
-    --color-text-two-dark: rgb(222, 225, 227);
-    --color-prim-100: #6f50cc;
-    --color-prim-200: #8162d2;
-    --color-prim-300: #9275d8;
-    --color-prim-400: #a388de;
-    --color-prim-500: #b39be4;
-    --color-prim-600: #c2aeea;
+    --color-text-two-dark: rgb(177, 177, 177);
+    --color-prim-100: #d9cdfd;
+    --color-prim-200: #c6b8ee;
+    --color-prim-300: #bcade6;
+    --color-prim-400: #a795d6;
+    --color-prim-500: #9783ca;
+    --color-prim-600: #816cb6;
     /* ... */
   }
 }

@@ -1,6 +1,9 @@
 import React from 'react'
 
-const BookmarkSquareIcon: React.FC<{ size: number }> = ({ size }) => {
+const BookmarkSquareIcon: React.FC<{ size: number; className?: string }> = ({
+  size,
+  className,
+}) => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -8,7 +11,7 @@ const BookmarkSquareIcon: React.FC<{ size: number }> = ({ size }) => {
       viewBox='0 0 24 24'
       strokeWidth={1.5}
       stroke='currentColor'
-      className={`w-${size} h-${size}`}
+      className={`w-${size} h-${size} ${className}`}
     >
       <path
         strokeLinecap='round'

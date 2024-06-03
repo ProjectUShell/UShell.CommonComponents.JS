@@ -88,89 +88,98 @@ const Guifad1: React.FC<{
     setCurrentMode('details')
   }
   return (
-    <div className='w-full h-full flex overflow-hidden text-sm bg-bg1 dark:bg-bg1dark'>
-      <aside
-        style={{ minWidth: '72px' }}
-        className='flex flex-col justify-start bg-bg3 
-          dark:bg-bg2dark w-72 py-2'
-      >
-        <StructureNavigation
-          schemaRoot={dataSourceManager.getSchemaRoot()}
-          currentRecord={currentRecord}
-          entitySchema={node.dataSource.entitySchema!}
-          onRelationSelected={(rel: RelationSchema) => setCurrentRelation(rel)}
-          onRelationEnter={(rel: RelationSchema) => enterRelation(rel, null)}
-          setMode={(mode: 'list' | 'details') => setCurrentMode(mode)}
-          mode={currentMode}
-          relation={currentRelation}
-          className='w-full h-1/2 '
-          dirty={dirty}
-        ></StructureNavigation>
-        <div className='w-full h-1/2 max-w-full'>
-          {currentRelation && currentRecord && (
-            <PreviewTable
-              dataSource={dataSourceManager.tryGetDataSource(currentRelation.foreignEntityName)!}
-              onRecordEnter={(r: any) => {
-                enterRelation(currentRelation, r)
-              }}
-              onSelectedRecordsChange={(sr: any[]) => {
-                console.log('sr', sr)
-              }}
-              parentSchema={node.dataSource.entitySchema!}
-              schemaRoot={dataSourceManager.getSchemaRoot()}
-              parent={currentRecord}
-            ></PreviewTable>
-          )}
-        </div>
-
-        {/* {!currentRelation && <div className='h-full w-64 pr-1 mt-1'></div>} */}
-      </aside>
-      <div className='h-full w-full flex flex-col min-w-0'>
-        <header className='flex flex-col bg-bg3 dark:bg-bg2dark'>
-          <Breadcrumb
-            nodes={nodes}
-            onNodeClick={(n: ObjectGraphNode[], r: any) => {
-              setCurrentNodes(n)
-              setCurrentRecord(r)
-              const newMode = r ? 'details' : 'list'
-              setCurrentMode(newMode)
-            }}
+    <div className='w-full h-full flex flex-col overflow-hidden text-sm bg-bg1 dark:bg-bg1dark'>
+      <div className='w-full h-full flex overflow-hidden text-sm bg-bg1 dark:bg-bg2dark'>
+        <aside
+          style={{ minWidth: '72px' }}
+          className='flex flex-col justify-start bg-navigation 
+          dark:bg-bg1dark border-r-0 border-hairlineStructure dark:border-bg3dark w-72 py-0'
+        >
+          <div className='p-1 m-1 pl-1 pb-2 border-b border-bg6 dark:border-bg3dark'>Structure</div>
+          <StructureNavigation
+            schemaRoot={dataSourceManager.getSchemaRoot()}
+            currentRecord={currentRecord}
+            entitySchema={node.dataSource.entitySchema!}
+            onRelationSelected={(rel: RelationSchema) => setCurrentRelation(rel)}
+            onRelationEnter={(rel: RelationSchema) => enterRelation(rel, null)}
+            setMode={(mode: 'list' | 'details') => setCurrentMode(mode)}
+            mode={currentMode}
+            relation={currentRelation}
+            className='w-full h-1/2 '
             dirty={dirty}
-          ></Breadcrumb>
-        </header>
-
-        <div className='p-2 h-full overflow-auto'>
-          {currentMode == 'list' && (
-            <EntityTable
-              dataSourceManager={dataSourceManager}
-              dataSource={node.dataSource}
-              onRecordEnter={(r: any) => {
-                console.log('record enter', r)
-              }}
-              onSelectedRecordsChange={(selectedRecords) =>
-                onSelectedRecordsChange(selectedRecords)
-              }
-              selectedRecord={currentRecord}
-              onCreateRecord={createRecord}
-              parentSchema={node.parent?.dataSource?.entitySchema}
+          ></StructureNavigation>
+          <div className='w-full h-1/2 max-w-full border-t border-bg4 dark:border-bg3dark'>
+            {currentRelation && currentRecord && (
+              <>
+                <div className='p-1 m-1 mb-2 pl-1 pb-2 border-b border-bg6  dark:border-bg3dark'>
+                  Preview Table
+                </div>
+                <PreviewTable
+                  dataSource={
+                    dataSourceManager.tryGetDataSource(currentRelation.foreignEntityName)!
+                  }
+                  onRecordEnter={(r: any) => {
+                    enterRelation(currentRelation, r)
+                  }}
+                  onSelectedRecordsChange={(sr: any[]) => {
+                    console.log('sr', sr)
+                  }}
+                  parentSchema={node.dataSource.entitySchema!}
+                  schemaRoot={dataSourceManager.getSchemaRoot()}
+                  parent={currentRecord}
+                ></PreviewTable>
+              </>
+            )}
+          </div>
+          {/* {!currentRelation && <div className='h-full w-64 pr-1 mt-1'></div>} */}
+        </aside>
+        <div className='h-full w-full flex flex-col min-w-0'>
+          <header className='flex flex-col bg-navigation dark:bg-bg1dark border-b border-bg6 dark:border-bg3dark border-l'>
+            <Breadcrumb
               schemaRoot={dataSourceManager.getSchemaRoot()}
-              entitySchema={node.dataSource.entitySchema!}
-              parent={node.parent?.record}
-            ></EntityTable>
-          )}
-          {currentMode == 'details' && (
-            <EntityForm
-              dataSourceManager={dataSourceManager}
-              dataSource={node.dataSource}
-              entity={currentRecord}
-              dirty={dirty}
-              setDirty={setDirty}
-              onChange={(updatedEntity: any) => {
-                setCurrentRecord(updatedEntity)
-                setDirty(false)
+              nodes={nodes}
+              onNodeClick={(n: ObjectGraphNode[], r: any) => {
+                setCurrentNodes(n)
+                setCurrentRecord(r)
+                const newMode = r ? 'details' : 'list'
+                // setCurrentMode(newMode)
               }}
-            ></EntityForm>
-          )}
+              dirty={dirty}
+            ></Breadcrumb>
+          </header>
+          <div className='p-2 h-full overflow-auto'>
+            {currentMode == 'list' && (
+              <EntityTable
+                dataSourceManager={dataSourceManager}
+                dataSource={node.dataSource}
+                onRecordEnter={(r: any) => {
+                  console.log('record enter', r)
+                }}
+                onSelectedRecordsChange={(selectedRecords) =>
+                  onSelectedRecordsChange(selectedRecords)
+                }
+                selectedRecord={currentRecord}
+                onCreateRecord={createRecord}
+                parentSchema={node.parent?.dataSource?.entitySchema}
+                schemaRoot={dataSourceManager.getSchemaRoot()}
+                entitySchema={node.dataSource.entitySchema!}
+                parent={node.parent?.record}
+              ></EntityTable>
+            )}
+            {currentMode == 'details' && (
+              <EntityForm
+                dataSourceManager={dataSourceManager}
+                dataSource={node.dataSource}
+                entity={currentRecord}
+                dirty={dirty}
+                setDirty={setDirty}
+                onChange={(updatedEntity: any) => {
+                  setCurrentRecord(updatedEntity)
+                  setDirty(false)
+                }}
+              ></EntityForm>
+            )}
+          </div>
         </div>
       </div>
     </div>

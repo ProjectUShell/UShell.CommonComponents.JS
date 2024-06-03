@@ -52,13 +52,13 @@ const FilterTag: React.FC<{
   return (
     <DropdownButton
       initialOpen={{ o: open }}
-      leftOffset={0}
-      topOffset={0}
+      leftOffset={1}
+      topOffset={-1}
       buttonContent={
-        <div className='group rounded-md p-1 bg-backgroundone dark:bg-backgroundonedark flex gap-1'>
+        <div className='group rounded-sm p-1 bg-bg3 hover:bg-bg4 dark:bg-bg3dark dark:hover:bg-bg1dark flex gap-1'>
           <button className=''>{getLabel(filter)}</button>
           <button
-            className='hover:bg-backgroundtwo hover:dark:bg-backgroundtwodark w-auto group-hover:visible group-hover:w-auto '
+            className='hover:bg-bg6 hover:dark:bg-backgroundtwodark w-auto group-hover:visible group-hover:w-auto '
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
@@ -70,16 +70,18 @@ const FilterTag: React.FC<{
         </div>
       }
     >
-      <LogicalExpressionEditor
-        fields={fields}
-        fkRelations={fkRelations}
-        onUpdateExpression={(e) => {
-          onUpdateFilter(e)
-          setOpen(false)
-        }}
-        intialExpression={filter}
-        dataSourceManager={dataSourceManager}
-      ></LogicalExpressionEditor>
+      <div className='border'>
+        <LogicalExpressionEditor
+          fields={fields}
+          fkRelations={fkRelations}
+          onUpdateExpression={(e) => {
+            onUpdateFilter(e)
+            setOpen(false)
+          }}
+          intialExpression={filter}
+          dataSourceManager={dataSourceManager}
+        ></LogicalExpressionEditor>
+      </div>
     </DropdownButton>
   )
 }

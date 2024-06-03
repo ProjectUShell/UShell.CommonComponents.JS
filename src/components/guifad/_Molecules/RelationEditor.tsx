@@ -29,14 +29,20 @@ const RelationEditor: React.FC<{
 
   useEffect(() => {
     console.log('RelationEditor init', initialRelation)
-    setCurrentField(fields.find((f) => f.name.toLocaleLowerCase() == initialRelation.fieldName.toLocaleLowerCase())!)
+    setCurrentField(
+      fields.find(
+        (f) => f.name.toLocaleLowerCase() == initialRelation.fieldName.toLocaleLowerCase(),
+      )!,
+    )
 
     setCurrentFkRelation((cfk) => {
       if (cfk && cfk.foreignKeyIndexName == initialRelation.fieldName) {
         return cfk
       }
       return fkRelations.find(
-        (f) => f.foreignNavigationName.toLocaleLowerCase() == initialRelation.fieldName.toLocaleLowerCase(),
+        (f) =>
+          f.foreignNavigationName.toLocaleLowerCase() ==
+          initialRelation.fieldName.toLocaleLowerCase(),
       )!
     })
 
@@ -49,7 +55,10 @@ const RelationEditor: React.FC<{
       return { label: f.name, value: f.name }
     })
     for (const fkRelation of fkRelations) {
-      result.push({ label: fkRelation.foreignNavigationName, value: fkRelation.foreignNavigationName })
+      result.push({
+        label: fkRelation.foreignNavigationName,
+        value: fkRelation.foreignNavigationName,
+      })
     }
     return result
   }
@@ -90,7 +99,11 @@ const RelationEditor: React.FC<{
     }
   }
 
-  function notifyRelationUpdated(field: FieldSchema | null, operator: string | null, value: string) {
+  function notifyRelationUpdated(
+    field: FieldSchema | null,
+    operator: string | null,
+    value: string,
+  ) {
     if (field && operator && value) {
       onUpdateRelation({
         fieldName: field.name,
@@ -110,7 +123,8 @@ const RelationEditor: React.FC<{
     if (fkRelationToSet) {
       console.log('fkRelationToSet', fkRelationToSet)
       fieldToSet = fields.find(
-        (f) => f.name.toLocaleLowerCase() == fkRelationToSet.foreignKeyIndexName.toLocaleLowerCase(),
+        (f) =>
+          f.name.toLocaleLowerCase() == fkRelationToSet.foreignKeyIndexName.toLocaleLowerCase(),
       )
       if (!fieldToSet) {
         setCurrentField(null)
@@ -147,7 +161,10 @@ const RelationEditor: React.FC<{
         options={getFieldOptions()}
         initialOption={
           currentFkRelation
-            ? { label: currentFkRelation.foreignNavigationName, value: currentFkRelation.foreignNavigationName }
+            ? {
+                label: currentFkRelation.foreignNavigationName,
+                value: currentFkRelation.foreignNavigationName,
+              }
             : currrentField && { label: currrentField.name, value: currrentField.name }
         }
         onOptionSet={(o) => onFieldSet(o?.value)}
@@ -155,7 +172,9 @@ const RelationEditor: React.FC<{
       ></DropdownSelect>
       <DropdownSelect
         options={getValidOperators(currrentField?.type)}
-        initialOption={currrentField && { label: getOperatorLabel(currentOperator), value: currentOperator }}
+        initialOption={
+          currrentField && { label: getOperatorLabel(currentOperator), value: currentOperator }
+        }
         onOptionSet={(o) => onOperatorSet(o?.value)}
         placeholder={currrentField ? 'Select a operator' : 'Select a field first'}
       ></DropdownSelect>
@@ -172,7 +191,7 @@ const RelationEditor: React.FC<{
           value={currentValue}
           type={EntitySchemaService.getHtmlInputType(currrentField?.type || 'string')}
           onChange={(e) => onValueSet(e.target.value)}
-          className='p-0.5 outline-1 outline-gray-400 outline rounded-sm w-64 focus:z-50 relative bg-backgroundonw dark:bg-backgroundonedark'
+          className='p-0.5 outline-0 outline-gray-400 outline rounded-sm w-64 focus:z-50 relative bg-bg1 dark:bg-bg2dark'
         ></input>
       )}
     </div>

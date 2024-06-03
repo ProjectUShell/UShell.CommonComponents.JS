@@ -1,12 +1,14 @@
 import React from 'react'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
+import { SchemaRoot } from 'fusefx-modeldescription'
 
 const Breadcrumb: React.FC<{
+  schemaRoot: SchemaRoot
   nodes: ObjectGraphNode[]
   onNodeClick: (n: ObjectGraphNode[], currentRecord: any) => void
   dirty: boolean
-}> = ({ nodes, onNodeClick, dirty }) => {
+}> = ({ schemaRoot, nodes, onNodeClick, dirty }) => {
   function getLabel(n: ObjectGraphNode, i: number) {
     if (i >= nodes.length - 1) {
       return n.dataSource.entitySchema!.name
@@ -15,7 +17,11 @@ const Breadcrumb: React.FC<{
     return succNode.parent?.record
       ? n.dataSource.entitySchema!.name +
           ' ' +
-          EntitySchemaService.getLabelByEntitySchema(succNode.dataSource.entitySchema!, succNode.parent.record)
+          EntitySchemaService.getLabel(
+            schemaRoot,
+            succNode.dataSource.entitySchema!.name,
+            succNode.parent.record,
+          )
       : n.dataSource.entitySchema!.name
   }
 
@@ -28,20 +34,22 @@ const Breadcrumb: React.FC<{
   }
 
   return (
-    <div className='font-bold flex'>
-      {nodes.map((n, i) => (
-        <div key={i} className='flex justify-start'>
-          {i > 0 && <span className='py-1 m-1'>/</span>}
-          <button
-            disabled={dirty}
-            className={`rounded-md p-1 m-1
-              ${dirty ? '' : 'hover:bg-backgroundone dark:hover:bg-backgroundonedark'}`}
-            onClick={() => onNodeClick(nodes.slice(0, i + 1), getCallingRecord(i))}
-          >
-            {getLabel(n, i)}
-          </button>
-        </div>
-      ))}
+    <div className='font-bold flex p-1'>
+      <div className='h-full w-full bg-breadcrumb dark:bg-bg1dark border-0 border-bg6 dark:border-bg3dark flex items-center content-center align-middle'>
+        {nodes.map((n, i) => (
+          <div key={i} className='flex justify-start'>
+            {i > 0 && <span className='py-1 m-0'>/</span>}
+            <button
+              disabled={dirty}
+              className={`rounded-sm p-1 m-0
+              ${dirty ? '' : 'hover:bg-bg1 dark:hover:bg-bg2dark'}`}
+              onClick={() => onNodeClick(nodes.slice(0, i + 1), getCallingRecord(i))}
+            >
+              {getLabel(n, i)}
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

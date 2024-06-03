@@ -54,11 +54,7 @@ const VerticalMenuInternal: React.FC<{
   const depthCssClass = getDepthCssClass(depth)
 
   return (
-    <ul
-      className={`select-none text-sm  rounded-md ${
-        className ? '' : 'bg-backgroundone dark:bg-backgroundonedark'
-      }`}
-    >
+    <ul className={`select-none text-sm  rounded-md ${className ? '' : ''}`}>
       {menuItems.map((mi: MenuItem) => (
         <div key={mi.id}>
           <li
@@ -67,12 +63,12 @@ const VerticalMenuInternal: React.FC<{
               mi.type !== 'Group'
                 ? (menuItemHoverClassName && menuItemHoverClassName !== ''
                     ? menuItemHoverClassName
-                    : 'hover:bg-bg2 dark:hover:bg-bg2dark ') + ' cursor-pointer'
+                    : ' ') + ' cursor-pointer'
                 : ''
             } ${mi.type == 'Command' ? 'mt-0 font-light' : 'mt-4 font-bold'} ${
               shellMenuState.activeItemId == mi.id
-                ? 'bg-prim6 dark:bg-prim1 border-r-2 border-textone dark:border-textonedark'
-                : ''
+                ? 'bg-prim1 dark:bg-prim6 border-r-2 border-textone dark:border-textonedark'
+                : 'hover:bg-bg3 dark:hover:bg-bg2dark'
             }`}
             onClick={() => {
               if (mi.type == 'Folder') {

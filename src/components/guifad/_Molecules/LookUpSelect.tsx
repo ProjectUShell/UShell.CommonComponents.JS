@@ -19,7 +19,9 @@ const LookUpSelect: React.FC<{
 
   useEffect(() => {
     try {
-      const dataSource: IDataSource | null = dataSourceManager.tryGetDataSource(lookUpRelation.primaryEntityName)
+      const dataSource: IDataSource | null = dataSourceManager.tryGetDataSource(
+        lookUpRelation.primaryEntityName,
+      )
       if (!dataSource) {
         console.error('No DataSource for LookUps', lookUpRelation)
         setError('No DataSource for LookUps')
@@ -28,11 +30,12 @@ const LookUpSelect: React.FC<{
       dataSource
         .getEntityRefs(undefined, { pageNumber: 1, pageSize: 200 }, undefined)
         .then((r: PaginatedList) => {
-          setLookUpList(
-            r.page.map((e: any) => {
-              return { value: e.key, label: e.label }
-            }),
-          )
+          const lul = r.page.map((e: any) => {
+            return { value: e.key, label: e.label }
+          })
+          lul.sort((a, b) => a.label.localeCompare(b.label))
+          console.log('lul', lul)
+          setLookUpList(lul)
         })
         .catch((err) => setError('Failed to get Entity Refs'))
       setError(null)
@@ -60,6 +63,7 @@ const LookUpSelect: React.FC<{
         }}
         initialOption={lookUpList.find((li) => li.value == initialValue)}
         topOffset={0}
+        inputClassname='border'
       ></DropdownSelect>
     </div>
   )

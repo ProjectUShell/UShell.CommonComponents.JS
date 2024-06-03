@@ -163,7 +163,7 @@ const Dropdown: React.FC<{
       )}
       <div className='relative'>
         <div
-          className={`absolute z-40
+          className={`absolute z-40  shadow-md
            ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
              flex justify-center items-center w-max ${className}`}
         >

@@ -38,7 +38,9 @@ const LogicalExpressionEditor: React.FC<{
   dataSourceManager: IDataSourceManagerBase
 }> = ({ intialExpression, fields, fkRelations, onUpdateExpression, dataSourceManager }) => {
   console.log('LogicalExpressionEditor dataSourceManager', dataSourceManager)
-  const [originalExpression, setOriginalExpression] = useState<LogicalExpression | null>(getCopy(intialExpression))
+  const [originalExpression, setOriginalExpression] = useState<LogicalExpression | null>(
+    getCopy(intialExpression),
+  )
   const [expression, setExpression] = useState<LogicalExpression>()
 
   useEffect(() => {
@@ -51,7 +53,7 @@ const LogicalExpressionEditor: React.FC<{
   // console.log('initialExpression LE1', intialExpression)
   return (
     <div
-      className='bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md shadow-md'
+      className='bg-bg2 dark:bg-bg1dark p-2 rounded-md shadow-md'
       onKeyDown={(e) => {
         if (e.key == 'Enter' && isExpressionValid(expression)) {
           onUpdateExpression(expression!)

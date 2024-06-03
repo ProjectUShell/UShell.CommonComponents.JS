@@ -36,6 +36,7 @@ const Table: React.FC<{
   records: any[]
   getId?: (e: any) => any
   className?: string
+  classNameHeader?: string
   onRecordEnter?: (r: any) => void
   onSelectedRecordsChange?: (selectedRecords: any[]) => void
   selectedRecord?: any
@@ -53,6 +54,7 @@ const Table: React.FC<{
   records,
   getId,
   className,
+  classNameHeader,
   onRecordEnter,
   onSelectedRecordsChange,
   selectedRecord,
@@ -378,7 +380,7 @@ const Table: React.FC<{
           className='w-full max-h-full text-sm text-left'
           style={Object.keys(columnWidths).length > 0 ? { width: getTableWidth() } : {}}
         >
-          <thead className='text-xs border-backgroundfour bg-backgroundone dark:bg-backgroundonedark sticky top-0'>
+          <thead className='text-xs sticky top-0'>
             <tr className=''>
               {expandableRowProps && (
                 <th
@@ -396,8 +398,12 @@ const Table: React.FC<{
                   id={`column_${c.key}`}
                   // onMouseEnter={() => initColumnWidth(c.key)}
                   key={c.label}
-                  className='border-y-0 border-backgroundfour dark:border-backgroundfourdark
-                  hover:bg-bg2 dark:hover:bg-bg2dark cursor-pointer'
+                  className={`${
+                    classNameHeader
+                      ? classNameHeader
+                      : 'bg-bg2 dark:bg-bg3dark border-y-0 border-backgroundfour dark:border-backgroundfourdark hover:bg-bg3 dark:hover:bg-bg3dark'
+                  }
+                  cursor-pointer`}
                   onClick={(e) => {
                     if (c.sortable) {
                       toggleSorting(c.key)
@@ -481,8 +487,8 @@ const Table: React.FC<{
                   key={i}
                   className={`border-t border-b border-bg3 dark:border-bg3dark  ${
                     selectedRows[i]
-                      ? 'bg-prim6 dark:bg-prim1 text-textonedark'
-                      : 'bg-bg1 dark:bg-bg1dark'
+                      ? 'bg-prim1 dark:bg-prim6 text-textonedark'
+                      : 'bg-bg1 dark:bg-bg2dark'
                   } text-sm`}
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}

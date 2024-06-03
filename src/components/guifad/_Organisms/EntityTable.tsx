@@ -59,15 +59,26 @@ const EntityTable: React.FC<{
   }>({})
   const [filterByEntityName, setFilterByEntityName] = useState<{
     [entityName: string]: LogicalExpression[]
-  }>({})
+  }>(loadFilter())
   const [useParentFilter, setUseParentFilter] = useState(true)
   const [reloadTrigger, setReloadTrigger] = useState(0)
 
   const [universalSearchText, setUniversalSearchText] = useState('')
-  const [filterTagsVisible, setFilterTagsVisible] = useState(false)
+  const [filterTagsVisible, setFilterTagsVisible] = useState(true)
 
   function forceReload() {
     setReloadTrigger((r) => r + 1)
+  }
+
+  function loadFilter(): {
+    [entityName: string]: LogicalExpression[]
+  } {
+    const filterJson: string | null = localStorage.getItem('filterByEntityName')
+    if (!filterJson) return {}
+    const result: {
+      [entityName: string]: LogicalExpression[]
+    } = JSON.parse(filterJson)
+    return result
   }
 
   useEffect(() => {
@@ -92,6 +103,10 @@ const EntityTable: React.FC<{
       return newF
     })
   }, [universalSearchText, entitySchema.name])
+
+  useEffect(() => {
+    localStorage.setItem('filterByEntityName', JSON.stringify(filterByEntityName))
+  }, [filterByEntityName])
 
   const columns: TableColumn[] = useMemo(() => {
     const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
@@ -205,22 +220,22 @@ const EntityTable: React.FC<{
 
   return (
     <div className='flex flex-col h-full'>
-      <div className='flex justify-between items-center'>
-        <div className={`flex justify-end p-1 ${className} rounded-md bg-bg1 dark:bg-bg1dark `}>
+      <div className='toolbar bg-toolbar dark:bg-bg1dark rounded-sm border border-bg4 dark:border-bg3dark flex justify-between items-center my-1'>
+        <div className={`flex justify-end p-1 ${className} rounded-md`}>
           <button
-            className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark'
+            className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-hoverItem dark:hover:bg-bg2dark'
             onClick={(e) => addRecord()}
           >
             <PlusCircleIcon></PlusCircleIcon>
           </button>
           <button
-            className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-backgroundone dark:hover:bg-backgroundonedark'
+            className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-hoverItem dark:hover:bg-bg2dark'
             onClick={(e) => deleteRecords()}
           >
             <TrashIcon></TrashIcon>
           </button>
         </div>
-        <div className={`flex p-1 ${className} rounded-md bg-bg1 dark:bg-bg1dark `}>
+        <div className={`flex p-1 ${className} rounded-md `}>
           <div className='p-1'>
             <SearchBar
               onSearch={(searchText: string) => {
@@ -228,63 +243,33 @@ const EntityTable: React.FC<{
               }}
             ></SearchBar>
           </div>
-          <DropdownButton
-            className=''
-            rightOffset={1}
-            topOffset={-1}
-            buttonContent={<FunnelIcon size={5}></FunnelIcon>}
-          >
-            <LogicalExpressionEditor
-              intialExpression={null}
-              fields={dataSource.entitySchema!.fields}
-              fkRelations={EntitySchemaService.getRelationsByFilter(
-                schemaRoot,
-                (r) => r.foreignEntityName == dataSource.entitySchema!.name,
-              )}
-              dataSourceManager={dataSourceManager}
-              onUpdateExpression={(e) => {
-                setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
-                  const newF: any = { ...ofi }
-                  if (newF[entitySchema.name]) {
-                    newF[entitySchema.name] = [...newF[entitySchema.name], e]
-                  } else {
-                    newF[entitySchema.name] = [e]
-                  }
-                  return newF
-                })
-                // setFilter((f) => [...f, e])
-              }}
-            ></LogicalExpressionEditor>
-          </DropdownButton>
-          <QueryLibrary
-            expressions={filterByEntityName[dataSource.entitySchema!.name] || []}
-            entityName={dataSource.entitySchema!.name}
-            applySavedQuery={(q: LogicalExpression[]) => applyQuery(q)}
-          ></QueryLibrary>
+
           <button
-            id='ShowFilterTagsButton'
-            className={`hover:bg-backgroundone dark:hover:bg-backgroundonedark p-1 rounded-md ${
+            className={`hover:bg-hoverItem dark:hover:bg-bg2dark p-1 rounded-md ${
               filterByEntityName[dataSource.entitySchema!.name]?.length > 0 ? 'text-green-600' : ''
             }`}
             onClick={() => setFilterTagsVisible((x) => !x)}
           >
-            <AdjustmentsHorizontalIcon size={5}></AdjustmentsHorizontalIcon>
+            <div id='ShowFilterTagsButton'>
+              <AdjustmentsHorizontalIcon size={5}></AdjustmentsHorizontalIcon>
+            </div>
             <Tooltip targetId='ShowFilterTagsButton'>
-              <div className='text-textone dark:text-textonedark'>
+              <div className='bg-bg1 dark:bg-bg1dark text-textone dark:text-textonedark w-20'>
                 {filterTagsVisible ? 'Hide Filters' : 'Show Filters'}
               </div>
             </Tooltip>
           </button>
           <button
-            id='ParentFilterButton'
-            className={`hover:bg-backgroundone dark:hover:bg-backgroundonedark p-1 rounded-md ${
+            className={`hover:bg-hoverItem dark:hover:bg-bg2dark p-1 rounded-md ${
               useParentFilter ? 'text-green-600' : ''
             }`}
             onClick={() => setUseParentFilter((x) => !x)}
           >
-            <ArrowUturnUpd size={5}></ArrowUturnUpd>
+            <div id='ParentFilterButton'>
+              <ArrowUturnUpd size={5} className=''></ArrowUturnUpd>
+            </div>
             <Tooltip targetId='ParentFilterButton'>
-              <div className='text-textone dark:text-textonedark'>
+              <div className=' bg-bg1 dark:bg-bg1dark text-textone dark:text-textonedark  w-40'>
                 {useParentFilter ? 'Disable Parent Filter' : 'Activate Parent Filter'}
               </div>
             </Tooltip>
@@ -293,24 +278,71 @@ const EntityTable: React.FC<{
       </div>
       <div>
         {filterTagsVisible && (
-          <FilterTagBar
-            dataSourceManager={dataSourceManager}
-            className='mb-1 rounded-md'
-            filters={filterByEntityName[entitySchema.name] || []}
-            fkRelations={EntitySchemaService.getRelationsByFilter(
-              schemaRoot,
-              (r) => r.foreignEntityName == dataSource.entitySchema!.name,
-            )}
-            fields={dataSource.entitySchema!.fields}
-            onUpdateFilters={(uf) => {
-              setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
-                const newF: any = { ...ofi }
-                newF[entitySchema.name] = uf
-                return newF
-              })
-              // setFilter(uf)
-            }}
-          ></FilterTagBar>
+          <div className='FilterBar flex justify-between'>
+            <FilterTagBar
+              dataSourceManager={dataSourceManager}
+              className='mb-1 rounded-md'
+              filters={filterByEntityName[entitySchema.name] || []}
+              fkRelations={EntitySchemaService.getRelationsByFilter(
+                schemaRoot,
+                (r) => r.foreignEntityName == dataSource.entitySchema!.name,
+              )}
+              fields={dataSource.entitySchema!.fields}
+              onUpdateFilters={(uf) => {
+                setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
+                  const newF: any = { ...ofi }
+                  newF[entitySchema.name] = uf
+                  return newF
+                })
+                // setFilter(uf)
+              }}
+            ></FilterTagBar>
+            <div className='flex'>
+              <DropdownButton
+                className=''
+                rightOffset={1}
+                topOffset={1}
+                buttonContent={
+                  <FunnelIcon
+                    size={6}
+                    className='hover:bg-bg4 dark:hover:bg-bg3dark rounded-sm p-0.5'
+                  ></FunnelIcon>
+                }
+                initialOpen={{ o: false }}
+              >
+                <div className='border dark:border-bg3dark'>
+                  <LogicalExpressionEditor
+                    intialExpression={null}
+                    fields={dataSource.entitySchema!.fields}
+                    fkRelations={EntitySchemaService.getRelationsByFilter(
+                      schemaRoot,
+                      (r) => r.foreignEntityName == dataSource.entitySchema!.name,
+                    )}
+                    dataSourceManager={dataSourceManager}
+                    onUpdateExpression={(e) => {
+                      setFilterByEntityName(
+                        (ofi: { [entityName: string]: LogicalExpression[] }) => {
+                          const newF: any = { ...ofi }
+                          if (newF[entitySchema.name]) {
+                            newF[entitySchema.name] = [...newF[entitySchema.name], e]
+                          } else {
+                            newF[entitySchema.name] = [e]
+                          }
+                          return newF
+                        },
+                      )
+                      // setFilter((f) => [...f, e])
+                    }}
+                  ></LogicalExpressionEditor>
+                </div>
+              </DropdownButton>
+              <QueryLibrary
+                expressions={filterByEntityName[dataSource.entitySchema!.name] || []}
+                entityName={dataSource.entitySchema!.name}
+                applySavedQuery={(q: LogicalExpression[]) => applyQuery(q)}
+              ></QueryLibrary>
+            </div>
+          </div>
         )}
       </div>
       {!data ? (
@@ -339,7 +371,7 @@ const EntityTable: React.FC<{
               return newSp
             })
           }}
-          rowHeight={2}
+          rowHeight={1}
         ></Table>
       )}
     </div>

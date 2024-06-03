@@ -28,20 +28,24 @@ const PreviewTable: React.FC<{
       parentSchema && parent && schemaRoot
         ? getParentFilter(schemaRoot, parentSchema, dataSource.entitySchema!, parent)
         : null
-    dataSource.getEntityRefs(parentFilter ? parentFilter : undefined, { pageNumber: 1, pageSize: 10 }).then((r) => {
-      setRecords(r.page)
-    })
+    dataSource
+      .getEntityRefs(parentFilter ? parentFilter : undefined, { pageNumber: 1, pageSize: 10 })
+      .then((r) => {
+        setRecords(r.page)
+      })
   }, [dataSource, parentSchema, parent, schemaRoot])
 
   return (
-    <div className='h-full w-full max-w-full pr-1 mt-1'>
+    <div className='h-full w-full max-w-full pr-1 ml-0 -mt-1 border-0 border-red-400'>
       <Table
         columns={columns}
         records={records}
         onRecordEnter={onRecordEnter}
-        className='overflow-auto'
+        className='overflow-auto pl-1'
+        classNameHeader='bg-bg1 dark:bg-bg3dark border dark:border-bg3dark'
         pagingParams={{ pageSize: 10, pageNumber: 1 }}
         totalCount={10}
+        rowHeight={1}
       ></Table>
     </div>
   )

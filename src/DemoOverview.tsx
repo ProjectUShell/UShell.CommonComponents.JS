@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 
 import './tailwind.css'
 import ShellLayout from './components/shell-layout/_Templates/ShellLayout'
@@ -19,6 +19,8 @@ import SchemaManager from './components/schema-editor/components/SchemaManager'
 import { LocalStorageSchemaProvider } from './components/schema-editor/LocalStorageSchemaProvider'
 import { activateItem, loadShellMenuState } from './components/shell-layout/ShellMenuState'
 import { MenuItem } from './components/shell-layout/ShellMenu'
+import { SchemaRoot } from 'fusefx-modeldescription'
+import { ISchemaProvider } from './components/schema-editor/ISchemaProvider'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -33,6 +35,11 @@ const Demo = () => {
     Common: ['ColorDemo', 'DropdownButtonDemo'],
     SchemaEditor: ['Schema Manager', 'Editor', 'Schema Guifad'],
   }
+
+  const [schemaName, setSchemaName] = useState('')
+  const [schemaProvider, setSchemaProvider] = useState<ISchemaProvider>(
+    new LocalStorageSchemaProvider(),
+  )
 
   const menuItems: MenuItem[] = demoComponents.map((dc) => {
     return {
@@ -56,6 +63,12 @@ const Demo = () => {
   })
 
   console.log('menuState', loadShellMenuState())
+
+  const shellMenuState = useMemo(() => {
+    const res = loadShellMenuState()
+    setCurrentComponent(res.activeItemId)
+    return res
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -82,7 +95,7 @@ const Demo = () => {
             },
           ],
         }}
-        shellMenuState={loadShellMenuState()}
+        shellMenuState={shellMenuState}
       >
         {(currentComponent == 'GuifadDemo' || currentComponent == 'GuifadDemo2') && (
           <GuifadFuse
@@ -123,6 +136,7 @@ const Demo = () => {
           <SchemaManager
             schemaProvider={new LocalStorageSchemaProvider()}
             enterSchema={(sn: string) => {
+              setSchemaName(sn)
               activateItem(
                 menuItems
                   .find((mi) => mi.id == 'SchemaEditor')!
@@ -131,7 +145,19 @@ const Demo = () => {
             }}
           ></SchemaManager>
         )}
-        {currentComponent == 'Editor' && <SchemaEditor></SchemaEditor>}
+        {currentComponent == 'Editor' && (
+          <SchemaEditor
+            schemaName={schemaName}
+            schema={schemaProvider.loadSchema(schemaName)}
+            onChangeSchema={(s: SchemaRoot) => {
+              schemaProvider.saveSchema(schemaName, s)
+            }}
+            onChangeSchemaName={(sn: string) => {
+              schemaProvider.updateName(schemaName, sn)
+              setSchemaName(sn)
+            }}
+          ></SchemaEditor>
+        )}
       </ShellLayout>
     </QueryClientProvider>
   )

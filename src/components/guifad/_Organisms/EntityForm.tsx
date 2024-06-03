@@ -111,12 +111,18 @@ const EntityForm: React.FC<{
 
   return (
     <div className='flex flex-col h-full'>
-      <div className={`flex justify-end p-1 ${className} bg-bg1 dark:bg-bg1dark rounded-md mb-2`}>
+      <div
+        className={`flex justify-start p-1 ${className} bg-toolbar dark:bg-bg1dark rounded-sm border border-bg4 dark:border-bg3dark my-1`}
+      >
         {dirty && (
           <button
             disabled={!dirty}
             className={`rounded-md p-1
-              ${dirty ? 'text-red-400 dark:text-red-400 hover:bg-bg2 dark:hover:bg-bg2dark' : ''}`}
+              ${
+                dirty
+                  ? 'text-red-400 dark:text-red-400 hover:bg-hoverItem dark:hover:bg-bg2dark'
+                  : ''
+              }`}
             onClick={(e) => cancel()}
           >
             <XMarkIcon size={6}></XMarkIcon>
@@ -127,7 +133,9 @@ const EntityForm: React.FC<{
             disabled={dirty}
             className={`rounded-md p-1
               ${
-                !dirty ? 'text-blue-400 dark:text-blue-400 hover:bg-bg2 dark:hover:bg-bg2dark' : ''
+                !dirty
+                  ? 'text-blue-400 dark:text-blue-400 hover:bg-hoverItem dark:hover:bg-bg2dark'
+                  : ''
               }`}
             onClick={(e) => setDirty(true)}
           >
@@ -137,13 +145,20 @@ const EntityForm: React.FC<{
         <button
           disabled={!dirty}
           className={`rounded-md p-1 
-            ${dirty ? 'text-blue-400 dark:text-blue-400 hover:bg-bg2 dark:hover:bg-bg2dark' : ''}`}
+            ${
+              dirty
+                ? 'text-blue-400 dark:text-blue-400 hover:bg-hoverItem dark:hover:bg-bg2dark'
+                : ''
+            }`}
           onClick={(e) => save()}
         >
           <FloppyDiskIcon size={6}></FloppyDiskIcon>
         </button>
       </div>
-      <Group name={dataSource.entitySchema!.name} className='overflow-auto h-full'>
+      <Group
+        name={dataSource.entitySchema!.name}
+        className='overflow-auto h-full bg-bg1 dark:bg-bg2dark p-1 rounded-md'
+      >
         <div className='my-2'>
           {fieldsToDisplay.map((f) => (
             <InputField

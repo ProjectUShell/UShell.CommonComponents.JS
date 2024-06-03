@@ -11,7 +11,9 @@ const QueryLibrary: React.FC<{
   applySavedQuery: (query: LogicalExpression[]) => void
 }> = ({ entityName, expressions, applySavedQuery }) => {
   const [currentName, setCurrentName] = useState('')
-  const [queryLib, setQueryLib] = useState<{ [queryName: string]: LogicalExpression[] }>(loadQueryLib())
+  const [queryLib, setQueryLib] = useState<{ [queryName: string]: LogicalExpression[] }>(
+    loadQueryLib(),
+  )
 
   function loadQueryLib(): { [queryName: string]: LogicalExpression[] } {
     const localStoreId: string = 'QueryLib_' + entityName
@@ -42,50 +44,61 @@ const QueryLibrary: React.FC<{
   }
 
   return (
-    <DropdownButton rightOffset={1} buttonContent={<BookmarkSquareIcon size={5}></BookmarkSquareIcon>}>
-      <div className='bg-backgroundone dark:bg-backgroundonedark p-2'>
-        Use a saved query
-        <div className='w-full border my-1 border-backgroundthree dark:border-backgroundthreedark'></div>
-      </div>
-
-      <div className='bg-backgroundone dark:bg-backgroundonedark pb-1'>
-        <div>
-          {Object.keys(queryLib).map((queryName: string) => (
-            <div
-              key={queryName}
-              className='hover:bg-backgroundthree dark:hover:bg-backgroundthreedark
-                w-full p-1 flex justify-between align-middle items-center cursor-pointer'
-              onClick={() => applySavedQuery(queryLib[queryName])}
-            >
-              {queryName}
-              <button
-                className='hover:text-red-300'
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  deleteQuery(queryName)
-                }}
-              >
-                <TrashIcon></TrashIcon>
-              </button>
-            </div>
-          ))}
+    <DropdownButton
+      rightOffset={1}
+      topOffset={1}
+      buttonContent={
+        <BookmarkSquareIcon
+          size={6}
+          className='hover:bg-bg4 dark:hover:bg-bg3dark rounded-sm p-0.5'
+        ></BookmarkSquareIcon>
+      }
+    >
+      <div className='border dark:border-bg3dark'>
+        <div className='bg-bg2 dark:bg-backgroundonedark p-2 z-50'>
+          Use a saved query
+          <div className='w-full border my-1 border-backgroundthree dark:border-backgroundthreedark'></div>
         </div>
-        <div className='w-full border my-1 border-backgroundthree dark:border-backgroundthreedark'></div>
-        <div className='flex items-center align-middle gap-1 px-1'>
-          <input
-            className='p-1 outline-none bg-backgroundfour dark:bg-backgroundfourdark'
-            placeholder='Save current Query'
-            value={currentName}
-            onChange={(e: any) => setCurrentName(e.target.value)}
-          ></input>
-          <button
-            disabled={currentName == '' || expressions.length == 0}
-            className='enabled:hover:bg-backgroundthree enabled:dark:hover:bg-backgroundthreedark p-1 rounded-sm'
-            onClick={() => saveCurrentQuery()}
-          >
-            Save
-          </button>
+
+        <div className='bg-bg2  dark:bg-backgroundonedark pb-1'>
+          <div>
+            {Object.keys(queryLib).map((queryName: string) => (
+              <div
+                key={queryName}
+                className='hover:bg-hoverItem dark:hover:bg-backgroundthreedark
+                w-full p-1 flex justify-between align-middle items-center cursor-pointer'
+                onClick={() => applySavedQuery(queryLib[queryName])}
+              >
+                {queryName}
+                <button
+                  className='hover:text-red-300'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    deleteQuery(queryName)
+                  }}
+                >
+                  <TrashIcon></TrashIcon>
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className='w-full border my-1 border-backgroundthree dark:border-backgroundthreedark'></div>
+          <div className='flex items-center align-middle gap-1 px-1'>
+            <input
+              className='p-1 outline-none bg-bg1 dark:bg-backgroundfourdark'
+              placeholder='Save current Query'
+              value={currentName}
+              onChange={(e: any) => setCurrentName(e.target.value)}
+            ></input>
+            <button
+              disabled={currentName == '' || expressions.length == 0}
+              className='enabled:hover:bg-hoverItem enabled:dark:hover:bg-backgroundthreedark p-1 rounded-sm'
+              onClick={() => saveCurrentQuery()}
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </DropdownButton>

@@ -41,18 +41,22 @@ const StructureNavigation: React.FC<{
       </h1>
       <button
         disabled={dirty}
-        className={`w-full flex gap-1 items-center hover:bg-bg1 dark:hover:bg-bg1dark ${
+        className={`w-full flex gap-1 items-center  ${
           dirty ? 'hover:cursor-pointer text-gray-400' : ''
-        } rounded-l-md p-1 ${mode == 'list' ? 'bg-bg1 dark:bg-bg1dark' : ''}`}
+        } rounded-l-md p-1 ${
+          mode == 'list' ? 'bg-bg1 dark:bg-bg2dark' : 'hover:bg-hoverItem dark:hover:bg-bg3dark'
+        }`}
         onClick={(e) => setMode('list')}
       >
         <ListIcon></ListIcon>List
       </button>
       <button
         disabled={!currentRecord}
-        className={`w-full flex gap-1 items-center hover:bg-bg1 dark:hover:bg-bg1dark ${
+        className={`w-full flex gap-1 items-center  ${
           !currentRecord ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
-        } ${mode == 'details' ? 'bg-bg1 dark:bg-bg1dark' : ''} rounded-l-md p-1`}
+        } ${
+          mode == 'details' ? 'bg-bg1 dark:bg-bg2dark' : 'hover:bg-hoverItem dark:hover:bg-bg3dark'
+        } rounded-l-md p-1`}
         onClick={(e) => setMode('details')}
       >
         <PencilIcon></PencilIcon>Details
