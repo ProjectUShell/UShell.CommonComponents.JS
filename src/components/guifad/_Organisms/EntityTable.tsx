@@ -223,13 +223,13 @@ const EntityTable: React.FC<{
       <div className='toolbar bg-toolbar dark:bg-bg1dark rounded-sm border border-bg4 dark:border-bg3dark flex justify-between items-center my-1'>
         <div className={`flex justify-end p-1 ${className} rounded-md`}>
           <button
-            className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-hoverItem dark:hover:bg-bg2dark'
+            className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-hoverItem dark:hover:bg-hoverItemDark'
             onClick={(e) => addRecord()}
           >
             <PlusCircleIcon></PlusCircleIcon>
           </button>
           <button
-            className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-hoverItem dark:hover:bg-bg2dark'
+            className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-hoverItem dark:hover:bg-hoverItemDark'
             onClick={(e) => deleteRecords()}
           >
             <TrashIcon></TrashIcon>

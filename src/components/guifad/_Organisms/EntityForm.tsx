@@ -120,7 +120,7 @@ const EntityForm: React.FC<{
             className={`rounded-md p-1
               ${
                 dirty
-                  ? 'text-red-400 dark:text-red-400 hover:bg-hoverItem dark:hover:bg-bg2dark'
+                  ? 'text-red-400 dark:text-red-400 hover:bg-hoverItem dark:hover:bg-hoverItemDark'
                   : ''
               }`}
             onClick={(e) => cancel()}
@@ -134,7 +134,7 @@ const EntityForm: React.FC<{
             className={`rounded-md p-1
               ${
                 !dirty
-                  ? 'text-blue-400 dark:text-blue-400 hover:bg-hoverItem dark:hover:bg-bg2dark'
+                  ? 'text-blue-400 dark:text-blue-400 hover:bg-hoverItem dark:hover:bg-hoverItemDark'
                   : ''
               }`}
             onClick={(e) => setDirty(true)}

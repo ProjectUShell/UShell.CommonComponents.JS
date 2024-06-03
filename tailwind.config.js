@@ -50,16 +50,27 @@ module.exports = {
         prim5: 'var(--color-prim-500)',
         prim6: 'var(--color-prim-600)',
         topbar: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-five1)',
+        topbarDark: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-zero-dark)',
         topbarshadow: 2 == 1 ? 'var(--color-background-five)' : 'var(--color-background-four1)',
         menu: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-four1)',
-        navigation: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-two1)',
-        breadcrumb: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-two1)',
+        menuDark: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-zero-dark)',
+        navigation: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-three1)',
+        navigationDark: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-one-dark)',
+        breadcrumb: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-three1)',
         toolbar: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-two1)',
         table: 2 == 1 ? 'var(--color-background-one)' : 'var(--color-background-one1)',
         tableHead: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-two1)',
-        hoverItem: 2 == 1 ? 'var(--color-background-three)' : 'var(--color-background-four1)',
-        selectedItem: 2 == 1 ? 'var(--color-background-four)' : 'var(--color-background-five1)',
-        hairlineStructure: 2 == 1 ? 'var(--color-background-four)' : 'var(--color-background-one)',
+        hoverItem: 2 == 1 ? 'var(--color-background-three)' : 'var(--color-background-five1)',
+        hoverItemDark:
+          2 == 1 ? 'var(--color-background-three)' : 'var(--color-background-five-dark)',
+        selectedItem: 2 == 1 ? 'var(--color-background-four)' : 'var(--color-background-six1)',
+        hairlineMenu: 2 == 1 ? 'var(--color-background-four)' : 'var(--color-background-six1)',
+        hairlineMenuDark:
+          2 == 1 ? 'var(--color-background-four)' : 'var(--color-background-two-dark)',
+        hairlineNavigation:
+          2 == 1 ? 'var(--color-background-four)' : 'var(--color-background-six1)',
+        hairlineNavigationDark:
+          2 == 1 ? 'var(--color-background-four)' : 'var(--color-background-three-dark)',
         // ...
       },
     },

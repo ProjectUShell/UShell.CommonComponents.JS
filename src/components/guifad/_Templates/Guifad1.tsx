@@ -93,25 +93,29 @@ const Guifad1: React.FC<{
         <aside
           style={{ minWidth: '72px' }}
           className='flex flex-col justify-start bg-navigation 
-          dark:bg-bg1dark border-r-0 border-hairlineStructure dark:border-bg3dark w-72 py-0'
+          dark:bg-navigationDark border-r-0 border-hairlineNavigation dark:border-hairlineNavigationDark w-72 py-0'
         >
-          <div className='p-1 m-1 pl-1 pb-2 border-b border-bg6 dark:border-bg3dark'>Structure</div>
-          <StructureNavigation
-            schemaRoot={dataSourceManager.getSchemaRoot()}
-            currentRecord={currentRecord}
-            entitySchema={node.dataSource.entitySchema!}
-            onRelationSelected={(rel: RelationSchema) => setCurrentRelation(rel)}
-            onRelationEnter={(rel: RelationSchema) => enterRelation(rel, null)}
-            setMode={(mode: 'list' | 'details') => setCurrentMode(mode)}
-            mode={currentMode}
-            relation={currentRelation}
-            className='w-full h-1/2 '
-            dirty={dirty}
-          ></StructureNavigation>
-          <div className='w-full h-1/2 max-w-full border-t border-bg4 dark:border-bg3dark'>
+          <div className=''>
+            <div className='p-2 m-0 pl-3 pb-3 border-b-0 border-b-bg6 border-r border-hairlineNavigation dark:border-hairlineNavigationDark'>
+              Structure
+            </div>
+            <StructureNavigation
+              schemaRoot={dataSourceManager.getSchemaRoot()}
+              currentRecord={currentRecord}
+              entitySchema={node.dataSource.entitySchema!}
+              onRelationSelected={(rel: RelationSchema) => setCurrentRelation(rel)}
+              onRelationEnter={(rel: RelationSchema) => enterRelation(rel, null)}
+              setMode={(mode: 'list' | 'details') => setCurrentMode(mode)}
+              mode={currentMode}
+              relation={currentRelation}
+              className='w-full h-1/2 '
+              dirty={dirty}
+            ></StructureNavigation>
+          </div>
+          <div className='w-full h-full max-w-full border-t-2 border-t-bg7 dark:border-hairlineNavigationDark border-r mt-0'>
             {currentRelation && currentRecord && (
               <>
-                <div className='p-1 m-1 mb-2 pl-1 pb-2 border-b border-bg6  dark:border-bg3dark'>
+                <div className='p-2 m-0 pl-3 pb-3 border-b-0 border-b-bg7 border-r-0 border-hairlineNavigation dark:border-hairlineNavigationDark'>
                   Preview Table
                 </div>
                 <PreviewTable
@@ -134,7 +138,7 @@ const Guifad1: React.FC<{
           {/* {!currentRelation && <div className='h-full w-64 pr-1 mt-1'></div>} */}
         </aside>
         <div className='h-full w-full flex flex-col min-w-0'>
-          <header className='flex flex-col bg-navigation dark:bg-bg1dark border-b border-bg6 dark:border-bg3dark border-l'>
+          <header className='flex flex-col bg-navigation dark:bg-bg1dark border-b border-bg6 dark:border-bg3dark border-l-0'>
             <Breadcrumb
               schemaRoot={dataSourceManager.getSchemaRoot()}
               nodes={nodes}
