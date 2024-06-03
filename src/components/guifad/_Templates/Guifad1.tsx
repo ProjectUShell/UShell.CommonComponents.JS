@@ -89,7 +89,7 @@ const Guifad1: React.FC<{
   }
   return (
     <div className='w-full h-full flex flex-col overflow-hidden text-sm bg-bg1 dark:bg-bg1dark'>
-      <div className='w-full h-full flex overflow-hidden text-sm bg-bg1 dark:bg-bg2dark'>
+      <div className='w-full h-full flex overflow-hidden text-sm bg-content dark:bg-contentDark'>
         <aside
           style={{ minWidth: '72px' }}
           className='flex flex-col justify-start bg-navigation 

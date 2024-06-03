@@ -49,6 +49,8 @@ module.exports = {
         prim4: 'var(--color-prim-400)',
         prim5: 'var(--color-prim-500)',
         prim6: 'var(--color-prim-600)',
+        content: 2 == 1 ? 'var(--color-background-one)' : 'var(--color-background-one1)',
+        contentDark: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-two-dark)',
         topbar: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-five1)',
         topbarDark: 2 == 1 ? 'var(--color-background-two)' : 'var(--color-background-zero-dark)',
         topbarshadow: 2 == 1 ? 'var(--color-background-five)' : 'var(--color-background-four1)',
