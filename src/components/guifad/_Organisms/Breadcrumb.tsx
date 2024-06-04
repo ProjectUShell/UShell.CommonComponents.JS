@@ -11,9 +11,19 @@ const Breadcrumb: React.FC<{
 }> = ({ schemaRoot, nodes, onNodeClick, dirty }) => {
   function getLabel(n: ObjectGraphNode, i: number) {
     if (i >= nodes.length - 1) {
+      const node: ObjectGraphNode = nodes[i]
+      if (n.record && !n.parent) {
+        return (
+          n.dataSource.entitySchema!.name +
+          ' ' +
+          EntitySchemaService.getLabel(schemaRoot, node.dataSource!.entitySchema!.name, node.record)
+        )
+      }
       return n.dataSource.entitySchema!.name
     }
+    console.log('breadcrumb nodes', n)
     const succNode: ObjectGraphNode = nodes[i + 1]
+
     return succNode.parent?.record
       ? n.dataSource.entitySchema!.name +
           ' ' +

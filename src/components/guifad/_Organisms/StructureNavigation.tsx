@@ -9,7 +9,7 @@ import { lowerFirstLetter } from '../../../utils/StringUtils'
 
 const StructureNavigation: React.FC<{
   currentRecord: any
-  parent: any
+  hideList: any
   entitySchema: EntitySchema
   schemaRoot: SchemaRoot
   onRelationSelected: (rel: RelationSchema) => void
@@ -21,7 +21,7 @@ const StructureNavigation: React.FC<{
   dirty: boolean
 }> = ({
   currentRecord,
-  parent,
+  hideList,
   entitySchema,
   schemaRoot,
   onRelationSelected,
@@ -41,7 +41,7 @@ const StructureNavigation: React.FC<{
             EntitySchemaService.getLabel(schemaRoot, entitySchema.name, currentRecord)
           : entitySchema.name}
       </h1>
-      {!currentRecord || parent ? (
+      {!hideList && (
         <button
           disabled={dirty}
           className={`w-full flex gap-1 items-center   ${
@@ -55,8 +55,6 @@ const StructureNavigation: React.FC<{
         >
           <ListIcon></ListIcon>List
         </button>
-      ) : (
-        <></>
       )}
       <button
         disabled={!currentRecord}

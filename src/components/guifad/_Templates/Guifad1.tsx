@@ -103,7 +103,7 @@ const Guifad1: React.FC<{
             <StructureNavigation
               schemaRoot={dataSourceManager.getSchemaRoot()}
               currentRecord={currentRecord}
-              parent={node.parent}
+              hideList={node.record && !node.parent}
               entitySchema={node.dataSource.entitySchema!}
               onRelationSelected={(rel: RelationSchema) => setCurrentRelation(rel)}
               onRelationEnter={(rel: RelationSchema) => enterRelation(rel, null)}
@@ -145,9 +145,16 @@ const Guifad1: React.FC<{
               schemaRoot={dataSourceManager.getSchemaRoot()}
               nodes={nodes}
               onNodeClick={(n: ObjectGraphNode[], r: any) => {
-                setCurrentNodes(n)
                 setCurrentRecord(r)
+                setCurrentNodes(n)
                 const newMode = r ? 'details' : 'list'
+                console.log('breadcrumb node clicked', { n: n, r: r })
+                const currentNode: ObjectGraphNode = n[n.length - 1]
+                if (currentNode.record && !currentNode.parent) {
+                  console.log('breadcrumb node clicked currentNode', currentNode)
+                  setCurrentRecord(currentNode.record)
+                  setCurrentMode('details')
+                }
                 // setCurrentMode(newMode)
               }}
               dirty={dirty}
