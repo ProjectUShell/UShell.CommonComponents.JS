@@ -9,6 +9,7 @@ import { lowerFirstLetter } from '../../../utils/StringUtils'
 
 const StructureNavigation: React.FC<{
   currentRecord: any
+  parent: any
   entitySchema: EntitySchema
   schemaRoot: SchemaRoot
   onRelationSelected: (rel: RelationSchema) => void
@@ -20,6 +21,7 @@ const StructureNavigation: React.FC<{
   dirty: boolean
 }> = ({
   currentRecord,
+  parent,
   entitySchema,
   schemaRoot,
   onRelationSelected,
@@ -39,19 +41,23 @@ const StructureNavigation: React.FC<{
             EntitySchemaService.getLabel(schemaRoot, entitySchema.name, currentRecord)
           : entitySchema.name}
       </h1>
-      <button
-        disabled={dirty}
-        className={`w-full flex gap-1 items-center   ${
-          dirty ? 'hover:cursor-pointer text-gray-400' : ''
-        } rounded-l-md p-1 ${
-          mode == 'list'
-            ? 'bg-bg1 dark:bg-bg2dark'
-            : 'hover:bg-hoverItem dark:hover:bg-hoverItemDark border-r dark:border-hairlineNavigationDark'
-        }`}
-        onClick={(e) => setMode('list')}
-      >
-        <ListIcon></ListIcon>List
-      </button>
+      {!currentRecord || parent ? (
+        <button
+          disabled={dirty}
+          className={`w-full flex gap-1 items-center   ${
+            dirty ? 'hover:cursor-pointer text-gray-400' : ''
+          } rounded-l-md p-1 ${
+            mode == 'list'
+              ? 'bg-bg1 dark:bg-bg2dark'
+              : 'hover:bg-hoverItem dark:hover:bg-hoverItemDark border-r dark:border-hairlineNavigationDark'
+          }`}
+          onClick={(e) => setMode('list')}
+        >
+          <ListIcon></ListIcon>List
+        </button>
+      ) : (
+        <></>
+      )}
       <button
         disabled={!currentRecord}
         className={`w-full flex gap-1 items-center  ${

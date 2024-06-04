@@ -11,7 +11,8 @@ const GuifadFuse: React.FC<{
   fuseUrl: string
   routePattern: 'body' | 'route' | 'method'
   rootEntityName: string
-}> = ({ fuseUrl, routePattern, rootEntityName }) => {
+  record?: any
+}> = ({ fuseUrl, routePattern, rootEntityName, record }) => {
   const [dataStore, setDataStore] = useState<FuseDataStore | null | undefined>(undefined)
   const [error, setError] = useState<any>(null)
 
@@ -40,7 +41,11 @@ const GuifadFuse: React.FC<{
   if (dataStore == undefined) return <div>Loading...</div>
   return (
     <QueryClientProvider client={queryClient}>
-      <Guifad dataSourceManager={dataStore} rootEntityName={rootEntityName}></Guifad>
+      <Guifad
+        dataSourceManager={dataStore}
+        rootEntityName={rootEntityName}
+        record={record}
+      ></Guifad>
     </QueryClientProvider>
   )
 }

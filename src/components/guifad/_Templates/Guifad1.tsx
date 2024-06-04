@@ -3,7 +3,7 @@ import { ObjectGraphNode } from '../ObjectGraphNode'
 import Breadcrumb from '../_Organisms/Breadcrumb'
 import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
 import StructureNavigation from '../_Organisms/StructureNavigation'
-import { RelationSchema } from 'fusefx-modeldescription'
+import { EntitySchema, RelationSchema } from 'fusefx-modeldescription'
 import EntityTable from '../_Organisms/EntityTable'
 import EntityForm from '../_Organisms/EntityForm'
 import { setParentId } from '../../../data/DataSourceService'
@@ -13,7 +13,8 @@ import ErrorPage from '../../../_Molecules/ErrorScreen'
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
   dataSourceManager: IDataSourceManagerBase
-}> = ({ rootNode, dataSourceManager }) => {
+  enterRecord?: (r: any, entitySchema: EntitySchema) => void
+}> = ({ rootNode, dataSourceManager, enterRecord }) => {
   // states
   const [nodes, setCurrentNodes] = useState<ObjectGraphNode[]>([rootNode])
   const [currentRecord, setCurrentRecord] = useState<any | null>(null)
@@ -24,9 +25,9 @@ const Guifad1: React.FC<{
   // useEffects
   useEffect(() => {
     setCurrentNodes([rootNode])
-    setCurrentRecord(null)
+    setCurrentRecord(rootNode.record)
     setCurrentRelation(null)
-    setCurrentMode('list')
+    setCurrentMode(rootNode.record ? 'details' : 'list')
   }, [rootNode])
 
   // guards
@@ -102,6 +103,7 @@ const Guifad1: React.FC<{
             <StructureNavigation
               schemaRoot={dataSourceManager.getSchemaRoot()}
               currentRecord={currentRecord}
+              parent={node.parent}
               entitySchema={node.dataSource.entitySchema!}
               onRelationSelected={(rel: RelationSchema) => setCurrentRelation(rel)}
               onRelationEnter={(rel: RelationSchema) => enterRelation(rel, null)}
@@ -157,7 +159,9 @@ const Guifad1: React.FC<{
                 dataSourceManager={dataSourceManager}
                 dataSource={node.dataSource}
                 onRecordEnter={(r: any) => {
-                  console.log('record enter', r)
+                  enterRecord
+                    ? enterRecord(r, node.dataSource.entitySchema!)
+                    : console.log('record enter', r)
                 }}
                 onSelectedRecordsChange={(selectedRecords) =>
                   onSelectedRecordsChange(selectedRecords)

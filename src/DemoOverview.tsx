@@ -109,6 +109,7 @@ const Demo = () => {
             rootEntityName='Person'
             routePattern='body'
             fuseUrl='https://localhost:7288/AccountManagement/'
+            record={{ Id: 2, MirstName: 'Max' }}
           ></GuifadFuse>
         )}
         {currentComponent == 'TableDemo' && <TableDemo></TableDemo>}

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
+import { EntitySchema } from 'fusefx-modeldescription'
 import Guifad1 from './Guifad1'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 
@@ -10,7 +11,9 @@ import { ObjectGraphNode } from '../ObjectGraphNode'
 const Guifad: React.FC<{
   dataSourceManager: IDataSourceManagerBase
   rootEntityName: string
-}> = ({ dataSourceManager, rootEntityName }) => {
+  record?: any
+  enterRecord?: (r: any, entitySchema: EntitySchema) => void
+}> = ({ dataSourceManager, rootEntityName, record, enterRecord }) => {
   const [rootDataSource, setRootDataSource] = useState<IDataSource | null>(null)
 
   // useEffect(() => {
@@ -27,9 +30,15 @@ const Guifad: React.FC<{
   const rootNode: ObjectGraphNode = {
     dataSource: rootDataSource2,
     parent: null,
-    record: null,
+    record: record,
   }
-  return <Guifad1 dataSourceManager={dataSourceManager} rootNode={rootNode}></Guifad1>
+  return (
+    <Guifad1
+      dataSourceManager={dataSourceManager}
+      rootNode={rootNode}
+      enterRecord={enterRecord}
+    ></Guifad1>
+  )
 }
 
 export default Guifad
