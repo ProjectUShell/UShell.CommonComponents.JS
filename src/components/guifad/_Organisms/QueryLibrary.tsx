@@ -14,6 +14,7 @@ const QueryLibrary: React.FC<{
   const [queryLib, setQueryLib] = useState<{ [queryName: string]: LogicalExpression[] }>(
     loadQueryLib(),
   )
+  const [open, setOpen] = useState({ o: false })
 
   function loadQueryLib(): { [queryName: string]: LogicalExpression[] } {
     const localStoreId: string = 'QueryLib_' + entityName
@@ -47,17 +48,18 @@ const QueryLibrary: React.FC<{
     <DropdownButton
       rightOffset={1}
       topOffset={1}
+      initialOpen={open}
       buttonContent={
         <BookmarkSquareIcon
           size={6}
-          className='hover:bg-bg4 dark:hover:bg-bg3dark rounded-sm p-0.5'
+          className='hover:bg-tableHover dark:hover:bg-tableHoverDark rounded-sm p-0.5'
         ></BookmarkSquareIcon>
       }
     >
       <div className='border dark:border-bg3dark'>
         <div className='bg-bg2 dark:bg-backgroundonedark p-2 z-50'>
           Use a saved query
-          <div className='w-full border my-1 border-backgroundthree dark:border-backgroundthreedark'></div>
+          <div className='w-full border my-1 border-bg6 dark:border-backgroundthreedark'></div>
         </div>
 
         <div className='bg-bg2  dark:bg-backgroundonedark pb-1'>
@@ -67,7 +69,10 @@ const QueryLibrary: React.FC<{
                 key={queryName}
                 className='hover:bg-hoverItem dark:hover:bg-backgroundthreedark
                 w-full p-1 flex justify-between align-middle items-center cursor-pointer'
-                onClick={() => applySavedQuery(queryLib[queryName])}
+                onClick={() => {
+                  applySavedQuery(queryLib[queryName])
+                  setOpen({ o: false })
+                }}
               >
                 {queryName}
                 <button
@@ -83,7 +88,7 @@ const QueryLibrary: React.FC<{
               </div>
             ))}
           </div>
-          <div className='w-full border my-1 border-backgroundthree dark:border-backgroundthreedark'></div>
+          <div className='w-full border my-1 border-bg6 dark:border-bg3dark'></div>
           <div className='flex items-center align-middle gap-1 px-1'>
             <input
               className='p-1 outline-none bg-bg1 dark:bg-backgroundfourdark'

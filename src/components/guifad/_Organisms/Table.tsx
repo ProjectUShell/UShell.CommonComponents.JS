@@ -401,7 +401,7 @@ const Table: React.FC<{
                   className={`${
                     classNameHeader
                       ? classNameHeader
-                      : 'bg-bg2 dark:bg-bg3dark border-y-0 border-backgroundfour dark:border-backgroundfourdark hover:bg-bg3 dark:hover:bg-bg3dark'
+                      : 'bg-tableHead dark:bg-tableHeadDark hover:bg-tableHover dark:hover:bg-tableHoverDark border-y-0 border-backgroundfour dark:border-backgroundfourdark'
                   }
                   cursor-pointer`}
                   onClick={(e) => {
@@ -488,7 +488,7 @@ const Table: React.FC<{
                   className={`border-t border-b border-bg3 dark:border-bg3dark  ${
                     selectedRows[i]
                       ? 'bg-prim1 dark:bg-prim6 text-textonedark'
-                      : 'bg-bg1 dark:bg-bg2dark'
+                      : 'bg-table dark:bg-tableDark hover:bg-tableHover dark:hover:bg-tableHoverDark'
                   } text-sm`}
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}
@@ -533,7 +533,7 @@ const Table: React.FC<{
                     <td
                       id={`table_cell_${j}_${i}`}
                       key={j}
-                      className={`border-y-0 border-backgroundfour dark:border-backgroundfourdark px-4 py-${
+                      className={` border-y-0 border-backgroundfour dark:border-backgroundfourdark px-4 py-${
                         rowHeight !== undefined ? rowHeight : 4
                       } font-normal text-gray-900 whitespace-nowrap dark:text-white `}
                       style={c.key in columnWidths ? { width: getColumnWidth(c.key) } : {}}

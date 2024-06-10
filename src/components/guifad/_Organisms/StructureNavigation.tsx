@@ -34,7 +34,7 @@ const StructureNavigation: React.FC<{
 }) => {
   return (
     <div className={`pl-2 text-md ${className}`}>
-      <h1 className='pb-2 font-bold border-r dark:border-hairlineNavigationDark'>
+      <h1 className='pb-2 font-bold border-r border-navigationBorder dark:border-navigationBorderDark'>
         {currentRecord
           ? entitySchema.name +
             ' ' +
@@ -48,8 +48,8 @@ const StructureNavigation: React.FC<{
             dirty ? 'hover:cursor-pointer text-gray-400' : ''
           } rounded-l-md p-1 ${
             mode == 'list'
-              ? 'bg-bg1 dark:bg-bg2dark'
-              : 'hover:bg-hoverItem dark:hover:bg-hoverItemDark border-r dark:border-hairlineNavigationDark'
+              ? 'bg-content dark:bg-contentDark'
+              : 'hover:bg-navigationHover dark:hover:bg-navigationHoverDark border-r border-navigationBorder dark:border-navigationBorderDark'
           }`}
           onClick={(e) => setMode('list')}
         >
@@ -62,15 +62,15 @@ const StructureNavigation: React.FC<{
           !currentRecord ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
         } ${
           mode == 'details'
-            ? 'bg-bg1 dark:bg-bg2dark'
-            : 'hover:bg-hoverItem dark:hover:bg-hoverItemDark border-r dark:border-hairlineNavigationDark'
+            ? 'bg-content dark:bg-contentDark'
+            : 'hover:bg-navigationHover dark:hover:bg-navigationHoverDark border-r border-navigationBorder dark:border-navigationBorderDark'
         } rounded-l-md p-1`}
         onClick={(e) => setMode('details')}
       >
         <PencilIcon></PencilIcon>Details
       </button>
-      <div className='w-full border-b-2 py-1 border-b-texttwo dark:border-texttwodark border-r dark:border-r-hairlineNavigationDark'></div>
-      <div className='border-r dark:border-hairlineNavigationDark'>
+      <div className='w-full border-b dark:border-texttwodark border-r border-navigationBorder dark:border-navigationBorderDark'></div>
+      <div className='border-r border-navigationBorder dark:border-navigationBorderDark'>
         {EntitySchemaService.getRelations(schemaRoot, entitySchema, false).map((er) => (
           <button
             key={er.primaryNavigationName}

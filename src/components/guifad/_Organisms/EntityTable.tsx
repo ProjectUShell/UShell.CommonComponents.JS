@@ -220,16 +220,16 @@ const EntityTable: React.FC<{
 
   return (
     <div className='flex flex-col h-full'>
-      <div className='toolbar bg-toolbar dark:bg-bg1dark rounded-sm border border-bg4 dark:border-bg3dark flex justify-between items-center my-1'>
+      <div className='toolbar bg-toolbar dark:bg-toolbarDark rounded-sm border border-toolbarBorder dark:border-toolbarBorderDark flex justify-between items-center my-1'>
         <div className={`flex justify-end p-1 ${className} rounded-md`}>
           <button
-            className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-hoverItem dark:hover:bg-hoverItemDark'
+            className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
             onClick={(e) => addRecord()}
           >
             <PlusCircleIcon></PlusCircleIcon>
           </button>
           <button
-            className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-hoverItem dark:hover:bg-hoverItemDark'
+            className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
             onClick={(e) => deleteRecords()}
           >
             <TrashIcon></TrashIcon>
@@ -245,7 +245,7 @@ const EntityTable: React.FC<{
           </div>
 
           <button
-            className={`hover:bg-hoverItem dark:hover:bg-bg2dark p-1 rounded-md ${
+            className={`hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark p-1 rounded-md ${
               filterByEntityName[dataSource.entitySchema!.name]?.length > 0 ? 'text-green-600' : ''
             }`}
             onClick={() => setFilterTagsVisible((x) => !x)}
@@ -260,7 +260,7 @@ const EntityTable: React.FC<{
             </Tooltip>
           </button>
           <button
-            className={`hover:bg-hoverItem dark:hover:bg-bg2dark p-1 rounded-md ${
+            className={`hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark p-1 rounded-md ${
               useParentFilter ? 'text-green-600' : ''
             }`}
             onClick={() => setUseParentFilter((x) => !x)}
@@ -305,7 +305,7 @@ const EntityTable: React.FC<{
                 buttonContent={
                   <FunnelIcon
                     size={6}
-                    className='hover:bg-bg4 dark:hover:bg-bg3dark rounded-sm p-0.5'
+                    className='hover:bg-tableHover dark:hover:bg-tableHoverDark rounded-sm p-0.5'
                   ></FunnelIcon>
                 }
                 initialOpen={{ o: false }}

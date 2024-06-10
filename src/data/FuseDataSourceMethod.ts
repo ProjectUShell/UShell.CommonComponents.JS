@@ -27,7 +27,7 @@ export class FuseDataSourceMethod implements IDataSource {
   }
   entityUpdateMethod(entity: any[]): Promise<boolean> {
     return this.dataStore
-      .post(this.url + `${this.entitySchema!.name}/AddOrUpdate${this.entitySchema!.name}`, {
+      .post(this.url + `AddOrUpdate${this.entitySchema!.name}`, {
         entity: entity,
       })
       .then((r) => {
@@ -39,7 +39,7 @@ export class FuseDataSourceMethod implements IDataSource {
   }
   entityInsertMethod(entity: any[]): Promise<boolean> {
     return this.dataStore
-      .post(this.url + `${this.entitySchema!.name}/AddOrUpdate${this.entitySchema!.name}`, {
+      .post(this.url + `AddOrUpdate${this.entitySchema!.name}`, {
         entity: entity,
       })
       .then((r) => {
@@ -54,7 +54,7 @@ export class FuseDataSourceMethod implements IDataSource {
       EntitySchemaService.getPrimaryKey(this.entitySchema!, e),
     )
     return this.dataStore
-      .post(this.url + `${this.entitySchema!.name}/TryDelete${this.entitySchema!.name}List`, {
+      .post(this.url + `TryDelete${this.entitySchema!.name}List`, {
         keysToDelete: idsToDelete,
       })
       .then((r) => {
@@ -73,7 +73,7 @@ export class FuseDataSourceMethod implements IDataSource {
     sortingParams?: SortingField[] | undefined,
   ): Promise<PaginatedList> {
     return this.dataStore
-      .post(this.url + `${this.entitySchema!.name}/Get${this.entitySchema!.name}List`, {
+      .post(this.url + `Get${this.entitySchema!.name}List`, {
         filter: filter,
         limit: pagingParams?.pageSize,
         skip: pagingParams ? (pagingParams?.pageNumber - 1) * pagingParams?.pageSize : 0,
@@ -92,7 +92,7 @@ export class FuseDataSourceMethod implements IDataSource {
     sortingParams?: SortingField[] | undefined,
   ): Promise<PaginatedList> {
     return this.dataStore
-      .post(this.url + `${this.entitySchema!.name}/Get${this.entitySchema!.name}Refs`, {
+      .post(this.url + `Get${this.entitySchema!.name}Refs`, {
         filter: filter,
         skip: pagingParams ? (pagingParams.pageNumber - 1) * pagingParams.pageSize : 0,
         limit: pagingParams ? pagingParams.pageSize + 2 : 10,

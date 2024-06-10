@@ -97,7 +97,7 @@ const Guifad1: React.FC<{
           dark:bg-navigationDark border-r-0 border-hairlineNavigation dark:border-hairlineNavigationDark w-72 py-0'
         >
           <div className=''>
-            <div className='p-2 m-0 pl-3 pb-3 border-b-0 border-b-bg6 border-r border-hairlineNavigation dark:border-hairlineNavigationDark'>
+            <div className='p-2 m-0 pl-3 pb-3 border-b-0 border-r border-navigationBorder dark:border-navigationBorderDark'>
               Structure
             </div>
             <StructureNavigation
@@ -114,7 +114,7 @@ const Guifad1: React.FC<{
               dirty={dirty}
             ></StructureNavigation>
           </div>
-          <div className='w-full h-full max-w-full border-t-2 border-t-bg7 dark:border-hairlineNavigationDark border-r mt-0'>
+          <div className='w-full h-full max-w-full border-t-2 border-navigationBorder dark:border-navigationBorderDark border-r mt-0'>
             {currentRelation && currentRecord && (
               <>
                 <div className='p-2 m-0 pl-3 pb-3 border-b-0 border-b-bg7 border-r-0 border-hairlineNavigation dark:border-hairlineNavigationDark'>
@@ -140,7 +140,7 @@ const Guifad1: React.FC<{
           {/* {!currentRelation && <div className='h-full w-64 pr-1 mt-1'></div>} */}
         </aside>
         <div className='h-full w-full flex flex-col min-w-0'>
-          <header className='flex flex-col bg-navigation dark:bg-bg1dark border-b border-bg6 dark:border-bg3dark border-l-0'>
+          <header className='flex flex-col bg-breadcrumb dark:bg-breadcrumbDark border-b border-breadcrumbBorder dark:border-breadcrumbBorderDark border-l-0'>
             <Breadcrumb
               schemaRoot={dataSourceManager.getSchemaRoot()}
               nodes={nodes}

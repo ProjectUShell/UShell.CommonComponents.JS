@@ -25,7 +25,7 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
         .map((mi) => (
           <div key={mi.id}>
             <div
-              className='flex items-center justify-between px-2 py-3 hover:bg-backgroundfour dark:hover:bg-backgroundfourdark cursor-pointer'
+              className='flex items-center justify-between px-2 py-3 hover:bg-red-400 dark:hover:bg-red-400 cursor-pointer'
               onClick={(e) => activateItem(mi, shellMenuState)}
             >
               <div className='px-1'>{mi.label}</div>
@@ -41,10 +41,10 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
               <div
                 ref={buttonRef}
                 className={`relative flex items-center justify-between z-50 
-                px-2 py-2  hover:text-textone   hover:bg-bg1 dark:hover:bg-bg3dark cursor-pointer ${
+                px-2 py-2  hover:text-textone   hover:bg-menuHover dark:hover:bg-menuHoverDark cursor-pointer ${
                   mi.children && openStateById[mi.id]
-                    ? 'bg-bg1 dark:bg-bg3dark text-textone dark:text-textonedark border-l-2 border-prim1 dark:border-prim6'
-                    : 'border-l-2 border-menu dark:border-bg0dark text-texttwo dark:text-textonedark'
+                    ? 'bg-menuHover dark:bg-menuHoverDark text-textone dark:text-textonedark border-l-2 border-prim1 dark:border-prim6'
+                    : 'border-l-2 border-menu dark:border-menuDark text-texttwo dark:text-textonedark'
                 }`}
                 onClick={() => {
                   setiIsOpen(mi.id, true)
@@ -72,11 +72,11 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
                   setIsOpen={() => {
                     setiIsOpen(mi.id, false)
                   }}
-                  className='bg-bg2 dark:bg-bg3dark rounded-sm'
+                  className='bg-menuHover dark:bg-menuHoverDark rounded-sm'
                   minWidthRef={buttonRef}
                 >
                   <div
-                    className='bg-bg1 dark:bg-bg3dark
+                    className='bg-menuHover dark:bg-menuHoverDark
                      border-l-2 border-prim1 dark:border-prim6 rounded-sm shadow-lg shadow-bg6 dark:shadow-black ronded-b-md'
                   >
                     <div
@@ -87,8 +87,8 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
                       <VerticalMenu
                         menuItems={mi.children}
                         shellMenuState={shellMenuState}
-                        className='bg-bg2 dark:bg-bg3dark'
-                        menuItemHoverClassName='hover:bg-bg3 dark:hover:bg-bg4dark'
+                        className='bg-menu1 dark:bg-menu1Dark'
+                        menuItemHoverClassName='hover:bg-menuHover1 dark:hover:bg-menuHover1Dark'
                       ></VerticalMenu>
                     </div>
                   </div>

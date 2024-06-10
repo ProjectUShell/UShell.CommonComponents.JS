@@ -21,13 +21,14 @@ import { activateItem, loadShellMenuState } from './components/shell-layout/Shel
 import { MenuItem } from './components/shell-layout/ShellMenu'
 import { SchemaRoot } from 'fusefx-modeldescription'
 import { ISchemaProvider } from './components/schema-editor/ISchemaProvider'
+import TabControl, { TabItem } from './_Organisms/TabControl'
 
 const queryClient = new QueryClient()
 const Demo = () => {
   FuseDataStore.getTokenMethod = () =>
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3MTM2OTg3NjYsImV4cCI6MTc0NTIzNDc2NiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.C-c7FWta-4pyjSZL1tnOlLdI6fFHM6d11VpWVrtJwqA'
   const [currentComponent, setCurrentComponent] = useState<string>('TableDemo')
-
+  const [tabIndex, setTabIndex] = useState(0)
   const demoComponents: string[] = ['Guifad', 'Table', 'Common', 'SchemaEditor']
   const subComponents: { [key: string]: string[] } = {
     Guifad: ['GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
@@ -98,18 +99,46 @@ const Demo = () => {
         shellMenuState={shellMenuState}
       >
         {(currentComponent == 'GuifadDemo' || currentComponent == 'GuifadDemo2') && (
-          <GuifadFuse
-            rootEntityName={currentComponent == 'GuifadDemo' ? 'Depot' : 'Fund'}
-            routePattern='route'
-            fuseUrl='https://localhost:7288/FundsManagement/'
-          ></GuifadFuse>
+          <TabControl
+            tabItems={[
+              {
+                id: '1',
+                canClose: false,
+                title: 'Fonds 1',
+                tag: null,
+                renderMethod: () => (
+                  <GuifadFuse
+                    rootEntityName={currentComponent == 'GuifadDemo' ? 'Depot' : 'Fund'}
+                    routePattern='route'
+                    fuseUrl='https://localhost:7288/FundsManagement/'
+                  ></GuifadFuse>
+                ),
+              },
+              {
+                id: '2',
+                canClose: false,
+                title: 'Fonds 2',
+                tag: null,
+                renderMethod: () => (
+                  <GuifadFuse
+                    rootEntityName={currentComponent == 'GuifadDemo' ? 'Depot' : 'Fund'}
+                    routePattern='route'
+                    fuseUrl='https://localhost:7288/FundsManagement/'
+                  ></GuifadFuse>
+                ),
+              },
+            ]}
+            initialActiveTabIndex={tabIndex}
+            onTabChange={(i: TabItem, idx: number) => setTabIndex(idx)}
+            onTabClose={() => console.log('tab close')}
+          ></TabControl>
         )}
         {currentComponent == 'GuifadDemo3' && (
           <GuifadFuse
             rootEntityName='Person'
             routePattern='body'
             fuseUrl='https://localhost:7288/AccountManagement/'
-            record={{ Id: 2, MirstName: 'Max' }}
+            // record={{ Id: 2, MirstName: 'Max' }}
           ></GuifadFuse>
         )}
         {currentComponent == 'TableDemo' && <TableDemo></TableDemo>}

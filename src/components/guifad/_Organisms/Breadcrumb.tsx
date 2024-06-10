@@ -45,14 +45,14 @@ const Breadcrumb: React.FC<{
 
   return (
     <div className='font-bold flex p-1'>
-      <div className='h-full w-full bg-breadcrumb dark:bg-bg1dark border-0 border-bg6 dark:border-bg3dark flex items-center content-center align-middle'>
+      <div className='h-full w-full bg-breadcrumb dark:bg-breadcrumbDark flex items-center content-center align-middle'>
         {nodes.map((n, i) => (
           <div key={i} className='flex justify-start'>
             {i > 0 && <span className='py-1 m-0'>/</span>}
             <button
               disabled={dirty}
               className={`rounded-sm p-1 m-0
-              ${dirty ? '' : 'hover:bg-bg1 dark:hover:bg-bg2dark'}`}
+              ${dirty ? '' : 'hover:bg-breadcrumbHover dark:hover:bg-breadcrumbHoverDark'}`}
               onClick={() => onNodeClick(nodes.slice(0, i + 1), getCallingRecord(i))}
             >
               {getLabel(n, i)}
