@@ -16,13 +16,13 @@ function getBg(i, d) {
       lightCurveDark[i] * ligthCurveWeightDark
     maxSatStep = satCurveDark[satCurveDark.length - 1]
     s = satDark - (satCurveDark[i] / maxSatStep) * satDark
-    return 'hsl(' + hue + ',' + s + ',' + light + ')'
+    return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
   } else {
     light = 100 - lightCurve[i] * ligthCurveWeight
     maxSatStep = satCurve[satCurve.length - 1]
     s = sat - (satCurve[i] / maxSatStep) * sat
 
-    return 'hsl(' + hue + ',' + s + ',' + light + ')'
+    return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
   }
 }
 
