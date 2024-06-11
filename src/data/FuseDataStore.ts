@@ -36,6 +36,7 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   private _RoutePattern: 'body' | 'route' | 'method' = 'body'
   private _TokenSourceUid = ''
   private _AdditionalBodyArgs: any | null = null
+  private _GetSchemaRootMethod: string | null = null
 
   constructor(
     url: string,
@@ -43,16 +44,19 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     entitySchemaUrl?: string,
     tokenSourceUid?: string,
     additionalBodyArgs?: any,
+    getSchemaRootMethod?: any,
   ) {
     this._Url = url
     this._EntitySchemaUrl = entitySchemaUrl ? entitySchemaUrl : url
     this._RoutePattern = routePattern
     this._TokenSourceUid = tokenSourceUid ? tokenSourceUid : ''
     this._AdditionalBodyArgs = additionalBodyArgs ? additionalBodyArgs : null
+    this._GetSchemaRootMethod = getSchemaRootMethod ? getSchemaRootMethod : null
   }
 
   init(): Promise<void> {
-    return this.post(this._EntitySchemaUrl + `GetSchemaRoot`)
+    const gsr: string = this._GetSchemaRootMethod ? this._GetSchemaRootMethod : 'GetSchemaRoot'
+    return this.post(this._EntitySchemaUrl + gsr)
       .then((r) => r.return)
       .catch((e) => null)
       .then((sr) => {
