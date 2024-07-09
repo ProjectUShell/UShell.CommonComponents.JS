@@ -112,7 +112,7 @@ const EntityForm: React.FC<{
   return (
     <div className='flex flex-col h-full'>
       <div
-        className={`flex justify-start p-1 ${className} bg-toolbar dark:bg-bg1dark rounded-sm border border-bg4 dark:border-bg3dark my-1`}
+        className={`bg-toolbar dark:bg-toolbarDark flex justify-start p-1 ${className} rounded-sm border border-toolbarBorder dark:border-toolbarBorderDark my-1`}
       >
         {dirty && (
           <button
@@ -120,7 +120,7 @@ const EntityForm: React.FC<{
             className={`rounded-md p-1
               ${
                 dirty
-                  ? 'text-red-400 dark:text-red-400 hover:bg-hoverItem dark:hover:bg-hoverItemDark'
+                  ? 'text-red-400 dark:text-red-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
                   : ''
               }`}
             onClick={(e) => cancel()}
@@ -134,7 +134,7 @@ const EntityForm: React.FC<{
             className={`rounded-md p-1
               ${
                 !dirty
-                  ? 'text-blue-400 dark:text-blue-400 hover:bg-hoverItem dark:hover:bg-hoverItemDark'
+                  ? 'text-blue-400 dark:text-blue-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
                   : ''
               }`}
             onClick={(e) => setDirty(true)}
@@ -147,7 +147,7 @@ const EntityForm: React.FC<{
           className={`rounded-md p-1 
             ${
               dirty
-                ? 'text-blue-400 dark:text-blue-400 hover:bg-hoverItem dark:hover:bg-bg2dark'
+                ? 'text-blue-400 dark:text-blue-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
                 : ''
             }`}
           onClick={(e) => save()}

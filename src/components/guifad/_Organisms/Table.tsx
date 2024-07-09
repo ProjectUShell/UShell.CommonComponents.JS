@@ -133,6 +133,8 @@ const Table: React.FC<{
   }, [records, initialSelectedRecord, getId])
 
   useEffect(() => {
+    approxColumnWidth()
+
     let timeOutFunctionId: any = null
     function onResizeEnd() {
       setReRender((r) => r + 1)
@@ -270,6 +272,8 @@ const Table: React.FC<{
       const ratio = desiredWidth / textWidth
       const desiredTextLength: number = ratio * textLength
       const s: string = v
+      return v
+      return s.substring(0, desiredTextLength)
       return s.substring(0, desiredTextLength - 3) + '...'
     }
     return v
@@ -314,7 +318,8 @@ const Table: React.FC<{
     if (idx >= 0 && idx < columns.length - 1) {
       const nextKey: string = columns[idx + 1].key
       const newNextWidth: number = Math.max(dragStartWidthNext - widthDelta, 150)
-      console.log('newNextWidth', newNextWidth)
+      // console.log('newNextWidth', newNextWidth)
+      // console.log('newWidth', newWidth)
       newWidths[nextKey] = newNextWidth
       // setColumnWidths({ ...columnWidths, [nextKey]: oldNextWidth - newWidth })
     }
@@ -359,6 +364,34 @@ const Table: React.FC<{
     })
   }
 
+  function approxColumnWidth() {
+    const initialColumnWidths: { [key: string]: number } = {}
+    let tableWidth = 0
+    // columnWidths[key] = document.getElementById(`column_${key}`)!.clientWidth
+    if (expandableRowProps && !('column_expand' in initialColumnWidths)) {
+      const el: any = document.getElementById('column_expand')
+      if (el) {
+        initialColumnWidths['column_expand'] = document.getElementById('column_expand')!.clientWidth
+        // columnWidths['column_expand'] = document.getElementById('column_expand')!.clientWidth
+        tableWidth += initialColumnWidths['column_expand']
+      }
+    }
+    columns.forEach((c) => {
+      if (!(c.key in initialColumnWidths)) {
+        console.log(`columnwidth ${c.key}`, document.getElementById(`column_${c.key}`)?.clientWidth)
+        initialColumnWidths[c.key] = document.getElementById(`column_${c.key}`)!.clientWidth
+        tableWidth += initialColumnWidths[c.key]
+      }
+    })
+
+    columns.forEach((c) => {
+      if (!(c.key in initialColumnWidths)) {
+        console.log(`columnwidth ${c.key}`, document.getElementById(`column_${c.key}`)?.clientWidth)
+        // columnWidths[c.key] = 100
+      }
+    })
+  }
+
   // return (
   //   <div
   //     className={`bg-red-400 relative overflow-hidden shadow-md rounded-sm
@@ -367,7 +400,6 @@ const Table: React.FC<{
   //     <div className='flex flex-col h-full w-full overflow-auto bg-blue-300 border-2'></div>
   //   </div>
   // )
-
   return (
     <div
       className={`relative overflow-hidden shadow-lg1 drop-shadow-md1 
@@ -377,7 +409,9 @@ const Table: React.FC<{
     >
       <div className='flex flex-col h-full w-full overflow-auto '>
         <table
-          className='w-full max-h-full text-sm text-left'
+          className={`w-full max-h-full text-sm text-left ${
+            Object.keys(columnWidths).length > 0 ? 'table-fixed' : 'table-fixed1'
+          } `}
           style={Object.keys(columnWidths).length > 0 ? { width: getTableWidth() } : {}}
         >
           <thead className='text-xs sticky top-0'>
@@ -385,11 +419,11 @@ const Table: React.FC<{
               {expandableRowProps && (
                 <th
                   id={'column_expand'}
-                  className='border-t border-b border-backgroundfour dark:border-backgroundfourdark'
+                  className='bg-tableHead dark:bg-tableHeadDark border-y-0  border-backgroundfour dark:border-backgroundfourdark'
                   style={
                     'column_expand' in columnWidths
                       ? { width: getColumnWidth('column_expand') }
-                      : {}
+                      : { width: 50 }
                   }
                 ></th>
               )}
@@ -456,8 +490,16 @@ const Table: React.FC<{
                     </div>
                     <div
                       draggable
-                      className='resize-handle hover:cursor-w-resize p-4 '
-                      onDragStart={(e) => {
+                      className='resize-handle cursor-w-resize p-4 bg-transparent'
+                      onClick={(e) => e.stopPropagation()}
+                      onDragStart={(e: any) => {
+                        e.dataTransfer.dropEffect = 'move'
+                        e.dataTransfer.effectAllowed = 'all'
+                        const img = new Image()
+                        // img.src = "example.gif";
+                        e.dataTransfer.setDragImage(img, 10, 10)
+                        e.defaultPrevented = false
+                        e.dataTransfer.defaultPrevented = false
                         initColumnWidth()
                         setDragStartWidth(getColumnWidth(c.key))
                         setDragStartWidthNext(getColumnWidthNext(c.key))
@@ -467,7 +509,11 @@ const Table: React.FC<{
                         setDragStartWidth(0)
                         setDragStartX(0)
                       }}
-                      onDrag={(e) => {
+                      onDragOver={(e) => e.preventDefault()}
+                      onDragLeave={(e) => e.preventDefault()}
+                      onDrag={(e: any) => {
+                        e.preventDefault()
+                        console.log('e', e.dataTransfer)
                         if (e.clientX == 0) {
                           return
                         }
@@ -513,7 +559,7 @@ const Table: React.FC<{
                       style={
                         'column_expand' in columnWidths
                           ? { width: getColumnWidth('column_expand') }
-                          : {}
+                          : { width: 30 }
                       }
                     >
                       <button
@@ -535,8 +581,10 @@ const Table: React.FC<{
                       key={j}
                       className={` border-y-0 border-backgroundfour dark:border-backgroundfourdark px-4 py-${
                         rowHeight !== undefined ? rowHeight : 4
-                      } font-normal text-gray-900 whitespace-nowrap dark:text-white `}
-                      style={c.key in columnWidths ? { width: getColumnWidth(c.key) } : {}}
+                      } font-normal text-gray-900 whitespace-nowrap dark:text-white overflow-hidden`}
+                      style={
+                        c.key in columnWidths ? { width: getColumnWidth(c.key) } : { maxWidth: 300 }
+                      }
                     >
                       {c.onRenderCell ? (
                         c.onRenderCell(

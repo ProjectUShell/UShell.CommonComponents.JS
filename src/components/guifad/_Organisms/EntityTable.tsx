@@ -236,7 +236,7 @@ const EntityTable: React.FC<{
           </button>
         </div>
         <div className={`flex p-1 ${className} rounded-md `}>
-          <div className='p-1'>
+          <div className='p-0'>
             <SearchBar
               onSearch={(searchText: string) => {
                 setUniversalSearchText(searchText)

@@ -132,7 +132,9 @@ const Table2: React.FC<{
       return
     }
     const newSortingParams = [...sortingParams]
-    const currentSortingField: SortingField | undefined = newSortingParams?.find((sf) => sf.fieldName == colKey)
+    const currentSortingField: SortingField | undefined = newSortingParams?.find(
+      (sf) => sf.fieldName == colKey,
+    )
     if (!currentSortingField) {
       newSortingParams.push({ fieldName: colKey, descending: false })
     } else if (currentSortingField.descending) {
@@ -272,12 +274,18 @@ const Table2: React.FC<{
             <tr className=''>
               {expandableRowProps && <th className='border border-slate-600 px-6 py-3'></th>}
               {columns.map((c: TableColumn, index) => (
-                <th key={c.label} className='border border-slate-600 px-6 py-3' style={{ width: 100 }}>
+                <th
+                  key={c.label}
+                  className='border border-slate-600 px-6 py-3'
+                  style={{ width: 100 }}
+                >
                   <div className='flex justify-between items-center gap-1'>
                     {c.label}
                     {onSortingParamsChange && c.sortable && (
                       <button onClick={(e) => toggleSorting(c.key)} className='pl-2'>
-                        {!sortingParams.find((sf) => sf.fieldName == c.key) && <SwitchIcon></SwitchIcon>}
+                        {!sortingParams.find((sf) => sf.fieldName == c.key) && (
+                          <SwitchIcon></SwitchIcon>
+                        )}
                         {sortingParams.find((sf) => sf.fieldName == c.key)?.descending && (
                           <BarsArrowDownIcon className='text-blue-600 dark:text-blue-400'></BarsArrowDownIcon>
                         )}
@@ -293,7 +301,11 @@ const Table2: React.FC<{
                           {filterVisible[c.fieldName] && (
                             <Dropdown setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}>
                               <div className='w-40 bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md'>
-                                {c.renderFilter(filterByColumn[c.fieldName], (f) => onColumnFilterChange(f, c), c)}
+                                {c.renderFilter(
+                                  filterByColumn[c.fieldName],
+                                  (f) => onColumnFilterChange(f, c),
+                                  c,
+                                )}
                               </div>
                             </Dropdown>
                           )}
@@ -320,7 +332,9 @@ const Table2: React.FC<{
                 <tr
                   key={i}
                   className={`border-b dark:border-gray-700 ${
-                    selectedRows[i] ? 'bg-blue-300 dark:bg-blue-400' : 'bg-backgroundthree dark:bg-backgroundthreedark'
+                    selectedRows[i]
+                      ? 'bg-blue-300 dark:bg-blue-400'
+                      : 'bg-backgroundthree dark:bg-backgroundthreedark'
                   } text-sm`}
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}
@@ -348,7 +362,11 @@ const Table2: React.FC<{
                         className='rounded-md hover:text-blue-600'
                         onClick={(e) => onToggleRowExpand(i)}
                       >
-                        {rowExpanded[i] ? <MinusCircleIcon></MinusCircleIcon> : <PlusCircleIcon></PlusCircleIcon>}
+                        {rowExpanded[i] ? (
+                          <MinusCircleIcon></MinusCircleIcon>
+                        ) : (
+                          <PlusCircleIcon></PlusCircleIcon>
+                        )}
                       </button>
                     </td>
                   )}
@@ -361,7 +379,11 @@ const Table2: React.FC<{
                         rowHeight !== undefined ? rowHeight : 4
                       } font-normal text-gray-900 whitespace-nowrap dark:text-white`}
                     >
-                      {getDisplay(r[lowerFirstLetter(c.fieldName)], c, document.getElementById(`table_cell_${j}_${i}`))}
+                      {getDisplay(
+                        r[lowerFirstLetter(c.fieldName)],
+                        c,
+                        document.getElementById(`table_cell_${j}_${i}`),
+                      )}
                     </td>
                   ))}
                 </tr>

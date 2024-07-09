@@ -82,7 +82,9 @@ const ResizableTable: React.FC<ResizableTableProps> = ({ columns, data }) => {
         {data.map((row, rowIndex) => (
           <tr key={rowIndex}>
             {columns.map((column, columnIndex) => (
-              <td key={`${rowIndex}-${columnIndex}`}>{row[column.key]}</td>
+              <td className='whitespace-nowrap ' key={`${rowIndex}-${columnIndex}`}>
+                {row[column.key]}
+              </td>
             ))}
           </tr>
         ))}

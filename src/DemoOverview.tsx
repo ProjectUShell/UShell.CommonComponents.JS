@@ -158,7 +158,12 @@ const Demo = () => {
               { key: 'p1', name: 'test1', width: 100 },
               { key: 'p2', name: 'test2', width: 100 },
             ]}
-            data={[{ p1: 'dasdsdsdasds', p2: 'dfafasfsdf' }]}
+            data={[
+              {
+                p1: 'dasdsdsdasds asdsdasd sdasdasdasd dsadasd das dsa dsad sadsadasdsad',
+                p2: 'dfafasfsdf',
+              },
+            ]}
           ></ResizableTable2>
         )}
         {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
