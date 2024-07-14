@@ -14,8 +14,9 @@ const ReportEditor: React.FC<{
   entitySchema: EntitySchema
   report: ReportDefinition
   setReport: (rd: ReportDefinition) => void
-}> = ({ entitySchema, report, setReport }) => {
-  const [tab, setTab] = useState<'query' | 'chart'>('query')
+  saveReport: (rd: ReportDefinition) => void
+}> = ({ entitySchema, report, setReport, saveReport }) => {
+  const [tab, setTab] = useState<'query' | 'chart'>('chart')
 
   return (
     <>
@@ -23,21 +24,21 @@ const ReportEditor: React.FC<{
         <div className='toolbar flex border-b border-bg8 dark:border-bg8dark text-sm'>
           <div className='flex gap-4 border-bg8 dark:border-bg8dark px-2'>
             <button
-              onClick={(e) => setTab('query')}
-              className={`${tab == 'query' ? 'border-b-2 border-prim2' : ''}`}
-            >
-              <div className='p-2'>Query</div>
-            </button>
-            <button
               onClick={(e) => setTab('chart')}
               className={`p-2 ${tab == 'chart' ? 'border-b-2 border-prim2' : ''}`}
             >
               <div className=''>Chart</div>
             </button>
+            <button
+              onClick={(e) => setTab('query')}
+              className={`${tab == 'query' ? 'border-b-2 border-prim2' : ''}`}
+            >
+              <div className='p-2'>Query</div>
+            </button>
           </div>
-          <div className='flex gap-4 py-2 ml-2 '>
-            <div className='border-l-2 px-4'>
-              <button>Save</button>
+          <div className='flex gap-4 py-1 ml-2 my-2 border-l-2'>
+            <div className=' ml-2 p-2 hover:bg-bg6 dark:hover:bg-bg5dark'>
+              <button onClick={() => saveReport(report)}>Save</button>
             </div>
           </div>
         </div>

@@ -23,8 +23,9 @@ import { SchemaRoot } from 'fusefx-modeldescription'
 import { ISchemaProvider } from './components/schema-editor/ISchemaProvider'
 import TabControl, { TabItem } from './_Organisms/TabControl'
 import ReportChart from './components/report/_Molecules/ReportChart'
-import ReportManager from './components/report/_Templates/ReportManager'
+import ReportManager, { ReportManager1 } from './components/report/_Templates/ReportManager'
 import { ReportServiceConnector } from './components/report/ReportServiceConnector'
+import { LocalStorageReportRepository } from './components/report/LocalStorageReportRepository'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -199,11 +200,10 @@ const Demo = () => {
           <ReportChart reportServiceUrl='https://localhost:7288/ReportService'></ReportChart>
         )}
         {currentComponent == 'ReportManager' && (
-          <ReportManager
-            reportCollection={[]}
-            reportName='New Report'
+          <ReportManager1
+            reportRepository={new LocalStorageReportRepository()}
             reportSerivce={new ReportServiceConnector('https://localhost:7288/ReportService')}
-          ></ReportManager>
+          ></ReportManager1>
         )}
       </ShellLayout>
     </QueryClientProvider>

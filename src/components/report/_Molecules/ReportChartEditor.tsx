@@ -63,7 +63,21 @@ const ReportChartEditor: React.FC<{
             initialValue={reportChartDefinition.name}
             inputType='string'
             label='Name'
-            onValueChange={() => {}}
+            onValueChange={(n) => {
+              reportChartDefinition.name = n
+              onUpdateDefinition(reportChartDefinition)
+            }}
+          ></InputField>
+        </div>
+        <div className='flex flex-col justify-between w-full'>
+          <InputField
+            initialValue={reportChartDefinition.folder}
+            inputType='string'
+            label='Folder'
+            onValueChange={(n) => {
+              reportChartDefinition.folder = n
+              onUpdateDefinition(reportChartDefinition)
+            }}
           ></InputField>
         </div>
         <div className='flex flex-col justify-between w-full'>

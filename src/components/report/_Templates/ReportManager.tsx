@@ -6,12 +6,51 @@ import ReportEditor from '../_Organisms/ReportEditor'
 import { IReportService } from '../IReportService'
 import { EntitySchema } from 'fusefx-modeldescription'
 import ReportResultViewer from '../_Organisms/ReportResultViewer'
+import { IReportRepository } from '../IReportRepository'
+import ReportExplorer from '../_Organisms/ReportExplorer'
+import { useQuery } from '@tanstack/react-query'
+import PencilAlt from '../../../_Icons/PencilAlt'
+import PresentationChartBar from '../../../_Icons/PresentationChartBar'
+import MenuAlt4 from '../../../_Icons/MenuAlt4'
+
+export const ReportManager1: React.FC<{
+  reportRepository: IReportRepository
+  reportSerivce: IReportService
+}> = ({ reportRepository, reportSerivce }) => {
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['report', reportRepository],
+    queryFn: () => {
+      try {
+        return reportRepository.getReports()
+      } catch (error) {
+        return null
+      }
+    },
+  })
+
+  if (isLoading) {
+    return <div>Loading</div>
+  }
+
+  if (!data) {
+    return <div>Loading</div>
+  }
+
+  return (
+    <ReportManager
+      reportCollection={data}
+      reportSerivce={reportSerivce}
+      addOrUpdateReport={(r: ReportDefinition) => reportRepository.addOrUpdateReport(r)}
+    ></ReportManager>
+  )
+}
 
 const ReportManager: React.FC<{
   reportCollection: ReportDefinition[]
+  addOrUpdateReport: (r: ReportDefinition) => void
   reportSerivce: IReportService
   reportName?: string
-}> = ({ reportCollection, reportSerivce, reportName }) => {
+}> = ({ reportCollection, addOrUpdateReport, reportSerivce, reportName }) => {
   const [currentReport, setCurrentReport] = useState<ReportDefinition | null>(null)
   const [entitySchema, setEntitySchema] = useState<EntitySchema | null>(null)
   const [viewMode, setViewMode] = useState<'split' | 'editor' | 'result'>('split')
@@ -21,15 +60,18 @@ const ReportManager: React.FC<{
   }, [reportSerivce])
 
   useEffect(() => {
+    console.log('useEffect')
     if (!reportName || reportName == '') {
       return
     }
     for (let report of reportCollection) {
       if (report.name == reportName) {
+        console.log('setCurrentReport', report)
         setCurrentReport(report)
         return
       }
     }
+    console.log('setCurrentReport')
     setCurrentReport({
       name: reportName,
       folder: 'My Reports',
@@ -40,20 +82,44 @@ const ReportManager: React.FC<{
   }, [reportName])
 
   if (!entitySchema) return <div>Loading...</div>
-
   return (
     <div className='w-full h-full flex flex-col mx-1'>
       <div className='breadcrumb flex justify-between border-0 border-red-400 w-full mb-4 mt-2'>
         <ReportManagerBreadcrumb
           reportCollection={reportCollection}
           report={currentReport}
+          setReport={setCurrentReport}
         ></ReportManagerBreadcrumb>
         <div className='flex gap-1'>
-          <button onClick={() => setViewMode('split')}>Split</button>
-          <button onClick={() => setViewMode('editor')}>Editor</button>
-          <button onClick={() => setViewMode('result')}>Result</button>
+          <button
+            className='hover:bg-bg4 dark:hover:bg-bg6dark p-1'
+            onClick={() => setViewMode('split')}
+          >
+            <MenuAlt4></MenuAlt4>
+          </button>
+          <button
+            className='hover:bg-bg4 dark:hover:bg-bg6dark p-1'
+            onClick={() => setViewMode('editor')}
+          >
+            <PencilAlt></PencilAlt>
+          </button>
+          <button
+            className='hover:bg-bg4 dark:hover:bg-bg6dark p-1'
+            onClick={() => setViewMode('result')}
+          >
+            <PresentationChartBar></PresentationChartBar>
+          </button>
         </div>
       </div>
+      {!currentReport && (
+        <ReportExplorer
+          reportCollection={reportCollection}
+          enterReport={(r) => setCurrentReport(r)}
+          createNewReport={() =>
+            setCurrentReport({ folder: 'My', name: 'New Report', type: 'Bar', horizontal: false })
+          }
+        ></ReportExplorer>
+      )}
       <div
         className={`editor border-0  w-full flex flex-col transition-all ${
           viewMode == 'split' ? 'h-1/2' : viewMode == 'editor' ? 'h-full' : 'h-0 invisible'
@@ -64,6 +130,7 @@ const ReportManager: React.FC<{
             entitySchema={entitySchema}
             report={currentReport}
             setReport={(r) => setCurrentReport({ ...r })}
+            saveReport={(r) => addOrUpdateReport(r)}
           ></ReportEditor>
         )}
       </div>
