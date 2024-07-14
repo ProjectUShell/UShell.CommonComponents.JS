@@ -49,92 +49,89 @@ export const ReportChart1: React.FC<{
     }
   })
   return (
-    <ReportChart2
-      data={data}
-      xField={report.groupBy && report.groupBy.length > 0 ? report.groupBy[0] : ''}
-      yFields={yValues}
-      stacked={false}
-    ></ReportChart2>
+    <div className='h-full w-full max-h-full border-0 border-blue-500 flex overflow-auto'>
+      <ReportBarChart
+        data={data}
+        xFields={report.groupBy || []}
+        yGroups={report.reportValues || []}
+        yFields={yValues}
+        horizontal={report.horizontal}
+      ></ReportBarChart>
+    </div>
   )
 }
 
-const ReportChart2: React.FC<{
+const ReportBarChart: React.FC<{
   data: { [key: string]: any }[]
-  xField: string
+  xFields: string[]
+  yGroups: string[]
   yFields: string[]
-  stacked: boolean
-}> = ({ data, xField, yFields, stacked }) => {
-  const optionsTest2: ApexOptions = {
+  horizontal: boolean
+}> = ({ data, xFields, yGroups, yFields, horizontal }) => {
+  function getCategory(d: any) {
+    let result = ''
+    xFields.forEach((xField: any, i: number) => {
+      if (i > 0) {
+        result += '_' + d[xField]
+      } else {
+        result += d[xField]
+      }
+    })
+    return result
+  }
+  function getYGroup(yField: string) {
+    for (let yGroup of yGroups) {
+      if (yField.startsWith(yGroup)) {
+        return yGroup
+      }
+    }
+    return ''
+  }
+  var options2: ApexOptions = {
     chart: {
       type: 'bar',
       height: 350,
-      stacked: stacked,
-      toolbar: {
-        show: true,
-      },
-      zoom: {
-        enabled: true,
+      stacked: true,
+    },
+    stroke: {
+      width: 1,
+      colors: ['#fff'],
+    },
+    dataLabels: {
+      formatter: (val: any) => {
+        return val / 1000 + 'K'
       },
     },
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          legend: {
-            position: 'bottom',
-            offsetX: -10,
-            offsetY: 0,
-          },
-        },
-      },
-    ],
     plotOptions: {
       bar: {
-        horizontal: false,
-        borderRadius: 0,
-        borderRadiusApplication: 'end', // 'around', 'end'
-        borderRadiusWhenStacked: 'last', // 'all', 'last'
-        dataLabels: {
-          total: {
-            enabled: true,
-            style: {
-              fontSize: '13px',
-              fontWeight: 900,
-            },
-          },
-        },
+        horizontal: horizontal,
       },
     },
     xaxis: {
-      type: 'category',
-      categories: data.map((d) => d[xField]),
+      categories: data.map((d) => getCategory(d)),
     },
+    colors: ['#80c7fd', '#008FFB', '#80f1cb', '#00E396'],
     legend: {
-      position: 'right',
-      offsetY: 40,
-    },
-    fill: {
-      opacity: 1,
+      position: 'top',
+      horizontalAlign: 'left',
     },
   }
-  const optionsTest = {
-    series: yFields.map((yField) => {
-      return {
-        name: yField,
-        data: data.map((d) => d[yField]),
-      }
-    }),
-  }
+  var series2 = yFields.map((yField) => {
+    return {
+      name: yField,
+      group: getYGroup(yField),
+      data: data.map((d) => d[yField]),
+    }
+  })
 
-  if (!xField || xField == '') {
-    return <div>No Data</div>
-  }
-
-  // return <div>Test</div>
   return (
-    <div className='h-full w-full flex flex-col overflow-auto border-4 border-red-400'>
-      <Chart options={optionsTest2} series={optionsTest.series} type='bar' height={350}></Chart>
-    </div>
+    <Chart
+      options={options2}
+      series={series2}
+      type='bar'
+      height={horizontal ? xFields.length * 1000 : 500}
+      width={horizontal ? 1000 : xFields.length * 1000}
+    ></Chart>
   )
 }
 

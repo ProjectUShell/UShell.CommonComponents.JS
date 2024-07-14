@@ -77,103 +77,120 @@ const ReportChartEditor: React.FC<{
             initialOption={{ label: reportChartDefinition.type, value: reportChartDefinition.type }}
           ></DropdownSelect>
         </div>
-      </div>
-      <div className=''>
-        <div className='groupby'>
-          <label>Group By</label>
-          <div className='border p-1 dark:border-bg8dark'>
-            {entitySchema.fields.map((f) => (
-              <div key={f.name} className='flex justify-between w-full'>
-                <label>{f.name}</label>
-                <div>
-                  <input
-                    className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
+        <div className='flex justify-between w-full  gap-1'>
+          <label>Horizontal</label>
+          <div>
+            <input
+              className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
                  border border-contentBorder dark:border-contentBorderDark'
-                    type='checkbox'
-                    value={
-                      reportChartDefinition.groupBy
-                        ? reportChartDefinition.groupBy.includes(f.name)
-                          ? 1
-                          : 0
-                        : 0
-                    }
-                    onChange={(e) => {
-                      setGroupBy(f.name, e.target.checked)
-                    }}
-                  ></input>
-                </div>
-              </div>
-            ))}
+              type='checkbox'
+              checked={reportChartDefinition.horizontal}
+              onChange={(e) => {
+                reportChartDefinition.horizontal = e.target.checked
+                console.log('horizontal', reportChartDefinition.horizontal)
+                onUpdateDefinition(reportChartDefinition)
+              }}
+            ></input>
           </div>
         </div>
       </div>
-      <div className=''>
-        <div className='stackby'>
-          <label>Stack By</label>
-          <div className='border p-1 dark:border-bg8dark'>
-            {entitySchema.fields.map((f) => (
-              <div key={f.name} className='flex justify-between w-full'>
-                <label>{f.name}</label>
-                <div>
-                  <input
-                    className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
+      <div className='groupby'>
+        <label>Group By</label>
+        <div className='border p-1 dark:border-bg8dark'>
+          {entitySchema.fields.map((f) => (
+            <div key={f.name} className='flex justify-between w-full  gap-1'>
+              <label>{f.name}</label>
+              <div>
+                <input
+                  className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
                  border border-contentBorder dark:border-contentBorderDark'
-                    type='checkbox'
-                    value={
-                      reportChartDefinition.stackBy
-                        ? reportChartDefinition.stackBy.includes(f.name)
-                          ? 1
-                          : 0
+                  type='checkbox'
+                  value={
+                    reportChartDefinition.groupBy
+                      ? reportChartDefinition.groupBy.includes(f.name)
+                        ? 1
                         : 0
-                    }
-                    onChange={(e) => {
-                      setStackBy(f.name, e.target.checked)
-                    }}
-                  ></input>
-                </div>
+                      : 0
+                  }
+                  onChange={(e) => {
+                    setGroupBy(f.name, e.target.checked)
+                  }}
+                ></input>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      {aggregateFunctions.map((af) => (
-        <div className='' key={af}>
-          <div className=''>
-            <label>{af}</label>
-            <div className='border p-1 dark:border-bg8dark'>
-              {entitySchema.fields
-                .filter(
-                  (f: FieldSchema) =>
-                    ['int', 'integer', 'int16', 'int32', 'decimal', 'float', 'single'].includes(
-                      f.type.toLowerCase(),
-                    ) && f.name.toLowerCase() != 'id',
-                )
-                .map((f) => (
-                  <div key={f.name} className='flex justify-between w-full'>
-                    <label>{f.name}</label>
-                    <div>
-                      <input
-                        className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
-                    border border-contentBorder dark:border-contentBorderDark'
-                        type='checkbox'
-                        value={
-                          reportChartDefinition.groupBy
-                            ? reportChartDefinition.groupBy.includes(f.name)
-                              ? 1
-                              : 0
-                            : 0
-                        }
-                        onChange={(e) => {
-                          setValue(applyAggregate(af, f.name), e.target.checked)
-                        }}
-                      ></input>
-                    </div>
-                  </div>
-                ))}
             </div>
-          </div>
+          ))}
         </div>
-      ))}
+      </div>
+      <div className='stackby'>
+        <label>Stack By</label>
+        <div className='border p-1 dark:border-bg8dark'>
+          {entitySchema.fields.map((f) => (
+            <div key={f.name} className='flex justify-between w-full  gap-1'>
+              <label>{f.name}</label>
+              <div>
+                <input
+                  className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
+                 border border-contentBorder dark:border-contentBorderDark'
+                  type='checkbox'
+                  value={
+                    reportChartDefinition.stackBy
+                      ? reportChartDefinition.stackBy.includes(f.name)
+                        ? 1
+                        : 0
+                      : 0
+                  }
+                  onChange={(e) => {
+                    setStackBy(f.name, e.target.checked)
+                  }}
+                ></input>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className='flex flex-col'>
+        <h1>Values</h1>
+        <div className='flex gap-1 overflow-auto'>
+          {aggregateFunctions.map((af) => (
+            <div className='' key={af}>
+              <div className=''>
+                <label>{af}</label>
+                <div className='border p-1 dark:border-bg8dark'>
+                  {entitySchema.fields
+                    .filter(
+                      (f: FieldSchema) =>
+                        ['int', 'integer', 'int16', 'int32', 'decimal', 'float', 'single'].includes(
+                          f.type.toLowerCase(),
+                        ) && f.name.toLowerCase() != 'id',
+                    )
+                    .map((f) => (
+                      <div key={f.name} className='flex justify-between w-full gap-1'>
+                        <label>{f.name}</label>
+                        <div>
+                          <input
+                            className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
+                    border border-contentBorder dark:border-contentBorderDark'
+                            type='checkbox'
+                            value={
+                              reportChartDefinition.groupBy
+                                ? reportChartDefinition.groupBy.includes(f.name)
+                                  ? 1
+                                  : 0
+                                : 0
+                            }
+                            onChange={(e) => {
+                              setValue(applyAggregate(af, f.name), e.target.checked)
+                            }}
+                          ></input>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

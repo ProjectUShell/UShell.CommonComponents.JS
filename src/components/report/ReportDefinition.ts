@@ -7,6 +7,7 @@ export class ReportChartDefinition {
   reportValues?: string[]
   name: string = ''
   folder: string = 'My Reports'
+  horizontal: boolean = false
 }
 
 export class ReportDefinition extends ReportChartDefinition {

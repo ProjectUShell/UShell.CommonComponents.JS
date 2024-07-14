@@ -35,6 +35,7 @@ const ReportManager: React.FC<{
       folder: 'My Reports',
       reportValues: [],
       type: 'Table',
+      horizontal: false,
     })
   }, [reportName])
 
