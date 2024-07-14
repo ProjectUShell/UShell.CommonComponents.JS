@@ -21,14 +21,12 @@ const RelationEditor: React.FC<{
   fkRelations: RelationSchema[]
   dataSourceManager: IDataSourceManagerBase
 }> = ({ initialRelation, fields, fkRelations, onUpdateRelation, dataSourceManager }) => {
-  console.log('RelationEditor render', initialRelation)
   const [currrentField, setCurrentField] = useState<FieldSchema | null>(null)
   const [currentFkRelation, setCurrentFkRelation] = useState<RelationSchema | null>(null)
   const [currentOperator, setCurrentOperator] = useState<string>('')
   const [currentValue, setCurrentValue] = useState<string>('')
 
   useEffect(() => {
-    console.log('RelationEditor init', initialRelation)
     setCurrentField(
       fields.find(
         (f) => f.name.toLocaleLowerCase() == initialRelation.fieldName.toLocaleLowerCase(),
@@ -121,7 +119,6 @@ const RelationEditor: React.FC<{
       (r) => r.foreignNavigationName.toLocaleLowerCase() == fieldName.toLocaleLowerCase(),
     )
     if (fkRelationToSet) {
-      console.log('fkRelationToSet', fkRelationToSet)
       fieldToSet = fields.find(
         (f) =>
           f.name.toLocaleLowerCase() == fkRelationToSet.foreignKeyIndexName.toLocaleLowerCase(),
@@ -153,9 +150,8 @@ const RelationEditor: React.FC<{
     notifyRelationUpdated(currrentField, currentOperator, v)
   }
 
-  console.log('currentField', currrentField)
   return (
-    <div className='flex p-2 gap-1  rounded-sm'>
+    <div className='flex p-0 gap-1  rounded-sm'>
       <DropdownSelect
         forceFocus
         options={getFieldOptions()}

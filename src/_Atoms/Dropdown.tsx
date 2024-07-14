@@ -157,13 +157,13 @@ const Dropdown: React.FC<{
       {setIsOpen && (
         <button
           id='button1'
-          className='fixed z-40 cursor-default inset-0 bg-black bg-opacity-0'
+          className='fixed z-50 cursor-default inset-0 bg-black bg-opacity-0'
           onClick={() => setIsOpen(false)}
         ></button>
       )}
       <div className='relative'>
         <div
-          className={`absolute z-40  shadow-md
+          className={`absolute z-50  shadow-md
            ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
              flex justify-center items-center w-max ${className}`}
         >

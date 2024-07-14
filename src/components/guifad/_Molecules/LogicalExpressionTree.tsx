@@ -45,7 +45,11 @@ const LogicalExpressionTree: React.FC<{
     console.log('expression', expression)
   }
 
-  function appendRelation(r: FieldPredicate, index: number, operator: 'or' | 'and' | 'not' | 'atom' | '') {
+  function appendRelation(
+    r: FieldPredicate,
+    index: number,
+    operator: 'or' | 'and' | 'not' | 'atom' | '',
+  ) {
     if ((expression.matchAll ? 'and' : 'or') == operator) {
       expression.predicates.push(getEmptyRelationElement())
       onUpdateExpression({ ...expression })
@@ -71,9 +75,9 @@ const LogicalExpressionTree: React.FC<{
   // console.log('expression LE', expression)
 
   return (
-    <div className='bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md text-sm'>
+    <div className='bg-bg1 dark:bg-bg1dark p-2 rounded-md text-sm'>
       <div className='-ml-3'>
-        <ChevrodnDownIcon rotate={135}></ChevrodnDownIcon>
+        <ChevrodnDownIcon rotate={135} size={4}></ChevrodnDownIcon>
       </div>
 
       {expression.predicates.map((a, i) => (
@@ -120,7 +124,7 @@ const LogicalExpressionTree: React.FC<{
         </div>
       ))}
       <div className='-ml-3'>
-        <ChevrodnDownIcon rotate={45}></ChevrodnDownIcon>
+        <ChevrodnDownIcon rotate={45} size={4}></ChevrodnDownIcon>
       </div>
     </div>
   )

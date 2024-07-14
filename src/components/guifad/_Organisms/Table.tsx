@@ -358,7 +358,7 @@ const Table: React.FC<{
     }
     columns.forEach((c) => {
       if (!(c.key in columnWidths)) {
-        console.log(`columnwidth ${c.key}`, document.getElementById(`column_${c.key}`)?.clientWidth)
+        // console.log(`columnwidth ${c.key}`, document.getElementById(`column_${c.key}`)?.clientWidth)
         columnWidths[c.key] = document.getElementById(`column_${c.key}`)!.clientWidth
       }
     })
@@ -378,7 +378,7 @@ const Table: React.FC<{
     }
     columns.forEach((c) => {
       if (!(c.key in initialColumnWidths)) {
-        console.log(`columnwidth ${c.key}`, document.getElementById(`column_${c.key}`)?.clientWidth)
+        // console.log(`columnwidth ${c.key}`, document.getElementById(`column_${c.key}`)?.clientWidth)
         initialColumnWidths[c.key] = document.getElementById(`column_${c.key}`)!.clientWidth
         tableWidth += initialColumnWidths[c.key]
       }
@@ -386,7 +386,7 @@ const Table: React.FC<{
 
     columns.forEach((c) => {
       if (!(c.key in initialColumnWidths)) {
-        console.log(`columnwidth ${c.key}`, document.getElementById(`column_${c.key}`)?.clientWidth)
+        // console.log(`columnwidth ${c.key}`, document.getElementById(`column_${c.key}`)?.clientWidth)
         // columnWidths[c.key] = 100
       }
     })

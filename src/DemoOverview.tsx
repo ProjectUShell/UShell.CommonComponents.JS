@@ -22,6 +22,9 @@ import { MenuItem } from './components/shell-layout/ShellMenu'
 import { SchemaRoot } from 'fusefx-modeldescription'
 import { ISchemaProvider } from './components/schema-editor/ISchemaProvider'
 import TabControl, { TabItem } from './_Organisms/TabControl'
+import ReportChart from './components/report/_Molecules/ReportChart'
+import ReportManager from './components/report/_Templates/ReportManager'
+import { ReportServiceConnector } from './components/report/ReportServiceConnector'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -29,12 +32,13 @@ const Demo = () => {
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3MTM2OTg3NjYsImV4cCI6MTc0NTIzNDc2NiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.C-c7FWta-4pyjSZL1tnOlLdI6fFHM6d11VpWVrtJwqA'
   const [currentComponent, setCurrentComponent] = useState<string>('TableDemo')
   const [tabIndex, setTabIndex] = useState(0)
-  const demoComponents: string[] = ['Guifad', 'Table', 'Common', 'SchemaEditor']
+  const demoComponents: string[] = ['Guifad', 'Table', 'Common', 'SchemaEditor', 'Reports']
   const subComponents: { [key: string]: string[] } = {
     Guifad: ['GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
     Table: ['TableDemo', 'ResizeTable', 'ResizeTable2'],
     Common: ['ColorDemo', 'DropdownButtonDemo'],
     SchemaEditor: ['Schema Manager', 'Editor', 'Schema Guifad'],
+    Reports: ['ReportService', 'ReportManager'],
   }
 
   const [schemaName, setSchemaName] = useState('')
@@ -62,8 +66,6 @@ const Demo = () => {
       }),
     }
   })
-
-  console.log('menuState', loadShellMenuState())
 
   const shellMenuState = useMemo(() => {
     const res = loadShellMenuState()
@@ -192,6 +194,16 @@ const Demo = () => {
               setSchemaName(sn)
             }}
           ></SchemaEditor>
+        )}
+        {currentComponent == 'ReportService' && (
+          <ReportChart reportServiceUrl='https://localhost:7288/ReportService'></ReportChart>
+        )}
+        {currentComponent == 'ReportManager' && (
+          <ReportManager
+            reportCollection={[]}
+            reportName='New Report'
+            reportSerivce={new ReportServiceConnector('https://localhost:7288/ReportService')}
+          ></ReportManager>
         )}
       </ShellLayout>
     </QueryClientProvider>

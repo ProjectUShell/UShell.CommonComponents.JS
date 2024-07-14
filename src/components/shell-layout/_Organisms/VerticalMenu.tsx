@@ -22,8 +22,6 @@ const VerticalMenu: React.FC<{
     setRerenderTrigger((t) => t + 1)
   }
 
-  console.log('shellMenuState v', shellMenuState)
-
   return (
     <VerticalMenuInternal
       menuItems={menuItems}
