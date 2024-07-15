@@ -78,12 +78,14 @@ const ReportManager: React.FC<{
       reportValues: [],
       type: 'Table',
       horizontal: false,
+      multiAxis: false,
+      stacked: false,
     })
   }, [reportName])
 
   if (!entitySchema) return <div>Loading...</div>
   return (
-    <div className='w-full h-full flex flex-col mx-1'>
+    <div className='w-full h-full flex flex-col px-2 border-0'>
       <div className='breadcrumb flex justify-between border-0 border-red-400 w-full mb-4 mt-2'>
         <ReportManagerBreadcrumb
           reportCollection={reportCollection}
@@ -116,7 +118,14 @@ const ReportManager: React.FC<{
           reportCollection={reportCollection}
           enterReport={(r) => setCurrentReport(r)}
           createNewReport={() =>
-            setCurrentReport({ folder: 'My', name: 'New Report', type: 'Bar', horizontal: false })
+            setCurrentReport({
+              folder: 'My',
+              name: 'New Report',
+              type: 'Bar',
+              horizontal: false,
+              multiAxis: false,
+              stacked: false,
+            })
           }
         ></ReportExplorer>
       )}

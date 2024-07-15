@@ -84,29 +84,72 @@ const ReportChartEditor: React.FC<{
           <label className='p-0'>Type</label>
           <DropdownSelect
             options={[
-              { label: 'Table', value: 'table' },
-              { label: 'Bar', value: 'bar' },
-              { label: 'Pie', value: 'pie' },
+              { label: 'Table', value: 'Table' },
+              { label: 'Bar', value: 'Bar' },
+              { label: 'Pie', value: 'Pie' },
+              { label: 'Line', value: 'Line' },
+              { label: 'Area', value: 'Area' },
+              { label: 'Donut', value: 'Donut' },
             ]}
             initialOption={{ label: reportChartDefinition.type, value: reportChartDefinition.type }}
+            onOptionSet={(o) => {
+              reportChartDefinition.type = o?.value
+              onUpdateDefinition(reportChartDefinition)
+            }}
           ></DropdownSelect>
         </div>
-        <div className='flex justify-between w-full  gap-1'>
-          <label>Horizontal</label>
-          <div>
-            <input
-              className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
+        {reportChartDefinition.type == 'Bar' && (
+          <div className='flex justify-between w-full  gap-1'>
+            <label>Horizontal</label>
+            <div>
+              <input
+                className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
                  border border-contentBorder dark:border-contentBorderDark'
-              type='checkbox'
-              checked={reportChartDefinition.horizontal}
-              onChange={(e) => {
-                reportChartDefinition.horizontal = e.target.checked
-                console.log('horizontal', reportChartDefinition.horizontal)
-                onUpdateDefinition(reportChartDefinition)
-              }}
-            ></input>
+                type='checkbox'
+                checked={reportChartDefinition.horizontal}
+                onChange={(e) => {
+                  reportChartDefinition.horizontal = e.target.checked
+                  console.log('horizontal', reportChartDefinition.horizontal)
+                  onUpdateDefinition(reportChartDefinition)
+                }}
+              ></input>
+            </div>
           </div>
-        </div>
+        )}
+        {reportChartDefinition.type == 'Line' && (
+          <div className='flex justify-between w-full  gap-1'>
+            <label>MultiAxis</label>
+            <div>
+              <input
+                className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
+                 border border-contentBorder dark:border-contentBorderDark'
+                type='checkbox'
+                checked={reportChartDefinition.multiAxis}
+                onChange={(e) => {
+                  reportChartDefinition.multiAxis = e.target.checked
+                  onUpdateDefinition(reportChartDefinition)
+                }}
+              ></input>
+            </div>
+          </div>
+        )}
+        {reportChartDefinition.type == 'Area' && (
+          <div className='flex justify-between w-full  gap-1'>
+            <label>Stacked</label>
+            <div>
+              <input
+                className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
+                 border border-contentBorder dark:border-contentBorderDark'
+                type='checkbox'
+                checked={reportChartDefinition.stacked}
+                onChange={(e) => {
+                  reportChartDefinition.stacked = e.target.checked
+                  onUpdateDefinition(reportChartDefinition)
+                }}
+              ></input>
+            </div>
+          </div>
+        )}
       </div>
       <div className='groupby'>
         <label>Group By</label>
@@ -119,12 +162,12 @@ const ReportChartEditor: React.FC<{
                   className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
                  border border-contentBorder dark:border-contentBorderDark'
                   type='checkbox'
-                  value={
+                  checked={
                     reportChartDefinition.groupBy
                       ? reportChartDefinition.groupBy.includes(f.name)
-                        ? 1
-                        : 0
-                      : 0
+                        ? true
+                        : false
+                      : false
                   }
                   onChange={(e) => {
                     setGroupBy(f.name, e.target.checked)
@@ -146,12 +189,12 @@ const ReportChartEditor: React.FC<{
                   className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
                  border border-contentBorder dark:border-contentBorderDark'
                   type='checkbox'
-                  value={
+                  checked={
                     reportChartDefinition.stackBy
                       ? reportChartDefinition.stackBy.includes(f.name)
-                        ? 1
-                        : 0
-                      : 0
+                        ? true
+                        : false
+                      : false
                   }
                   onChange={(e) => {
                     setStackBy(f.name, e.target.checked)
@@ -183,14 +226,16 @@ const ReportChartEditor: React.FC<{
                         <div>
                           <input
                             className='h-full text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1
-                    border border-contentBorder dark:border-contentBorderDark'
+                              border border-contentBorder dark:border-contentBorderDark'
                             type='checkbox'
-                            value={
-                              reportChartDefinition.groupBy
-                                ? reportChartDefinition.groupBy.includes(f.name)
-                                  ? 1
-                                  : 0
-                                : 0
+                            checked={
+                              reportChartDefinition.reportValues
+                                ? reportChartDefinition.reportValues.includes(
+                                    applyAggregate(af, f.name),
+                                  )
+                                  ? true
+                                  : false
+                                : false
                             }
                             onChange={(e) => {
                               setValue(applyAggregate(af, f.name), e.target.checked)

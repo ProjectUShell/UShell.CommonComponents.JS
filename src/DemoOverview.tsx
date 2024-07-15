@@ -196,9 +196,6 @@ const Demo = () => {
             }}
           ></SchemaEditor>
         )}
-        {currentComponent == 'ReportService' && (
-          <ReportChart reportServiceUrl='https://localhost:7288/ReportService'></ReportChart>
-        )}
         {currentComponent == 'ReportManager' && (
           <ReportManager1
             reportRepository={new LocalStorageReportRepository()}

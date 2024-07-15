@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ReportDefinition } from '../ReportDefinition'
 import { IReportService } from '../IReportService'
-import ReportChart, { ReportChart1 } from '../_Molecules/ReportChart'
+import { ReportChart1 } from '../_Molecules/ReportChart'
 import ReportTable from '../_Molecules/ReportTable'
 import { EntitySchema } from 'fusefx-modeldescription'
 

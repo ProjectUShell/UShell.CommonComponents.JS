@@ -38,7 +38,7 @@ const ReportExplorer: React.FC<{
       <TreeView1
         data={reportCollection}
         pathField='folder'
-        keyField='folder'
+        keyField='name'
         renderColumn={(d: any, c: string) => (
           <div className='hover:underline cursor-pointer' onClick={() => enterReport(d)}>
             {d.name}
