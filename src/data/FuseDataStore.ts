@@ -22,7 +22,7 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     }
     if (this._AdditionalHeaderArgs) {
       for (let additionalKey in this._AdditionalHeaderArgs) {
-        headers[additionalKey] = this._AdditionalHeaderArgs[additionalKey]
+        headers[additionalKey] = JSON.stringify(this._AdditionalHeaderArgs[additionalKey])
       }
     }
     const rawResponse = await fetch(url, {
