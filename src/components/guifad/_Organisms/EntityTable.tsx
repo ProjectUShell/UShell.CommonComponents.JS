@@ -49,7 +49,6 @@ const EntityTable: React.FC<{
   selectedRecord,
   onCreateRecord,
 }) => {
-  console.log('EntityTable dataSourceManager', dataSourceManager)
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
   // const [columns, setColumns] = useState<TableColumn[]>([])
@@ -207,7 +206,6 @@ const EntityTable: React.FC<{
   }
 
   function deleteRecords() {
-    console.log('deleteRecords', selectedRecords)
     if (selectedRecords.length == 0) {
       return
     }
@@ -355,7 +353,6 @@ const EntityTable: React.FC<{
           getId={getId}
           onRecordEnter={onRecordEnter}
           onSelectedRecordsChange={(sr) => {
-            console.log('selected change', sr)
             onSelectedRecordsChange(sr)
             setSelectedRecords(sr)
           }}

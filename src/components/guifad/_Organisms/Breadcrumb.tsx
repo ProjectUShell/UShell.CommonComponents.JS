@@ -21,7 +21,6 @@ const Breadcrumb: React.FC<{
       }
       return n.dataSource.entitySchema!.name
     }
-    console.log('breadcrumb nodes', n)
     const succNode: ObjectGraphNode = nodes[i + 1]
 
     return succNode.parent?.record

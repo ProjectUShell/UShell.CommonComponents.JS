@@ -17,7 +17,11 @@ import ColorDemo from './demo/ColorDemo'
 import SchemaEditor from './components/schema-editor/components/SchemaEditor'
 import SchemaManager from './components/schema-editor/components/SchemaManager'
 import { LocalStorageSchemaProvider } from './components/schema-editor/LocalStorageSchemaProvider'
-import { activateItem, loadShellMenuState } from './components/shell-layout/ShellMenuState'
+import {
+  activateItem,
+  loadShellMenuState,
+  ShellMenuState,
+} from './components/shell-layout/ShellMenuState'
 import { MenuItem } from './components/shell-layout/ShellMenu'
 import { SchemaRoot } from 'fusefx-modeldescription'
 import { ISchemaProvider } from './components/schema-editor/ISchemaProvider'
@@ -26,6 +30,8 @@ import ReportChart from './components/report/_Molecules/ReportChart'
 import ReportManager, { ReportManager1 } from './components/report/_Templates/ReportManager'
 import { ReportServiceConnector } from './components/report/ReportServiceConnector'
 import { LocalStorageReportRepository } from './components/report/LocalStorageReportRepository'
+import { ColorMode, loadShellSettings } from './components/shell-layout/ShellSettings'
+import Dashboard from './components/dashboard/_Templates/Dashboard'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -39,7 +45,7 @@ const Demo = () => {
     Table: ['TableDemo', 'ResizeTable', 'ResizeTable2'],
     Common: ['ColorDemo', 'DropdownButtonDemo'],
     SchemaEditor: ['Schema Manager', 'Editor', 'Schema Guifad'],
-    Reports: ['ReportService', 'ReportManager'],
+    Reports: ['ReportService', 'ReportManager', 'ReportDashboard'],
   }
 
   const [schemaName, setSchemaName] = useState('')
@@ -69,10 +75,12 @@ const Demo = () => {
   })
 
   const shellMenuState = useMemo(() => {
-    const res = loadShellMenuState()
+    const res: ShellMenuState = loadShellMenuState()
     setCurrentComponent(res.activeItemId)
     return res
   }, [])
+
+  const shellSettings = loadShellSettings()
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -200,7 +208,19 @@ const Demo = () => {
           <ReportManager1
             reportRepository={new LocalStorageReportRepository()}
             reportSerivce={new ReportServiceConnector('https://localhost:7288/ReportService')}
+            dark={shellSettings.colorMode == ColorMode.Dark}
           ></ReportManager1>
+        )}
+        {currentComponent == 'ReportDashboard' && (
+          <Dashboard
+            data={{
+              title: 'Dashboard Test',
+              entires: [
+                { column: 0, row: 0, title: 'Test 1', render: () => <div>Test 1</div> },
+                { column: 0, row: 0, title: 'Test 2', render: () => <div>Test 2</div> },
+              ],
+            }}
+          ></Dashboard>
         )}
       </ShellLayout>
     </QueryClientProvider>

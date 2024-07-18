@@ -9,7 +9,8 @@ const ReportResultViewer: React.FC<{
   report: ReportDefinition
   reportService: IReportService
   entitySchema: EntitySchema
-}> = ({ report, reportService, entitySchema }) => {
+  dark: boolean
+}> = ({ report, reportService, entitySchema, dark }) => {
   const [tab, setTab] = useState<'table' | 'chart'>('table')
   return (
     <div className='h-full w-full flex flex-col'>
@@ -38,7 +39,7 @@ const ReportResultViewer: React.FC<{
           ></ReportTable>
         )}
         {tab == 'chart' && (
-          <ReportChart1 reportService={reportService} report={report}></ReportChart1>
+          <ReportChart1 reportService={reportService} report={report} dark={dark}></ReportChart1>
         )}
       </div>
     </div>

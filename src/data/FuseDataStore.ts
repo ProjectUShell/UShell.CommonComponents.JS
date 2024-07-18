@@ -20,6 +20,11 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
         bodyParams[additionalKey] = this._AdditionalBodyArgs[additionalKey]
       }
     }
+    if (this._AdditionalHeaderArgs) {
+      for (let additionalKey in this._AdditionalHeaderArgs) {
+        headers[additionalKey] = this._AdditionalHeaderArgs[additionalKey]
+      }
+    }
     const rawResponse = await fetch(url, {
       method: 'POST',
       headers: headers,
@@ -37,6 +42,7 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   private _TokenSourceUid = ''
   private _AdditionalBodyArgs: any | null = null
   private _GetSchemaRootMethod: string | null = null
+  private _AdditionalHeaderArgs: any | null = null
 
   constructor(
     url: string,
@@ -45,6 +51,7 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     tokenSourceUid?: string,
     additionalBodyArgs?: any,
     getSchemaRootMethod?: any,
+    additionalHeaderArgs?: any,
   ) {
     this._Url = url
     this._EntitySchemaUrl = entitySchemaUrl ? entitySchemaUrl : url
@@ -52,6 +59,7 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     this._TokenSourceUid = tokenSourceUid ? tokenSourceUid : ''
     this._AdditionalBodyArgs = additionalBodyArgs ? additionalBodyArgs : null
     this._GetSchemaRootMethod = getSchemaRootMethod ? getSchemaRootMethod : null
+    this._AdditionalHeaderArgs = additionalHeaderArgs ? additionalHeaderArgs : null
   }
 
   init(): Promise<void> {

@@ -8,11 +8,15 @@ import ReportLineChart from './ReportLineChart'
 import ReportAreaChart from './ReportAreaChart'
 import ReportPieChart from './ReportPieChart'
 
-const ReportChart: React.FC<{ reportServiceUrl: string }> = ({ reportServiceUrl }) => {
+const ReportChart: React.FC<{ reportServiceUrl: string; dark: boolean }> = ({
+  reportServiceUrl,
+  dark,
+}) => {
   return (
     <ReportChart1
       reportService={new ReportServiceConnector(reportServiceUrl)}
       report={new ReportDefinition()}
+      dark={dark}
     ></ReportChart1>
   )
 }
@@ -20,7 +24,8 @@ const ReportChart: React.FC<{ reportServiceUrl: string }> = ({ reportServiceUrl 
 export const ReportChart1: React.FC<{
   reportService: IReportService
   report: ReportDefinition
-}> = ({ reportService, report }) => {
+  dark: boolean
+}> = ({ reportService, report, dark }) => {
   // const yFields = ['count(1)', 'sum(duration)']
   const { isLoading, error, data } = useQuery({
     queryKey: ['report', report],
@@ -57,6 +62,7 @@ export const ReportChart1: React.FC<{
           yGroups={report.reportValues || []}
           yFields={yValues}
           horizontal={report.horizontal}
+          dark={dark}
         ></ReportBarChart>
       )}
       {report.type == 'Line' && (

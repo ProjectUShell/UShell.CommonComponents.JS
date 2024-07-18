@@ -8,7 +8,8 @@ const ReportBarChart: React.FC<{
   yGroups: string[]
   yFields: string[]
   horizontal: boolean
-}> = ({ data, xFields, yGroups, yFields, horizontal }) => {
+  dark: boolean
+}> = ({ data, xFields, yGroups, yFields, horizontal, dark }) => {
   function getCategory(d: any) {
     let result = ''
     xFields.forEach((xField: any, i: number) => {
@@ -33,16 +34,13 @@ const ReportBarChart: React.FC<{
       type: 'bar',
       height: 350,
       stacked: true,
+      background: dark ? 'rgb(57, 56, 61)' : undefined,
     },
     stroke: {
       width: 1,
       // colors: ['#fff'],
     },
-    dataLabels: {
-      formatter: (val: any) => {
-        return val / 1000 + 'K'
-      },
-    },
+    dataLabels: {},
     plotOptions: {
       bar: {
         horizontal: horizontal,
@@ -55,6 +53,10 @@ const ReportBarChart: React.FC<{
     legend: {
       position: 'top',
       horizontalAlign: 'left',
+    },
+    theme: {
+      mode: dark ? 'dark' : 'light',
+      monochrome: {},
     },
   }
   var series2 = yFields.map((yField) => {

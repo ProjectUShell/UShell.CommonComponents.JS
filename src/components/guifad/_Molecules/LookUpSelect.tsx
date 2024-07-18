@@ -12,8 +12,6 @@ const LookUpSelect: React.FC<{
   onValueSet: (keyValues: any[]) => void
   showLabel?: boolean
 }> = ({ dataSourceManager, lookUpRelation, initialValue, onValueSet, showLabel = true }) => {
-  console.log('LookUpSelect', lookUpRelation)
-
   const [lookUpList, setLookUpList] = useState<{ label: string; value: string }[]>([])
   const [error, setError] = useState<any>(null)
 
@@ -34,7 +32,6 @@ const LookUpSelect: React.FC<{
             return { value: e.key, label: e.label }
           })
           lul.sort((a, b) => a.label.localeCompare(b.label))
-          console.log('lul', lul)
           setLookUpList(lul)
         })
         .catch((err) => setError('Failed to get Entity Refs'))

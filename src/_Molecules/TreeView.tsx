@@ -50,7 +50,6 @@ export const TreeView1: React.FC<{
   keyField: string
   renderColumn?: (d: any, c: string) => JSX.Element
 }> = ({ data, pathField, keyField, renderColumn }) => {
-  console.log('data', data)
   const nodes = useMemo(() => {
     const result: TreeNode[] = []
     data.forEach((d) => {
@@ -88,12 +87,10 @@ const TreeViewInner: React.FC<{
     setClose(newClose)
     setSelectedNode(n)
   }
-  console.log('selected node', selectedNode)
   return (
     <div
       className='text-sm border-0 h-full'
       onClick={(e) => {
-        console.log('set node null')
         setSelectedNode(null)
       }}
     >

@@ -16,7 +16,8 @@ import MenuAlt4 from '../../../_Icons/MenuAlt4'
 export const ReportManager1: React.FC<{
   reportRepository: IReportRepository
   reportSerivce: IReportService
-}> = ({ reportRepository, reportSerivce }) => {
+  dark: boolean
+}> = ({ reportRepository, reportSerivce, dark }) => {
   const { isLoading, error, data } = useQuery({
     queryKey: ['report', reportRepository],
     queryFn: () => {
@@ -41,6 +42,7 @@ export const ReportManager1: React.FC<{
       reportCollection={data}
       reportSerivce={reportSerivce}
       addOrUpdateReport={(r: ReportDefinition) => reportRepository.addOrUpdateReport(r)}
+      dark={dark}
     ></ReportManager>
   )
 }
@@ -49,8 +51,9 @@ const ReportManager: React.FC<{
   reportCollection: ReportDefinition[]
   addOrUpdateReport: (r: ReportDefinition) => void
   reportSerivce: IReportService
+  dark: boolean
   reportName?: string
-}> = ({ reportCollection, addOrUpdateReport, reportSerivce, reportName }) => {
+}> = ({ reportCollection, addOrUpdateReport, reportSerivce, reportName, dark }) => {
   const [currentReport, setCurrentReport] = useState<ReportDefinition | null>(null)
   const [entitySchema, setEntitySchema] = useState<EntitySchema | null>(null)
   const [viewMode, setViewMode] = useState<'split' | 'editor' | 'result'>('split')
@@ -153,6 +156,7 @@ const ReportManager: React.FC<{
             report={currentReport}
             reportService={reportSerivce}
             entitySchema={entitySchema}
+            dark={dark}
           ></ReportResultViewer>
         </div>
       )}
