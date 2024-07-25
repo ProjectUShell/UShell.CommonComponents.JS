@@ -26,7 +26,7 @@ const DropdownButton: React.FC<{
       </button>
       {open && (
         <Dropdown
-          setIsOpen={(o) => setOpen(true)}
+          setIsOpen={(o) => setOpen(o)}
           leftOffset={leftOffset}
           rightOffset={rightOffset}
           topOffset={topOffset}

@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react'
+import React, { createRef, useEffect, useId, useMemo, useState } from 'react'
 
 const Dropdown: React.FC<{
   setIsOpen?: (o: boolean) => void
@@ -41,6 +41,10 @@ const Dropdown: React.FC<{
       window.removeEventListener('keydown', handleEscape)
     }
   }, [setIsOpen])
+
+  const refId: string = useMemo(() => {
+    return 'DropdownRef_' + crypto.randomUUID()
+  }, [])
 
   const dummy: React.FC = () => {
     return (
@@ -152,6 +156,12 @@ const Dropdown: React.FC<{
     bottomOffsetCss = ''
   }
 
+  function getHeight(): number {
+    const el = document.getElementById(refId)
+    if (!el) return 100
+    return window.innerHeight - el.getBoundingClientRect().y
+  }
+
   return (
     <>
       {setIsOpen && (
@@ -161,11 +171,12 @@ const Dropdown: React.FC<{
           onClick={() => setIsOpen(false)}
         ></button>
       )}
-      <div className='relative'>
+      <div className='relative' id={refId}>
         <div
-          className={`absolute z-50  shadow-md
-           ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
-             flex justify-center items-center w-max ${className}`}
+          style={{ height: getHeight() }}
+          className={`absolute z-50  shadow-md overflow-auto
+            ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
+             flex1 justify-center items-center w-max ${className}`}
         >
           <div
             style={{ minWidth: `${minWidthRef?.current?.clientWidth}px` }}
