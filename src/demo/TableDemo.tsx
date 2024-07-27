@@ -7,15 +7,31 @@ import ResizableTable from '../components/guifad/_Organisms/ResizableTable'
 
 const columns: TableColumn[] = [
   { label: 'Id', fieldName: 'id', fieldType: 'number', key: 'id' },
-  { label: 'Name', fieldName: 'name', maxCellLength: 400, fieldType: 'string', key: 'name', sortable: true },
-  { label: 'DateOfBirth', fieldName: 'dateOfBirth', fieldType: 'date', key: 'dateOfBirth' },
+  {
+    label: 'Name',
+    fieldName: 'name',
+    maxCellLength: 400,
+    fieldType: 'string',
+    key: 'name',
+    sortable: true,
+  },
+  {
+    label: 'DateOfBirth',
+    fieldName: 'dateOfBirth',
+    fieldType: 'date',
+    key: 'dateOfBirth',
+    minCellLength: 1000,
+  },
   {
     label: 'Level',
     fieldName: 'level',
     fieldType: 'number',
     key: 'level',
     onRenderCell: (v) => (
-      <button className='bg-red-200 p-1 text-xs rounded-md' onClick={(e) => console.log('level clicked')}>
+      <button
+        className='bg-red-200 p-1 text-xs rounded-md'
+        onClick={(e) => console.log('level clicked')}
+      >
         TEST
       </button>
     ),
@@ -40,7 +56,10 @@ const columns: TableColumn[] = [
     fieldType: 'number',
     key: 'category',
     onRenderCell: (v) => (
-      <button className='bg-red-200 p-1 text-xs rounded-md' onClick={(e) => console.log('level clicked')}>
+      <button
+        className='bg-red-200 p-1 text-xs rounded-md'
+        onClick={(e) => console.log('level clicked')}
+      >
         TEST
       </button>
     ),
@@ -113,7 +132,10 @@ const TableDemo = () => {
         }}
         onFilterChanged={onFilterChange}
         initialFilters={currentFilter}
-        expandableRowProps={{ rowExpandable: (r: any) => true, renderExpandedRow: (r) => <div>{r.name}</div> }}
+        expandableRowProps={{
+          rowExpandable: (r: any) => true,
+          renderExpandedRow: (r) => <div>{r.name}</div>,
+        }}
         rowHeight={0}
       ></Table>
     </div>

@@ -17,6 +17,7 @@ export interface TableColumn {
   fieldType: string
   key: string
   onRenderCell?: (cellValue: any) => React.JSX.Element
+  minCellLength?: number
   maxCellLength?: number
   renderFilter?: (
     filter: LogicalExpression,
@@ -443,7 +444,11 @@ const Table: React.FC<{
                       toggleSorting(c.key)
                     }
                   }}
-                  style={c.key in columnWidths ? { width: getColumnWidth(c.key) } : {}}
+                  style={
+                    c.key in columnWidths
+                      ? { width: getColumnWidth(c.key) }
+                      : { minWidth: c.minCellLength }
+                  }
                 >
                   <div className='flex items-center justify-between '>
                     <div className='flex items-center gap-1 px-4 py-2'>
