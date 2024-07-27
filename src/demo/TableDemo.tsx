@@ -20,7 +20,6 @@ const columns: TableColumn[] = [
     fieldName: 'dateOfBirth',
     fieldType: 'date',
     key: 'dateOfBirth',
-    minCellLength: 1000,
   },
   {
     label: 'Level',
@@ -55,6 +54,7 @@ const columns: TableColumn[] = [
     fieldName: 'category',
     fieldType: 'number',
     key: 'category',
+    minCellLength: 3000,
     onRenderCell: (v) => (
       <button
         className='bg-red-200 p-1 text-xs rounded-md'
@@ -73,6 +73,32 @@ const columns: TableColumn[] = [
             { label: 'good', value: 0 },
             { label: 'bad', value: 1 },
             { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red', value: 2 },
+            { label: 'red 1', value: 2 },
           ]}
         ></MultiSelectFilter>
       )
@@ -83,6 +109,12 @@ const records: any[] = [
   {
     id: 0,
     name: 'horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss horst asdssssssssssss',
+    dateOfBirth: '16.07.1990',
+    level: 13,
+  },
+  {
+    id: 1,
+    name: 'einfach horst',
     dateOfBirth: '16.07.1990',
     level: 13,
   },
@@ -120,7 +152,14 @@ const TableDemo = () => {
       <Table
         columns={columns}
         records={records}
-        //records={[]}
+        selectedRecord={records[0]}
+        onSelectedRecordsChange={() => {
+          // setCurrentFilter(currentFilter)
+        }}
+        getId={(r) => {
+          console.log('getting id')
+          return r.asd
+        }}
         totalCount={records.length}
         pagingParams={{ pageNumber: 1, pageSize: 20 }}
         onPagingParamsChange={(p: PagingParams) => {

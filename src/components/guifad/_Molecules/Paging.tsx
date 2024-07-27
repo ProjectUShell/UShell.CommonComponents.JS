@@ -20,18 +20,27 @@ const Paging: React.FC<{
     } else if (pagingParams.pageNumber >= numPages - 1) {
       setPages([1, numPages - 3, numPages - 2, numPages - 1, numPages])
     } else {
-      setPages([1, pagingParams.pageNumber - 1, pagingParams.pageNumber, pagingParams.pageNumber + 1, numPages])
+      setPages([
+        1,
+        pagingParams.pageNumber - 1,
+        pagingParams.pageNumber,
+        pagingParams.pageNumber + 1,
+        numPages,
+      ])
     }
   }, [pagingParams, total])
 
   return (
-    <nav className='flex items-center justify-between pt-4' aria-label='Table navigation'>
+    <nav className='cc_paging flex items-center justify-between pt-4' aria-label='Table navigation'>
       <div>
         <label className='my-auto mx-1  text-sm'>Page Size:</label>
         <select
           defaultValue={pagingParams.pageSize}
           onChange={(e) =>
-            console.log('select', onPagingParamsChange({ ...pagingParams, pageSize: Number.parseInt(e.target.value) }))
+            console.log(
+              'select',
+              onPagingParamsChange({ ...pagingParams, pageSize: Number.parseInt(e.target.value) }),
+            )
           }
           className='bg-backgroundone dark:bg-backgroundonedark mr-2 rounded-md text-sm'
         >
@@ -53,7 +62,9 @@ const Paging: React.FC<{
         <li className=''>
           <button
             disabled={pagingParams.pageNumber == 1}
-            onClick={(e) => onPagingParamsChange({ ...pagingParams, pageNumber: pagingParams.pageNumber - 1 })}
+            onClick={(e) =>
+              onPagingParamsChange({ ...pagingParams, pageNumber: pagingParams.pageNumber - 1 })
+            }
             className='flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
           >
             Previous
@@ -79,7 +90,9 @@ const Paging: React.FC<{
         <li>
           <button
             disabled={pagingParams.pageNumber * pagingParams.pageSize >= total}
-            onClick={(e) => onPagingParamsChange({ ...pagingParams, pageNumber: pagingParams.pageNumber + 1 })}
+            onClick={(e) =>
+              onPagingParamsChange({ ...pagingParams, pageNumber: pagingParams.pageNumber + 1 })
+            }
             className='flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
           >
             Next

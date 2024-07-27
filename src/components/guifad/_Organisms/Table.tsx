@@ -70,7 +70,6 @@ const Table: React.FC<{
   rowHeight,
 }) => {
   const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean }>({})
-  const [initialSelectedRecord, setInitialSelectedRecord] = useState<any>(selectedRecord)
   const [filterVisible, setFilterVisible] = useState<{ [c: string]: boolean }>({})
   const [filterByColumn, setFilterByColumn] = useState<{ [c: string]: LogicalExpression }>(
     initialFilters ? initialFilters : {},
@@ -120,18 +119,16 @@ const Table: React.FC<{
       return res
     }
     function getIntialSelectedRows(): { [index: number]: boolean } {
-      if (!initialSelectedRecord) {
+      if (!selectedRecord) {
         return []
       }
-      const i: number = records.findIndex(
-        (r) => getIdInternal(r) == getIdInternal(initialSelectedRecord),
-      )
+      const i: number = records.findIndex((r) => getIdInternal(r) == getIdInternal(selectedRecord))
       const newSr: { [index: number]: boolean } = {}
       newSr[i] = true
       return newSr
     }
     setSelectedRows(getIntialSelectedRows())
-  }, [records, initialSelectedRecord, getId])
+  }, [records, selectedRecord, getId])
 
   useEffect(() => {
     approxColumnWidth()
@@ -154,9 +151,6 @@ const Table: React.FC<{
     if (e.target.tagName == 'path' || e.target.tagName == 'svg') {
       return
     }
-    if (!onSelectedRecordsChange) {
-      return
-    }
     const newSelectedValue = !selectedRows[i]
     if (!e.ctrlKey && !newSelectedValue) return
     const newSr = e.ctrlKey ? { ...selectedRows } : {}
@@ -166,7 +160,9 @@ const Table: React.FC<{
     })
     const selectedRecords: any[] = records.filter((r, i) => newSr[i])
 
-    onSelectedRecordsChange(selectedRecords)
+    if (onSelectedRecordsChange) {
+      onSelectedRecordsChange(selectedRecords)
+    }
   }
 
   function onRowDoubleClick(i: number, e: any) {
@@ -395,7 +391,7 @@ const Table: React.FC<{
 
   // return (
   //   <div
-  //     className={`bg-red-400 relative overflow-hidden shadow-md rounded-sm
+  //     className={`bg-red-400 relative overflow-hidden1 shadow-md rounded-sm
   //     border border-backgroundfour dark:border-backgroundfourdark h-full w-full flex flex-col justify-between ${className}`}
   //   >
   //     <div className='flex flex-col h-full w-full overflow-auto bg-blue-300 border-2'></div>
@@ -403,12 +399,12 @@ const Table: React.FC<{
   // )
   return (
     <div
-      className={`relative overflow-hidden shadow-lg1 drop-shadow-md1 
-      h-full w-full flex flex-col justify-between ${
-        className ? className : 'bg-bg1 dark:bg-bg1dark rounded-md '
-      } `}
+      className={`cc_table_0 z-10 relative overflow-hidden shadow-lg1 drop-shadow-md1 
+        flex flex-col h-full w-full justify-between ${
+          className ? className : 'bg-bg1 dark:bg-bg1dark rounded-md '
+        } `}
     >
-      <div className='flex flex-col h-full w-full overflow-auto '>
+      <div className='cc_table_1 flex flex-col h-full w-full overflow-auto'>
         <table
           className={`w-full max-h-full text-sm text-left ${
             Object.keys(columnWidths).length > 0 ? 'table-fixed' : 'table-fixed1'
@@ -472,7 +468,7 @@ const Table: React.FC<{
                           <>
                             {filterVisible[c.fieldName] && (
                               <Dropdown setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}>
-                                <div className='w-40 bg-backgroundone dark:bg-backgroundonedark p-2 rounded-md'>
+                                <div className='w-40 bg-bg1 dark:bg-bg1dark p-2 rounded-md border-2'>
                                   {c.renderFilter(
                                     filterByColumn[c.fieldName],
                                     (f) => onColumnFilterChange(f, c),

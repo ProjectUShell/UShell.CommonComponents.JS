@@ -156,6 +156,17 @@ const Dropdown: React.FC<{
     bottomOffsetCss = ''
   }
 
+  function getTop(): number {
+    const el = document.getElementById(refId)
+    if (!el) return 100
+    return el.getBoundingClientRect().top
+  }
+  function getLeft(): number {
+    const el = document.getElementById(refId)
+    if (!el) return 100
+    return el.getBoundingClientRect().left
+  }
+
   function getHeight(): number {
     const el = document.getElementById(refId)
     if (!el) return 100
@@ -173,8 +184,8 @@ const Dropdown: React.FC<{
       )}
       <div className='relative' id={refId}>
         <div
-          style={{ height: getHeight() }}
-          className={`absolute z-50  shadow-md overflow-auto
+          style={{ height: getHeight(), width: '200', top: getTop(), left: getLeft() }}
+          className={`fixed z-50  shadow-md1 overflow-auto 
             ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
              flex1 justify-center items-center w-max ${className}`}
         >

@@ -11,7 +11,11 @@ interface MultiSelectCheckboxProps {
   onSelectionChange: (selectedValues: any[]) => void
 }
 
-const MultiSelect: React.FC<MultiSelectCheckboxProps> = ({ options, initialValues, onSelectionChange }) => {
+const MultiSelect: React.FC<MultiSelectCheckboxProps> = ({
+  options,
+  initialValues,
+  onSelectionChange,
+}) => {
   const [selectedValues, setSelectedValues] = useState<any[]>(initialValues)
 
   const handleCheckboxChange = (value: any) => {
@@ -28,7 +32,7 @@ const MultiSelect: React.FC<MultiSelectCheckboxProps> = ({ options, initialValue
   }, [selectedValues, onSelectionChange])
 
   return (
-    <div className='flex flex-wrap'>
+    <div className='flex flex-col'>
       {options.map((option) => (
         <label key={option.value} className='flex items-center space-x-2 p-2'>
           <input
