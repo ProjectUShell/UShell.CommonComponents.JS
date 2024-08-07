@@ -18,8 +18,9 @@ export const ReportManager1: React.FC<{
   reportSerivce: IReportService
   dark: boolean
 }> = ({ reportRepository, reportSerivce, dark }) => {
+  const [r, setR] = useState(0)
   const { isLoading, error, data } = useQuery({
-    queryKey: ['report', reportRepository],
+    queryKey: ['report', reportRepository, r],
     queryFn: () => {
       try {
         return reportRepository.getReports()
@@ -41,19 +42,27 @@ export const ReportManager1: React.FC<{
     <ReportManager
       reportCollection={data}
       reportSerivce={reportSerivce}
-      addOrUpdateReport={(r: ReportDefinition) => reportRepository.addOrUpdateReport(r)}
+      addOrUpdateReport={(r: ReportDefinition) => {
+        reportRepository.addOrUpdateReport(r)
+        setR((x) => x + 1)
+      }}
+      deleteReport={(r) => {
+        reportRepository.deleteReport(r)
+        setR((x) => x + 1)
+      }}
       dark={dark}
     ></ReportManager>
   )
 }
 
-const ReportManager: React.FC<{
+export const ReportManager: React.FC<{
   reportCollection: ReportDefinition[]
   addOrUpdateReport: (r: ReportDefinition) => void
+  deleteReport: (r: ReportDefinition) => void
   reportSerivce: IReportService
   dark: boolean
   reportName?: string
-}> = ({ reportCollection, addOrUpdateReport, reportSerivce, reportName, dark }) => {
+}> = ({ reportCollection, addOrUpdateReport, deleteReport, reportSerivce, reportName, dark }) => {
   const [currentReport, setCurrentReport] = useState<ReportDefinition | null>(null)
   const [entitySchema, setEntitySchema] = useState<EntitySchema | null>(null)
   const [viewMode, setViewMode] = useState<'split' | 'editor' | 'result'>('split')
@@ -142,7 +151,13 @@ const ReportManager: React.FC<{
             entitySchema={entitySchema}
             report={currentReport}
             setReport={(r) => setCurrentReport({ ...r })}
-            saveReport={(r) => addOrUpdateReport(r)}
+            saveReport={(r) => {
+              addOrUpdateReport(r)
+            }}
+            deleteReport={(r) => {
+              deleteReport(r)
+              setCurrentReport(null)
+            }}
           ></ReportEditor>
         )}
       </div>

@@ -15,7 +15,8 @@ const ReportEditor: React.FC<{
   report: ReportDefinition
   setReport: (rd: ReportDefinition) => void
   saveReport: (rd: ReportDefinition) => void
-}> = ({ entitySchema, report, setReport, saveReport }) => {
+  deleteReport: (rd: ReportDefinition) => void
+}> = ({ entitySchema, report, setReport, saveReport, deleteReport }) => {
   const [tab, setTab] = useState<'query' | 'chart'>('chart')
 
   return (
@@ -39,6 +40,14 @@ const ReportEditor: React.FC<{
           <div className='flex gap-4 py-1 ml-2 my-2 border-l-2'>
             <div className=' ml-2 p-2 hover:bg-bg6 dark:hover:bg-bg5dark'>
               <button onClick={() => saveReport(report)}>Save</button>
+            </div>
+            <div className=' ml-2 p-2 hover:bg-bg6 dark:hover:bg-bg5dark'>
+              <button
+                className='text-red-500 dark:text-red-300'
+                onClick={() => deleteReport(report)}
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>

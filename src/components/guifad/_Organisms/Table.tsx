@@ -45,7 +45,7 @@ const Table: React.FC<{
   totalCount?: number
   onPagingParamsChange?: (p: PagingParams) => void
   initialSortingParams?: SortingField[]
-  onSortingParamsChange?: (sortingParams: SortingField[]) => void
+  onSortingParamsChange?: (sortingParams: SortingField[], changedField: SortingField) => void
   initialFilters?: { [c: string]: LogicalExpression }
   onFilterChanged?: (filterByColumn: { [c: string]: LogicalExpression }) => void
   expandableRowProps?: ExpandableProps
@@ -185,11 +185,15 @@ const Table: React.FC<{
       newSortingParams.push({ fieldName: colKey, descending: false })
     } else if (currentSortingField.descending) {
       newSortingParams.splice(newSortingParams.indexOf(currentSortingField), 1)
+      currentSortingField.descending = false
     } else {
       currentSortingField.descending = true
     }
     setSortingParams(newSortingParams)
-    onSortingParamsChange(newSortingParams)
+    onSortingParamsChange(
+      newSortingParams,
+      currentSortingField ? currentSortingField : { fieldName: colKey, descending: false },
+    )
   }
 
   function onSetFilterVisible(c: string, v: boolean) {

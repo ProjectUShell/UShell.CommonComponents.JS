@@ -13,6 +13,13 @@ import { ShellMenu } from './components/shell-layout/ShellMenu'
 import { FuseDataStore } from './data/FuseDataStore'
 import { FuseDataSourceBody } from './data/FuseDataSourceBody'
 import { FuseDataSourceRoute } from './data/FuseDataSourceRoute'
+import { ReportManager1, ReportManager } from './components/report/_Templates/ReportManager'
+import ReportEditor from './components/report/_Organisms/ReportEditor'
+import ReportExplorer from './components/report/_Organisms/ReportExplorer'
+import ReportResultViewer from './components/report/_Organisms/ReportResultViewer'
+import ReportChart from './components/report/_Molecules/ReportChart'
+import ReportTable from './components/report/_Molecules/ReportTable'
+import ReportChartEditor from './components/report/_Molecules/ReportChartEditor'
 
 // export { MyComponent }
 
@@ -25,6 +32,11 @@ export { ShellLayout }
 export { FuseDataStore }
 export { FuseDataSourceBody }
 export { FuseDataSourceRoute }
+export { ReportManager }
+export { ReportManager1 }
+export { ReportEditor, ReportExplorer, ReportResultViewer, ReportChartEditor }
+export { ReportChart }
+export { ReportTable }
 
 export * from './components/shell-layout/_Templates/ShellLayout'
 

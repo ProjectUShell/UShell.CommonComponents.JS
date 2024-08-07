@@ -29,6 +29,7 @@ export class LocalStorageReportRepository implements IReportRepository {
   }
 
   deleteReport(report: ReportDefinition): Promise<void> {
+    console.log('deleting report', report)
     const resLs: string | null = localStorage.getItem('LocalStorageReportRepository')
     let repo: ReportDefinition[] = []
     if (resLs) {
@@ -36,8 +37,9 @@ export class LocalStorageReportRepository implements IReportRepository {
     }
     const existingInd: number = repo.findIndex((r) => r.name == report.name)
     if (existingInd >= 0) {
-      repo = repo.slice(existingInd)
+      repo.splice(existingInd, 1)
     }
+    localStorage.setItem('LocalStorageReportRepository', JSON.stringify(repo))
     return new Promise<void>((resolve) => resolve())
   }
 }

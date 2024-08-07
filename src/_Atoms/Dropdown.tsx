@@ -156,21 +156,61 @@ const Dropdown: React.FC<{
     bottomOffsetCss = ''
   }
 
-  function getTop(): number {
+  function getTop(): number | undefined {
     const el = document.getElementById(refId)
     if (!el) return 100
-    return el.getBoundingClientRect().top
+    const t = el.getBoundingClientRect().top
+    const hHalf = window.innerHeight / 2
+    if (t <= hHalf) {
+      return t
+    } else {
+      return undefined
+    }
   }
-  function getLeft(): number {
+  function getBottom(): number | undefined {
     const el = document.getElementById(refId)
     if (!el) return 100
-    return el.getBoundingClientRect().left
+    const b = el.getBoundingClientRect().bottom
+    console.log('el.rect', el.getBoundingClientRect())
+    const hHalf = window.innerHeight / 2
+    if (b < hHalf) {
+      return b
+    } else {
+      return undefined
+    }
+  }
+  function getLeft(): number | undefined {
+    const el = document.getElementById(refId)
+    if (!el) return 100
+    const l = el.getBoundingClientRect().left
+    const wHalf = window.innerWidth / 2
+    if (l <= wHalf) {
+      return l
+    } else {
+      return undefined
+    }
+  }
+  function getRight(): number | undefined {
+    const el = document.getElementById(refId)
+    if (!el) return 100
+    const r = window.innerWidth - el.getBoundingClientRect().right
+    const wHalf = window.innerWidth / 2
+    if (r < wHalf) {
+      return r
+    } else {
+      return undefined
+    }
   }
 
   function getHeight(): number {
     const el = document.getElementById(refId)
     if (!el) return 100
-    return window.innerHeight - el.getBoundingClientRect().y
+    const t = getTop()
+    if (t) {
+      return window.innerHeight - el.getBoundingClientRect().y
+    } else {
+      return el.getBoundingClientRect().y - 20
+    }
   }
 
   return (
@@ -184,7 +224,14 @@ const Dropdown: React.FC<{
       )}
       <div className='relative' id={refId}>
         <div
-          style={{ height: getHeight(), width: '200', top: getTop(), left: getLeft() }}
+          style={{
+            height: getHeight(),
+            width: '200',
+            bottom: 1120,
+            top: getTop(),
+            left: getLeft(),
+            right: getRight(),
+          }}
           className={`fixed z-50  shadow-md1 overflow-auto 
             ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
              flex1 justify-center items-center w-max ${className}`}

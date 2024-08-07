@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ReportChartDefinition } from '../ReportDefinition'
 import InputField from '../../guifad/_Atoms/InputField'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import { EntitySchema, FieldSchema } from 'fusefx-modeldescription'
+import TrashIcon from '../../../_Icons/TrashIcon'
+import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 
 const aggregateFunctions: string[] = ['Count', 'Sum', 'Avg', 'Min', 'Max']
 function applyAggregate(aggregateFunction: string, fieldName: string) {
@@ -14,6 +16,8 @@ const ReportChartEditor: React.FC<{
   reportChartDefinition: ReportChartDefinition
   onUpdateDefinition: (updatedDefinition: ReportChartDefinition) => void
 }> = ({ entitySchema, reportChartDefinition, onUpdateDefinition }) => {
+  const [currentCustomValue, setCurrentCustomValue] = useState('')
+
   function setGroupBy(fieldName: string, v: boolean) {
     if (!reportChartDefinition.groupBy) {
       reportChartDefinition.groupBy = []
@@ -41,6 +45,7 @@ const ReportChartEditor: React.FC<{
   }
 
   function setValue(valueName: string, v: boolean) {
+    if (!valueName || valueName == '') return
     if (!reportChartDefinition.reportValues) {
       reportChartDefinition.reportValues = []
     }
@@ -53,6 +58,15 @@ const ReportChartEditor: React.FC<{
       reportChartDefinition.reportValues?.push(valueName)
     }
     onUpdateDefinition(reportChartDefinition)
+  }
+
+  function isCustomValue(valueName: string) {
+    for (let af of aggregateFunctions) {
+      if (valueName.includes(af)) {
+        return false
+      }
+    }
+    return true
   }
 
   return (
@@ -205,7 +219,7 @@ const ReportChartEditor: React.FC<{
           ))}
         </div>
       </div>
-      <div className='flex flex-col'>
+      <div className='aggregates flex flex-col'>
         <h1>Values</h1>
         <div className='flex gap-1 overflow-auto'>
           {aggregateFunctions.map((af) => (
@@ -248,6 +262,44 @@ const ReportChartEditor: React.FC<{
               </div>
             </div>
           ))}
+        </div>
+      </div>
+      <div className='aggregates flex flex-col  w-full'>
+        <h1>Custom Values</h1>
+        <div className='flex flex-col gap-1 overflow-auto w-full'>
+          {reportChartDefinition.reportValues
+            ?.filter((rv) => isCustomValue(rv))
+            .map((rv) => (
+              <div className='flex gap-1 w-full'>
+                <input
+                  className='border-bg6 dark:border-bg6dark border dark:bg-bg1dark px-1 outline-none w-full'
+                  defaultValue={rv}
+                  disabled
+                ></input>
+                <button
+                  className='hover:bg-bg6 dark:hover:bg-bg6dark p-1 rounded-sm  text-red-500 dark:text-red-400'
+                  onClick={() => setValue(rv, false)}
+                >
+                  <TrashIcon></TrashIcon>
+                </button>
+              </div>
+            ))}
+          <div className='flex gap-1'>
+            <input
+              className='border-bg6 dark:border-bg6dark border dark:bg-bg1dark px-1 outline-none  w-full'
+              value={currentCustomValue}
+              onChange={(e) => setCurrentCustomValue(e.target.value)}
+            ></input>
+            <button
+              className='hover:bg-bg6 dark:hover:bg-bg6dark p-1 rounded-sm'
+              onClick={(e: any) => {
+                setValue(currentCustomValue, true)
+                setCurrentCustomValue('')
+              }}
+            >
+              <PlusCircleIcon></PlusCircleIcon>
+            </button>
+          </div>
         </div>
       </div>
     </div>
