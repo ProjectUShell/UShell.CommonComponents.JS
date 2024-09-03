@@ -8,7 +8,7 @@ export interface IReportService {
     sortedBy: string[],
     limit: number,
     skip: number,
-  ): Promise<{ [key: string]: any }[]>
+  ): Promise<{ page: { [key: string]: any }[]; totalCount: number }>
 
   getEntitySchema(): Promise<EntitySchema>
 }

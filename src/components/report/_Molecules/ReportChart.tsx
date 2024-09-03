@@ -48,7 +48,7 @@ export const ReportChart1: React.FC<{
   }
 
   const yValues: string[] = []
-  const dataRef: any = data[0]
+  const dataRef: any = data.page[0]
   Object.keys(dataRef).forEach((k) => {
     if (!(report.groupBy?.includes(k) || report.stackBy?.includes(k))) {
       yValues.push(k)
@@ -58,7 +58,7 @@ export const ReportChart1: React.FC<{
     <div className='h-full w-full max-h-full border-0 border-blue-500 flex overflow-auto'>
       {report.type == 'Bar' && (
         <ReportBarChart
-          data={data}
+          data={data.page}
           xFields={report.groupBy || []}
           yGroups={report.reportValues || []}
           yFields={yValues}
@@ -68,7 +68,7 @@ export const ReportChart1: React.FC<{
       )}
       {report.type == 'Line' && (
         <ReportLineChart
-          data={data}
+          data={data.page}
           xFields={report.groupBy || []}
           yGroups={report.reportValues || []}
           yFields={yValues}
@@ -77,7 +77,7 @@ export const ReportChart1: React.FC<{
       )}
       {report.type == 'Area' && (
         <ReportAreaChart
-          data={data}
+          data={data.page}
           xFields={report.groupBy || []}
           yGroups={report.reportValues || []}
           yFields={yValues}
@@ -86,7 +86,7 @@ export const ReportChart1: React.FC<{
       )}
       {report.type == 'Pie' && (
         <ReportPieChart
-          data={data}
+          data={data.page}
           xFields={report.groupBy || []}
           yGroups={report.reportValues || []}
           yFields={yValues}
@@ -95,7 +95,7 @@ export const ReportChart1: React.FC<{
       )}
       {report.type == 'Donut' && (
         <ReportPieChart
-          data={data}
+          data={data.page}
           xFields={report.groupBy || []}
           yGroups={report.reportValues || []}
           yFields={yValues}

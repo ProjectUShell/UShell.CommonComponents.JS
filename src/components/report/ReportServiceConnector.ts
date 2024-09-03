@@ -14,7 +14,7 @@ export class ReportServiceConnector implements IReportService {
     sortedBy: string[],
     limit: number,
     skip: number,
-  ): Promise<{ [key: string]: any }[]> {
+  ): Promise<{ page: { [key: string]: any }[]; totalCount: number }> {
     return fetch(this._Url + '/GenerateReport', {
       method: 'POST',
       headers: {
@@ -35,7 +35,7 @@ export class ReportServiceConnector implements IReportService {
         return r.json()
       })
       .then((r) => {
-        return r.return
+        return r.return ? r.return : r
       })
   }
 
@@ -51,7 +51,7 @@ export class ReportServiceConnector implements IReportService {
         return r.json()
       })
       .then((r) => {
-        return r.return
+        return r.return ? r.return : r
       })
   }
 }

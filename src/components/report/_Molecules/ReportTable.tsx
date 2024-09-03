@@ -33,7 +33,7 @@ const ReportTable: React.FC<{
   const columns = useMemo(() => {
     const c: TableColumn[] = []
     if (!data) return []
-    if (data.length == 0) {
+    if (data.page.length == 0) {
       report.groupBy?.sort().forEach((g) => {
         c.push({ fieldName: g, fieldType: 'string', key: g, label: g, sortable: true })
       })
@@ -41,7 +41,7 @@ const ReportTable: React.FC<{
         c.push({ fieldName: v, fieldType: 'string', key: v, label: v, sortable: false })
       })
     } else {
-      const dataRef: any = data[0]
+      const dataRef: any = data.page[0]
       Object.keys(dataRef).forEach((k) => {
         c.push({ fieldName: k, fieldType: 'string', key: k, label: k, sortable: true })
       })
@@ -59,7 +59,7 @@ const ReportTable: React.FC<{
 
   function applySorting(): any[] {
     if (!data) return []
-    let result: any[] = data
+    let result: any[] = data.page
     for (let sortingField of sortingParams) {
       result = result?.sort((a, b) => {
         if (!(sortingField.fieldName in a)) {
@@ -90,6 +90,7 @@ const ReportTable: React.FC<{
         initialSortingParams={sortingParams}
         pagingParams={pagingParams}
         onPagingParamsChange={(pp) => setPagingParams(pp)}
+        totalCount={data.totalCount}
       ></Table>
     </div>
   )
