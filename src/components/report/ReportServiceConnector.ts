@@ -9,7 +9,12 @@ export class ReportServiceConnector implements IReportService {
     this._Url = url
   }
 
-  generateReport(report: ReportDefinition): Promise<{ [key: string]: any }[]> {
+  generateReport(
+    report: ReportDefinition,
+    sortedBy: string[],
+    limit: number,
+    skip: number,
+  ): Promise<{ [key: string]: any }[]> {
     return fetch(this._Url + '/GenerateReport', {
       method: 'POST',
       headers: {
@@ -21,6 +26,9 @@ export class ReportServiceConnector implements IReportService {
         groupBy: report.groupBy,
         stackBy: report.stackBy,
         reportValues: report.reportValues,
+        sortedBy: sortedBy,
+        limit: limit,
+        skip: skip,
       }),
     })
       .then((r: any) => {

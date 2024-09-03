@@ -7,6 +7,7 @@ import ReportBarChart from './ReportBarChart'
 import ReportLineChart from './ReportLineChart'
 import ReportAreaChart from './ReportAreaChart'
 import ReportPieChart from './ReportPieChart'
+import { PagingParams, SortingField } from 'fusefx-repositorycontract'
 
 const ReportChart: React.FC<{ reportServiceUrl: string; dark: boolean }> = ({
   reportServiceUrl,
@@ -31,7 +32,7 @@ export const ReportChart1: React.FC<{
     queryKey: ['report', report],
     queryFn: () => {
       try {
-        return reportService.generateReport(report)
+        return reportService.generateReport(report, [], 10000, 0)
       } catch (error) {
         return null
       }

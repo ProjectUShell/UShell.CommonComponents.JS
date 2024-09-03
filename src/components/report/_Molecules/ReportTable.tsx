@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { IReportService } from '../IReportService'
 import { useQuery } from '@tanstack/react-query'
-import { LogicalExpression, SortingField } from 'fusefx-repositorycontract'
+import { LogicalExpression, PagingParams, SortingField } from 'fusefx-repositorycontract'
 import Table, { TableColumn } from '../../guifad/_Organisms/Table'
 import { ReportDefinition } from '../ReportDefinition'
 import { EntitySchema } from 'fusefx-modeldescription'
@@ -12,12 +12,18 @@ const ReportTable: React.FC<{
   entitySchema: EntitySchema
 }> = ({ reportService, report, entitySchema }) => {
   const [sortingParams, setSortingParams] = useState<SortingField[]>([])
+  const [pagingParams, setPagingParams] = useState<PagingParams>({ pageNumber: 1, pageSize: 100 })
 
   const { isLoading, error, data } = useQuery({
     queryKey: ['report', report],
     queryFn: () => {
       try {
-        return reportService.generateReport(report)
+        return reportService.generateReport(
+          report,
+          sortingParams.map((sp) => (sp.descending ? '^' + sp.fieldName : sp.fieldName)),
+          pagingParams.pageSize,
+          (pagingParams.pageNumber - 1) * pagingParams.pageSize,
+        )
       } catch (error) {
         return null
       }
@@ -56,6 +62,12 @@ const ReportTable: React.FC<{
     let result: any[] = data
     for (let sortingField of sortingParams) {
       result = result?.sort((a, b) => {
+        if (!(sortingField.fieldName in a)) {
+          return b
+        }
+        if (!(sortingField.fieldName in b)) {
+          return a
+        }
         const as: string = a[sortingField.fieldName].toString()
         const bs: string = b[sortingField.fieldName].toString()
         if (sortingField.descending) {
@@ -76,6 +88,8 @@ const ReportTable: React.FC<{
           setSortingParams([csp])
         }}
         initialSortingParams={sortingParams}
+        pagingParams={pagingParams}
+        onPagingParamsChange={(pp) => setPagingParams(pp)}
       ></Table>
     </div>
   )
