@@ -97,7 +97,7 @@ export const ReportManager: React.FC<{
 
   if (!entitySchema) return <div>Loading...</div>
   return (
-    <div className='w-full h-full flex flex-col px-2 border-0'>
+    <div className='w-full h-full flex flex-col px-2 border-0 border-red-400'>
       <div className='breadcrumb flex justify-between border-0 border-red-400 w-full mb-4 mt-2'>
         <ReportManagerBreadcrumb
           reportCollection={reportCollection}
@@ -141,40 +141,42 @@ export const ReportManager: React.FC<{
           }
         ></ReportExplorer>
       )}
-      <div
-        className={`editor border-0  w-full flex flex-col transition-all ${
-          viewMode == 'split' ? 'h-1/2' : viewMode == 'editor' ? 'h-full' : 'h-0 invisible'
-        }`}
-      >
-        {currentReport && (
-          <ReportEditor
-            entitySchema={entitySchema}
-            report={currentReport}
-            setReport={(r) => setCurrentReport({ ...r })}
-            saveReport={(r) => {
-              addOrUpdateReport(r)
-            }}
-            deleteReport={(r) => {
-              deleteReport(r)
-              setCurrentReport(null)
-            }}
-          ></ReportEditor>
-        )}
-      </div>
-      {currentReport && (
+      <div className='h-full w-full max-h-full overflow-hidden border-0 border-pink-400'>
         <div
-          className={`result border-0  w-full flex flex-col ${
-            viewMode == 'split' ? 'h-1/2' : viewMode == 'result' ? 'h-full' : 'h-0'
+          className={`editor border-0  w-full flex flex-col transition-all ${
+            viewMode == 'split' ? 'h-1/2' : viewMode == 'editor' ? 'h-full' : 'h-0 invisible'
           }`}
         >
-          <ReportResultViewer
-            report={currentReport}
-            reportService={reportSerivce}
-            entitySchema={entitySchema}
-            dark={dark}
-          ></ReportResultViewer>
+          {currentReport && (
+            <ReportEditor
+              entitySchema={entitySchema}
+              report={currentReport}
+              setReport={(r) => setCurrentReport({ ...r })}
+              saveReport={(r) => {
+                addOrUpdateReport(r)
+              }}
+              deleteReport={(r) => {
+                deleteReport(r)
+                setCurrentReport(null)
+              }}
+            ></ReportEditor>
+          )}
         </div>
-      )}
+        {currentReport && (
+          <div
+            className={`result w-full flex flex-col border-0 border-blue-400 ${
+              viewMode == 'split' ? 'h-1/2' : viewMode == 'result' ? 'h-full' : 'h-0'
+            }`}
+          >
+            <ReportResultViewer
+              report={currentReport}
+              reportService={reportSerivce}
+              entitySchema={entitySchema}
+              dark={dark}
+            ></ReportResultViewer>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

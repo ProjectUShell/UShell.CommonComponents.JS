@@ -21,7 +21,7 @@ const ReportEditor: React.FC<{
 
   return (
     <>
-      <div className='editor border-0  w-full h-full flex flex-col  '>
+      <div className='editor border-0 border-red-400  w-full h-full flex flex-col  '>
         <div className='toolbar flex border-b border-bg8 dark:border-bg8dark text-sm'>
           <div className='flex gap-4 border-bg8 dark:border-bg8dark px-2'>
             <button

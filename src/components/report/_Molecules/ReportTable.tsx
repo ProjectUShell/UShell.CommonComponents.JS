@@ -15,7 +15,7 @@ const ReportTable: React.FC<{
   const [pagingParams, setPagingParams] = useState<PagingParams>({ pageNumber: 1, pageSize: 100 })
 
   const { isLoading, error, data } = useQuery({
-    queryKey: ['report', report],
+    queryKey: ['report', report, sortingParams, pagingParams],
     queryFn: () => {
       try {
         return reportService.generateReport(
@@ -57,7 +57,7 @@ const ReportTable: React.FC<{
     return <div>Loading</div>
   }
 
-  function applySorting(): any[] {
+  function applyLocalSorting(): any[] {
     if (!data) return []
     let result: any[] = data.page
     for (let sortingField of sortingParams) {
@@ -83,7 +83,7 @@ const ReportTable: React.FC<{
     <div className='border-0 border-blue-500 h-full'>
       <Table
         columns={columns}
-        records={applySorting()}
+        records={data.page}
         onSortingParamsChange={(sp, csp) => {
           setSortingParams([csp])
         }}
