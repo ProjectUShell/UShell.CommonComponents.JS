@@ -32,7 +32,7 @@ export const ReportChart1: React.FC<{
     queryKey: ['report', report],
     queryFn: () => {
       try {
-        return reportService.generateReport(report, [], 10000, 0)
+        return reportService.generateReport(report, [report.sortedBy], report.limit, 0)
       } catch (error) {
         return null
       }

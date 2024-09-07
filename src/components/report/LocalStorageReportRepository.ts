@@ -21,7 +21,7 @@ export class LocalStorageReportRepository implements IReportRepository {
     }
     const existingInd: number = repo.findIndex((r) => r.name == report.name)
     if (existingInd >= 0) {
-      repo = repo.slice(existingInd)
+      repo.splice(existingInd)
     }
     repo.push(report)
     localStorage.setItem('LocalStorageReportRepository', JSON.stringify(repo))

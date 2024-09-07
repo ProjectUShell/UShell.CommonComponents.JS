@@ -7,6 +7,8 @@ export class ReportChartDefinition {
   groupBy?: string[]
   stackBy?: string[]
   reportValues?: string[]
+  limit: number = 20
+  sortedBy: string = ''
   name: string = ''
   folder: string = 'My Reports'
   horizontal: boolean = false

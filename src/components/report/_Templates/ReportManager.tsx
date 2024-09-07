@@ -92,6 +92,8 @@ export const ReportManager: React.FC<{
       horizontal: false,
       multiAxis: false,
       stacked: false,
+      limit: 20,
+      sortedBy: '',
     })
   }, [reportName])
 
@@ -137,6 +139,8 @@ export const ReportManager: React.FC<{
               horizontal: false,
               multiAxis: false,
               stacked: false,
+              limit: 20,
+              sortedBy: '',
             })
           }
         ></ReportExplorer>

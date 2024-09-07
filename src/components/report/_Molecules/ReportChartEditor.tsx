@@ -95,6 +95,36 @@ const ReportChartEditor: React.FC<{
           ></InputField>
         </div>
         <div className='flex flex-col justify-between w-full'>
+          <InputField
+            initialValue={reportChartDefinition.limit}
+            inputType='number'
+            label='Limit'
+            onValueChange={(n) => {
+              reportChartDefinition.limit = n
+              onUpdateDefinition(reportChartDefinition)
+            }}
+          ></InputField>
+        </div>
+        <div className='flex flex-col justify-between w-full'>
+          <InputField
+            initialValue={reportChartDefinition.sortedBy}
+            inputType='text'
+            label='Sorted By'
+            onValueChange={(n: string) => {
+              console.log('n', n.substring(1))
+              if (
+                !entitySchema.fields.find(
+                  (f) => f.name == n || (n.startsWith('^') && n.substring(1) == f.name),
+                )
+              )
+                return
+              console.log('yes')
+              reportChartDefinition.sortedBy = n
+              onUpdateDefinition(reportChartDefinition)
+            }}
+          ></InputField>
+        </div>
+        <div className='flex flex-col justify-between w-full'>
           <label className='p-0'>Type</label>
           <DropdownSelect
             options={[
