@@ -16,6 +16,7 @@ const ReportEditor: React.FC<{
   setReport: (rd: ReportDefinition) => void
   saveReport: (rd: ReportDefinition) => void
   deleteReport: (rd: ReportDefinition) => void
+  canSave: (rd: ReportDefinition) => boolean
 }> = ({ entitySchema, report, setReport, saveReport, deleteReport }) => {
   const [tab, setTab] = useState<'query' | 'chart'>('chart')
 

@@ -17,7 +17,8 @@ export const ReportManager1: React.FC<{
   reportRepository: IReportRepository
   reportSerivce: IReportService
   dark: boolean
-}> = ({ reportRepository, reportSerivce, dark }) => {
+  initialReport?: ReportDefinition
+}> = ({ reportRepository, reportSerivce, dark, initialReport }) => {
   const [r, setR] = useState(0)
   const { isLoading, error, data } = useQuery({
     queryKey: ['report', reportRepository, r],
@@ -50,7 +51,9 @@ export const ReportManager1: React.FC<{
         reportRepository.deleteReport(r)
         setR((x) => x + 1)
       }}
+      canSaveReport={(r) => reportRepository.canSaveReport(r)}
       dark={dark}
+      initialReport={initialReport}
     ></ReportManager>
   )
 }
@@ -59,13 +62,29 @@ export const ReportManager: React.FC<{
   reportCollection: ReportDefinition[]
   addOrUpdateReport: (r: ReportDefinition) => void
   deleteReport: (r: ReportDefinition) => void
+  canSaveReport: (r: ReportDefinition) => boolean
   reportSerivce: IReportService
   dark: boolean
   reportName?: string
-}> = ({ reportCollection, addOrUpdateReport, deleteReport, reportSerivce, reportName, dark }) => {
+  initialReport?: ReportDefinition
+}> = ({
+  reportCollection,
+  addOrUpdateReport,
+  deleteReport,
+  canSaveReport,
+  reportSerivce,
+  reportName,
+  dark,
+  initialReport,
+}) => {
   const [currentReport, setCurrentReport] = useState<ReportDefinition | null>(null)
   const [entitySchema, setEntitySchema] = useState<EntitySchema | null>(null)
   const [viewMode, setViewMode] = useState<'split' | 'editor' | 'result'>('split')
+
+  useEffect(() => {
+    if (!initialReport) return
+    setCurrentReport(initialReport)
+  }, [initialReport])
 
   useEffect(() => {
     reportSerivce.getEntitySchema().then((es: EntitySchema) => setEntitySchema(es))
@@ -163,6 +182,7 @@ export const ReportManager: React.FC<{
                 deleteReport(r)
                 setCurrentReport(null)
               }}
+              canSave={canSaveReport}
             ></ReportEditor>
           )}
         </div>

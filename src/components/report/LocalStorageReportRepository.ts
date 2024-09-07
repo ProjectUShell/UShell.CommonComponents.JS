@@ -2,6 +2,10 @@ import { IReportRepository } from './IReportRepository'
 import { ReportDefinition } from './ReportDefinition'
 
 export class LocalStorageReportRepository implements IReportRepository {
+  canSaveReport(report: ReportDefinition): boolean {
+    return true
+  }
+
   getReports(): Promise<ReportDefinition[]> {
     return new Promise<ReportDefinition[]>((resolve) => {
       const resLs: string | null = localStorage.getItem('LocalStorageReportRepository')
