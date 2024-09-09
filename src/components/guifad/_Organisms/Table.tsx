@@ -471,7 +471,10 @@ const Table: React.FC<{
                         {c.renderFilter && onFilterChanged && (
                           <>
                             {filterVisible[c.fieldName] && (
-                              <Dropdown setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}>
+                              <Dropdown
+                                refId={`UShell_Table_Filter_Button_${c.fieldName}`}
+                                setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}
+                              >
                                 <div className='w-40 bg-bg1 dark:bg-bg1dark p-2 rounded-md border-2'>
                                   {c.renderFilter(
                                     filterByColumn[c.fieldName],
@@ -482,6 +485,7 @@ const Table: React.FC<{
                               </Dropdown>
                             )}
                             <button
+                              id={`UShell_Table_Filter_Button_${c.fieldName}`}
                               onClick={(e) => onSetFilterVisible(c.fieldName, true)}
                               className={`${
                                 filterByColumn[c.fieldName] ? 'bg-green-200 dark:bg-green-600' : ''

@@ -13,11 +13,15 @@ const SettingsDropdown: React.FC<{
 
   return (
     <div className=''>
-      <button className='align-middle' onClick={() => setIsOpen((o) => !o)}>
+      <button
+        id='UShell_Settings_Button'
+        className='align-middle'
+        onClick={() => setIsOpen((o) => !o)}
+      >
         <CogWheelIcon></CogWheelIcon>
       </button>
       {isOpen && (
-        <Dropdown setIsOpen={setIsOpen} rightOffset={1}>
+        <Dropdown refId='UShell_Settings_Button' setIsOpen={setIsOpen} rightOffset={1}>
           <div className='bg-bg1 shadow-lg dark:bg-bg2dark p-1 rounded-md'>
             <div className='mb-4'>
               <RadioGroup

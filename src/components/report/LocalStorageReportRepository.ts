@@ -2,8 +2,8 @@ import { IReportRepository } from './IReportRepository'
 import { ReportDefinition } from './ReportDefinition'
 
 export class LocalStorageReportRepository implements IReportRepository {
-  canSaveReport(report: ReportDefinition): boolean {
-    return true
+  canSaveReport(report: ReportDefinition): { success: boolean; reason: string } {
+    return { success: report.folder != 'Base', reason: 'Folder is invalid' }
   }
 
   getReports(): Promise<ReportDefinition[]> {

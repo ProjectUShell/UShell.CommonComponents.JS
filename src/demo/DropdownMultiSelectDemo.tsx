@@ -1,29 +1,31 @@
 import React from 'react'
 import Dropdown from '../_Atoms/Dropdown'
 import Paging from '../components/guifad/_Molecules/Paging'
+import DocComponent from './DocComponent'
+import DropdownSelect from '../_Atoms/DropdownSelect'
 
 const DropdownMultiSelectDemo = () => {
   return (
-    <div
-      className='cc_table z-10 relative overflow-hidden1 overflow-auto shadow-lg1 drop-shadow-md1 
-    flex flex-col h-full w-full justify-between '
-    >
-      <div className='flex flex-col h-full w-full overflow-y-hidden overflow-x-auto '>
-        <Dropdown>
-          <div>Hi</div>
-        </Dropdown>
-      </div>
-      <div className='z-0 relative'>
-        <div>Paging</div>
-        <div>Paging</div>
-        <div>Paging</div>
-      </div>
-      {/* <Paging
-        total={100}
-        pagingParams={{ pageNumber: 1, pageSize: 10 }}
-        onPagingParamsChange={() => {}}
-      ></Paging> */}
-    </div>
+    <DocComponent
+      title='Dropdown MultiSelect'
+      subTitle='Use DropdownMultiSelect for Dropdowns for selection of multiple values at once'
+      explanation='The button component is probably the most widely used element in any user interface or website as it can be used to launch an action but also to link to other pages.
+                    Flowbite provides a large variety of styles and sizes for the button component including outlined buttons, multiple colors, sizes, buttons with icons, and more.'
+      demos={[
+        {
+          demoTitle: 'Basic',
+          demoExplanation: 'Basic Demo',
+          demoComponent: (
+            <DropdownSelect
+              options={[
+                { label: 'Option A', value: 1 },
+                { label: 'Option B', value: 2 },
+              ]}
+            ></DropdownSelect>
+          ),
+        },
+      ]}
+    ></DocComponent>
   )
 }
 

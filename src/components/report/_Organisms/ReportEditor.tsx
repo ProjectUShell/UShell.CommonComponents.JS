@@ -9,6 +9,7 @@ import { IReportService } from '../IReportService'
 import { EntitySchema } from 'fusefx-modeldescription'
 import { ReportDefinition } from '../ReportDefinition'
 import ReportChartEditor from '../_Molecules/ReportChartEditor'
+import Tooltip from '../../../_Atoms/Tooltip'
 
 const ReportEditor: React.FC<{
   entitySchema: EntitySchema
@@ -16,9 +17,11 @@ const ReportEditor: React.FC<{
   setReport: (rd: ReportDefinition) => void
   saveReport: (rd: ReportDefinition) => void
   deleteReport: (rd: ReportDefinition) => void
-  canSave: (rd: ReportDefinition) => boolean
-}> = ({ entitySchema, report, setReport, saveReport, deleteReport }) => {
+  canSave: (rd: ReportDefinition) => { success: boolean; reason: string }
+}> = ({ entitySchema, report, setReport, saveReport, deleteReport, canSave }) => {
   const [tab, setTab] = useState<'query' | 'chart'>('chart')
+
+  const canSaveRes: { success: boolean; reason: string } = canSave(report)
 
   return (
     <>
@@ -40,7 +43,19 @@ const ReportEditor: React.FC<{
           </div>
           <div className='flex gap-4 py-1 ml-2 my-2 border-l-2'>
             <div className=' ml-2 p-2 hover:bg-bg6 dark:hover:bg-bg5dark'>
-              <button onClick={() => saveReport(report)}>Save</button>
+              <button
+                id={`ReportSaveButton_${report.name}`}
+                className='disabled:text-red-400'
+                disabled={!canSaveRes.success}
+                onClick={() => saveReport(report)}
+              >
+                {!canSaveRes.success && (
+                  <Tooltip targetId={`ReportSaveButton_${report.name}`}>
+                    {canSaveRes.reason}
+                  </Tooltip>
+                )}
+                Save
+              </button>
             </div>
             <div className=' ml-2 p-2 hover:bg-bg6 dark:hover:bg-bg5dark'>
               <button

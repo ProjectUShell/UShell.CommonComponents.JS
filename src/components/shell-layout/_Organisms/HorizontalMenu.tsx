@@ -73,7 +73,8 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
                     setiIsOpen(mi.id, false)
                   }}
                   className='bg-menuHover dark:bg-menuHoverDark rounded-sm'
-                  minWidthRef={buttonRef}
+                  minWidth={true}
+                  refId={buttonRef.id}
                 >
                   <div
                     className='bg-menuHover dark:bg-menuHoverDark

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Dropdown from './Dropdown'
 
 const DropdownButton: React.FC<{
@@ -16,6 +16,10 @@ const DropdownButton: React.FC<{
     setOpen(initialOpen ? initialOpen.o : false)
   }, [initialOpen])
 
+  const refId: string = useMemo(() => {
+    return 'UShell_DropdownButton_' + crypto.randomUUID()
+  }, [])
+
   return (
     <>
       <button
@@ -26,6 +30,7 @@ const DropdownButton: React.FC<{
       </button>
       {open && (
         <Dropdown
+          refId={refId}
           setIsOpen={(o) => setOpen(o)}
           leftOffset={leftOffset}
           rightOffset={rightOffset}

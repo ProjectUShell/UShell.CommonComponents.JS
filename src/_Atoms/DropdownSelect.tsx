@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Option } from './MultiSelect'
 import Dropdown from './Dropdown'
 import FunnelIcon from '../_Icons/FunnelIcon'
@@ -164,10 +164,14 @@ const DropdownSelect: React.FC<{
   }
 
   const ref: any = useRef()
+  const refId: string = useMemo(() => {
+    return 'UShell_DropdownSelect_' + crypto.randomUUID()
+  }, [])
   return (
     <div onBlur={(e) => setOpen(false)}>
       {/* <button onClick={(e) => setOpen(true)}> */}
       <div
+        id={refId}
         ref={ref}
         className='p-0.5 w-full rounded-sm focus:z-50 relative flex bg-bg1 dark:bg-bg2dark'
       >
@@ -195,10 +199,11 @@ const DropdownSelect: React.FC<{
       {open && (
         <div className={`${open ? '' : ''}`}>
           <Dropdown
+            refId={refId}
             leftOffset={0}
             bottomOffset={bottomOffset ? bottomOffset : undefined}
             topOffset={topOffset ? topOffset : undefined}
-            minWidthRef={ref}
+            minWidth={true}
           >
             <div className='bg-bg2 dark:bg-bg3dark w-full p-1 rounded-b-md border-0 dark:border dark:border-bg4dark'>
               {options

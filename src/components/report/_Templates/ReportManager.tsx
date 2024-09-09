@@ -62,7 +62,7 @@ export const ReportManager: React.FC<{
   reportCollection: ReportDefinition[]
   addOrUpdateReport: (r: ReportDefinition) => void
   deleteReport: (r: ReportDefinition) => void
-  canSaveReport: (r: ReportDefinition) => boolean
+  canSaveReport: (r: ReportDefinition) => { success: boolean; reason: string }
   reportSerivce: IReportService
   dark: boolean
   reportName?: string

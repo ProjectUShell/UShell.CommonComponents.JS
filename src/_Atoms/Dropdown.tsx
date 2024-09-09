@@ -7,8 +7,9 @@ const Dropdown: React.FC<{
   rightOffset?: number
   leftOffset?: number
   children: any
+  refId: string
   className?: string
-  minWidthRef?: any
+  minWidth?: boolean
 }> = ({
   setIsOpen,
   children,
@@ -16,15 +17,15 @@ const Dropdown: React.FC<{
   bottomOffset,
   rightOffset,
   leftOffset,
+  refId,
   className,
-  minWidthRef,
+  minWidth,
 }) => {
   const [render, setRender] = useState(0)
 
   useEffect(() => {
-    console.log('minWidth', minWidthRef)
     setRender((r) => r + 1)
-  }, [minWidthRef])
+  }, [minWidth])
 
   useEffect(() => {
     if (!setIsOpen) {
@@ -41,10 +42,6 @@ const Dropdown: React.FC<{
       window.removeEventListener('keydown', handleEscape)
     }
   }, [setIsOpen])
-
-  const refId: string = useMemo(() => {
-    return 'DropdownRef_' + crypto.randomUUID()
-  }, [])
 
   const dummy: React.FC = () => {
     return (
@@ -119,42 +116,42 @@ const Dropdown: React.FC<{
     )
   }
 
-  let topOffsetCss: string = topOffset
-    ? topOffset > 0
-      ? `top-${topOffset}`
-      : `-top-${-topOffset}`
-    : 'top-0'
-  let bottomOffsetCss: string = bottomOffset
-    ? bottomOffset > 0
-      ? `bottom-${bottomOffset}`
-      : `-bottom-${-bottomOffset}`
-    : ''
-  let rightOffsetCss: string = rightOffset
-    ? rightOffset > 0
-      ? `right-${rightOffset}`
-      : `-right-${-rightOffset}`
-    : 'right-0'
-  let leftOffsetCss: string = leftOffset
-    ? leftOffset > 0
-      ? `left-${leftOffset}`
-      : `-left-${-leftOffset}`
-    : 'left-0'
+  // let topOffsetCss: string = topOffset
+  //   ? topOffset > 0
+  //     ? `top-${topOffset}`
+  //     : `-top-${-topOffset}`
+  //   : 'top-0'
+  // let bottomOffsetCss: string = bottomOffset
+  //   ? bottomOffset > 0
+  //     ? `bottom-${bottomOffset}`
+  //     : `-bottom-${-bottomOffset}`
+  //   : ''
+  // let rightOffsetCss: string = rightOffset
+  //   ? rightOffset > 0
+  //     ? `right-${rightOffset}`
+  //     : `-right-${-rightOffset}`
+  //   : 'right-0'
+  // let leftOffsetCss: string = leftOffset
+  //   ? leftOffset > 0
+  //     ? `left-${leftOffset}`
+  //     : `-left-${-leftOffset}`
+  //   : 'left-0'
 
-  if (leftOffset && !rightOffset) {
-    rightOffsetCss = ''
-  }
+  // if (leftOffset && !rightOffset) {
+  //   rightOffsetCss = ''
+  // }
 
-  if (rightOffset && !leftOffset) {
-    leftOffsetCss = ''
-  }
+  // if (rightOffset && !leftOffset) {
+  //   leftOffsetCss = ''
+  // }
 
-  if (bottomOffset && !topOffset) {
-    topOffsetCss = ''
-  }
+  // if (bottomOffset && !topOffset) {
+  //   topOffsetCss = ''
+  // }
 
-  if (topOffset && !bottomOffset) {
-    bottomOffsetCss = ''
-  }
+  // if (topOffset && !bottomOffset) {
+  //   bottomOffsetCss = ''
+  // }
 
   function getTop(): number | undefined {
     const el = document.getElementById(refId)
@@ -212,6 +209,7 @@ const Dropdown: React.FC<{
       return el.getBoundingClientRect().y - 20
     }
   }
+  // ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
 
   return (
     <>
@@ -233,13 +231,9 @@ const Dropdown: React.FC<{
             right: getRight(),
           }}
           className={`fixed z-50  shadow-md1 overflow-auto 
-            ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
              flex1 justify-center items-center w-max ${className}`}
         >
-          <div
-            style={{ minWidth: `${minWidthRef?.current?.clientWidth}px` }}
-            className='rounded-md'
-          >
+          <div style={{ minWidth: `${minWidth ? 100 : 0}px` }} className='rounded-md'>
             {children}
           </div>
         </div>
