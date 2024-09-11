@@ -8,6 +8,10 @@ import ReportLineChart from './ReportLineChart'
 import ReportAreaChart from './ReportAreaChart'
 import ReportPieChart from './ReportPieChart'
 import { PagingParams, SortingField } from 'fusefx-repositorycontract'
+import ReportBarChart2 from './ReportBarChart2'
+import ReportPieChart2 from './ReportPieChart2'
+import ReportLineChart2 from './ReportLineChart2'
+import ReportAreaChart2 from './ReportAreaChart2'
 
 const ReportChart: React.FC<{ reportServiceUrl: string; dark: boolean }> = ({
   reportServiceUrl,
@@ -57,16 +61,16 @@ export const ReportChart1: React.FC<{
   return (
     <div className='h-full w-full max-h-full border-0 border-blue-500 flex overflow-auto'>
       {report.type == 'Bar' && (
-        <ReportBarChart
+        <ReportBarChart2
           data={data.page}
-          xFields={report.groupBy || []}
-          yGroups={report.reportValues || []}
-          yFields={yValues}
+          groupBy={report.groupBy || []}
+          stackBy={report.stackBy || []}
+          reportValues={report.reportValues || []}
           horizontal={report.horizontal}
           dark={dark}
-        ></ReportBarChart>
+        ></ReportBarChart2>
       )}
-      {report.type == 'Line' && (
+      {/* {report.type == 'Line' && (
         <ReportLineChart
           data={data.page}
           xFields={report.groupBy || []}
@@ -74,8 +78,17 @@ export const ReportChart1: React.FC<{
           yFields={yValues}
           multiAxis={report.multiAxis}
         ></ReportLineChart>
+      )} */}
+      {report.type == 'Line' && (
+        <ReportLineChart2
+          data={data.page}
+          groupBy={report.groupBy || []}
+          reportValues={report.reportValues || []}
+          stackBy={report.stackBy || []}
+          dark={dark}
+        ></ReportLineChart2>
       )}
-      {report.type == 'Area' && (
+      {/* {report.type == 'Area' && (
         <ReportAreaChart
           data={data.page}
           xFields={report.groupBy || []}
@@ -83,8 +96,17 @@ export const ReportChart1: React.FC<{
           yFields={yValues}
           stacked={report.stacked}
         ></ReportAreaChart>
+      )} */}
+      {report.type == 'Area' && (
+        <ReportAreaChart2
+          data={data.page}
+          groupBy={report.groupBy || []}
+          reportValues={report.reportValues || []}
+          stackBy={report.stackBy || []}
+          dark={dark}
+        ></ReportAreaChart2>
       )}
-      {report.type == 'Pie' && (
+      {/* {report.type == 'Pie' && (
         <ReportPieChart
           data={data.page}
           xFields={report.groupBy || []}
@@ -92,6 +114,15 @@ export const ReportChart1: React.FC<{
           yFields={yValues}
           donut={false}
         ></ReportPieChart>
+      )} */}
+      {report.type == 'Pie' && (
+        <ReportPieChart2
+          data={data.page}
+          groupBy={report.groupBy || []}
+          stackBy={report.stackBy || []}
+          reportValues={report.reportValues || []}
+          dark={dark}
+        ></ReportPieChart2>
       )}
       {report.type == 'Donut' && (
         <ReportPieChart
