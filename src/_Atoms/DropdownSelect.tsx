@@ -173,7 +173,7 @@ const DropdownSelect: React.FC<{
       <div
         id={refId}
         ref={ref}
-        className='p-0.5 w-full rounded-sm focus:z-50 relative flex bg-bg1 dark:bg-bg2dark'
+        className='p-0.5 w-full rounded-sm focus:z-50 relative flex bg-bg1 dark:bg-bg2dark border-0 border-red-400'
       >
         <input
           autoFocus={forceFocus}

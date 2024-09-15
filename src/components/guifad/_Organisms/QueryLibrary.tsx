@@ -56,14 +56,14 @@ const QueryLibrary: React.FC<{
         ></BookmarkSquareIcon>
       }
     >
-      <div className='border dark:border-bg3dark'>
+      <div className='border dark:border-bg3dark flex flex-col'>
         <div className='bg-bg2 dark:bg-backgroundonedark p-2 z-50'>
           Use a saved query
           <div className='w-full border my-1 border-bg6 dark:border-backgroundthreedark'></div>
         </div>
 
         <div className='bg-bg2  dark:bg-backgroundonedark pb-1'>
-          <div>
+          <div className=' flex flex-col'>
             {Object.keys(queryLib).map((queryName: string) => (
               <div
                 key={queryName}

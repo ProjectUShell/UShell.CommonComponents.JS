@@ -23,7 +23,8 @@ const DropdownButton: React.FC<{
   return (
     <>
       <button
-        className={`rounded-md p-1  relative ${open && 'z-50'}`}
+        id={refId}
+        className={`rounded-md p-1 relative ${open && 'z-50'} border-0 border-blue-400`}
         onClick={(e) => setOpen((o) => !o)}
       >
         {buttonContent}
@@ -35,6 +36,7 @@ const DropdownButton: React.FC<{
           leftOffset={leftOffset}
           rightOffset={rightOffset}
           topOffset={topOffset}
+          minWidth={false}
         >
           {children}
         </Dropdown>

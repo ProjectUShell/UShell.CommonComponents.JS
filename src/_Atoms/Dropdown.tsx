@@ -155,10 +155,11 @@ const Dropdown: React.FC<{
 
   function getTop(): number | undefined {
     const el = document.getElementById(refId)
-    if (!el) return 100
-    const t = el.getBoundingClientRect().top
+    if (!el) return undefined
+    const t = el.getBoundingClientRect().top + el.getBoundingClientRect().height
     const hHalf = window.innerHeight / 2
     if (t <= hHalf) {
+      console.log('dropdown using top', t)
       return t
     } else {
       return undefined
@@ -166,12 +167,13 @@ const Dropdown: React.FC<{
   }
   function getBottom(): number | undefined {
     const el = document.getElementById(refId)
-    if (!el) return 100
-    const b = el.getBoundingClientRect().bottom
-    console.log('el.rect', el.getBoundingClientRect())
+    console.log('dropdown getBottom', refId)
+    if (!el) return undefined
+    const t = el.getBoundingClientRect().top + el.getBoundingClientRect().height
     const hHalf = window.innerHeight / 2
-    if (b < hHalf) {
-      return b
+    if (t > hHalf) {
+      console.log('dropdown using bottom', window.innerHeight - el.getBoundingClientRect().top)
+      return window.innerHeight - el.getBoundingClientRect().top
     } else {
       return undefined
     }
@@ -204,10 +206,16 @@ const Dropdown: React.FC<{
     if (!el) return 100
     const t = getTop()
     if (t) {
-      return window.innerHeight - el.getBoundingClientRect().y
+      return window.innerHeight - t
     } else {
-      return el.getBoundingClientRect().y - 20
+      return el.getBoundingClientRect().y
     }
+  }
+
+  function getWidth(): number {
+    const el = document.getElementById(refId)
+    if (!el) return 100
+    return el.getBoundingClientRect().width
   }
   // ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
 
@@ -220,20 +228,21 @@ const Dropdown: React.FC<{
           onClick={() => setIsOpen(false)}
         ></button>
       )}
-      <div className='relative' id={refId}>
+      <div className='relative'>
         <div
           style={{
-            height: getHeight(),
-            width: '200',
-            bottom: 1120,
+            height: undefined,
+            maxHeight: getHeight(),
+            width: minWidth ? getWidth() : undefined,
+            bottom: getBottom(),
             top: getTop(),
             left: getLeft(),
             right: getRight(),
           }}
           className={`fixed z-50  shadow-md1 overflow-auto 
-             flex1 justify-center items-center w-max ${className}`}
+             flex1 justify-center items-center w-max ${className} border-0 border-pink-400`}
         >
-          <div style={{ minWidth: `${minWidth ? 100 : 0}px` }} className='rounded-md'>
+          <div style={{}} className='rounded-md'>
             {children}
           </div>
         </div>
