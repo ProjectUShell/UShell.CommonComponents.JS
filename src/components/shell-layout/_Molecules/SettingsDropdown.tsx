@@ -22,7 +22,7 @@ const SettingsDropdown: React.FC<{
       </button>
       {isOpen && (
         <Dropdown refId='UShell_Settings_Button' setIsOpen={setIsOpen} rightOffset={1}>
-          <div className='bg-bg1 shadow-lg dark:bg-bg2dark p-1 rounded-md'>
+          <div className='bg-bg1 shadow-lg dark:bg-bg2dark p-3 rounded-md border-2 border-bg5 dark:border-bg7dark'>
             <div className='mb-4'>
               <RadioGroup
                 value={shellSettings.layoutMode}

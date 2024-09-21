@@ -49,14 +49,9 @@ const TopBar: React.FC<{
           )}
         </div>
 
-        <div>Search</div>
+        <div className='Search'></div>
 
         <div className='flex items-center gap-1 justify-between py-2'>
-          <SettingsDropdown
-            shellSettings={shellSettings}
-            setLayoutMode={setLayoutMode}
-            setColorMode={setColorMode}
-          ></SettingsDropdown>
           {topBarElements &&
             topBarElements!.map((e: TopBarItem, index: number) => (
               <div className='align-middle' key={index}>
@@ -64,6 +59,13 @@ const TopBar: React.FC<{
                 {e.icon}
               </div>
             ))}
+          <div className='ml-1 pl-1'>
+            <SettingsDropdown
+              shellSettings={shellSettings}
+              setLayoutMode={setLayoutMode}
+              setColorMode={setColorMode}
+            ></SettingsDropdown>
+          </div>
         </div>
       </div>
     </header>
