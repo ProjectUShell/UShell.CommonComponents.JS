@@ -67,7 +67,7 @@ const VerticalMenuInternal: React.FC<{
                     ? menuItemHoverClassName
                     : ' ') + ' cursor-pointer'
                 : ''
-            } ${mi.type == 'Command' ? 'mt-0 font-light' : 'mt-4 font-bold'} ${
+            } ${mi.type == 'Command' ? 'mt-0 font-normal' : 'mt-4 font-bold'} ${
               shellMenuState.activeItemId == mi.id
                 ? 'bg-prim1 dark:bg-prim6 border-r-2 border-texttwo dark:border-menuBorderDark'
                 : 'hover:bg-menuHover dark:hover:bg-menuHoverDark'
