@@ -69,7 +69,7 @@ const StructureNavigation: React.FC<{
       >
         <PencilIcon></PencilIcon>Details
       </button>
-      <div className='w-full border-b dark:border-texttwodark border-r border-navigationBorder dark:border-navigationBorderDark'></div>
+      <div className='w-full border-b border-r border-navigationBorder dark:border-navigationBorderDark'></div>
       <div className='border-r border-navigationBorder dark:border-navigationBorderDark'>
         {EntitySchemaService.getRelations(schemaRoot, entitySchema, false).map((er) => (
           <button
