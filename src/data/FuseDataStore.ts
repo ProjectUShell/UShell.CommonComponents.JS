@@ -15,17 +15,19 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     if (FuseDataStore.getTokenMethod) {
       headers['Authorization'] = FuseDataStore.getTokenMethod(this._TokenSourceUid)
     }
-    if (this._AdditionalBodyArgs) {
+    if (this._GetAdditionalBodyArgs) {
       if (!bodyParams) {
         bodyParams = {}
       }
-      for (let additionalKey in this._AdditionalBodyArgs) {
-        bodyParams[additionalKey] = this._AdditionalBodyArgs[additionalKey]
+      const additionalBodyArgs: any = this._GetAdditionalBodyArgs()
+      for (let additionalKey in additionalBodyArgs) {
+        bodyParams[additionalKey] = additionalBodyArgs[additionalKey]
       }
     }
-    if (this._AdditionalHeaderArgs) {
-      for (let additionalKey in this._AdditionalHeaderArgs) {
-        headers[additionalKey] = JSON.stringify(this._AdditionalHeaderArgs[additionalKey])
+    if (this._GetAdditionalHeaderArgs) {
+      const additionalHeaderArgs: any = this._GetAdditionalHeaderArgs()
+      for (let additionalKey in additionalHeaderArgs) {
+        headers[additionalKey] = JSON.stringify(additionalHeaderArgs[additionalKey])
       }
     }
     const rawResponse = await fetch(url, {
@@ -43,26 +45,26 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   private _SchemaRoot: SchemaRoot | null = null
   private _RoutePattern: 'body' | 'route' | 'method' = 'body'
   private _TokenSourceUid = ''
-  private _AdditionalBodyArgs: any | null = null
+  private _GetAdditionalBodyArgs: (() => any) | null = null
   private _GetSchemaRootMethod: string | null = null
-  private _AdditionalHeaderArgs: any | null = null
+  private _GetAdditionalHeaderArgs: (() => any) | null = null
 
   constructor(
     url: string,
     routePattern: 'body' | 'route' | 'method',
     entitySchemaUrl?: string,
     tokenSourceUid?: string,
-    additionalBodyArgs?: any,
+    getAdditionalBodyArgs?: () => any,
     getSchemaRootMethod?: any,
-    additionalHeaderArgs?: any,
+    getAdditionalHeaderArgs?: () => any,
   ) {
     this._Url = url
     this._EntitySchemaUrl = entitySchemaUrl ? entitySchemaUrl : url
     this._RoutePattern = routePattern
     this._TokenSourceUid = tokenSourceUid ? tokenSourceUid : ''
-    this._AdditionalBodyArgs = additionalBodyArgs ? additionalBodyArgs : null
+    this._GetAdditionalBodyArgs = getAdditionalBodyArgs ? getAdditionalBodyArgs : null
     this._GetSchemaRootMethod = getSchemaRootMethod ? getSchemaRootMethod : null
-    this._AdditionalHeaderArgs = additionalHeaderArgs ? additionalHeaderArgs : null
+    this._GetAdditionalHeaderArgs = getAdditionalHeaderArgs ? getAdditionalHeaderArgs : null
   }
 
   init(): Promise<void> {
