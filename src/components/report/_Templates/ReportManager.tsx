@@ -21,7 +21,7 @@ export const ReportManager1: React.FC<{
 }> = ({ reportRepository, reportSerivce, dark, initialReport }) => {
   const [r, setR] = useState(0)
   const { isLoading, error, data } = useQuery({
-    queryKey: ['report', reportRepository, r],
+    queryKey: ['reportRepository', reportRepository, r],
     queryFn: () => {
       try {
         return reportRepository.getReports()

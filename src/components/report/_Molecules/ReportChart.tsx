@@ -33,7 +33,7 @@ export const ReportChart1: React.FC<{
 }> = ({ reportService, report, dark }) => {
   // const yFields = ['count(1)', 'sum(duration)']
   const { isLoading, error, data } = useQuery({
-    queryKey: ['report', report],
+    queryKey: [`report_${report.name}`, report],
     queryFn: () => {
       try {
         return reportService.generateReport(report, [report.sortedBy], report.limit, 0)
