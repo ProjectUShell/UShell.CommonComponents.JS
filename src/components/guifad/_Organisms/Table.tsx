@@ -425,7 +425,7 @@ const Table: React.FC<{
 
   if (!onSortingParamsChange && sortingParams) {
     filteredRecords = applySorting(
-      records,
+      filteredRecords,
       sortingParams,
       sortingParams.map((sp) => columns.find((c) => c.fieldName == sp.fieldName)!),
     )
