@@ -52,7 +52,7 @@ export const ReportChart1: React.FC<{
   }
 
   const yValues: string[] = []
-  const dataRef: any = data.page[0]
+  const dataRef: any = data?.page && data.page.length > 0 ? data.page[0] : {}
   Object.keys(dataRef).forEach((k) => {
     if (!(report.groupBy?.includes(k) || report.stackBy?.includes(k))) {
       yValues.push(k)

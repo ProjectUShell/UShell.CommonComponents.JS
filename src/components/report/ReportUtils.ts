@@ -30,7 +30,7 @@ export function getStackGroups(
 ): { [stackId: string]: string[] } {
   const result: { [stackId: string]: string[] } = {}
 
-  const dataRef: any = data[0]
+  const dataRef: any = data && data.length > 0 ? data[0] : {}
   reportValues.forEach((rv) => {
     const stackGroupValues: string[] = []
     Object.keys(dataRef).forEach((k) => {
