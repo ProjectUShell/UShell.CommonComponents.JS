@@ -38,7 +38,7 @@ const columns: TableColumn[] = [
       return (
         <MultiSelectFilter
           column={column}
-          initialValues={getSelectedValues(filter)}
+          initialValues={getSelectedValues(filter, column.fieldName)}
           onFilterChanged={onFilterChanged}
           options={[
             { label: 'debug', value: 0 },
@@ -67,7 +67,7 @@ const columns: TableColumn[] = [
       return (
         <MultiSelectFilter
           column={column}
-          initialValues={getSelectedValues(filter)}
+          initialValues={getSelectedValues(filter, column.fieldName)}
           onFilterChanged={onFilterChanged}
           options={[
             { label: 'good', value: 0 },

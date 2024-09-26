@@ -15,6 +15,7 @@ const DropdownMultiSelectDemo = () => {
         {
           demoTitle: 'Basic',
           demoExplanation: 'Basic Demo',
+          sourceCode: 'xxx',
           demoComponent: (
             <DropdownSelect
               options={[

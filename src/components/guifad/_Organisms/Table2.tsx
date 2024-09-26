@@ -308,6 +308,7 @@ const Table2: React.FC<{
                                   filterByColumn[c.fieldName],
                                   (f) => onColumnFilterChange(f, c),
                                   c,
+                                  records,
                                 )}
                               </div>
                             </Dropdown>

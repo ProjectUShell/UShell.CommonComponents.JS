@@ -33,6 +33,7 @@ import { LocalStorageReportRepository } from './components/report/LocalStorageRe
 import { ColorMode, loadShellSettings } from './components/shell-layout/ShellSettings'
 import Dashboard from './components/dashboard/_Templates/Dashboard'
 import DropdownMultiSelectDemo from './demo/DropdownMultiSelectDemo'
+import TableDemo1 from './demo/TableDemo1'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -43,7 +44,7 @@ const Demo = () => {
   const demoComponents: string[] = ['Guifad', 'Table', 'Common', 'SchemaEditor', 'Reports']
   const subComponents: { [key: string]: string[] } = {
     Guifad: ['GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
-    Table: ['TableDemo', 'ResizeTable', 'ResizeTable2'],
+    Table: ['TableDemo', 'ResizeTable', 'ResizeTable2', 'Table1'],
     Common: ['ColorDemo', 'DropdownButtonDemo', 'DropdownMultiSelectDemo'],
     SchemaEditor: ['Schema Manager', 'Editor', 'Schema Guifad'],
     Reports: ['ReportService', 'ReportManager', 'ReportDashboard'],
@@ -181,6 +182,7 @@ const Demo = () => {
             ]}
           ></ResizableTable2>
         )}
+        {currentComponent == 'Table1' && <TableDemo1></TableDemo1>}
         {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
         {currentComponent == 'Schema Manager' && (
           <SchemaManager

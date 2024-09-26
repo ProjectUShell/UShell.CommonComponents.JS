@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { lowerFirstLetter } from '../../../utils/StringUtils'
 import Paging from '../_Molecules/Paging'
 import BarsArrowUpIcon from '../../../_Icons/BarsArrowUpIcon'
@@ -10,6 +10,7 @@ import Dropdown from '../../../_Atoms/Dropdown'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import MinusCircleIcon from '../../../_Icons/MinusCircleIcon'
 import PaddingDummy from '../../../_Atoms/PaddingDummy'
+import { applyFilter, applySorting } from '../../../utils/LogicUtils'
 
 export interface TableColumn {
   label: string
@@ -23,8 +24,16 @@ export interface TableColumn {
     filter: LogicalExpression,
     onFilterChanged: (filter: LogicalExpression | null) => void,
     column: TableColumn,
+    availableRecords: any[],
   ) => React.JSX.Element
   sortable?: boolean
+}
+
+export interface TableColors {
+  header?: string
+  headerHover?: string
+  cell?: string
+  cellHover?: string
 }
 
 export interface ExpandableProps {
@@ -50,6 +59,8 @@ const Table: React.FC<{
   onFilterChanged?: (filterByColumn: { [c: string]: LogicalExpression }) => void
   expandableRowProps?: ExpandableProps
   rowHeight?: number
+  tableColors?: TableColors
+  useClientFilter?: boolean
 }> = ({
   columns,
   records,
@@ -68,6 +79,8 @@ const Table: React.FC<{
   onFilterChanged,
   expandableRowProps,
   rowHeight,
+  tableColors,
+  useClientFilter = false,
 }) => {
   const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean }>({})
   const [filterVisible, setFilterVisible] = useState<{ [c: string]: boolean }>({})
@@ -174,9 +187,6 @@ const Table: React.FC<{
   }
 
   function toggleSorting(colKey: string) {
-    if (!onSortingParamsChange) {
-      return
-    }
     const newSortingParams = [...sortingParams]
     const currentSortingField: SortingField | undefined = newSortingParams?.find(
       (sf) => sf.fieldName == colKey,
@@ -190,6 +200,10 @@ const Table: React.FC<{
       currentSortingField.descending = true
     }
     setSortingParams(newSortingParams)
+
+    if (!onSortingParamsChange) {
+      return
+    }
     onSortingParamsChange(
       newSortingParams,
       currentSortingField ? currentSortingField : { fieldName: colKey, descending: false },
@@ -286,7 +300,7 @@ const Table: React.FC<{
   }
 
   function onColumnFilterChange(columnFilter: LogicalExpression | null, column: TableColumn) {
-    if (!onFilterChanged) {
+    if (!onFilterChanged && !useClientFilter) {
       return
     }
     if (columnFilter) {
@@ -294,12 +308,16 @@ const Table: React.FC<{
     } else {
       delete filterByColumn[column.fieldName]
     }
+    console.log('onColumnFilterChange', columnFilter)
+    console.log('new filterByColumn', filterByColumn)
     setFilterByColumn({ ...filterByColumn })
     setFilterVisible((fv) => {
       fv[column.fieldName] = false
       return { ...fv }
     })
-    onFilterChanged(filterByColumn)
+    if (onFilterChanged) {
+      onFilterChanged(filterByColumn)
+    }
   }
 
   function onToggleRowExpand(r: number) {
@@ -393,14 +411,26 @@ const Table: React.FC<{
     })
   }
 
-  // return (
-  //   <div
-  //     className={`bg-red-400 relative overflow-hidden1 shadow-md rounded-sm
-  //     border border-backgroundfour dark:border-backgroundfourdark h-full w-full flex flex-col justify-between ${className}`}
-  //   >
-  //     <div className='flex flex-col h-full w-full overflow-auto bg-blue-300 border-2'></div>
-  //   </div>
-  // )
+  const refId: string = useMemo(() => {
+    return 'UShell_Table_' + crypto.randomUUID()
+  }, [])
+
+  let filteredRecords: any[] = records
+  if (useClientFilter) {
+    for (let f in filterByColumn) {
+      console.log('filterByColumn', f)
+      filteredRecords = applyFilter(records, filterByColumn[f])
+    }
+  }
+
+  if (!onSortingParamsChange && sortingParams) {
+    filteredRecords = applySorting(
+      records,
+      sortingParams,
+      sortingParams.map((sp) => columns.find((c) => c.fieldName == sp.fieldName)!),
+    )
+  }
+
   return (
     <div
       className={`cc_table_0 z-10 relative overflow-hidden shadow-lg1 drop-shadow-md1 
@@ -420,7 +450,9 @@ const Table: React.FC<{
               {expandableRowProps && (
                 <th
                   id={'column_expand'}
-                  className='bg-tableHead dark:bg-tableHeadDark border-y-0  border-backgroundfour dark:border-backgroundfourdark'
+                  className={`${
+                    tableColors?.header || 'bg-tableHead dark:bg-tableHeadDark'
+                  }  border-y-0  border-backgroundfour dark:border-backgroundfourdark`}
                   style={
                     'column_expand' in columnWidths
                       ? { width: getColumnWidth('column_expand') }
@@ -434,13 +466,14 @@ const Table: React.FC<{
                   // onMouseEnter={() => initColumnWidth(c.key)}
                   key={c.label}
                   className={`${
-                    classNameHeader
-                      ? classNameHeader
-                      : 'bg-tableHead dark:bg-tableHeadDark hover:bg-tableHover dark:hover:bg-tableHoverDark border-y-0 border-backgroundfour dark:border-backgroundfourdark'
+                    tableColors?.header ||
+                    'bg-tableHead dark:bg-tableHeadDark hover:bg-tableHover dark:hover:bg-tableHoverDark border-y-0 border-backgroundfour dark:border-backgroundfourdark'
                   }
-                  cursor-pointer`}
+                  cursor-pointer select-none`}
                   onClick={(e) => {
                     if (c.sortable) {
+                      e.stopPropagation()
+                      e.preventDefault()
                       toggleSorting(c.key)
                     }
                   }}
@@ -453,8 +486,15 @@ const Table: React.FC<{
                   <div className='flex items-center justify-between '>
                     <div className='flex items-center gap-1 px-4 py-2'>
                       {c.label}
-                      {onSortingParamsChange && c.sortable && (
-                        <button onClick={(e) => toggleSorting(c.key)} className='pl-2'>
+                      {c.sortable && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            e.preventDefault()
+                            toggleSorting(c.key)
+                          }}
+                          className='pl-2'
+                        >
                           {!sortingParams.find((sf) => sf.fieldName == c.key) && (
                             <SwitchIcon></SwitchIcon>
                           )}
@@ -468,27 +508,37 @@ const Table: React.FC<{
                         </button>
                       )}
                       <div className=''>
-                        {c.renderFilter && onFilterChanged && (
+                        {c.renderFilter && (onFilterChanged || useClientFilter) && (
                           <>
                             {filterVisible[c.fieldName] && (
                               <Dropdown
-                                refId={`UShell_Table_Filter_Button_${c.fieldName}`}
+                                refId={`${refId}_Filter_Button_${c.fieldName}`}
                                 setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}
                               >
-                                <div className='w-40 bg-bg1 dark:bg-bg1dark p-2 rounded-md border-2'>
+                                <div
+                                  className='w1-40 bg-bg1 dark:bg-bg1dark border-2 border-bg4 dark:border-bg4dark shadow-lg shadow-black'
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                  }}
+                                >
                                   {c.renderFilter(
                                     filterByColumn[c.fieldName],
                                     (f) => onColumnFilterChange(f, c),
                                     c,
+                                    records,
                                   )}
                                 </div>
                               </Dropdown>
                             )}
                             <button
-                              id={`UShell_Table_Filter_Button_${c.fieldName}`}
-                              onClick={(e) => onSetFilterVisible(c.fieldName, true)}
+                              id={`${refId}_Filter_Button_${c.fieldName}`}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                e.preventDefault()
+                                onSetFilterVisible(c.fieldName, true)
+                              }}
                               className={`${
-                                filterByColumn[c.fieldName] ? 'bg-green-200 dark:bg-green-600' : ''
+                                filterByColumn[c.fieldName] ? 'bg-green-300 dark:bg-green-800' : ''
                               }  rounded-lg p-1`}
                             >
                               <FunnelIcon size={4}></FunnelIcon>
@@ -536,7 +586,7 @@ const Table: React.FC<{
             </tr>
           </thead>
           <tbody className='overflow-auto h-full'>
-            {records.map((r, i) => {
+            {filteredRecords.map((r, i) => {
               const renderRow = (
                 <tr
                   key={i}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export interface Option {
   label: string
@@ -16,33 +16,40 @@ const MultiSelect: React.FC<MultiSelectCheckboxProps> = ({
   initialValues,
   onSelectionChange,
 }) => {
-  const [selectedValues, setSelectedValues] = useState<any[]>(initialValues)
+  // const [selectedValues, setSelectedValues] = useState<any[]>(initialValues)
+
+  // useEffect(() => {
+  //   setSelectedValues(initialValues)
+  // }, [initialValues])
 
   const handleCheckboxChange = (value: any) => {
-    const isChecked = selectedValues.includes(value)
+    const isChecked = initialValues.includes(value)
     if (isChecked) {
-      setSelectedValues(selectedValues.filter((v) => v !== value))
+      onSelectionChange(initialValues.filter((v) => v !== value))
     } else {
-      setSelectedValues([...selectedValues, value])
+      onSelectionChange([...initialValues, value])
     }
   }
 
-  React.useEffect(() => {
-    onSelectionChange(selectedValues)
-  }, [selectedValues, onSelectionChange])
+  // React.useEffect(() => {
+  //   onSelectionChange(selectedValues)
+  // }, [selectedValues, onSelectionChange])
 
   return (
     <div className='flex flex-col'>
       {options.map((option) => (
-        <label key={option.value} className='flex items-center space-x-2 p-2'>
+        <label
+          key={option.value}
+          className='flex items-center space-x-2 p-2 hover:bg-bg4 dark:hover:bg-bg4dark'
+        >
           <input
             type='checkbox'
             value={option.value}
-            checked={selectedValues.includes(option.value)}
+            checked={initialValues.includes(option.value)}
             onChange={() => handleCheckboxChange(option.value)}
-            className='form-checkbox h-5 w-5 text-blue-600'
+            className='form-checkbox h-4 w-4 accent-blue-400'
           />
-          <span className='text-sm'>{option.label}</span>
+          <span className='text-sm font-normal px-4'>{option.label}</span>
         </label>
       ))}
     </div>

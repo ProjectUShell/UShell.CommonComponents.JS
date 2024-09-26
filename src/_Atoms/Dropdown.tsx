@@ -159,7 +159,6 @@ const Dropdown: React.FC<{
     const t = el.getBoundingClientRect().top + el.getBoundingClientRect().height
     const hHalf = window.innerHeight / 2
     if (t <= hHalf) {
-      console.log('dropdown using top', t)
       return t
     } else {
       return undefined
@@ -167,12 +166,10 @@ const Dropdown: React.FC<{
   }
   function getBottom(): number | undefined {
     const el = document.getElementById(refId)
-    console.log('dropdown getBottom', refId)
     if (!el) return undefined
     const t = el.getBoundingClientRect().top + el.getBoundingClientRect().height
     const hHalf = window.innerHeight / 2
     if (t > hHalf) {
-      console.log('dropdown using bottom', window.innerHeight - el.getBoundingClientRect().top)
       return window.innerHeight - el.getBoundingClientRect().top
     } else {
       return undefined
@@ -225,7 +222,11 @@ const Dropdown: React.FC<{
         <button
           id='button1'
           className='fixed z-50 cursor-default inset-0 bg-black bg-opacity-0'
-          onClick={() => setIsOpen(false)}
+          onClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            setIsOpen(false)
+          }}
         ></button>
       )}
       <div className='relative'>
@@ -239,7 +240,7 @@ const Dropdown: React.FC<{
             left: getLeft(),
             right: getRight(),
           }}
-          className={`fixed z-50  shadow-md1 overflow-auto 
+          className={`fixed z-50  shadow-lg overflow-auto 
              flex1 justify-center items-center w-max ${className} border-0 border-pink-400`}
         >
           <div style={{}} className='rounded-md'>
