@@ -34,6 +34,7 @@ export class FuseDataSourceBody implements IDataSource {
       .then((r) => {
         if (r.fault) {
           console.error('AddOrUpdate failed', { entity: entity, fault: r.fault })
+          throw r.fault //TODO => fault in signature of IDataSource?
         }
         return r.return
       })

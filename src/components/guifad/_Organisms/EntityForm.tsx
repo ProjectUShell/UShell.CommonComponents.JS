@@ -13,6 +13,7 @@ import BoltIcon from '../../../_Icons/BoltIcon'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
 import { EntityLayout, LayoutPartition } from '../../../[Move2LayoutDescription]/EntityLayout'
 import EntityFormGroup from '../_Molecules/EntityFormGroup'
+import Modal from '../../../_Atoms/Modal'
 
 const EntityForm: React.FC<{
   dataSource: IDataSource
@@ -71,15 +72,32 @@ const EntityForm: React.FC<{
   }, [dataSourceManager, dataSource])
 
   if (error) {
-    return <ErrorPage messages={[error]}></ErrorPage>
+    return (
+      <Modal
+        margin={40}
+        terminate={() => {
+          setError(null)
+        }}
+      >
+        <ErrorPage messages={[error.toString()]}></ErrorPage>
+        {/* {error.toString()} */}
+      </Modal>
+    )
+    // return <ErrorPage messages={[error]}></ErrorPage>
   }
 
   function save() {
-    dataSource.entityUpdateMethod(currentEntity).then((newEntry: any) => {
-      if (newEntry) {
-        onChange(newEntry)
-      }
-    })
+    dataSource
+      .entityUpdateMethod(currentEntity)
+      .then((newEntry: any) => {
+        if (newEntry) {
+          onChange(newEntry)
+        }
+      })
+      .catch((ex) => {
+        setError(ex)
+        console.error('error in entityUpdateMethod', ex)
+      })
   }
 
   function changeValue(field: FieldSchema, newValue: any) {
@@ -131,7 +149,7 @@ const EntityForm: React.FC<{
   }
 
   return (
-    <div className='flex flex-col h-full'>
+    <div className='flex flex-col h-full overflow-hidden'>
       <div
         className={`UShell_EntityForm_Toolbar bg-toolbar dark:bg-toolbarDark flex justify-start p-1 rounded-sm 
         border border-toolbarBorder dark:border-toolbarBorderDark my-1`}
@@ -177,60 +195,62 @@ const EntityForm: React.FC<{
           <FloppyDiskIcon size={6}></FloppyDiskIcon>
         </button>
       </div>
-      {entityLayout?.partitions
-        .filter((p) => p.type == 'group')
-        .map((p) => (
-          <EntityFormGroup
-            label={p.name}
-            allFields={fieldsToDisplay}
-            fieldsToDisplay={fieldsToDisplay.filter((f) => p.fields.includes(f.name))}
-            currentEntity={currentEntity}
-            changeValue={changeValue}
-            fkRelations={fkRelations}
-            fkRelationsToDisplay={fkRelations.filter((fk) =>
-              p.fields.includes(fk.primaryEntityName),
-            )}
-            dataSourceManager={dataSourceManager}
-            changeLookUpValues={changeLookUpValues}
-            partitions={p.children}
-          ></EntityFormGroup>
-        ))}
-      <div className='flex gap-1 w-full '>
+      <div className='flex flex-col h-full overflow-auto'>
         {entityLayout?.partitions
-          .filter((p) => p.type == 'column')
+          .filter((p) => p.type == 'group')
           .map((p) => (
-            <div key={p.name}>
-              <EntityFormGroup
-                label={p.name}
-                allFields={fieldsToDisplay}
-                fieldsToDisplay={fieldsToDisplay.filter((f) => p.fields.includes(f.name))}
-                currentEntity={currentEntity}
-                changeValue={changeValue}
-                fkRelations={fkRelations}
-                fkRelationsToDisplay={fkRelations.filter((fk) =>
-                  p.fields.includes(fk.primaryEntityName),
-                )}
-                dataSourceManager={dataSourceManager}
-                changeLookUpValues={changeLookUpValues}
-                partitions={p.children}
-              ></EntityFormGroup>
-            </div>
+            <EntityFormGroup
+              label={p.name}
+              allFields={fieldsToDisplay}
+              fieldsToDisplay={fieldsToDisplay.filter((f) => p.fields.includes(f.name))}
+              currentEntity={currentEntity}
+              changeValue={changeValue}
+              fkRelations={fkRelations}
+              fkRelationsToDisplay={fkRelations.filter((fk) =>
+                p.fields.includes(fk.primaryEntityName),
+              )}
+              dataSourceManager={dataSourceManager}
+              changeLookUpValues={changeLookUpValues}
+              partitions={p.children}
+            ></EntityFormGroup>
           ))}
+        <div className='flex gap-1 w-full '>
+          {entityLayout?.partitions
+            .filter((p) => p.type == 'column')
+            .map((p) => (
+              <div key={p.name}>
+                <EntityFormGroup
+                  label={p.name}
+                  allFields={fieldsToDisplay}
+                  fieldsToDisplay={fieldsToDisplay.filter((f) => p.fields.includes(f.name))}
+                  currentEntity={currentEntity}
+                  changeValue={changeValue}
+                  fkRelations={fkRelations}
+                  fkRelationsToDisplay={fkRelations.filter((fk) =>
+                    p.fields.includes(fk.primaryEntityName),
+                  )}
+                  dataSourceManager={dataSourceManager}
+                  changeLookUpValues={changeLookUpValues}
+                  partitions={p.children}
+                ></EntityFormGroup>
+              </div>
+            ))}
+        </div>
+        <EntityFormGroup
+          label={dataSource.entitySchema!.name}
+          allFields={fieldsToDisplay}
+          fieldsToDisplay={fieldsToDisplay.filter((f) => getRemainingFields().includes(f.name))}
+          currentEntity={currentEntity}
+          changeValue={changeValue}
+          fkRelations={fkRelations}
+          fkRelationsToDisplay={fkRelations.filter((f) =>
+            getRemainingFkRelations().includes(f.primaryEntityName),
+          )}
+          dataSourceManager={dataSourceManager}
+          changeLookUpValues={changeLookUpValues}
+          partitions={[]}
+        ></EntityFormGroup>
       </div>
-      <EntityFormGroup
-        label={dataSource.entitySchema!.name}
-        allFields={fieldsToDisplay}
-        fieldsToDisplay={fieldsToDisplay.filter((f) => getRemainingFields().includes(f.name))}
-        currentEntity={currentEntity}
-        changeValue={changeValue}
-        fkRelations={fkRelations}
-        fkRelationsToDisplay={fkRelations.filter((f) =>
-          getRemainingFkRelations().includes(f.primaryEntityName),
-        )}
-        dataSourceManager={dataSourceManager}
-        changeLookUpValues={changeLookUpValues}
-        partitions={[]}
-      ></EntityFormGroup>
     </div>
   )
 }

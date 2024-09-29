@@ -33,12 +33,12 @@ const EntityFormGroup: React.FC<{
   return (
     <>
       {partitions.length > 0 && (
-        <Group name={label} className='overflow-auto h-full bg-bg1 dark:bg-bg2dark p-1 rounded-md'>
-          <div className='flex gap-1 w-full border-0 border-red-400'>
+        <Group name={label} className='overflow-auto1 bg-bg1 dark:bg-bg2dark p-1 rounded-md'>
+          <div className='flex gap-1 w-full h-full border-0 border-red-400'>
             {partitions
               .filter((p) => p.type == 'column')
               .map((p) => (
-                <div key={p.name} className='w-full'>
+                <div key={p.name} className='w-full h-full'>
                   <EntityFormGroup
                     allFields={allFields}
                     fieldsToDisplay={allFields.filter((f) => p.fields.includes(f.name))}
@@ -58,8 +58,8 @@ const EntityFormGroup: React.FC<{
         </Group>
       )}
       {(fieldsToDisplay.length > 0 || fkRelationsToDisplay.length > 0) && (
-        <Group name={label} className='overflow-auto h-full bg-bg1 dark:bg-bg2dark p-1 rounded-md'>
-          <div className='my-2'>
+        <Group name={label} className='overflow-auto1 bg-bg1 dark:bg-bg2dark p-1 rounded-md'>
+          <div className='my-2 h-full'>
             {fieldsToDisplay.map((f) => (
               <InputField
                 className='my-2'
