@@ -124,6 +124,11 @@ const EntityForm: React.FC<{
     const coveredFields: string[] = getCoveredFields(entityLayout.partitions)
     return fieldsToDisplay.map((f) => f.name).filter((fn) => !coveredFields.includes(fn))
   }
+  function getRemainingFkRelations(): string[] {
+    if (!entityLayout) return fieldsToDisplay.map((f) => f.name)
+    const coveredFields: string[] = getCoveredFields(entityLayout.partitions)
+    return fkRelations.map((f) => f.primaryEntityName).filter((fn) => !coveredFields.includes(fn))
+  }
 
   return (
     <div className='flex flex-col h-full'>
@@ -220,7 +225,7 @@ const EntityForm: React.FC<{
         changeValue={changeValue}
         fkRelations={fkRelations}
         fkRelationsToDisplay={fkRelations.filter((f) =>
-          getRemainingFields().includes(f.primaryEntityName),
+          getRemainingFkRelations().includes(f.primaryEntityName),
         )}
         dataSourceManager={dataSourceManager}
         changeLookUpValues={changeLookUpValues}
