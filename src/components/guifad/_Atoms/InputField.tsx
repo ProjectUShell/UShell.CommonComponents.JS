@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import GuidInputField from './GuidInputField'
 import InputStyle from './InputStyle'
+import BoolInputField from './BoolInputField'
 
 const InputField: React.FC<{
   className?: string
@@ -56,17 +57,30 @@ const InputField: React.FC<{
           classNameBg={classNameBg}
         ></GuidInputField>
       )}
-      {inputType.toLocaleLowerCase() != 'guid' && (
-        <InputStyle
-          htmlType={EntitySchemaService.getHtmlInputType(inputType)}
-          currentValue={currentValue}
-          disabled={disabled}
+      {(inputType.toLocaleLowerCase() == 'bool' || inputType.toLocaleLowerCase() == 'boolean') && (
+        <BoolInputField
           initialValue={initialValue}
-          onValueChange={onValueChange}
+          currentValue={currentValue}
           setCurrentValue={setCurrentValue}
+          onValueChange={onValueChange}
+          className={className}
+          disabled={disabled}
           classNameBg={classNameBg}
-        ></InputStyle>
+        ></BoolInputField>
       )}
+      {inputType.toLocaleLowerCase() != 'guid' &&
+        inputType.toLocaleLowerCase() != 'bool' &&
+        inputType.toLocaleLowerCase() != 'boolean' && (
+          <InputStyle
+            htmlType={EntitySchemaService.getHtmlInputType(inputType)}
+            currentValue={currentValue}
+            disabled={disabled}
+            initialValue={initialValue}
+            onValueChange={onValueChange}
+            setCurrentValue={setCurrentValue}
+            classNameBg={classNameBg}
+          ></InputStyle>
+        )}
     </div>
   )
 }

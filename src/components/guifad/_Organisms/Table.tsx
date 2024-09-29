@@ -247,6 +247,9 @@ const Table: React.FC<{
   }
 
   function getDisplay(v: any, c: TableColumn, test: any) {
+    if (c.fieldType.toLocaleLowerCase() == 'bool' || c.fieldType.toLocaleLowerCase() == 'boolean') {
+      return v ? 'Yes' : 'No'
+    }
     if (!test) {
       return v
     }
