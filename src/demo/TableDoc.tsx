@@ -5,7 +5,7 @@ import TableDemoBasic from './TableDemoBasic'
 import TableDemoClientFilter from './TableDemoClientFilter'
 import TableDemoClientFilterAndSorting from './TableDemoClientFilterAndSorting'
 
-const TableDemo1 = () => {
+const TableDoc = () => {
   return (
     <DocComponent
       title='Table'
@@ -36,4 +36,4 @@ const TableDemo1 = () => {
   )
 }
 
-export default TableDemo1
+export default TableDoc

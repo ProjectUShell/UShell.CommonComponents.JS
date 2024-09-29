@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { FuseDataStore } from '../../../data/FuseDataStore'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
 import LoadingScreen from '../../../_Molecules/LoadingScreen'
+import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutDescriptionRoot'
 
 const queryClient = new QueryClient()
 
@@ -11,8 +12,9 @@ const GuifadFuse: React.FC<{
   fuseUrl: string
   routePattern: 'body' | 'route' | 'method'
   rootEntityName: string
+  layoutDescription?: LayoutDescriptionRoot
   record?: any
-}> = ({ fuseUrl, routePattern, rootEntityName, record }) => {
+}> = ({ fuseUrl, routePattern, rootEntityName, layoutDescription, record }) => {
   const [dataStore, setDataStore] = useState<FuseDataStore | null | undefined>(undefined)
   const [error, setError] = useState<any>(null)
 
@@ -45,6 +47,7 @@ const GuifadFuse: React.FC<{
         dataSourceManager={dataStore}
         rootEntityName={rootEntityName}
         record={record}
+        layoutDescription={layoutDescription}
       ></Guifad>
     </QueryClientProvider>
   )

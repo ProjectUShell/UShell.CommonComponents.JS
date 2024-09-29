@@ -173,11 +173,13 @@ const DropdownSelect: React.FC<{
       <div
         id={refId}
         ref={ref}
-        className='p-0.5 w-full rounded-sm focus:z-50 relative flex bg-bg1 dark:bg-bg2dark border-0 border-red-400'
+        className='p-0 w-full rounded-sm focus:z-50 relative flex
+         bg-bg1 dark:bg-bg2dark border-0 border-red-400'
       >
         <input
           autoFocus={forceFocus}
-          className={`w-full focus:z-50 relative outline-none bg-bg1 dark:bg-bg2dark dark:border-bg4dark p-1 rounded-md ${inputClassname}`}
+          className={`w-full focus:z-50 relative outline-none             
+            ${inputClassname}`}
           onClick={(e) => setOpen(true)}
           value={currentText}
           type='text'
@@ -205,7 +207,10 @@ const DropdownSelect: React.FC<{
             topOffset={topOffset ? topOffset : undefined}
             minWidth={true}
           >
-            <div className='bg-bg2 dark:bg-bg3dark w-full p-1 rounded-b-md border-0 dark:border dark:border-bg4dark'>
+            <div
+              className='bg-bg2 dark:bg-bg3dark w-full p-1
+            border-2 dark:border dark:border-bg4dark'
+            >
               {options
                 .filter((o) => currentMatchingOptions.length == 0 || isMatchingOption(o))
                 .map((o) => (

@@ -40,16 +40,22 @@ const records: any[] = [
     salary: 30000,
   },
   {
-    id: 1,
+    id: 2,
     name: 'Ann',
     birthday: '2002-03-11',
     salary: 100000,
   },
   {
-    id: 1,
+    id: 3,
     name: 'Nico',
     birthday: '1987-12-04',
     salary: 250000,
+  },
+  {
+    id: 4,
+    name: 'Nicole',
+    birthday: '1987-12-04',
+    salary: 150000,
   },
 ]
 const TableDemoClientFilter = () => {

@@ -3,6 +3,8 @@ import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
 import { EntitySchema } from 'fusefx-modeldescription'
 import Guifad1 from './Guifad1'
 import { ObjectGraphNode } from '../ObjectGraphNode'
+import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
+import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutDescriptionRoot'
 
 //TODO statt SchemRoot => genauere Funktionenen auf dem SchemaRoot wie getNavigations
 // oder komplett nur IDataSourceManager reingeben
@@ -11,9 +13,16 @@ import { ObjectGraphNode } from '../ObjectGraphNode'
 const Guifad: React.FC<{
   dataSourceManager: IDataSourceManagerBase
   rootEntityName: string
+  layoutDescription?: LayoutDescriptionRoot
   record?: any
   enterRecord?: (r: any, entitySchema: EntitySchema) => void
-}> = ({ dataSourceManager, rootEntityName, record, enterRecord }) => {
+}> = ({
+  dataSourceManager,
+  rootEntityName,
+  record,
+  enterRecord,
+  layoutDescription = { entityLayouts: [], semanticVersion: '0', timestampUtc: '0' },
+}) => {
   const [rootDataSource, setRootDataSource] = useState<IDataSource | null>(null)
 
   // useEffect(() => {
@@ -37,6 +46,7 @@ const Guifad: React.FC<{
       dataSourceManager={dataSourceManager}
       rootNode={rootNode}
       enterRecord={enterRecord}
+      layoutDescription={layoutDescription}
     ></Guifad1>
   )
 }

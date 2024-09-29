@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 const DocComponent: React.FC<{
   title: string
   subTitle: string
-  explanation: string
+  explanation: string | JSX.Element
   demos: {
     demoTitle: string
     demoExplanation: string

@@ -10,8 +10,16 @@ const LookUpSelect: React.FC<{
   lookUpRelation: RelationSchema
   initialValue: any
   onValueSet: (keyValues: any[]) => void
+  inputClassName?: string
   showLabel?: boolean
-}> = ({ dataSourceManager, lookUpRelation, initialValue, onValueSet, showLabel = true }) => {
+}> = ({
+  dataSourceManager,
+  lookUpRelation,
+  initialValue,
+  onValueSet,
+  inputClassName = '',
+  showLabel = true,
+}) => {
   const [lookUpList, setLookUpList] = useState<{ label: string; value: string }[]>([])
   const [error, setError] = useState<any>(null)
 
@@ -60,7 +68,7 @@ const LookUpSelect: React.FC<{
         }}
         initialOption={lookUpList.find((li) => li.value == initialValue)}
         topOffset={0}
-        inputClassname='border'
+        inputClassname={inputClassName}
       ></DropdownSelect>
     </div>
   )

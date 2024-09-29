@@ -33,7 +33,9 @@ import { LocalStorageReportRepository } from './components/report/LocalStorageRe
 import { ColorMode, loadShellSettings } from './components/shell-layout/ShellSettings'
 import Dashboard from './components/dashboard/_Templates/Dashboard'
 import DropdownMultiSelectDemo from './demo/DropdownMultiSelectDemo'
-import TableDemo1 from './demo/TableDemo1'
+import TableDoc from './demo/TableDoc'
+import DocComponent from './demo/DocComponent'
+import GuifadDoc from './demo/GuifadDoc'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -41,13 +43,26 @@ const Demo = () => {
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3MTM2OTg3NjYsImV4cCI6MTc0NTIzNDc2NiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.C-c7FWta-4pyjSZL1tnOlLdI6fFHM6d11VpWVrtJwqA'
   const [currentComponent, setCurrentComponent] = useState<string>('TableDemo')
   const [tabIndex, setTabIndex] = useState(0)
-  const demoComponents: string[] = ['Guifad', 'Table', 'Common', 'SchemaEditor', 'Reports']
+  const demoComponents: string[] = [
+    'Base Components',
+    'FuseFx Components',
+    'Dynamic Reports',
+    'Schema Editor',
+    'Technical',
+  ]
   const subComponents: { [key: string]: string[] } = {
-    Guifad: ['GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
-    Table: ['TableDemo', 'ResizeTable', 'ResizeTable2', 'Table1'],
-    Common: ['ColorDemo', 'DropdownButtonDemo', 'DropdownMultiSelectDemo'],
-    SchemaEditor: ['Schema Manager', 'Editor', 'Schema Guifad'],
-    Reports: ['ReportService', 'ReportManager', 'ReportDashboard'],
+    'Base Components': [
+      'DropdownButtonDemo',
+      'DropdownMultiSelectDemo',
+      'TableDemo',
+      'ResizeTable',
+      'ResizeTable2',
+      'Table1',
+    ],
+    'FuseFx Components': ['Guifad', 'GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
+    'Dynamic Reports': ['ReportService', 'ReportManager', 'ReportDashboard'],
+    'Schema Editor': ['Schema Manager', 'Editor', 'Schema Guifad'],
+    Technical: ['ColorDemo'],
   }
 
   const [schemaName, setSchemaName] = useState('')
@@ -111,6 +126,7 @@ const Demo = () => {
         }}
         shellMenuState={shellMenuState}
       >
+        {currentComponent == 'Guifad' && <GuifadDoc></GuifadDoc>}
         {(currentComponent == 'GuifadDemo' || currentComponent == 'GuifadDemo2') && (
           <TabControl
             tabItems={[
@@ -182,7 +198,7 @@ const Demo = () => {
             ]}
           ></ResizableTable2>
         )}
-        {currentComponent == 'Table1' && <TableDemo1></TableDemo1>}
+        {currentComponent == 'Table1' && <TableDoc></TableDoc>}
         {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
         {currentComponent == 'Schema Manager' && (
           <SchemaManager

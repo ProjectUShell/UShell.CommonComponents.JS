@@ -9,12 +9,14 @@ import EntityForm from '../_Organisms/EntityForm'
 import { setParentId } from '../../../data/DataSourceService'
 import PreviewTable from '../_Organisms/PreviewTable'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
+import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutDescriptionRoot'
 
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
   dataSourceManager: IDataSourceManagerBase
+  layoutDescription: LayoutDescriptionRoot
   enterRecord?: (r: any, entitySchema: EntitySchema) => void
-}> = ({ rootNode, dataSourceManager, enterRecord }) => {
+}> = ({ rootNode, dataSourceManager, layoutDescription, enterRecord }) => {
   // states
   const [nodes, setCurrentNodes] = useState<ObjectGraphNode[]>([rootNode])
   const [currentRecord, setCurrentRecord] = useState<any | null>(null)
@@ -89,7 +91,7 @@ const Guifad1: React.FC<{
     setCurrentMode('details')
   }
   return (
-    <div className='w-full h-full flex flex-col overflow-hidden text-sm bg-bg1 dark:bg-bg1dark'>
+    <div className='w-full h-full flex flex-col overflow-hidden text-sm bg-bg1 dark:bg-bg1dark border-0 border-red-400'>
       <div className='w-full h-full flex overflow-hidden text-sm bg-content dark:bg-contentDark'>
         <aside
           style={{ minWidth: '72px' }}
@@ -192,6 +194,9 @@ const Guifad1: React.FC<{
                   setCurrentRecord(updatedEntity)
                   setDirty(false)
                 }}
+                entityLayout={layoutDescription.entityLayouts.find(
+                  (el) => el.entityName == node.dataSource.entitySchema?.name,
+                )}
               ></EntityForm>
             )}
           </div>

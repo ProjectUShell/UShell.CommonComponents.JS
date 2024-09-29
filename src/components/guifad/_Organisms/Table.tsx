@@ -590,7 +590,7 @@ const Table: React.FC<{
               const renderRow = (
                 <tr
                   key={i}
-                  className={`border-t border-b border-bg3 dark:border-bg3dark  ${
+                  className={`border-t border-b border-tableBorder dark:border-tableBorderDark  ${
                     selectedRows[i]
                       ? 'bg-prim1 dark:bg-prim6 text-textonedark'
                       : 'bg-table dark:bg-tableDark hover:bg-tableHover dark:hover:bg-tableHoverDark'

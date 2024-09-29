@@ -241,7 +241,7 @@ const Dropdown: React.FC<{
             right: getRight(),
           }}
           className={`fixed z-50  shadow-lg overflow-auto 
-             flex1 justify-center items-center w-max ${className} border-0 border-pink-400`}
+             flex1 justify-center items-center w-max ${className} border-0 bg-transparent border-pink-400`}
         >
           <div style={{}} className='rounded-md'>
             {children}

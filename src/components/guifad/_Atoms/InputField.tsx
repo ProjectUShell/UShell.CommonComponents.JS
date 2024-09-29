@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
+import GuidInputField from './GuidInputField'
+import InputStyle from './InputStyle'
 
 const InputField: React.FC<{
   className?: string
@@ -7,9 +9,18 @@ const InputField: React.FC<{
   inputType: string
   initialValue: any
   onValueChange: (newValue: any) => void
-}> = ({ className, label, inputType, initialValue, onValueChange }) => {
+  setabilityFlags?: number
+  classNameBg?: string
+}> = ({
+  className,
+  label,
+  inputType,
+  initialValue,
+  onValueChange,
+  setabilityFlags = 7,
+  classNameBg,
+}) => {
   const [currentValue, setCurrentValue] = useState<any>(initialValue)
-
   useEffect(() => {
     function getInitialValue(initialValue: any): any {
       const htmlType: string = EntitySchemaService.getHtmlInputType(inputType)
@@ -29,18 +40,33 @@ const InputField: React.FC<{
     setCurrentValue(getInitialValue(initialValue))
   }, [initialValue, inputType])
 
+  const fixAfterCreation: boolean = setabilityFlags < 6 //TODO adjust setability check after Fix in EntityAnnotations
+  const disabled: boolean = fixAfterCreation && initialValue && initialValue != ''
   return (
     <div className={className}>
       <label className='block mb-2 text-xs font-medium'>{label}</label>
-      <input
-        className='text-sm rounded-md bg-bg1 dark:bg-bg2dark block w-full p-1 border border-contentBorder dark:border-contentBorderDark'
-        type={EntitySchemaService.getHtmlInputType(inputType)}
-        value={currentValue}
-        onChange={(e) => {
-          onValueChange(e.target.value)
-          setCurrentValue(e.target.value)
-        }}
-      ></input>
+      {inputType.toLocaleLowerCase() == 'guid' && (
+        <GuidInputField
+          initialValue={initialValue}
+          currentValue={currentValue}
+          setCurrentValue={setCurrentValue}
+          onValueChange={onValueChange}
+          className={className}
+          disabled={disabled}
+          classNameBg={classNameBg}
+        ></GuidInputField>
+      )}
+      {inputType.toLocaleLowerCase() != 'guid' && (
+        <InputStyle
+          htmlType={EntitySchemaService.getHtmlInputType(inputType)}
+          currentValue={currentValue}
+          disabled={disabled}
+          initialValue={initialValue}
+          onValueChange={onValueChange}
+          setCurrentValue={setCurrentValue}
+          classNameBg={classNameBg}
+        ></InputStyle>
+      )}
     </div>
   )
 }

@@ -165,6 +165,8 @@ const RelationEditor: React.FC<{
         }
         onOptionSet={(o) => onFieldSet(o?.value)}
         placeholder='Select a field'
+        inputClassname='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
+               p-2 w-full transition-all bg-bg4 dark:bg-bg4dark'
       ></DropdownSelect>
       <DropdownSelect
         options={getValidOperators(currrentField?.type)}
@@ -173,6 +175,8 @@ const RelationEditor: React.FC<{
         }
         onOptionSet={(o) => onOperatorSet(o?.value)}
         placeholder={currrentField ? 'Select a operator' : 'Select a field first'}
+        inputClassname='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
+               p-2 w-full transition-all bg-bg4 dark:bg-bg4dark'
       ></DropdownSelect>
       {currentFkRelation ? (
         <LookUpSelect
@@ -181,13 +185,16 @@ const RelationEditor: React.FC<{
           initialValue={null}
           lookUpRelation={currentFkRelation}
           onValueSet={(keyValues: any[]) => onValueSet(keyValues)}
+          inputClassName='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
+               p-2 w-full transition-all bg-bg4 dark:bg-bg4dark'
         ></LookUpSelect>
       ) : (
         <input
           value={currentValue}
           type={EntitySchemaService.getHtmlInputType(currrentField?.type || 'string')}
           onChange={(e) => onValueSet(e.target.value)}
-          className='p-0.5 outline-0 outline-gray-400 outline rounded-sm w-64 focus:z-50 relative bg-bg1 dark:bg-bg2dark'
+          className='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
+               p-2 transition-all bg-bg4 dark:bg-bg4dark outline-none'
         ></input>
       )}
     </div>
