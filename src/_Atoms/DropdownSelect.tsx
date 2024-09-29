@@ -187,7 +187,7 @@ const DropdownSelect: React.FC<{
           onKeyDown={(e) => onInputKeyDown(e)}
           placeholder={placeholder || 'enter valid value'}
         ></input>
-        {!open ? (
+        {/* {!open ? (
           <button tabIndex={-1} onClick={() => setOpen(true)}>
             <ChevrodnDownIcon></ChevrodnDownIcon>
           </button>
@@ -195,7 +195,7 @@ const DropdownSelect: React.FC<{
           <button tabIndex={-1} onClick={() => setOpen(false)}>
             <XMarkIcon size={2}></XMarkIcon>
           </button>
-        )}
+        )} */}
       </div>
       {/* </button> */}
       {open && (
