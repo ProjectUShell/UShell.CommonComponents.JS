@@ -4,9 +4,10 @@ import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import { PaginatedList } from 'fusefx-repositorycontract'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
+import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 const LookUpSelect: React.FC<{
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
   lookUpRelation: RelationSchema
   initialValue: any
   onValueSet: (keyValues: any[]) => void

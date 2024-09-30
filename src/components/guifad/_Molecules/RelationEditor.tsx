@@ -8,6 +8,7 @@ import InputField from '../_Atoms/InputField'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import LookUpSelect from './LookUpSelect'
 import { IDataSourceManagerBase } from 'ushell-modulebase'
+import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 // export interface IFieldInfo {
 //   name: string
@@ -19,7 +20,7 @@ const RelationEditor: React.FC<{
   onUpdateRelation: (r: FieldPredicate) => void
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
 }> = ({ initialRelation, fields, fkRelations, onUpdateRelation, dataSourceManager }) => {
   const [currrentField, setCurrentField] = useState<FieldSchema | null>(null)
   const [currentFkRelation, setCurrentFkRelation] = useState<RelationSchema | null>(null)

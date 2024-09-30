@@ -5,13 +5,14 @@ import Guifad1 from './Guifad1'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
 import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutDescriptionRoot'
+import { IDataSourceManagerWidget } from './IDataSourceManagerWidget'
 
 //TODO statt SchemRoot => genauere Funktionenen auf dem SchemaRoot wie getNavigations
 // oder komplett nur IDataSourceManager reingeben
 // IDataSourceManager: getDataSource, getNavigations
 // TODO wenn kein rootEntityName => Auswahl der EntityTypes darstellen
 const Guifad: React.FC<{
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
   rootEntityName: string
   layoutDescription?: LayoutDescriptionRoot
   record?: any

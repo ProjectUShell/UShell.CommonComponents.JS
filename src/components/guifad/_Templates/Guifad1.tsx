@@ -10,10 +10,11 @@ import { setParentId } from '../../../data/DataSourceService'
 import PreviewTable from '../_Organisms/PreviewTable'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
 import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutDescriptionRoot'
+import { IDataSourceManagerWidget } from './IDataSourceManagerWidget'
 
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
   layoutDescription: LayoutDescriptionRoot
   enterRecord?: (r: any, entitySchema: EntitySchema) => void
 }> = ({ rootNode, dataSourceManager, layoutDescription, enterRecord }) => {

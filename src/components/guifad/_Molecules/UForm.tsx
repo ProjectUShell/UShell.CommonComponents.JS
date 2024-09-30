@@ -6,6 +6,7 @@ import LookUpSelect from './LookUpSelect'
 import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import { IDataSourceManagerBase } from 'ushell-modulebase'
 import UForm1 from './UForm1'
+import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 const UForm: React.FC<{
   fieldsToDisplay: FieldSchema[]
@@ -13,7 +14,7 @@ const UForm: React.FC<{
   currentEntity: any
   changeValue: (field: FieldSchema, newValue: any) => void
   changeLookUpValues: (l: RelationSchema, keyValues: any) => void
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
   labelPosition: 'top' | 'left'
   classNameBg?: string
   classNameInputBg?: string

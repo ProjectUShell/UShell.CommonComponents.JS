@@ -26,6 +26,8 @@ import Accordion from './_Molecules/Accordion'
 import AccordionMenu from './_Molecules/AccordionMenu'
 import UForm from './components/guifad/_Molecules/UForm'
 import UForm1 from './components/guifad/_Molecules/UForm1'
+import EntityForm from './components/guifad/_Organisms/EntityForm'
+import EntityTable from './components/guifad/_Organisms/EntityTable'
 
 // export { MyComponent }
 
@@ -48,6 +50,8 @@ export { Accordion }
 export { AccordionMenu }
 export { UForm }
 export { UForm1 }
+export { EntityForm }
+export { EntityTable }
 
 export * from './components/shell-layout/_Templates/ShellLayout'
 

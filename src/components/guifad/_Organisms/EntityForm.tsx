@@ -14,10 +14,11 @@ import ErrorPage from '../../../_Molecules/ErrorScreen'
 import { EntityLayout, LayoutPartition } from '../../../[Move2LayoutDescription]/EntityLayout'
 import EntityFormGroup from '../_Molecules/EntityFormGroup'
 import Modal from '../../../_Atoms/Modal'
+import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 const EntityForm: React.FC<{
   dataSource: IDataSource
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
   entity: any
   dirty: boolean
   setDirty: (d: boolean) => void

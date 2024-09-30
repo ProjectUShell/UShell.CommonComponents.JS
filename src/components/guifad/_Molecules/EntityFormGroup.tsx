@@ -7,6 +7,7 @@ import InputField from '../_Atoms/InputField'
 import LookUpSelect from './LookUpSelect'
 import { EntityLayout, LayoutPartition } from '../../../[Move2LayoutDescription]/EntityLayout'
 import UForm from './UForm'
+import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 const EntityFormGroup: React.FC<{
   label?: string
@@ -16,7 +17,7 @@ const EntityFormGroup: React.FC<{
   changeValue: (field: FieldSchema, newValue: any) => void
   fkRelations: RelationSchema[]
   fkRelationsToDisplay: RelationSchema[]
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
   changeLookUpValues: (l: RelationSchema, keyValues: any) => void
   partitions: LayoutPartition[]
 }> = ({

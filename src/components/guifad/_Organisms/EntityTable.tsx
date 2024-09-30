@@ -23,9 +23,10 @@ import SearchBar from '../../../_Molecules/SearchBar'
 import AdjustmentsHorizontalIcon from '../../../_Icons/AdjustmentsHorizontalIcon'
 import BookmarkSquareIcon from '../../../_Icons/BookmarkSquareIcon'
 import QueryLibrary from './QueryLibrary'
+import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 const EntityTable: React.FC<{
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
   dataSource: IDataSource
   parentSchema: EntitySchema | undefined
   parent: any | undefined

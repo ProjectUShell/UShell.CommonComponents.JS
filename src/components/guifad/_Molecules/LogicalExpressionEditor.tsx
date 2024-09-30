@@ -6,6 +6,7 @@ import LogicalExpressionTree from './LogicalExpressionTree'
 import { getEmptyExpression, isExpressionValid } from '../ExpressionService'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 import { IDataSourceManagerBase } from 'ushell-modulebase'
+import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 function getCopy(e: LogicalExpression | null): LogicalExpression {
   if (e == null) {
@@ -35,7 +36,7 @@ const LogicalExpressionEditor: React.FC<{
   onUpdateExpression: (e: LogicalExpression) => void
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
 }> = ({ intialExpression, fields, fkRelations, onUpdateExpression, dataSourceManager }) => {
   console.log('LogicalExpressionEditor dataSourceManager', dataSourceManager)
   const [originalExpression, setOriginalExpression] = useState<LogicalExpression | null>(

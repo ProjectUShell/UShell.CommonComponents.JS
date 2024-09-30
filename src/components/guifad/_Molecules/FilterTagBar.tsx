@@ -3,6 +3,7 @@ import { LogicalExpression } from 'fusefx-repositorycontract'
 import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import FilterTag from './FilterTag'
 import { IDataSourceManagerBase } from 'ushell-modulebase'
+import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 const FilterTagBar: React.FC<{
   filters: LogicalExpression[]
@@ -10,7 +11,7 @@ const FilterTagBar: React.FC<{
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
   className?: string
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
 }> = ({ filters, fields, fkRelations, onUpdateFilters, className, dataSourceManager }) => {
   function onFiltersUpdate(f: LogicalExpression, index: number) {
     filters[index] = f

@@ -42,7 +42,11 @@ const Accordion: React.FC<{
               ${openIndices.includes(i) ? 'bg-bg8 dark:bg-bg8dark' : ''}`}
             onClick={() => toggleOpen(i)}
           >
-            <div className={`p-3  ${isOpen(i) ? 'rotate-0 transition-all' : '-rotate-90'}`}>
+            <div
+              className={`p-3  ${
+                isOpen(i) ? 'transform rotate-0 transition-all' : 'transform  -rotate-90'
+              }`}
+            >
               <ChevrodnDownIcon></ChevrodnDownIcon>
             </div>
             <button className=' p-3 '>{item.label}</button>

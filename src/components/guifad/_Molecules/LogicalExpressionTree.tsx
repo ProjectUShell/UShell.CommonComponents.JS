@@ -7,13 +7,14 @@ import { getEmptyRelationElement, isRelationValid } from '../ExpressionService'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
 import { IDataSourceManagerBase } from 'ushell-modulebase'
+import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 const LogicalExpressionTree: React.FC<{
   expression: LogicalExpression
   onUpdateExpression: (e: LogicalExpression) => void
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
 }> = ({ expression, fields, fkRelations, onUpdateExpression, dataSourceManager }) => {
   function onRelationUpdated(r: FieldPredicate, index: number) {
     expression.predicates[index] = r

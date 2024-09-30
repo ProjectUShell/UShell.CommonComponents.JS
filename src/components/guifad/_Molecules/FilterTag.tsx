@@ -6,6 +6,7 @@ import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import XMarkIcon from '../../../_Icons/XMarkIcon'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 import { IDataSourceManagerBase } from 'ushell-modulebase'
+import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 const FilterTag: React.FC<{
   filter: LogicalExpression
@@ -13,7 +14,7 @@ const FilterTag: React.FC<{
   fkRelations: RelationSchema[]
   onUpdateFilter: (f: LogicalExpression) => void
   onDelete: () => void
-  dataSourceManager: IDataSourceManagerBase
+  dataSourceManager: IDataSourceManagerWidget
 }> = ({ filter, fields, fkRelations, onUpdateFilter, onDelete, dataSourceManager }) => {
   const [open, setOpen] = useState(false)
 
