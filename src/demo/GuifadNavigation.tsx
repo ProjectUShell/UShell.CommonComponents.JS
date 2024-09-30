@@ -12,6 +12,7 @@ const GuifadNavigation = () => {
         timestampUtc: '',
         entityLayouts: [
           {
+            dislpayRemainingFields: false,
             entityName: 'Person',
             displayLabel: 'Person',
             displayLabelPlural: 'People',

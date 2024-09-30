@@ -26,4 +26,6 @@ export class EntityLayout {
   public controlPreference?: ControlPreference
 
   public partitions: LayoutPartition[] = []
+
+  public dislpayRemainingFields: boolean = true
 }

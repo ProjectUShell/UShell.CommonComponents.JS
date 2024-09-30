@@ -177,6 +177,7 @@ const Demo = () => {
               timestampUtc: '',
               entityLayouts: [
                 {
+                  dislpayRemainingFields: true,
                   entityName: 'Person',
                   displayLabel: 'Person',
                   displayLabelPlural: 'People',

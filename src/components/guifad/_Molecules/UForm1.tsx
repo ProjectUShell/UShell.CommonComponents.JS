@@ -30,20 +30,27 @@ const UForm1: React.FC<{
     <div className='flex'>
       {labelPosition == 'left' && (
         <div
-          className={`my-2 h-full flex flex-col gap-1 
+          className={`my-2 h-full flex flex-col gap-2
       ${classNameBg || ''}`}
         >
           {fieldsToDisplay.map((f) => (
             <div className='flex items-baseline border-0 border-red-400'>
-              <label className='whitespace-nowrap pt-5 pb-1 px-3 font-medium text-sm align-baseline border-b-2 border-b-transparent'>
+              <label className='whitespace-nowrap p-3 font-medium text-sm align-baseline border-b-2 border-b-transparent'>
                 {f.name}
+              </label>
+            </div>
+          ))}
+          {customInputs.map((f) => (
+            <div className='flex items-baseline border-0 border-red-400'>
+              <label className='whitespace-nowrap p-3 font-medium text-sm align-baseline border-b-2 border-b-transparent'>
+                {f.label}
               </label>
             </div>
           ))}
         </div>
       )}
       <div
-        className={`my-2 h-full w-full flex flex-col gap-1
+        className={`my-2 h-full w-full flex flex-col gap-2
       ${classNameBg || ''}`}
       >
         {fieldsToDisplay.map((f) => (

@@ -24,7 +24,17 @@ const EntityForm: React.FC<{
   setDirty: (d: boolean) => void
   onChange: (updatedEntity: any) => void
   entityLayout?: EntityLayout
-}> = ({ dataSourceManager, dataSource, entity, dirty, setDirty, onChange, entityLayout }) => {
+  labelPosition?: 'top' | 'left'
+}> = ({
+  dataSourceManager,
+  dataSource,
+  entity,
+  dirty,
+  setDirty,
+  onChange,
+  entityLayout,
+  labelPosition = 'top',
+}) => {
   // states
   const [currentEntity, setCurrentEntity] = useState({ ...entity })
   const [fkRelations, setFkRelations] = useState<RelationSchema[]>([])
@@ -199,8 +209,9 @@ const EntityForm: React.FC<{
       <div className='flex flex-col h-full overflow-auto'>
         {entityLayout?.partitions
           .filter((p) => p.type == 'group')
-          .map((p) => (
+          .map((p, i) => (
             <EntityFormGroup
+              key={i}
               label={p.name}
               allFields={fieldsToDisplay}
               fieldsToDisplay={fieldsToDisplay.filter((f) => p.fields.includes(f.name))}
@@ -213,6 +224,7 @@ const EntityForm: React.FC<{
               dataSourceManager={dataSourceManager}
               changeLookUpValues={changeLookUpValues}
               partitions={p.children}
+              labelPosition={labelPosition}
             ></EntityFormGroup>
           ))}
         <div className='flex gap-1 w-full '>
@@ -233,24 +245,28 @@ const EntityForm: React.FC<{
                   dataSourceManager={dataSourceManager}
                   changeLookUpValues={changeLookUpValues}
                   partitions={p.children}
+                  labelPosition={labelPosition}
                 ></EntityFormGroup>
               </div>
             ))}
         </div>
-        <EntityFormGroup
-          label={dataSource.entitySchema!.name}
-          allFields={fieldsToDisplay}
-          fieldsToDisplay={fieldsToDisplay.filter((f) => getRemainingFields().includes(f.name))}
-          currentEntity={currentEntity}
-          changeValue={changeValue}
-          fkRelations={fkRelations}
-          fkRelationsToDisplay={fkRelations.filter((f) =>
-            getRemainingFkRelations().includes(f.primaryEntityName),
-          )}
-          dataSourceManager={dataSourceManager}
-          changeLookUpValues={changeLookUpValues}
-          partitions={[]}
-        ></EntityFormGroup>
+        {(!entityLayout || entityLayout.dislpayRemainingFields) && (
+          <EntityFormGroup
+            label={dataSource.entitySchema!.name}
+            allFields={fieldsToDisplay}
+            fieldsToDisplay={fieldsToDisplay.filter((f) => getRemainingFields().includes(f.name))}
+            currentEntity={currentEntity}
+            changeValue={changeValue}
+            fkRelations={fkRelations}
+            fkRelationsToDisplay={fkRelations.filter((f) =>
+              getRemainingFkRelations().includes(f.primaryEntityName),
+            )}
+            dataSourceManager={dataSourceManager}
+            changeLookUpValues={changeLookUpValues}
+            partitions={[]}
+            labelPosition={labelPosition}
+          ></EntityFormGroup>
+        )}
       </div>
     </div>
   )

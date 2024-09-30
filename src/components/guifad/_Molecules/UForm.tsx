@@ -60,6 +60,7 @@ const UForm: React.FC<{
                 rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
                 p-3 w-full transition-all bg-bg4 dark:bg-bg4dark              
               `}
+              showLabel={labelPosition == 'top'}
             ></LookUpSelect>
           ),
         }

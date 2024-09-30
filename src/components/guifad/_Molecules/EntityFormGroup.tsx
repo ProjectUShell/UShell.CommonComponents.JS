@@ -20,6 +20,7 @@ const EntityFormGroup: React.FC<{
   dataSourceManager: IDataSourceManagerWidget
   changeLookUpValues: (l: RelationSchema, keyValues: any) => void
   partitions: LayoutPartition[]
+  labelPosition: 'left' | 'top'
 }> = ({
   label,
   allFields,
@@ -31,6 +32,7 @@ const EntityFormGroup: React.FC<{
   dataSourceManager,
   changeLookUpValues,
   partitions,
+  labelPosition,
 }) => {
   return (
     <>
@@ -53,6 +55,7 @@ const EntityFormGroup: React.FC<{
                     dataSourceManager={dataSourceManager}
                     changeLookUpValues={changeLookUpValues}
                     partitions={p.children}
+                    labelPosition={labelPosition}
                   ></EntityFormGroup>
                 </div>
               ))}
@@ -68,7 +71,7 @@ const EntityFormGroup: React.FC<{
             dataSourceManager={dataSourceManager}
             fieldsToDisplay={fieldsToDisplay}
             fkRelationsToDisplay={fkRelationsToDisplay}
-            labelPosition='top'
+            labelPosition={labelPosition}
           ></UForm>
         </Group>
       )}
