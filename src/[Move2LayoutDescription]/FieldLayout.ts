@@ -7,7 +7,7 @@ export class FieldLayout {
   public fieldName: string = ''
 
   /** for tool-tip */
-  public summary: string = ''
+  public summary?: string = ''
 
   /** only valid when a field.type == 'text' */
   public textContentType?: 'plain' | 'markdown' | 'html' = 'plain'
@@ -18,7 +18,7 @@ export class FieldLayout {
   /** only valid when a field.type == 'text' */
   public textValidationRegex?: string | null = null
 
-  public dropdownMode: 'none' | 'static' | 'staticAndCustom' | 'staticFromDataSource' = 'none'
+  public dropdownMode?: 'none' | 'static' | 'staticAndCustom' | 'staticFromDataSource' = 'none'
 
   /** only valid when a field.dropdownMode == 'static'|'staticAndCustom' (in the form of '{'key':'label'}') */
   public dropdownStaticEntries?: { [key: string]: string }
@@ -41,9 +41,9 @@ export class FieldLayout {
   /** the class-name of a custom validator to use */
   public validatorName?: string
 
-  public required: boolean = true
+  public required?: boolean = true
 
-  public defaultValue: string | null = null
+  public defaultValue?: string | null = null
 
   /**
    * Never = 0 (this field should only be set by wellknown technical automatisms),
@@ -53,23 +53,23 @@ export class FieldLayout {
    * AfterCreation = 6 (represents the logical combination of 'OnSingleUpdate' + 'OnBatchUpdate'),
    * Always = 7 (represents the logical combination of 'OnCreation' + 'AfterCreation')
    */
-  public setabilityFlags: number = 7
+  public setabilityFlags?: number = 7
 
   /**
    * Indicates, if a field belongs to a more specific business domain.
    * This can be used to control the detail-grade (displayed fields) in the UI
    * or when exporting data in an abstract way.
    */
-  public contentConcern: string | null = null
+  public contentConcern?: string | null = null
 
   /**
    * Defines whether a field contains content that is commonly used for filtering.
    * This can have the values 0=None, 1=ExactMatch, 2=Substring (tect whcih has NOT the semantic of an ID/KEY)
    * This is a non-technical information, which relates to the domain model (business-level)!
    */
-  public filterable: number = 0
+  public filterable?: number = 0
 
-  public hidden: boolean = false
+  public hidden?: boolean = false
 
   public controlPreference?: ControlPreference
 }

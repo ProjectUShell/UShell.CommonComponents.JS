@@ -8,6 +8,7 @@ import LookUpSelect from './LookUpSelect'
 import { EntityLayout, LayoutPartition } from '../../../[Move2LayoutDescription]/EntityLayout'
 import UForm from './UForm'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
+import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
 
 const EntityFormGroup: React.FC<{
   label?: string
@@ -21,6 +22,7 @@ const EntityFormGroup: React.FC<{
   changeLookUpValues: (l: RelationSchema, keyValues: any) => void
   partitions: LayoutPartition[]
   labelPosition: 'left' | 'top'
+  fieldLayouts: FieldLayout[]
 }> = ({
   label,
   allFields,
@@ -33,6 +35,7 @@ const EntityFormGroup: React.FC<{
   changeLookUpValues,
   partitions,
   labelPosition,
+  fieldLayouts,
 }) => {
   return (
     <>
@@ -56,6 +59,7 @@ const EntityFormGroup: React.FC<{
                     changeLookUpValues={changeLookUpValues}
                     partitions={p.children}
                     labelPosition={labelPosition}
+                    fieldLayouts={fieldLayouts}
                   ></EntityFormGroup>
                 </div>
               ))}
@@ -72,6 +76,7 @@ const EntityFormGroup: React.FC<{
             fieldsToDisplay={fieldsToDisplay}
             fkRelationsToDisplay={fkRelationsToDisplay}
             labelPosition={labelPosition}
+            fieldLayouts={fieldLayouts}
           ></UForm>
         </Group>
       )}

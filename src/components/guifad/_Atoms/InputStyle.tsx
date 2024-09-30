@@ -24,7 +24,8 @@ const InputStyle: React.FC<{
   return (
     <input
       disabled={disabled}
-      className={`text-sm rounded-sm border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6 p-3 outline-none block w-full transition-all
+      className={`text-sm rounded-sm
+         border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6 p-3 outline-none block w-full transition-all
         ${classNameBg ? classNameBg : 'bg-bg4 dark:bg-bg4dark'}
         ${
           disabled

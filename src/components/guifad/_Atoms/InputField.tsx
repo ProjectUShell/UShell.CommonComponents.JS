@@ -3,12 +3,14 @@ import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import GuidInputField from './GuidInputField'
 import InputStyle from './InputStyle'
 import BoolInputField from './BoolInputField'
+import DropdownSelect from '../../../_Atoms/DropdownSelect'
 
 const InputField: React.FC<{
   label: string | null
   inputType: string
   initialValue: any
   onValueChange: (newValue: any) => void
+  allowedValues?: { [key: string]: string }
   setabilityFlags?: number
   classNameBg?: string
   classNameHoverBg?: string
@@ -18,6 +20,7 @@ const InputField: React.FC<{
   inputType,
   initialValue,
   onValueChange,
+  allowedValues,
   setabilityFlags = 7,
   classNameBg,
   classNameHoverBg,
@@ -78,9 +81,24 @@ const InputField: React.FC<{
             classNameHoverBgDark={classNameHoverBgDark}
           ></BoolInputField>
         )}
+        {allowedValues && (
+          <DropdownSelect
+            inputClassname='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
+              p-3 w-full transition-all bg-bg4 dark:bg-bg4dark'
+            options={Object.keys(allowedValues).map((av) => {
+              return { label: allowedValues[av], value: av }
+            })}
+            onOptionSet={(o) => {
+              setCurrentValue(o?.value)
+              onValueChange(o?.value)
+            }}
+            initialOption={{ label: allowedValues[initialValue], value: initialValue }}
+          ></DropdownSelect>
+        )}
         {inputType.toLocaleLowerCase() != 'guid' &&
           inputType.toLocaleLowerCase() != 'bool' &&
-          inputType.toLocaleLowerCase() != 'boolean' && (
+          inputType.toLocaleLowerCase() != 'boolean' &&
+          !allowedValues && (
             <InputStyle
               htmlType={EntitySchemaService.getHtmlInputType(inputType)}
               currentValue={currentValue}

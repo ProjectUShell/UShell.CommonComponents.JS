@@ -225,6 +225,7 @@ const EntityForm: React.FC<{
               changeLookUpValues={changeLookUpValues}
               partitions={p.children}
               labelPosition={labelPosition}
+              fieldLayouts={entityLayout?.fieldLayouts || []}
             ></EntityFormGroup>
           ))}
         <div className='flex gap-1 w-full '>
@@ -246,6 +247,7 @@ const EntityForm: React.FC<{
                   changeLookUpValues={changeLookUpValues}
                   partitions={p.children}
                   labelPosition={labelPosition}
+                  fieldLayouts={entityLayout?.fieldLayouts || []}
                 ></EntityFormGroup>
               </div>
             ))}
@@ -265,6 +267,7 @@ const EntityForm: React.FC<{
             changeLookUpValues={changeLookUpValues}
             partitions={[]}
             labelPosition={labelPosition}
+            fieldLayouts={entityLayout?.fieldLayouts || []}
           ></EntityFormGroup>
         )}
       </div>

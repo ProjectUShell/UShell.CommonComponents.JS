@@ -7,6 +7,7 @@ import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import { IDataSourceManagerBase } from 'ushell-modulebase'
 import UForm1 from './UForm1'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
+import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
 
 const UForm: React.FC<{
   fieldsToDisplay: FieldSchema[]
@@ -16,6 +17,7 @@ const UForm: React.FC<{
   changeLookUpValues: (l: RelationSchema, keyValues: any) => void
   dataSourceManager: IDataSourceManagerWidget
   labelPosition: 'top' | 'left'
+  fieldLayouts: FieldLayout[]
   classNameBg?: string
   classNameInputBg?: string
   classNameInputHoverBg?: string
@@ -28,6 +30,7 @@ const UForm: React.FC<{
   dataSourceManager,
   changeLookUpValues,
   labelPosition,
+  fieldLayouts,
   classNameBg,
   classNameInputBg,
   classNameInputHoverBg,
@@ -35,6 +38,7 @@ const UForm: React.FC<{
 }) => {
   return (
     <UForm1
+      fieldLayouts={fieldLayouts}
       labelPosition={labelPosition}
       fieldsToDisplay={fieldsToDisplay.map((f) => {
         return {

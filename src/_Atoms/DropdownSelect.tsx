@@ -208,16 +208,20 @@ const DropdownSelect: React.FC<{
             minWidth={true}
           >
             <div
-              className='bg-bg2 dark:bg-bg3dark w-full p-1
+              className='bg-bg2 dark:bg-bg3dark w-full p-0
             border-2 dark:border dark:border-bg4dark'
             >
               {options
                 .filter((o) => currentMatchingOptions.length == 0 || isMatchingOption(o))
                 .map((o) => (
                   <div
-                    className={`cursor-default hover:bg-blue-200 p-0.5 rounded-md  ${
-                      isCurrentMatchingOption(o) && 'bg-backgroundtwo dark:bg-backgroundtwodark'
-                    } ${currentOption?.value == o.value ? 'bg-green-300 dark:bg-green-600' : ''}`}
+                    className={`cursor-default  p-1  ${
+                      isCurrentMatchingOption(o) && 'bg1-backgroundtwo dark:bg1-backgroundtwodark'
+                    } ${
+                      currentOption?.value == o.value
+                        ? 'bg-prim2 dark:bg-prim4'
+                        : 'hover:bg-bg7 dark:hover:bg-bg7dark'
+                    }`}
                     key={o.value}
                     onMouseDown={(e) => {
                       e.preventDefault()

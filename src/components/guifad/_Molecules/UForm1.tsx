@@ -1,5 +1,6 @@
 import React from 'react'
 import InputField from '../_Atoms/InputField'
+import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
 
 export class FieldInputInfo {
   name: string = ''
@@ -12,6 +13,7 @@ export class FieldInputInfo {
 const UForm1: React.FC<{
   fieldsToDisplay: FieldInputInfo[]
   labelPosition: 'top' | 'left'
+  fieldLayouts: FieldLayout[]
   customInputs?: { label: string; render: () => JSX.Element }[]
   classNameBg?: string
   classNameInputBg?: string
@@ -20,14 +22,25 @@ const UForm1: React.FC<{
 }> = ({
   fieldsToDisplay,
   labelPosition,
+  fieldLayouts,
   customInputs = [],
   classNameBg,
   classNameInputBg,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
 }) => {
+  function getLabel(f: FieldInputInfo) {
+    const fieldLayout: FieldLayout | undefined = fieldLayouts.find((fl) => fl.fieldName == f.name)
+    if (!fieldLayout) return f.name
+    return fieldLayout.displayLabel
+  }
+  function getAllowedValues(f: FieldInputInfo): { [key: string]: string } | undefined {
+    const fieldLayout: FieldLayout | undefined = fieldLayouts.find((fl) => fl.fieldName == f.name)
+    if (!fieldLayout) return undefined
+    return fieldLayout.dropdownStaticEntries
+  }
   return (
-    <div className='flex'>
+    <div className='flex gap-6'>
       {labelPosition == 'left' && (
         <div
           className={`my-2 h-full flex flex-col gap-2
@@ -35,8 +48,11 @@ const UForm1: React.FC<{
         >
           {fieldsToDisplay.map((f) => (
             <div className='flex items-baseline border-0 border-red-400'>
-              <label className='whitespace-nowrap p-3 font-medium text-sm align-baseline border-b-2 border-b-transparent'>
-                {f.name}
+              <label
+                style={{ borderBottomColor: 'transparent' }}
+                className='whitespace-nowrap p-3 text-sm align-baseline border-b-2 border-b-transparent'
+              >
+                {getLabel(f)}
               </label>
             </div>
           ))}
@@ -58,13 +74,14 @@ const UForm1: React.FC<{
             <InputField
               key={f.name}
               inputType={f.type}
-              label={labelPosition == 'top' ? f.name : null}
+              label={labelPosition == 'top' ? getLabel(f) : null}
               initialValue={f.value}
               onValueChange={(newValue: any) => f.setValue(newValue)}
               setabilityFlags={f.setabilityFlags}
               classNameBg={classNameInputBg}
               classNameHoverBg={classNameInputHoverBg}
               classNameHoverBgDark={classNameInputHoverBgDark}
+              allowedValues={getAllowedValues(f)}
             ></InputField>
           </div>
         ))}
