@@ -6,6 +6,7 @@ import Group from '../_Atoms/Group'
 import InputField from '../_Atoms/InputField'
 import LookUpSelect from './LookUpSelect'
 import { EntityLayout, LayoutPartition } from '../../../[Move2LayoutDescription]/EntityLayout'
+import UForm from './UForm'
 
 const EntityFormGroup: React.FC<{
   label?: string
@@ -59,35 +60,15 @@ const EntityFormGroup: React.FC<{
       )}
       {(fieldsToDisplay.length > 0 || fkRelationsToDisplay.length > 0) && (
         <Group name={label} className='overflow-auto1 bg-bg1 dark:bg-bg2dark p-1 rounded-md'>
-          <div className='my-2 h-full'>
-            {fieldsToDisplay.map((f) => (
-              <InputField
-                className='my-2'
-                key={f.name}
-                inputType={f.type}
-                label={f.name}
-                initialValue={getValue(currentEntity, f.name)}
-                onValueChange={(newValue: any) => changeValue(f, newValue)}
-                setabilityFlags={f.setabilityFlags}
-              ></InputField>
-            ))}
-            {fkRelationsToDisplay.map((l, i) => (
-              <LookUpSelect
-                key={i}
-                lookUpRelation={l}
-                dataSourceManager={dataSourceManager}
-                // initialValue={currentEntity[lowerFirstLetter(l.foreignKeyIndexName)]}
-                initialValue={getForeignKeyValue(currentEntity, l)}
-                onValueSet={(keyValues: any) => {
-                  changeLookUpValues(l, keyValues)
-                }}
-                inputClassName={`
-              rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
-               p-3 w-full transition-all bg-bg4 dark:bg-bg4dark              
-            `}
-              ></LookUpSelect>
-            ))}
-          </div>
+          <UForm
+            changeLookUpValues={changeLookUpValues}
+            changeValue={changeValue}
+            currentEntity={currentEntity}
+            dataSourceManager={dataSourceManager}
+            fieldsToDisplay={fieldsToDisplay}
+            fkRelationsToDisplay={fkRelationsToDisplay}
+            labelPosition='top'
+          ></UForm>
         </Group>
       )}
     </>

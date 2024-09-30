@@ -9,7 +9,18 @@ const GuidInputField: React.FC<{
   onValueChange: (newValue: any) => void
   disabled: boolean
   classNameBg?: string
-}> = ({ initialValue, currentValue, setCurrentValue, onValueChange, disabled, classNameBg }) => {
+  classNameHoverBg?: string
+  classNameHoverBgDark?: string
+}> = ({
+  initialValue,
+  currentValue,
+  setCurrentValue,
+  onValueChange,
+  disabled,
+  classNameBg,
+  classNameHoverBg,
+  classNameHoverBgDark,
+}) => {
   console.log('initialValue', initialValue)
 
   function generateGuid() {
@@ -28,6 +39,8 @@ const GuidInputField: React.FC<{
         onValueChange={onValueChange}
         setCurrentValue={setCurrentValue}
         classNameBg={classNameBg}
+        classNameHoverBg={classNameHoverBg}
+        classNameHoverBgDark={classNameHoverBgDark}
       ></InputStyle>
       {!disabled && (
         <button

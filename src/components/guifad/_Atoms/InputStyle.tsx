@@ -9,13 +9,30 @@ const InputStyle: React.FC<{
   disabled: boolean
   htmlType: string
   classNameBg?: string
-}> = ({ currentValue, setCurrentValue, onValueChange, disabled, htmlType, classNameBg }) => {
+  classNameHoverBg?: string
+  classNameHoverBgDark?: string
+}> = ({
+  currentValue,
+  setCurrentValue,
+  onValueChange,
+  disabled,
+  htmlType,
+  classNameBg,
+  classNameHoverBg,
+  classNameHoverBgDark,
+}) => {
   return (
     <input
       disabled={disabled}
       className={`text-sm rounded-sm border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6 p-3 outline-none block w-full transition-all
         ${classNameBg ? classNameBg : 'bg-bg4 dark:bg-bg4dark'}
-        ${disabled ? '' : 'border-b-2 hover:bg-bg5 dark:hover:bg-bg5dark'}
+        ${
+          disabled
+            ? 'border-b-2 '
+            : `border-b-2 
+           hover:${classNameHoverBg || 'bg-bg5'}
+           dark:hover:${classNameHoverBgDark || 'bg-bg5dark'}`
+        }
         `}
       type={htmlType}
       value={currentValue}

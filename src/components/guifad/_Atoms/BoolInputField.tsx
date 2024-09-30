@@ -9,7 +9,9 @@ const BoolInputField: React.FC<{
   onValueChange: (newValue: any) => void
   disabled: boolean
   classNameBg?: string
-}> = ({ initialValue, currentValue, setCurrentValue, onValueChange, disabled, classNameBg }) => {
+  classNameHoverBg?: string
+  classNameHoverBgDark?: string
+}> = ({ initialValue, setCurrentValue, onValueChange, disabled, classNameBg }) => {
   console.log('initialValue', initialValue)
   return (
     <DropdownSelect

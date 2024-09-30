@@ -44,7 +44,7 @@ const DocSubComponent: React.FC<{
       <h1 className='text-xl font-bold'>{demo.demoTitle}</h1>
       <h2>{demo.demoExplanation}</h2>
       <div className='border border-bg8 dark:border-bg8dark rounded-md p-2 bg-bg4 dark:bg-bg4dark'>
-        <p className=''>{demo.demoComponent}</p>
+        <div className=''>{demo.demoComponent}</div>
       </div>
       {!showCode && (
         <div className='border border-bg8 dark:border-bg8dark rounded-md p-2 bg-bg4 dark:bg-bg4dark flex flex-col'>

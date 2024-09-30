@@ -36,6 +36,11 @@ import DropdownMultiSelectDemo from './demo/DropdownMultiSelectDemo'
 import TableDoc from './demo/TableDoc'
 import DocComponent from './demo/DocComponent'
 import GuifadDoc from './demo/GuifadDoc'
+import TabControlDoc from './demo/TabControlDoc'
+import InputField from './components/guifad/_Atoms/InputField'
+import InputFieldDoc from './demo/InputFieldDoc'
+import AccordionDoc from './demo/AccordionDoc'
+import AccordionMenuDoc from './demo/AccordionMenuDoc'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -52,17 +57,17 @@ const Demo = () => {
   ]
   const subComponents: { [key: string]: string[] } = {
     'Base Components': [
-      'DropdownButtonDemo',
       'DropdownMultiSelectDemo',
-      'TableDemo',
-      'ResizeTable',
-      'ResizeTable2',
-      'Table1',
+      'Table',
+      'Tab Control',
+      'Input Field',
+      'Accordion',
+      'AccordionMenu',
     ],
     'FuseFx Components': ['Guifad', 'GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
     'Dynamic Reports': ['ReportService', 'ReportManager', 'ReportDashboard'],
     'Schema Editor': ['Schema Manager', 'Editor', 'Schema Guifad'],
-    Technical: ['ColorDemo'],
+    Technical: ['ColorDemo', 'TableDemo', 'ResizeTable', 'DropdownButtonDemo', 'ResizeTable2'],
   }
 
   const [schemaName, setSchemaName] = useState('')
@@ -239,7 +244,11 @@ const Demo = () => {
             ]}
           ></ResizableTable2>
         )}
-        {currentComponent == 'Table1' && <TableDoc></TableDoc>}
+        {currentComponent == 'Table' && <TableDoc></TableDoc>}
+        {currentComponent == 'Tab Control' && <TabControlDoc></TabControlDoc>}
+        {currentComponent == 'Input Field' && <InputFieldDoc></InputFieldDoc>}
+        {currentComponent == 'Accordion' && <AccordionDoc></AccordionDoc>}
+        {currentComponent == 'AccordionMenu' && <AccordionMenuDoc></AccordionMenuDoc>}
         {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
         {currentComponent == 'Schema Manager' && (
           <SchemaManager

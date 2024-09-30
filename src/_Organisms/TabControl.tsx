@@ -10,12 +10,30 @@ export class TabItem {
   renderMethod?: () => JSX.Element
 }
 
+export const TabControl1: React.FC<{
+  tabItems: TabItem[]
+  onTabClose: (tab: TabItem) => void
+  classNameContainerBg?: string
+}> = ({ tabItems, onTabClose, classNameContainerBg }) => {
+  const [activeTabIndex, setActiveTabIndex] = useState(0)
+  return (
+    <TabControl
+      initialActiveTabIndex={activeTabIndex}
+      onTabChange={(t, i) => setActiveTabIndex(i)}
+      onTabClose={onTabClose}
+      tabItems={tabItems}
+      classNameContainerBg={classNameContainerBg}
+    ></TabControl>
+  )
+}
+
 const TabControl: React.FC<{
   tabItems: TabItem[]
   initialActiveTabIndex: number
   onTabClose: (tab: TabItem) => void
-  onTabChange: (tab: TabItem, tabIndex: number) => void
-}> = ({ tabItems, initialActiveTabIndex, onTabClose, onTabChange }) => {
+  onTabChange: (tab: TabItem, idx: number) => void
+  classNameContainerBg?: string
+}> = ({ tabItems, initialActiveTabIndex, onTabClose, onTabChange, classNameContainerBg }) => {
   const [activeTabIndex, setActiveTabIndex] = useState(initialActiveTabIndex)
   // function onTabChange(tabId: string) {
   //   onTabChange(tab)
@@ -29,31 +47,31 @@ const TabControl: React.FC<{
   const shellSettings = loadShellSettings()
 
   return (
-    <div className='bg-tabBg dark:bg-tabBgDark h-full m-0 flex flex-col w-screen border1-4 border-pink-600'>
-      <div className='flex justify-stretch min-w-0'>
+    <div
+      className={`USHell_TabContainer h-full flex flex-col w-screen overflow-hidden
+     ${classNameContainerBg || 'bg-menu dark:bg-menuDark'} `}
+    >
+      <ul
+        className='UShell_TabBar flex flex-wrap text-sm font-medium text-center
+       border-b-2 border-menuBorder dark:border-menuBorderDark  -mb-px'
+      >
         {tabItems.map((ti, index) => (
-          <div
-            style={
-              shellSettings.colorMode == ColorMode.Dark
-                ? {
-                    borderLeftColor: 'var(--color-background-three-dark)',
-                    borderRightColor: 'var(--color-background-three-dark)',
-                  }
-                : {
-                    borderLeftColor: 'var(--color-background-six)',
-                    borderRightColor: 'var(--color-background-six)',
-                  }
-            }
+          <li
             key={ti.id}
-            className={`px-2 py-1 -rounded-b-sm flex justify-between border-r ${
-              index == activeTabIndex
-                ? 'bg-tabSelected dark:bg-tabSelectedDark border-t-4 border-prim3 dark:border-prim6 border-l-bg3dark'
-                : 'bg-tab dark:bg-tabDark hover:bg-tabHover dark:hover:bg-tabHoverDark border-tabBorder dark:border-tabBorderDark border-t-0 border-b'
-            } cursor-default`}
+            // className={`px-2 py-1 -rounded-b-sm flex justify-between border1-x cursor-default font-medium
+            className={`me-2 `}
           >
-            <button className='whitespace-nowrap pl-2 pr-4' onClick={(e) => onTabChange(ti, index)}>
-              {ti.title}
-            </button>
+            <a
+              className={`inline-block py-3 px-2 rounded-t-lg cursor-pointer select-none whitespace-nowrap
+                ${
+                  index == activeTabIndex
+                    ? 'font-bold bg1-bg2 dark:bg1-bg1dark border-b-2 border-blue-400'
+                    : ' hover1:bg-bg2 dark:hover1:bg-bg1dark bg-topbar1 dark:bg1-topbarDark hover:border-b-2 border-menuBorder dark:border-menuBorderDark'
+                }`}
+              onClick={(e) => onTabChange(ti, index)}
+            >
+              <p>{ti.title}</p>
+            </a>
             {ti.canClose && (
               <button
                 className='hover:bg-backgroundtwo dark:hover:bg-backgroundtwodark'
@@ -62,11 +80,11 @@ const TabControl: React.FC<{
                 <XMark size={4}></XMark>
               </button>
             )}
-          </div>
+          </li>
         ))}
-        <div className='border-b border-tabBorder dark:border-tabBorderDark w-full'></div>
-      </div>
-      <div className='h-full bg-backgroundone dark:bg-backgroundonedark flex flex-col'>
+        {/* <div className="border-b border-bg6 dark:border-bg3dark w-full"></div> */}
+      </ul>
+      <div className='h-full flex flex-col mt-0'>
         {tabItems[activeTabIndex]?.renderMethod && tabItems[activeTabIndex]?.renderMethod!()}
       </div>
     </div>
