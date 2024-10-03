@@ -42,14 +42,14 @@ const GuifadFuse: React.FC<{
   if (dataStore == null) return <div>No Entity Schema!</div>
   if (dataStore == undefined) return <div>Loading...</div>
   return (
-    <QueryClientProvider client={queryClient}>
-      <Guifad
-        dataSourceManager={dataStore}
-        rootEntityName={rootEntityName}
-        record={record}
-        layoutDescription={layoutDescription}
-      ></Guifad>
-    </QueryClientProvider>
+    // <QueryClientProvider client={queryClient}>
+    <Guifad
+      dataSourceManager={dataStore}
+      rootEntityName={rootEntityName}
+      record={record}
+      layoutDescription={layoutDescription}
+    ></Guifad>
+    // </QueryClientProvider>
   )
 }
 

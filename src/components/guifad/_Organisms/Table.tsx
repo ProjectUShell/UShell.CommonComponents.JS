@@ -11,6 +11,7 @@ import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import MinusCircleIcon from '../../../_Icons/MinusCircleIcon'
 import PaddingDummy from '../../../_Atoms/PaddingDummy'
 import { applyFilter, applySorting } from '../../../utils/LogicUtils'
+import DropdownSelectBasic from '../../../demo/DropdownSelectBasic'
 
 export interface TableColumn {
   label: string
@@ -436,26 +437,28 @@ const Table: React.FC<{
 
   return (
     <div
-      className={`cc_table_0 z-10 relative overflow-hidden shadow-lg1 drop-shadow-md1 
+      className={`cc_table_0  overflow-hidden shadow-lg1 drop-shadow-md1 
         flex flex-col h-full w-full justify-between ${
           className ? className : 'bg-bg1 dark:bg-bg1dark rounded-md '
         } `}
     >
-      <div className='cc_table_1 flex flex-col h-full w-full overflow-auto'>
+      <div className='cc_table_1 flex flex-col h-full w-full overflow-auto '>
         <table
-          className={`w-full max-h-full text-sm text-left ${
+          className={` USHell_Table_table w-full max-h-full text-sm text-left ${
             Object.keys(columnWidths).length > 0 ? 'table-fixed' : 'table-fixed1'
           } `}
           style={Object.keys(columnWidths).length > 0 ? { width: getTableWidth() } : {}}
         >
-          <thead className='text-xs sticky top-0'>
-            <tr className=''>
+          <thead className='USHell_Table_thead text-xs sticky top-0'>
+            <tr className='UShell_Table_tr relative z-50'>
               {expandableRowProps && (
                 <th
                   id={'column_expand'}
-                  className={`${
-                    tableColors?.header || 'bg-tableHead dark:bg-tableHeadDark'
-                  }  border-y-0  border-backgroundfour dark:border-backgroundfourdark`}
+                  className={`
+                    USHell_Table_tg
+                    ${
+                      tableColors?.header || 'bg-tableHead dark:bg-tableHeadDark'
+                    }  border-y-0  border-backgroundfour dark:border-backgroundfourdark`}
                   style={
                     'column_expand' in columnWidths
                       ? { width: getColumnWidth('column_expand') }
@@ -468,10 +471,12 @@ const Table: React.FC<{
                   id={`column_${c.key}`}
                   // onMouseEnter={() => initColumnWidth(c.key)}
                   key={c.label}
-                  className={`${
-                    tableColors?.header ||
-                    'bg-tableHead dark:bg-tableHeadDark hover:bg-tableHover dark:hover:bg-tableHoverDark border-y-0 border-backgroundfour dark:border-backgroundfourdark'
-                  }
+                  className={`
+                    USHell_Table_th
+                    ${
+                      tableColors?.header ||
+                      'bg-tableHead dark:bg-tableHeadDark hover:bg-tableHover dark:hover:bg-tableHoverDark border-y-0 border-backgroundfour dark:border-backgroundfourdark'
+                    }
                   cursor-pointer select-none`}
                   onClick={(e) => {
                     if (c.sortable) {
@@ -510,43 +515,21 @@ const Table: React.FC<{
                             )}
                         </button>
                       )}
-                      <div className=''>
+                      <div className='z-50'>
                         {c.renderFilter && (onFilterChanged || useClientFilter) && (
-                          <>
-                            {filterVisible[c.fieldName] && (
-                              <Dropdown
-                                refId={`${refId}_Filter_Button_${c.fieldName}`}
-                                setIsOpen={(o) => onSetFilterVisible(c.fieldName, o)}
-                              >
-                                <div
-                                  className='w1-40 bg-bg1 dark:bg-bg1dark border-2 border-bg4 dark:border-bg4dark shadow-lg shadow-black'
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                  }}
-                                >
-                                  {c.renderFilter(
-                                    filterByColumn[c.fieldName],
-                                    (f) => onColumnFilterChange(f, c),
-                                    c,
-                                    records,
-                                  )}
-                                </div>
-                              </Dropdown>
-                            )}
-                            <button
-                              id={`${refId}_Filter_Button_${c.fieldName}`}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                e.preventDefault()
-                                onSetFilterVisible(c.fieldName, true)
-                              }}
-                              className={`${
-                                filterByColumn[c.fieldName] ? 'bg-green-300 dark:bg-green-800' : ''
-                              }  rounded-lg p-1`}
-                            >
-                              <FunnelIcon size={4}></FunnelIcon>
-                            </button>
-                          </>
+                          <button
+                            id={`${refId}_Filter_Button_${c.fieldName}`}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              e.preventDefault()
+                              onSetFilterVisible(c.fieldName, true)
+                            }}
+                            className={`${
+                              filterByColumn[c.fieldName] ? 'bg-green-300 dark:bg-green-800' : ''
+                            }  rounded-lg p-1`}
+                          >
+                            <FunnelIcon size={4}></FunnelIcon>
+                          </button>
                         )}
                       </div>
                     </div>
@@ -588,6 +571,34 @@ const Table: React.FC<{
               ))}
             </tr>
           </thead>
+          {Object.keys(filterVisible)
+            .filter((fvk) => filterVisible[fvk])
+            .map((fvk) => {
+              // This cannot be inside thead because thead is sticky and children of sticky elements can never overlap the sticky parents
+              const c: TableColumn = columns.find((cn) => cn.fieldName == fvk)!
+              return (
+                <Dropdown
+                  refId={`${refId}_Filter_Button_${fvk}`}
+                  setIsOpen={(o) => onSetFilterVisible(fvk, o)}
+                >
+                  <div
+                    className='bg-bg1 dark:bg-bg1dark z-50 relative flex flex-col overflow-hidden
+                                   border-2 border-bg4 dark:border-bg4dark shadow-lg shadow-black'
+                    onClick={(e) => {
+                      e.stopPropagation()
+                    }}
+                  >
+                    {c.renderFilter &&
+                      c.renderFilter(
+                        filterByColumn[fvk],
+                        (f: any) => onColumnFilterChange(f, c),
+                        c,
+                        records,
+                      )}
+                  </div>
+                </Dropdown>
+              )
+            })}
           <tbody className='overflow-auto h-full'>
             {filteredRecords.map((r, i) => {
               const renderRow = (

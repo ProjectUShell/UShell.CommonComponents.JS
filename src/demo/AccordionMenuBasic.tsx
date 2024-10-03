@@ -15,12 +15,14 @@ const AccordionMenuBasic = () => {
           ),
           items: [
             {
+              key: 'Item1.1',
               label: 'Item 1.1',
               command: () => {
                 console.log('Item 1.1')
               },
             },
             {
+              key: 'Item1.2',
               label: 'Item 1.2',
               command: () => {
                 console.log('Item 1.2')
@@ -31,12 +33,14 @@ const AccordionMenuBasic = () => {
         'Group 2': {
           items: [
             {
+              key: 'Item2.1',
               label: 'Item 2.1',
               command: () => {
                 console.log('Item 2.1')
               },
             },
             {
+              key: 'Item2.2',
               label: 'Item 2.2',
               command: () => {
                 console.log('Item 2.2')

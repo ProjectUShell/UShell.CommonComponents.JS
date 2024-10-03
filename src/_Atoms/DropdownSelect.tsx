@@ -209,7 +209,7 @@ const DropdownSelect: React.FC<{
           >
             <div
               className='bg-bg2 dark:bg-bg3dark w-full p-0
-            border-2 dark:border dark:border-bg4dark'
+              border-2 dark:border dark:border-bg4dark'
             >
               {options
                 .filter((o) => currentMatchingOptions.length == 0 || isMatchingOption(o))

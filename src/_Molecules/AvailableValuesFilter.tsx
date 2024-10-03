@@ -11,6 +11,7 @@ import {
   getSelectedValues,
 } from '../utils/LogicUtils'
 import MagnifyingGlassIcon from '../_Icons/MagnifyingGlassIcon'
+import DropdownSelectBasic from '../demo/DropdownSelectBasic'
 
 const AvailableValuesFilter: React.FC<{
   column: TableColumn
@@ -59,8 +60,9 @@ const AvailableValuesFilter: React.FC<{
         )
     }
   }
+
   return (
-    <div className='flex flex-col w-full'>
+    <div className='flex flex-col w-full h-full overflow-hidden border-red-400 border-0'>
       <div className='border-0 mb-1 m-2'>
         <label
           className='flex items-center space-x-2 p-2
@@ -86,7 +88,9 @@ const AvailableValuesFilter: React.FC<{
           <span className='text-sm font-normal px-4'>Select All</span>
         </label>
       </div>
-      <div className='border-b p-2'>{renderMultiSelect()}</div>
+      <div className='border-b p-2 border-0 border-blue-400 h-full overflow-auto'>
+        {renderMultiSelect()}
+      </div>
       <div className='m-2 flex justify-end'>
         <button
           className='p-1 px-6 rounded-sm hover:bg-bg4 dark:hover:bg-bg4dark'

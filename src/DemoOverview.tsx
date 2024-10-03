@@ -32,7 +32,7 @@ import { ReportServiceConnector } from './components/report/ReportServiceConnect
 import { LocalStorageReportRepository } from './components/report/LocalStorageReportRepository'
 import { ColorMode, loadShellSettings } from './components/shell-layout/ShellSettings'
 import Dashboard from './components/dashboard/_Templates/Dashboard'
-import DropdownMultiSelectDemo from './demo/DropdownMultiSelectDemo'
+import DropdownMultiSelectDemo from './demo/DropdownSelectDoc'
 import TableDoc from './demo/TableDoc'
 import DocComponent from './demo/DocComponent'
 import GuifadDoc from './demo/GuifadDoc'
@@ -105,198 +105,198 @@ const Demo = () => {
   const shellSettings = loadShellSettings()
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ShellLayout
-        title='Demo'
-        shellMenu={{
-          items: menuItems,
-          topBarItems: [
+    // <QueryClientProvider client={queryClient}>
+    <ShellLayout
+      title='Demo'
+      shellMenu={{
+        items: menuItems,
+        topBarItems: [
+          {
+            icon: (
+              <button className='align-middle'>
+                <TrashIcon></TrashIcon>
+              </button>
+            ),
+            id: 'hi',
+          },
+          {
+            icon: (
+              <button className='align-middle'>
+                <XMarkIcon size={0}></XMarkIcon>
+              </button>
+            ),
+            id: 'you',
+          },
+        ],
+      }}
+      shellMenuState={shellMenuState}
+    >
+      {currentComponent == 'Guifad' && <GuifadDoc></GuifadDoc>}
+      {(currentComponent == 'GuifadDemo' || currentComponent == 'GuifadDemo2') && (
+        <TabControl
+          tabItems={[
             {
-              icon: (
-                <button className='align-middle'>
-                  <TrashIcon></TrashIcon>
-                </button>
+              id: '1',
+              canClose: false,
+              title: 'Fonds 1',
+              tag: null,
+              renderMethod: () => (
+                <GuifadFuse
+                  rootEntityName={currentComponent == 'GuifadDemo' ? 'Depot' : 'Fund'}
+                  routePattern='route'
+                  fuseUrl='https://localhost:7288/FundsManagement/'
+                ></GuifadFuse>
               ),
-              id: 'hi',
             },
             {
-              icon: (
-                <button className='align-middle'>
-                  <XMarkIcon size={0}></XMarkIcon>
-                </button>
+              id: '2',
+              canClose: false,
+              title: 'Fonds 2',
+              tag: null,
+              renderMethod: () => (
+                <GuifadFuse
+                  rootEntityName={currentComponent == 'GuifadDemo' ? 'Depot' : 'Fund'}
+                  routePattern='route'
+                  fuseUrl='https://localhost:7288/FundsManagement/'
+                ></GuifadFuse>
               ),
-              id: 'you',
             },
-          ],
-        }}
-        shellMenuState={shellMenuState}
-      >
-        {currentComponent == 'Guifad' && <GuifadDoc></GuifadDoc>}
-        {(currentComponent == 'GuifadDemo' || currentComponent == 'GuifadDemo2') && (
-          <TabControl
-            tabItems={[
+          ]}
+          initialActiveTabIndex={tabIndex}
+          onTabChange={(i: TabItem, idx: number) => setTabIndex(idx)}
+          onTabClose={() => console.log('tab close')}
+        ></TabControl>
+      )}
+      {currentComponent == 'GuifadDemo3' && (
+        <GuifadFuse
+          rootEntityName='Person'
+          routePattern='body'
+          fuseUrl='https://localhost:7288/AccountManagement/'
+          layoutDescription={{
+            semanticVersion: '0',
+            timestampUtc: '',
+            entityLayouts: [
               {
-                id: '1',
-                canClose: false,
-                title: 'Fonds 1',
-                tag: null,
-                renderMethod: () => (
-                  <GuifadFuse
-                    rootEntityName={currentComponent == 'GuifadDemo' ? 'Depot' : 'Fund'}
-                    routePattern='route'
-                    fuseUrl='https://localhost:7288/FundsManagement/'
-                  ></GuifadFuse>
-                ),
+                dislpayRemainingFields: true,
+                entityName: 'Person',
+                displayLabel: 'Person',
+                displayLabelPlural: 'People',
+                fieldLayouts: [],
+                identityLabelPattern: '',
+                isBlEntrypoint: false,
+                partitions: [
+                  {
+                    type: 'group',
+                    name: 'Identity',
+                    fields: [],
+                    children: [
+                      {
+                        type: 'column',
+                        name: 'c1',
+                        fields: ['FirstName', 'LastName'],
+                        children: [],
+                      },
+                      {
+                        type: 'column',
+                        name: 'c2',
+                        fields: ['Nation', 'DateOfBirth'],
+                        children: [],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'group',
+                    name: 'Contact',
+                    fields: ['PhoneNumber', 'Email'],
+                    children: [],
+                  },
+                ],
               },
-              {
-                id: '2',
-                canClose: false,
-                title: 'Fonds 2',
-                tag: null,
-                renderMethod: () => (
-                  <GuifadFuse
-                    rootEntityName={currentComponent == 'GuifadDemo' ? 'Depot' : 'Fund'}
-                    routePattern='route'
-                    fuseUrl='https://localhost:7288/FundsManagement/'
-                  ></GuifadFuse>
-                ),
-              },
-            ]}
-            initialActiveTabIndex={tabIndex}
-            onTabChange={(i: TabItem, idx: number) => setTabIndex(idx)}
-            onTabClose={() => console.log('tab close')}
-          ></TabControl>
-        )}
-        {currentComponent == 'GuifadDemo3' && (
-          <GuifadFuse
-            rootEntityName='Person'
-            routePattern='body'
-            fuseUrl='https://localhost:7288/AccountManagement/'
-            layoutDescription={{
-              semanticVersion: '0',
-              timestampUtc: '',
-              entityLayouts: [
-                {
-                  dislpayRemainingFields: true,
-                  entityName: 'Person',
-                  displayLabel: 'Person',
-                  displayLabelPlural: 'People',
-                  fieldLayouts: [],
-                  identityLabelPattern: '',
-                  isBlEntrypoint: false,
-                  partitions: [
-                    {
-                      type: 'group',
-                      name: 'Identity',
-                      fields: [],
-                      children: [
-                        {
-                          type: 'column',
-                          name: 'c1',
-                          fields: ['FirstName', 'LastName'],
-                          children: [],
-                        },
-                        {
-                          type: 'column',
-                          name: 'c2',
-                          fields: ['Nation', 'DateOfBirth'],
-                          children: [],
-                        },
-                      ],
-                    },
-                    {
-                      type: 'group',
-                      name: 'Contact',
-                      fields: ['PhoneNumber', 'Email'],
-                      children: [],
-                    },
-                  ],
-                },
-              ],
-            }}
-            // record={{ Id: 2, MirstName: 'Max' }}
-          ></GuifadFuse>
-        )}
-        {currentComponent == 'TableDemo' && <TableDemo></TableDemo>}
-        {currentComponent == 'DropdownButtonDemo' && <DropdownButtonDemo></DropdownButtonDemo>}
-        {currentComponent == 'DropdownMultiSelectDemo' && (
-          <DropdownMultiSelectDemo></DropdownMultiSelectDemo>
-        )}
-        {currentComponent == 'ResizeTable' && (
-          <ResizableTable
-            columns={[
-              { key: 'p1', title: 'test1' },
-              { key: 'p2', title: 'test2' },
-            ]}
-            data={[{ p1: 'dasdsdsdasds', p2: 'dfafasfsdf' }]}
-          ></ResizableTable>
-        )}
-        {currentComponent == 'ResizeTable2' && (
-          <ResizableTable2
-            columns={[
-              { key: 'p1', name: 'test1', width: 100 },
-              { key: 'p2', name: 'test2', width: 100 },
-            ]}
-            data={[
-              {
-                p1: 'dasdsdsdasds asdsdasd sdasdasdasd dsadasd das dsa dsad sadsadasdsad',
-                p2: 'dfafasfsdf',
-              },
-            ]}
-          ></ResizableTable2>
-        )}
-        {currentComponent == 'Table' && <TableDoc></TableDoc>}
-        {currentComponent == 'Tab Control' && <TabControlDoc></TabControlDoc>}
-        {currentComponent == 'Input Field' && <InputFieldDoc></InputFieldDoc>}
-        {currentComponent == 'Accordion' && <AccordionDoc></AccordionDoc>}
-        {currentComponent == 'AccordionMenu' && <AccordionMenuDoc></AccordionMenuDoc>}
-        {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
-        {currentComponent == 'Schema Manager' && (
-          <SchemaManager
-            schemaProvider={new LocalStorageSchemaProvider()}
-            enterSchema={(sn: string) => {
-              setSchemaName(sn)
-              activateItem(
-                menuItems
-                  .find((mi) => mi.id == 'SchemaEditor')!
-                  .children?.find((c) => c.id == 'Editor')!,
-              )
-            }}
-          ></SchemaManager>
-        )}
-        {currentComponent == 'Editor' && (
-          <SchemaEditor
-            schemaName={schemaName}
-            schema={schemaProvider.loadSchema(schemaName)}
-            onChangeSchema={(s: SchemaRoot) => {
-              schemaProvider.saveSchema(schemaName, s)
-            }}
-            onChangeSchemaName={(sn: string) => {
-              schemaProvider.updateName(schemaName, sn)
-              setSchemaName(sn)
-            }}
-          ></SchemaEditor>
-        )}
-        {currentComponent == 'ReportManager' && (
-          <ReportManager1
-            reportRepository={new LocalStorageReportRepository()}
-            reportSerivce={new ReportServiceConnector('https://localhost:7288/ReportService')}
-            dark={shellSettings.colorMode == ColorMode.Dark}
-          ></ReportManager1>
-        )}
-        {currentComponent == 'ReportDashboard' && (
-          <Dashboard
-            data={{
-              title: 'Dashboard Test',
-              entires: [
-                { column: 0, row: 0, title: 'Test 1', render: () => <div>Test 1</div> },
-                { column: 0, row: 0, title: 'Test 2', render: () => <div>Test 2</div> },
-              ],
-            }}
-          ></Dashboard>
-        )}
-      </ShellLayout>
-    </QueryClientProvider>
+            ],
+          }}
+          // record={{ Id: 2, MirstName: 'Max' }}
+        ></GuifadFuse>
+      )}
+      {currentComponent == 'TableDemo' && <TableDemo></TableDemo>}
+      {currentComponent == 'DropdownButtonDemo' && <DropdownButtonDemo></DropdownButtonDemo>}
+      {currentComponent == 'DropdownMultiSelectDemo' && (
+        <DropdownMultiSelectDemo></DropdownMultiSelectDemo>
+      )}
+      {currentComponent == 'ResizeTable' && (
+        <ResizableTable
+          columns={[
+            { key: 'p1', title: 'test1' },
+            { key: 'p2', title: 'test2' },
+          ]}
+          data={[{ p1: 'dasdsdsdasds', p2: 'dfafasfsdf' }]}
+        ></ResizableTable>
+      )}
+      {currentComponent == 'ResizeTable2' && (
+        <ResizableTable2
+          columns={[
+            { key: 'p1', name: 'test1', width: 100 },
+            { key: 'p2', name: 'test2', width: 100 },
+          ]}
+          data={[
+            {
+              p1: 'dasdsdsdasds asdsdasd sdasdasdasd dsadasd das dsa dsad sadsadasdsad',
+              p2: 'dfafasfsdf',
+            },
+          ]}
+        ></ResizableTable2>
+      )}
+      {currentComponent == 'Table' && <TableDoc></TableDoc>}
+      {currentComponent == 'Tab Control' && <TabControlDoc></TabControlDoc>}
+      {currentComponent == 'Input Field' && <InputFieldDoc></InputFieldDoc>}
+      {currentComponent == 'Accordion' && <AccordionDoc></AccordionDoc>}
+      {currentComponent == 'AccordionMenu' && <AccordionMenuDoc></AccordionMenuDoc>}
+      {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
+      {currentComponent == 'Schema Manager' && (
+        <SchemaManager
+          schemaProvider={new LocalStorageSchemaProvider()}
+          enterSchema={(sn: string) => {
+            setSchemaName(sn)
+            activateItem(
+              menuItems
+                .find((mi) => mi.id == 'SchemaEditor')!
+                .children?.find((c) => c.id == 'Editor')!,
+            )
+          }}
+        ></SchemaManager>
+      )}
+      {currentComponent == 'Editor' && (
+        <SchemaEditor
+          schemaName={schemaName}
+          schema={schemaProvider.loadSchema(schemaName)}
+          onChangeSchema={(s: SchemaRoot) => {
+            schemaProvider.saveSchema(schemaName, s)
+          }}
+          onChangeSchemaName={(sn: string) => {
+            schemaProvider.updateName(schemaName, sn)
+            setSchemaName(sn)
+          }}
+        ></SchemaEditor>
+      )}
+      {currentComponent == 'ReportManager' && (
+        <ReportManager1
+          reportRepository={new LocalStorageReportRepository()}
+          reportSerivce={new ReportServiceConnector('https://localhost:7288/ReportService')}
+          dark={shellSettings.colorMode == ColorMode.Dark}
+        ></ReportManager1>
+      )}
+      {currentComponent == 'ReportDashboard' && (
+        <Dashboard
+          data={{
+            title: 'Dashboard Test',
+            entires: [
+              { column: 0, row: 0, title: 'Test 1', render: () => <div>Test 1</div> },
+              { column: 0, row: 0, title: 'Test 2', render: () => <div>Test 2</div> },
+            ],
+          }}
+        ></Dashboard>
+      )}
+    </ShellLayout>
+    // </QueryClientProvider>
   )
 }
 

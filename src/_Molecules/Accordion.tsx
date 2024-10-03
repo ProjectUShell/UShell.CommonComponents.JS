@@ -6,7 +6,18 @@ import ChevrodnDownIcon from '../_Icons/ChevrodnDownIcon'
 const Accordion: React.FC<{
   items: { label: string | JSX.Element; content: JSX.Element }[]
   multipleOpenAllowed?: boolean
-}> = ({ items, multipleOpenAllowed = false }) => {
+  classNameBgHeader?: string
+  classNameBgHeaderActive?: string
+  classNameBgItems?: string
+  classNameBgItemHover?: string
+  classNameBgItemSelected?: string
+}> = ({
+  items,
+  multipleOpenAllowed = false,
+  classNameBgHeader = '',
+  classNameBgHeaderActive = '',
+  classNameBgItems = '',
+}) => {
   const [openIndices, setOpenIndices] = useState<number[]>([0])
 
   function toggleOpen(i: number) {
@@ -38,8 +49,8 @@ const Accordion: React.FC<{
           <div
             className={`flex items-center gap-2 w-full border-b cursor-pointer
             border-menuBorder dark:border-menuBorderDark
-            hover:bg-bg8 dark:hover:bg-bg8dark
-              ${openIndices.includes(i) ? 'bg-bg8 dark:bg-bg8dark' : ''}`}
+            ${classNameBgHeader}
+            ${isOpen(i) ? classNameBgHeaderActive : ''}`}
             onClick={() => toggleOpen(i)}
           >
             <div
@@ -51,9 +62,7 @@ const Accordion: React.FC<{
             </div>
             <button className=' p-3 '>{item.label}</button>
           </div>
-          {openIndices.includes(i) && (
-            <div className='bg-content dark:bg-contentDark'>{item.content}</div>
-          )}
+          {openIndices.includes(i) && <div className={`${classNameBgItems}`}>{item.content}</div>}
         </div>
       ))}
     </div>

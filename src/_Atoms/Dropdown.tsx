@@ -116,43 +116,6 @@ const Dropdown: React.FC<{
     )
   }
 
-  // let topOffsetCss: string = topOffset
-  //   ? topOffset > 0
-  //     ? `top-${topOffset}`
-  //     : `-top-${-topOffset}`
-  //   : 'top-0'
-  // let bottomOffsetCss: string = bottomOffset
-  //   ? bottomOffset > 0
-  //     ? `bottom-${bottomOffset}`
-  //     : `-bottom-${-bottomOffset}`
-  //   : ''
-  // let rightOffsetCss: string = rightOffset
-  //   ? rightOffset > 0
-  //     ? `right-${rightOffset}`
-  //     : `-right-${-rightOffset}`
-  //   : 'right-0'
-  // let leftOffsetCss: string = leftOffset
-  //   ? leftOffset > 0
-  //     ? `left-${leftOffset}`
-  //     : `-left-${-leftOffset}`
-  //   : 'left-0'
-
-  // if (leftOffset && !rightOffset) {
-  //   rightOffsetCss = ''
-  // }
-
-  // if (rightOffset && !leftOffset) {
-  //   leftOffsetCss = ''
-  // }
-
-  // if (bottomOffset && !topOffset) {
-  //   topOffsetCss = ''
-  // }
-
-  // if (topOffset && !bottomOffset) {
-  //   bottomOffsetCss = ''
-  // }
-
   function getTop(): number | undefined {
     const el = document.getElementById(refId)
     if (!el) return undefined
@@ -214,7 +177,6 @@ const Dropdown: React.FC<{
     if (!el) return 100
     return el.getBoundingClientRect().width
   }
-  // ${rightOffsetCss} ${topOffsetCss} ${leftOffsetCss} ${bottomOffsetCss}
 
   return (
     <>
@@ -229,7 +191,7 @@ const Dropdown: React.FC<{
           }}
         ></button>
       )}
-      <div className='relative'>
+      <div className=''>
         <div
           style={{
             height: undefined,
@@ -240,12 +202,10 @@ const Dropdown: React.FC<{
             left: getLeft(),
             right: getRight(),
           }}
-          className={`fixed z-50  shadow-lg overflow-auto 
-             flex1 justify-center items-center w-max ${className} border-0 bg-transparent border-pink-400`}
+          className={`fixed z-50  shadow-lg overflow-hidden 
+             flex flex-col justify-center items-center w-max ${className} border-0 bg-transparent border-pink-400`}
         >
-          <div style={{}} className='rounded-md'>
-            {children}
-          </div>
+          {children}
         </div>
       </div>
     </>

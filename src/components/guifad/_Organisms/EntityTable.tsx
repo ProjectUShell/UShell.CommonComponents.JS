@@ -3,7 +3,13 @@ import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
 import Table, { TableColumn } from './Table'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import TrashIcon from '../../../_Icons/TrashIcon'
-import { useQuery } from '@tanstack/react-query'
+import {
+  QueryClient,
+  QueryClientContext,
+  QueryClientProvider,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import { EntitySchema, SchemaRoot, RelationSchema } from 'fusefx-modeldescription'
 import { LogicalExpression, PagingParams, SortingField } from 'fusefx-repositorycontract'
 import { getParentFilter } from '../../../data/DataSourceService'
@@ -28,15 +34,77 @@ import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget
 const EntityTable: React.FC<{
   dataSourceManager: IDataSourceManagerWidget
   dataSource: IDataSource
-  parentSchema: EntitySchema | undefined
-  parent: any | undefined
+  parentSchema?: EntitySchema | undefined
+  parent?: any
   schemaRoot: SchemaRoot
   entitySchema: EntitySchema
   className?: string
-  onRecordEnter: (r: any) => void
-  onSelectedRecordsChange: (selectedRecords: any[]) => void
-  selectedRecord: any | null
-  onCreateRecord: () => void
+  onRecordEnter?: (r: any) => void
+  onSelectedRecordsChange?: (selectedRecords: any[]) => void
+  selectedRecord?: any | null
+  onCreateRecord?: () => void
+}> = ({
+  dataSourceManager,
+  dataSource,
+  schemaRoot,
+  entitySchema,
+  parentSchema,
+  parent,
+  className,
+  onRecordEnter,
+  onSelectedRecordsChange,
+  selectedRecord,
+  onCreateRecord,
+}) => {
+  console.log('get queryClient')
+  const qcc: any = QueryClientContext
+  console.log('QueryClientContext', qcc._currentValue)
+  if (!qcc._currentValue)
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <EntityTableInternal
+          dataSourceManager={dataSourceManager}
+          dataSource={dataSource}
+          schemaRoot={schemaRoot}
+          entitySchema={entitySchema}
+          parentSchema={parentSchema}
+          parent={parent}
+          className={className}
+          onRecordEnter={onRecordEnter}
+          onSelectedRecordsChange={onSelectedRecordsChange}
+          selectedRecord={selectedRecord}
+          onCreateRecord={onCreateRecord}
+        ></EntityTableInternal>
+      </QueryClientProvider>
+    )
+  return (
+    <EntityTableInternal
+      dataSourceManager={dataSourceManager}
+      dataSource={dataSource}
+      schemaRoot={schemaRoot}
+      entitySchema={entitySchema}
+      parentSchema={parentSchema}
+      parent={parent}
+      className={className}
+      onRecordEnter={onRecordEnter}
+      onSelectedRecordsChange={onSelectedRecordsChange}
+      selectedRecord={selectedRecord}
+      onCreateRecord={onCreateRecord}
+    ></EntityTableInternal>
+  )
+}
+const EntityTableInternal: React.FC<{
+  dataSourceManager: IDataSourceManagerWidget
+  dataSource: IDataSource
+  parentSchema?: EntitySchema | undefined
+  parent?: any
+  schemaRoot: SchemaRoot
+  entitySchema: EntitySchema
+  className?: string
+  onRecordEnter?: (r: any) => void
+  onSelectedRecordsChange?: (selectedRecords: any[]) => void
+  selectedRecord?: any | null
+  onCreateRecord?: () => void
 }> = ({
   dataSourceManager,
   dataSource,
@@ -203,6 +271,7 @@ const EntityTable: React.FC<{
 
   if (error) return <ErrorPage messages={['An error has occurred', error.toString()]}></ErrorPage>
   function addRecord() {
+    if (!onCreateRecord) return
     onCreateRecord()
   }
 
@@ -212,7 +281,7 @@ const EntityTable: React.FC<{
     }
     dataSource.entityDeleteMethod(selectedRecords).then((r) => {
       setSelectedRecords([])
-      onSelectedRecordsChange([])
+      onSelectedRecordsChange && onSelectedRecordsChange([])
       forceReload()
     })
   }
@@ -354,7 +423,7 @@ const EntityTable: React.FC<{
           getId={getId}
           onRecordEnter={onRecordEnter}
           onSelectedRecordsChange={(sr) => {
-            onSelectedRecordsChange(sr)
+            onSelectedRecordsChange && onSelectedRecordsChange(sr)
             setSelectedRecords(sr)
           }}
           selectedRecord={selectedRecords.length > 1 ? null : selectedRecord}
