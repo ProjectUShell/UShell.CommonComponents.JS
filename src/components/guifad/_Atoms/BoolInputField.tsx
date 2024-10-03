@@ -8,10 +8,7 @@ const BoolInputField: React.FC<{
   setCurrentValue: (cv: any) => void
   onValueChange: (newValue: any) => void
   disabled: boolean
-  classNameBg?: string
-  classNameHoverBg?: string
-  classNameHoverBgDark?: string
-}> = ({ initialValue, setCurrentValue, onValueChange, disabled, classNameBg }) => {
+}> = ({ initialValue, setCurrentValue, onValueChange, disabled, className }) => {
   console.log('initialValue', initialValue)
   return (
     <DropdownSelect
@@ -25,8 +22,7 @@ const BoolInputField: React.FC<{
       }}
       initialOption={{ label: initialValue ? 'Yes' : 'No', value: initialValue }}
       topOffset={0}
-      inputClassname='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
-        p-3 w-full transition-all bg-bg4 dark:bg-bg4dark'
+      inputClassname={className}
     ></DropdownSelect>
   )
 }

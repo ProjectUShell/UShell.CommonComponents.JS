@@ -17,8 +17,10 @@ const UForm1: React.FC<{
   customInputs?: { label: string; render: () => JSX.Element }[]
   classNameBg?: string
   classNameInputBg?: string
+  classNameInputBgDark?: string
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
+  styleType?: number
 }> = ({
   fieldsToDisplay,
   labelPosition,
@@ -26,8 +28,10 @@ const UForm1: React.FC<{
   customInputs = [],
   classNameBg,
   classNameInputBg,
+  classNameInputBgDark,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
+  styleType = 0,
 }) => {
   function getLabel(f: FieldInputInfo) {
     const fieldLayout: FieldLayout | undefined = fieldLayouts.find((fl) => fl.fieldName == f.name)
@@ -69,22 +73,30 @@ const UForm1: React.FC<{
         className={`my-2 h-full w-full flex flex-col gap-2
       ${classNameBg || ''}`}
       >
-        {fieldsToDisplay.map((f) => (
-          <div className='border-0 border-red-400'>
-            <InputField
-              key={f.name}
-              inputType={f.type}
-              label={labelPosition == 'top' ? getLabel(f) : null}
-              initialValue={f.value}
-              onValueChange={(newValue: any) => f.setValue(newValue)}
-              setabilityFlags={f.setabilityFlags}
-              classNameBg={classNameInputBg}
-              classNameHoverBg={classNameInputHoverBg}
-              classNameHoverBgDark={classNameInputHoverBgDark}
-              allowedValues={getAllowedValues(f)}
-            ></InputField>
-          </div>
-        ))}
+        {fieldsToDisplay.map((f) => {
+          const fieldLayout: FieldLayout | undefined = fieldLayouts.find(
+            (fl) => fl.fieldName == f.name,
+          )
+          return (
+            <div className='border-0 border-red-400'>
+              <InputField
+                key={f.name}
+                inputType={f.type}
+                label={labelPosition == 'top' ? getLabel(f) : null}
+                initialValue={f.value}
+                onValueChange={(newValue: any) => f.setValue(newValue)}
+                setabilityFlags={f.setabilityFlags}
+                classNameBg={classNameInputBg}
+                classNameBgDark={classNameInputBgDark}
+                classNameHoverBg={classNameInputHoverBg}
+                classNameHoverBgDark={classNameInputHoverBgDark}
+                allowedValues={getAllowedValues(f)}
+                multiLine={fieldLayout ? fieldLayout.textIsMultiLine : false}
+                styleType={styleType}
+              ></InputField>
+            </div>
+          )
+        })}
         {customInputs.map((c) => (
           <div key={c.label}>{c.render()}</div>
         ))}

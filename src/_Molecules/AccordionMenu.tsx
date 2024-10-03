@@ -14,6 +14,7 @@ const AccordionMenu: React.FC<{
       }[]
     }
   }
+  initialSelectedItemKey?: string
   classNameBgHeader?: string
   classNameBgHeaderActive?: string
   classNameBgItems?: string
@@ -26,8 +27,9 @@ const AccordionMenu: React.FC<{
   classNameBgItems = 'bg-content dark:bg-contentDark',
   classNameBgItemHover = 'hover:bg-contentHover dark:hover:bg-contentHoverDark',
   classNameBgItemSelected = 'bg-contentHover dark:bg-contentHoverDark',
+  initialSelectedItemKey = '',
 }) => {
-  const [selectedItemKey, setSelectedItemKey] = useState('')
+  const [selectedItemKey, setSelectedItemKey] = useState(initialSelectedItemKey)
 
   function isSelected(item: { key: string }) {
     return item.key == selectedItemKey

@@ -22,6 +22,7 @@ const UForm: React.FC<{
   classNameInputBg?: string
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
+  styleType?: number
 }> = ({
   fieldsToDisplay,
   currentEntity,
@@ -35,9 +36,11 @@ const UForm: React.FC<{
   classNameInputBg,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
+  styleType = 0,
 }) => {
   return (
     <UForm1
+      styleType={styleType}
       fieldLayouts={fieldLayouts}
       labelPosition={labelPosition}
       fieldsToDisplay={fieldsToDisplay.map((f) => {

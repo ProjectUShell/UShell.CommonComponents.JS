@@ -1,7 +1,7 @@
 import React from 'react'
+import { getInputStyleClassName } from './InputField'
 
 const InputStyle: React.FC<{
-  className?: string
   initialValue: any
   currentValue: any
   setCurrentValue: (cv: any) => void
@@ -9,8 +9,10 @@ const InputStyle: React.FC<{
   disabled: boolean
   htmlType: string
   classNameBg?: string
+  classNameBgDark?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
+  styleType?: number
 }> = ({
   currentValue,
   setCurrentValue,
@@ -18,23 +20,23 @@ const InputStyle: React.FC<{
   disabled,
   htmlType,
   classNameBg,
+  classNameBgDark,
   classNameHoverBg,
   classNameHoverBgDark,
+  styleType = 0,
 }) => {
+  const className: string = getInputStyleClassName(
+    styleType,
+    classNameBg,
+    classNameBgDark,
+    disabled,
+    classNameHoverBg,
+    classNameHoverBgDark,
+  )
   return (
     <input
       disabled={disabled}
-      className={`text-sm rounded-sm
-         border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6 p-3 outline-none block w-full transition-all
-        ${classNameBg ? classNameBg : 'bg-bg4 dark:bg-bg4dark'}
-        ${
-          disabled
-            ? 'border-b-2 '
-            : `border-b-2 
-           hover:${classNameHoverBg || 'bg-bg5'}
-           dark:hover:${classNameHoverBgDark || 'bg-bg5dark'}`
-        }
-        `}
+      className={className}
       type={htmlType}
       value={currentValue}
       onChange={(e) => {

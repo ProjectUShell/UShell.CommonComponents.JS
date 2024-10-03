@@ -3,6 +3,7 @@ import UForm1 from '../components/guifad/_Molecules/UForm1'
 
 const FormAlt = () => {
   const [firstName, setFirstName] = useState('')
+  const [description, setDescription] = useState('')
   const [id, setId] = useState('')
   const [dateOfBirth, setDateOfBirth] = useState('1900-01-01')
   const [height, setHeight] = useState(0)
@@ -11,6 +12,11 @@ const FormAlt = () => {
   return (
     <div className='bg-content dark:bg-contentDark p-2'>
       <UForm1
+        styleType={1}
+        classNameInputBg='bg-white'
+        classNameInputBgDark='bg-bg1dark'
+        classNameInputHoverBg='bg-white'
+        classNameInputHoverBgDark='bg-bg1dark'
         fieldLayouts={[
           { fieldName: 'FirstName', displayLabel: 'First Name' },
           {
@@ -19,6 +25,7 @@ const FormAlt = () => {
             displayLabel: 'Favorite Color',
             dropdownStaticEntries: { red: 'Red', blue: 'Blue', violet: 'Violet' },
           },
+          { fieldName: 'Description', displayLabel: 'Description', textIsMultiLine: true },
         ]}
         fieldsToDisplay={[
           {
@@ -36,11 +43,25 @@ const FormAlt = () => {
             setValue: (v) => setFirstName(v),
           },
           {
+            name: 'DateOfBirth',
+            setabilityFlags: 7,
+            type: 'date',
+            value: dateOfBirth,
+            setValue: (v) => setDateOfBirth(v),
+          },
+          {
             name: 'FavColor',
             setabilityFlags: 7,
             type: 'string',
             value: favColor,
             setValue: (v) => setFavColor(v),
+          },
+          {
+            name: 'Description',
+            setabilityFlags: 7,
+            type: 'string',
+            value: description,
+            setValue: (v) => setDescription(v),
           },
         ]}
         labelPosition='left'
