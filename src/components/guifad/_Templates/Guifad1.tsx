@@ -166,7 +166,7 @@ const Guifad1: React.FC<{
           <div className='p-2 h-full overflow-auto'>
             {currentMode == 'list' && (
               <EntityTable
-                dataSourceManager={dataSourceManager}
+                dataSourceManagerForNavigations={dataSourceManager}
                 dataSource={node.dataSource}
                 onRecordEnter={(r: any) => {
                   enterRecord
@@ -179,7 +179,7 @@ const Guifad1: React.FC<{
                 selectedRecord={currentRecord}
                 onCreateRecord={createRecord}
                 parentSchema={node.parent?.dataSource?.entitySchema}
-                schemaRoot={dataSourceManager.getSchemaRoot()}
+                // schemaRoot={dataSourceManager.getSchemaRoot()}
                 entitySchema={node.dataSource.entitySchema!}
                 parent={node.parent?.record}
               ></EntityTable>
@@ -191,7 +191,7 @@ const Guifad1: React.FC<{
                 entity={currentRecord}
                 dirty={dirty}
                 setDirty={setDirty}
-                onChange={(updatedEntity: any) => {
+                onSaved={(updatedEntity: any) => {
                   setCurrentRecord(updatedEntity)
                   setDirty(false)
                 }}

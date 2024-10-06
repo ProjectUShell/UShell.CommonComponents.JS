@@ -18,7 +18,7 @@ const EntityFormGroup: React.FC<{
   changeValue: (field: FieldSchema, newValue: any) => void
   fkRelations: RelationSchema[]
   fkRelationsToDisplay: RelationSchema[]
-  dataSourceManager: IDataSourceManagerWidget
+  dataSourceManager?: IDataSourceManagerWidget
   changeLookUpValues: (l: RelationSchema, keyValues: any) => void
   partitions: LayoutPartition[]
   labelPosition: 'left' | 'top'

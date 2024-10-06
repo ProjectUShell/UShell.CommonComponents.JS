@@ -15,7 +15,7 @@ const UForm: React.FC<{
   currentEntity: any
   changeValue: (field: FieldSchema, newValue: any) => void
   changeLookUpValues: (l: RelationSchema, keyValues: any) => void
-  dataSourceManager: IDataSourceManagerWidget
+  dataSourceManager?: IDataSourceManagerWidget
   labelPosition: 'top' | 'left'
   fieldLayouts: FieldLayout[]
   classNameBg?: string
@@ -50,28 +50,32 @@ const UForm: React.FC<{
           setValue: (newValue: any) => changeValue(f, newValue),
         }
       })}
-      customInputs={fkRelationsToDisplay.map((fk, i) => {
-        return {
-          label: fk.primaryEntityName,
-          render: () => (
-            <LookUpSelect
-              key={i}
-              lookUpRelation={fk}
-              dataSourceManager={dataSourceManager}
-              // initialValue={currentEntity[lowerFirstLetter(l.foreignKeyIndexName)]}
-              initialValue={getForeignKeyValue(currentEntity, fk)}
-              onValueSet={(keyValues: any) => {
-                changeLookUpValues(fk, keyValues)
-              }}
-              inputClassName={`
+      customInputs={
+        dataSourceManager
+          ? fkRelationsToDisplay.map((fk, i) => {
+              return {
+                label: fk.primaryEntityName,
+                render: () => (
+                  <LookUpSelect
+                    key={i}
+                    lookUpRelation={fk}
+                    dataSourceManager={dataSourceManager}
+                    // initialValue={currentEntity[lowerFirstLetter(l.foreignKeyIndexName)]}
+                    initialValue={getForeignKeyValue(currentEntity, fk)}
+                    onValueSet={(keyValues: any) => {
+                      changeLookUpValues(fk, keyValues)
+                    }}
+                    inputClassName={`
                 rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
                 p-3 w-full transition-all bg-bg4 dark:bg-bg4dark              
               `}
-              showLabel={labelPosition == 'top'}
-            ></LookUpSelect>
-          ),
-        }
-      })}
+                    showLabel={labelPosition == 'top'}
+                  ></LookUpSelect>
+                ),
+              }
+            })
+          : []
+      }
       classNameBg={classNameBg}
       classNameInputBg={classNameInputBg}
       classNameInputHoverBg={classNameInputHoverBg}
@@ -79,36 +83,36 @@ const UForm: React.FC<{
     ></UForm1>
   )
 
-  return (
-    <div className='my-2 h-full'>
-      {fieldsToDisplay.map((f) => (
-        <InputField
-          key={f.name}
-          inputType={f.type}
-          label={f.name}
-          initialValue={getValue(currentEntity, f.name)}
-          onValueChange={(newValue: any) => changeValue(f, newValue)}
-          setabilityFlags={f.setabilityFlags}
-        ></InputField>
-      ))}
-      {fkRelationsToDisplay.map((l, i) => (
-        <LookUpSelect
-          key={i}
-          lookUpRelation={l}
-          dataSourceManager={dataSourceManager}
-          // initialValue={currentEntity[lowerFirstLetter(l.foreignKeyIndexName)]}
-          initialValue={getForeignKeyValue(currentEntity, l)}
-          onValueSet={(keyValues: any) => {
-            changeLookUpValues(l, keyValues)
-          }}
-          inputClassName={`
-      rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
-       p-3 w-full transition-all bg-bg4 dark:bg-bg4dark              
-    `}
-        ></LookUpSelect>
-      ))}
-    </div>
-  )
+  // return (
+  //   <div className='my-2 h-full'>
+  //     {fieldsToDisplay.map((f) => (
+  //       <InputField
+  //         key={f.name}
+  //         inputType={f.type}
+  //         label={f.name}
+  //         initialValue={getValue(currentEntity, f.name)}
+  //         onValueChange={(newValue: any) => changeValue(f, newValue)}
+  //         setabilityFlags={f.setabilityFlags}
+  //       ></InputField>
+  //     ))}
+  //     {fkRelationsToDisplay.map((l, i) => (
+  //       <LookUpSelect
+  //         key={i}
+  //         lookUpRelation={l}
+  //         dataSourceManager={dataSourceManager}
+  //         // initialValue={currentEntity[lowerFirstLetter(l.foreignKeyIndexName)]}
+  //         initialValue={getForeignKeyValue(currentEntity, l)}
+  //         onValueSet={(keyValues: any) => {
+  //           changeLookUpValues(l, keyValues)
+  //         }}
+  //         inputClassName={`
+  //     rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
+  //      p-3 w-full transition-all bg-bg4 dark:bg-bg4dark
+  //   `}
+  //       ></LookUpSelect>
+  //     ))}
+  //   </div>
+  // )
 }
 
 export default UForm

@@ -20,8 +20,14 @@ const RelationEditor: React.FC<{
   onUpdateRelation: (r: FieldPredicate) => void
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
-  dataSourceManager: IDataSourceManagerWidget
-}> = ({ initialRelation, fields, fkRelations, onUpdateRelation, dataSourceManager }) => {
+  dataSourceManagerForNavigations?: IDataSourceManagerWidget
+}> = ({
+  initialRelation,
+  fields,
+  fkRelations,
+  onUpdateRelation,
+  dataSourceManagerForNavigations,
+}) => {
   const [currrentField, setCurrentField] = useState<FieldSchema | null>(null)
   const [currentFkRelation, setCurrentFkRelation] = useState<RelationSchema | null>(null)
   const [currentOperator, setCurrentOperator] = useState<string>('')
@@ -179,10 +185,10 @@ const RelationEditor: React.FC<{
         inputClassname='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
                p-2 w-full transition-all bg-bg4 dark:bg-bg4dark'
       ></DropdownSelect>
-      {currentFkRelation ? (
+      {currentFkRelation && dataSourceManagerForNavigations ? (
         <LookUpSelect
           showLabel={false}
-          dataSourceManager={dataSourceManager}
+          dataSourceManager={dataSourceManagerForNavigations}
           initialValue={null}
           lookUpRelation={currentFkRelation}
           onValueSet={(keyValues: any[]) => onValueSet(keyValues)}

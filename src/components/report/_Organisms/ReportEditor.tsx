@@ -70,7 +70,7 @@ const ReportEditor: React.FC<{
         <div className='h-full overflow-auto'>
           {tab == 'query' && (
             <LogicalExpressionTree
-              dataSourceManager={new FuseDataStore('fuseUrl', 'body')}
+              dataSourceManagerForNavigations={new FuseDataStore('fuseUrl', 'body')}
               expression={
                 report.filter || {
                   matchAll: true,

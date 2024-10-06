@@ -14,8 +14,8 @@ const LogicalExpressionTree: React.FC<{
   onUpdateExpression: (e: LogicalExpression) => void
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
-  dataSourceManager: IDataSourceManagerWidget
-}> = ({ expression, fields, fkRelations, onUpdateExpression, dataSourceManager }) => {
+  dataSourceManagerForNavigations?: IDataSourceManagerWidget
+}> = ({ expression, fields, fkRelations, onUpdateExpression, dataSourceManagerForNavigations }) => {
   function onRelationUpdated(r: FieldPredicate, index: number) {
     expression.predicates[index] = r
     onUpdateExpression({ ...expression })
@@ -90,7 +90,7 @@ const LogicalExpressionTree: React.FC<{
               fkRelations={fkRelations}
               initialRelation={a}
               onUpdateRelation={(r: FieldPredicate) => onRelationUpdated(r, i)}
-              dataSourceManager={dataSourceManager}
+              dataSourceManagerForNavigations={dataSourceManagerForNavigations}
             ></RelationEditor>
 
             {isRelationValid(a) && (
@@ -120,7 +120,7 @@ const LogicalExpressionTree: React.FC<{
             fkRelations={fkRelations}
             expression={e}
             onUpdateExpression={(e: LogicalExpression) => onExpressionUpdated(e, i)}
-            dataSourceManager={dataSourceManager}
+            dataSourceManagerForNavigations={dataSourceManagerForNavigations}
           ></LogicalExpressionTree>
         </div>
       ))}

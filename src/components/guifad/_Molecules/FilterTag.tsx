@@ -14,8 +14,15 @@ const FilterTag: React.FC<{
   fkRelations: RelationSchema[]
   onUpdateFilter: (f: LogicalExpression) => void
   onDelete: () => void
-  dataSourceManager: IDataSourceManagerWidget
-}> = ({ filter, fields, fkRelations, onUpdateFilter, onDelete, dataSourceManager }) => {
+  dataSourceManagerForNavigations?: IDataSourceManagerWidget
+}> = ({
+  filter,
+  fields,
+  fkRelations,
+  onUpdateFilter,
+  onDelete,
+  dataSourceManagerForNavigations,
+}) => {
   const [open, setOpen] = useState(false)
 
   function getLabel(f: LogicalExpression) {
@@ -80,7 +87,7 @@ const FilterTag: React.FC<{
             setOpen(false)
           }}
           intialExpression={filter}
-          dataSourceManager={dataSourceManager}
+          dataSourceManagerForNavigations={dataSourceManagerForNavigations}
         ></LogicalExpressionEditor>
       </div>
     </DropdownButton>

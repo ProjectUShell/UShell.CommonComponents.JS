@@ -11,8 +11,15 @@ const FilterTagBar: React.FC<{
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
   className?: string
-  dataSourceManager: IDataSourceManagerWidget
-}> = ({ filters, fields, fkRelations, onUpdateFilters, className, dataSourceManager }) => {
+  dataSourceManagerForNavigations?: IDataSourceManagerWidget
+}> = ({
+  filters,
+  fields,
+  fkRelations,
+  onUpdateFilters,
+  className,
+  dataSourceManagerForNavigations,
+}) => {
   function onFiltersUpdate(f: LogicalExpression, index: number) {
     filters[index] = f
     onUpdateFilters([...filters])
@@ -26,7 +33,7 @@ const FilterTagBar: React.FC<{
       {filters.map((f, i) => (
         <div key={i}>
           <FilterTag
-            dataSourceManager={dataSourceManager}
+            dataSourceManagerForNavigations={dataSourceManagerForNavigations}
             fields={fields}
             fkRelations={fkRelations}
             filter={f}

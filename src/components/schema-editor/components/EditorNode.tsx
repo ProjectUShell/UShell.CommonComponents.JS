@@ -53,7 +53,7 @@ const EditorNode: React.FC<{
     function handleCommitField(f: FieldSchema | null, value: any) {
       if (!value || value == '') return
       if (!f) {
-        f = new FieldSchema()
+        f = new FieldSchema('', '')
         f.name = value
         f.type = 'String'
       }

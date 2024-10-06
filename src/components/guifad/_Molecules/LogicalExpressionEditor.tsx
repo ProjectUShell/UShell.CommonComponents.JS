@@ -36,9 +36,14 @@ const LogicalExpressionEditor: React.FC<{
   onUpdateExpression: (e: LogicalExpression) => void
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
-  dataSourceManager: IDataSourceManagerWidget
-}> = ({ intialExpression, fields, fkRelations, onUpdateExpression, dataSourceManager }) => {
-  console.log('LogicalExpressionEditor dataSourceManager', dataSourceManager)
+  dataSourceManagerForNavigations?: IDataSourceManagerWidget
+}> = ({
+  intialExpression,
+  fields,
+  fkRelations,
+  onUpdateExpression,
+  dataSourceManagerForNavigations,
+}) => {
   const [originalExpression, setOriginalExpression] = useState<LogicalExpression | null>(
     getCopy(intialExpression),
   )
@@ -68,7 +73,7 @@ const LogicalExpressionEditor: React.FC<{
           setExpression(e)
         }}
         expression={expression}
-        dataSourceManager={dataSourceManager}
+        dataSourceManagerForNavigations={dataSourceManagerForNavigations}
       ></LogicalExpressionTree>
       <div className='flex gap-1 justify-end border-t pt-1 border-gray-400'>
         <button

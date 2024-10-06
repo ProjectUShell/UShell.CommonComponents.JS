@@ -41,6 +41,7 @@ import InputField from './components/guifad/_Atoms/InputField'
 import InputFieldDoc from './demo/InputFieldDoc'
 import AccordionDoc from './demo/AccordionDoc'
 import AccordionMenuDoc from './demo/AccordionMenuDoc'
+import EntityTableDoc from './demo/EntityTableDoc'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -64,7 +65,7 @@ const Demo = () => {
       'Accordion',
       'AccordionMenu',
     ],
-    'FuseFx Components': ['Guifad', 'GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
+    'FuseFx Components': ['Guifad', 'EntityTable', 'GuifadDemo', 'GuifadDemo2', 'GuifadDemo3'],
     'Dynamic Reports': ['ReportService', 'ReportManager', 'ReportDashboard'],
     'Schema Editor': ['Schema Manager', 'Editor', 'Schema Guifad'],
     Technical: ['ColorDemo', 'TableDemo', 'ResizeTable', 'DropdownButtonDemo', 'ResizeTable2'],
@@ -245,6 +246,7 @@ const Demo = () => {
           ]}
         ></ResizableTable2>
       )}
+      {currentComponent == 'EntityTable' && <EntityTableDoc></EntityTableDoc>}
       {currentComponent == 'Table' && <TableDoc></TableDoc>}
       {currentComponent == 'Tab Control' && <TabControlDoc></TabControlDoc>}
       {currentComponent == 'Input Field' && <InputFieldDoc></InputFieldDoc>}
