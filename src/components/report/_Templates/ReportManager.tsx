@@ -8,12 +8,46 @@ import { EntitySchema } from 'fusefx-modeldescription'
 import ReportResultViewer from '../_Organisms/ReportResultViewer'
 import { IReportRepository } from '../IReportRepository'
 import ReportExplorer from '../_Organisms/ReportExplorer'
-import { useQuery } from '@tanstack/react-query'
+import {
+  QueryClient,
+  QueryClientContext,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
 import PencilAlt from '../../../_Icons/PencilAlt'
 import PresentationChartBar from '../../../_Icons/PresentationChartBar'
 import MenuAlt4 from '../../../_Icons/MenuAlt4'
 
 export const ReportManager1: React.FC<{
+  reportRepository: IReportRepository
+  reportSerivce: IReportService
+  dark: boolean
+  initialReport?: ReportDefinition
+}> = ({ reportRepository, reportSerivce, dark, initialReport }) => {
+  const qcc: any = QueryClientContext
+  if (!qcc._currentValue) {
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <ReportManager1Inner
+          reportRepository={reportRepository}
+          reportSerivce={reportSerivce}
+          dark={dark}
+          initialReport={initialReport}
+        ></ReportManager1Inner>
+      </QueryClientProvider>
+    )
+  }
+  return (
+    <ReportManager1Inner
+      reportRepository={reportRepository}
+      reportSerivce={reportSerivce}
+      dark={dark}
+      initialReport={initialReport}
+    ></ReportManager1Inner>
+  )
+}
+
+export const ReportManager1Inner: React.FC<{
   reportRepository: IReportRepository
   reportSerivce: IReportService
   dark: boolean

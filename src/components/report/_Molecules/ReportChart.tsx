@@ -1,7 +1,12 @@
 import React from 'react'
 import { IReportService } from '../IReportService'
 import { ReportServiceConnector } from '../ReportServiceConnector'
-import { useQuery } from '@tanstack/react-query'
+import {
+  QueryClient,
+  QueryClientContext,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
 import { ReportDefinition } from '../ReportDefinition'
 import ReportBarChart from './ReportBarChart'
 import ReportLineChart from './ReportLineChart'
@@ -27,6 +32,32 @@ const ReportChart: React.FC<{ reportServiceUrl: string; dark: boolean }> = ({
 }
 
 export const ReportChart1: React.FC<{
+  reportService: IReportService
+  report: ReportDefinition
+  dark: boolean
+}> = ({ reportService, report, dark }) => {
+  const qcc: any = QueryClientContext
+  if (!qcc._currentValue) {
+    return (
+      <QueryClientProvider client={new QueryClient()}>
+        <ReportChart1Inner
+          reportService={reportService}
+          report={report}
+          dark={dark}
+        ></ReportChart1Inner>
+      </QueryClientProvider>
+    )
+  }
+  return (
+    <ReportChart1Inner
+      reportService={reportService}
+      report={report}
+      dark={dark}
+    ></ReportChart1Inner>
+  )
+}
+
+export const ReportChart1Inner: React.FC<{
   reportService: IReportService
   report: ReportDefinition
   dark: boolean
