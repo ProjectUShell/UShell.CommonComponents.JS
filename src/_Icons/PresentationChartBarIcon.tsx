@@ -1,6 +1,6 @@
 import React from 'react'
 
-const PresentationChartBar = () => {
+const PresentationChartBarIcon = () => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -19,4 +19,4 @@ const PresentationChartBar = () => {
   )
 }
 
-export default PresentationChartBar
+export default PresentationChartBarIcon

@@ -12,13 +12,22 @@ const LookUpSelect: React.FC<{
   initialValue: any
   onValueSet: (keyValues: any[]) => void
   inputClassName?: string
+  styleType?: number
+  classNameBg?: string
+  classNameBgDark?: string
+  classNameHoverBg?: string
+  classNameHoverBgDark?: string
   showLabel?: boolean
 }> = ({
   dataSourceManager,
   lookUpRelation,
   initialValue,
   onValueSet,
-  inputClassName = '',
+  styleType,
+  classNameBg,
+  classNameBgDark,
+  classNameHoverBg,
+  classNameHoverBgDark,
   showLabel = true,
 }) => {
   const [lookUpList, setLookUpList] = useState<{ label: string; value: string }[]>([])
@@ -69,7 +78,9 @@ const LookUpSelect: React.FC<{
         }}
         initialOption={lookUpList.find((li) => li.value == initialValue)}
         topOffset={0}
-        inputClassname={inputClassName}
+        classNameBg={classNameBg}
+        classNameHoverBg={classNameHoverBg}
+        classNameHoverBgDark={classNameHoverBgDark}
       ></DropdownSelect>
     </div>
   )

@@ -15,7 +15,21 @@ const LogicalExpressionTree: React.FC<{
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
-}> = ({ expression, fields, fkRelations, onUpdateExpression, dataSourceManagerForNavigations }) => {
+  classNameBg?: string
+  classNameBgInput?: string
+  classNameBgInputHover?: string
+  classNameBgInputHoverDark?: string
+}> = ({
+  expression,
+  fields,
+  fkRelations,
+  onUpdateExpression,
+  dataSourceManagerForNavigations,
+  classNameBg,
+  classNameBgInput,
+  classNameBgInputHover,
+  classNameBgInputHoverDark,
+}) => {
   function onRelationUpdated(r: FieldPredicate, index: number) {
     expression.predicates[index] = r
     onUpdateExpression({ ...expression })
@@ -76,7 +90,7 @@ const LogicalExpressionTree: React.FC<{
   // console.log('expression LE', expression)
 
   return (
-    <div className='bg-bg1 dark:bg-bg1dark p-2 rounded-md text-sm'>
+    <div className={`UShell_LogicalExpressionTree p-2 rounded-md text-sm ${classNameBg || ''}`}>
       <div className='-ml-3'>
         <ChevrodnDownIcon rotate={135} size={4}></ChevrodnDownIcon>
       </div>
@@ -91,6 +105,9 @@ const LogicalExpressionTree: React.FC<{
               initialRelation={a}
               onUpdateRelation={(r: FieldPredicate) => onRelationUpdated(r, i)}
               dataSourceManagerForNavigations={dataSourceManagerForNavigations}
+              classNameBgInput={classNameBgInput}
+              classNameBgInputHover={classNameBgInputHover}
+              classNameBgInputHoverDark={classNameBgInputHoverDark}
             ></RelationEditor>
 
             {isRelationValid(a) && (

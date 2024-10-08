@@ -13,7 +13,6 @@ const InputField: React.FC<{
   allowedValues?: { [key: string]: string }
   setabilityFlags?: number
   classNameBg?: string
-  classNameBgDark?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
   multiLine?: boolean
@@ -26,7 +25,6 @@ const InputField: React.FC<{
   allowedValues,
   setabilityFlags = 7,
   classNameBg,
-  classNameBgDark,
   classNameHoverBg,
   classNameHoverBgDark,
   multiLine = false,
@@ -56,7 +54,6 @@ const InputField: React.FC<{
   const classNameInput: string = getInputStyleClassName(
     styleType,
     classNameBg,
-    classNameBgDark,
     disabled,
     classNameHoverBg,
     classNameHoverBgDark,
@@ -71,7 +68,6 @@ const InputField: React.FC<{
           onValueChange={onValueChange}
           disabled={disabled}
           classNameBg={classNameBg}
-          classNameBgDark={classNameBgDark}
           classNameHoverBg={classNameHoverBg}
           classNameHoverBgDark={classNameHoverBgDark}
           styleType={styleType}
@@ -81,19 +77,25 @@ const InputField: React.FC<{
     if (inputType.toLocaleLowerCase() == 'bool' || inputType.toLocaleLowerCase() == 'boolean') {
       return (
         <BoolInputField
-          className={classNameInput}
           initialValue={initialValue}
           currentValue={currentValue}
           setCurrentValue={setCurrentValue}
           onValueChange={onValueChange}
           disabled={disabled}
+          classNameBg={classNameBg}
+          classNameHoverBg={classNameHoverBg}
+          classNameHoverBgDark={classNameHoverBgDark}
+          styleType={styleType}
         ></BoolInputField>
       )
     }
     if (allowedValues) {
       return (
         <DropdownSelect
-          inputClassname={classNameInput}
+          classNameBg={classNameBg}
+          classNameHoverBg={classNameHoverBg}
+          classNameHoverBgDark={classNameHoverBgDark}
+          styleType={styleType}
           options={Object.keys(allowedValues).map((av) => {
             return { label: allowedValues[av], value: av }
           })}
@@ -128,7 +130,6 @@ const InputField: React.FC<{
         onValueChange={onValueChange}
         setCurrentValue={setCurrentValue}
         classNameBg={classNameBg}
-        classNameBgDark={classNameBgDark}
         classNameHoverBg={classNameHoverBg}
         classNameHoverBgDark={classNameHoverBgDark}
         styleType={styleType}
@@ -137,7 +138,7 @@ const InputField: React.FC<{
   }
 
   return (
-    <div className={`${false ? 'flex justify-between gap-2 items-baseline' : ''}`}>
+    <div className={`w-full ${false ? 'flex justify-between gap-2 items-baseline ' : ''}`}>
       {label && (
         <label className='block mb-2 text-xs font-medium whitespace-nowrap align-baseline'>
           {label}
@@ -152,7 +153,6 @@ export default InputField
 export function getInputStyleClassName(
   styleType: number,
   classNameBg: string | undefined,
-  classNameBgDark: string | undefined,
   disabled: boolean,
   classNameHoverBg: string | undefined,
   classNameHoverBgDark: string | undefined,
@@ -162,9 +162,8 @@ export function getInputStyleClassName(
           styleType == 0
             ? 'border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6'
             : 'border-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6'
-        }
-          
-        ${classNameBg || 'bg-bg4'}  dark:${classNameBgDark || 'bg-bg4dark'}
+        }          
+        ${classNameBg || 'bg-content dark:bg-contentDark'}
         ${
           disabled
             ? ''

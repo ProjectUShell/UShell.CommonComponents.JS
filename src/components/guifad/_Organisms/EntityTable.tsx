@@ -426,8 +426,10 @@ const EntityTableInternal: React.FC<{
                   }
                   initialOpen={{ o: false }}
                 >
-                  <div className='border dark:border-bg3dark'>
+                  <div className='border-2 dark:border-bg7dark'>
                     <LogicalExpressionEditor
+                      classNameBg='bg-menu dark:bg-navigationDark'
+                      // classNameBgDark='bg-red-200'
                       intialExpression={null}
                       fields={dataSource.entitySchema!.fields}
                       fkRelations={

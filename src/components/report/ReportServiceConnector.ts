@@ -37,6 +37,7 @@ export class ReportServiceConnector implements IReportService {
       .then((r) => {
         return r.return ? r.return : r
       })
+      .catch((e) => console.error('Exception when generating fetching report', e))
   }
 
   getEntitySchema(): Promise<EntitySchema> {

@@ -13,8 +13,7 @@ const FormAlt = () => {
     <div className='bg-content dark:bg-contentDark p-2'>
       <UForm1
         styleType={1}
-        classNameInputBg='bg-white'
-        classNameInputBgDark='bg-bg1dark'
+        classNameInputBg='bg-white dark:bg-bg1dark'
         classNameInputHoverBg='bg-white'
         classNameInputHoverBgDark='bg-bg1dark'
         fieldLayouts={[

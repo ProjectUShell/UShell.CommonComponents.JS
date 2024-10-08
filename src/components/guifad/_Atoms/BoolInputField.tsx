@@ -2,14 +2,25 @@ import React from 'react'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 
 const BoolInputField: React.FC<{
-  className?: string
   initialValue: any
   currentValue: any
   setCurrentValue: (cv: any) => void
   onValueChange: (newValue: any) => void
   disabled: boolean
-}> = ({ initialValue, setCurrentValue, onValueChange, disabled, className }) => {
-  console.log('initialValue', initialValue)
+  styleType?: number
+  classNameBg?: string
+  classNameHoverBg?: string
+  classNameHoverBgDark?: string
+}> = ({
+  initialValue,
+  setCurrentValue,
+  onValueChange,
+  disabled,
+  styleType = 0,
+  classNameBg,
+  classNameHoverBg,
+  classNameHoverBgDark,
+}) => {
   return (
     <DropdownSelect
       options={[
@@ -22,7 +33,10 @@ const BoolInputField: React.FC<{
       }}
       initialOption={{ label: initialValue ? 'Yes' : 'No', value: initialValue }}
       topOffset={0}
-      inputClassname={className}
+      classNameBg={classNameBg}
+      classNameHoverBg={classNameHoverBg}
+      classNameHoverBgDark={classNameHoverBgDark}
+      styleType={styleType}
     ></DropdownSelect>
   )
 }

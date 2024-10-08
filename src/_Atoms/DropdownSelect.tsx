@@ -5,6 +5,7 @@ import FunnelIcon from '../_Icons/FunnelIcon'
 import ArrowUpDownIcon from '../_Icons/ArrowUpDownIcon'
 import ChevrodnDownIcon from '../_Icons/ChevrodnDownIcon'
 import XMarkIcon from '../_Icons/XMarkIcon'
+import { getInputStyleClassName } from '../components/guifad/_Atoms/InputField'
 
 const DropdownSelect: React.FC<{
   options: Option[]
@@ -14,7 +15,10 @@ const DropdownSelect: React.FC<{
   forceFocus?: boolean
   topOffset?: number
   bottomOffset?: number
-  inputClassname?: string
+  styleType?: number
+  classNameBg?: string
+  classNameHoverBg?: string
+  classNameHoverBgDark?: string
 }> = ({
   options,
   initialOption,
@@ -23,7 +27,10 @@ const DropdownSelect: React.FC<{
   forceFocus,
   topOffset,
   bottomOffset,
-  inputClassname,
+  styleType = 0,
+  classNameBg,
+  classNameHoverBg,
+  classNameHoverBgDark,
 }) => {
   const [open, setOpen] = useState(false)
   const [currentOption, setCurrentOption] = useState<Option | null | undefined>(initialOption)
@@ -168,7 +175,7 @@ const DropdownSelect: React.FC<{
     return 'UShell_DropdownSelect_' + crypto.randomUUID()
   }, [])
   return (
-    <div onBlur={(e) => setOpen(false)}>
+    <div className='w-full' onBlur={(e) => setOpen(false)}>
       {/* <button onClick={(e) => setOpen(true)}> */}
       <div
         id={refId}
@@ -179,9 +186,15 @@ const DropdownSelect: React.FC<{
         <input
           autoFocus={forceFocus}
           className={`w-full focus:z-50 relative outline-none             
-            ${inputClassname}`}
+            ${getInputStyleClassName(
+              styleType,
+              classNameBg,
+              false,
+              classNameHoverBg,
+              classNameHoverBgDark,
+            )}`}
           onClick={(e) => setOpen(true)}
-          value={currentText}
+          value={currentText || ''}
           type='text'
           onChange={(e) => trySetCurrentOption(e.target.value)}
           onKeyDown={(e) => onInputKeyDown(e)}
@@ -208,8 +221,9 @@ const DropdownSelect: React.FC<{
             minWidth={true}
           >
             <div
-              className='bg-bg2 dark:bg-bg3dark w-full p-0
-              border-2 dark:border dark:border-bg4dark'
+              className={`w-full p-0 border-2 dark:border-bg4dark ${
+                classNameBg || 'bg-content dark:bg-contentDark'
+              }`}
             >
               {options
                 .filter((o) => currentMatchingOptions.length == 0 || isMatchingOption(o))

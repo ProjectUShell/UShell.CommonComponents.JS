@@ -1,7 +1,19 @@
 import React, { useMemo } from 'react'
-import { ResponsiveContainer, Tooltip, Legend, Pie, PieChart, Cell } from 'recharts'
+import {
+  ResponsiveContainer,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Bar,
+  Pie,
+  PieChart,
+  Cell,
+} from 'recharts'
 import { getReportColor } from '../ReportColors'
-import { mergeGroupBysToSingleField } from '../ReportUtils'
+import { getStackGroups, mergeGroupBysToSingleField } from '../ReportUtils'
 
 const ReportPieChart2: React.FC<{
   data: { [key: string]: any }[]
@@ -9,8 +21,7 @@ const ReportPieChart2: React.FC<{
   stackBy: string[]
   reportValues: string[]
   dark: boolean
-  donut: boolean
-}> = ({ data, groupBy, stackBy, reportValues, dark, donut }) => {
+}> = ({ data, groupBy, stackBy, reportValues, dark }) => {
   console.log('barchart2', {
     groupBy: groupBy,
     stackBy: stackBy,
@@ -20,6 +31,14 @@ const ReportPieChart2: React.FC<{
 
   const singleFieldName = useMemo(() => {
     return 'name'
+    let res: string = ''
+    for (let i = 0; i < groupBy.length; ++i) {
+      res += groupBy[i]
+      if (i < groupBy.length - 1) {
+        res += '_'
+      }
+    }
+    return res
   }, [groupBy])
 
   const data3 = mergeGroupBysToSingleField(data, groupBy, singleFieldName)
@@ -33,7 +52,6 @@ const ReportPieChart2: React.FC<{
           data={data3}
           cx='50%'
           cy='50%'
-          innerRadius={donut ? '40%' : undefined}
           outerRadius='80%'
           fill='#8884d8'
           label

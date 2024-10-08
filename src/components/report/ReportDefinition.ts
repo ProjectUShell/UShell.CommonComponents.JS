@@ -1,6 +1,6 @@
 import { LogicalExpression } from 'fusefx-repositorycontract'
 
-type ChartType = 'Table' | 'Bar' | 'Pie' | 'Line' | 'Area' | 'Donut'
+export type ChartType = 'Table' | 'Bar' | 'Pie' | 'Line' | 'Area' | 'Donut'
 
 export class ReportChartDefinition {
   type: ChartType = 'Bar'

@@ -17,7 +17,6 @@ const UForm1: React.FC<{
   customInputs?: { label: string; render: () => JSX.Element }[]
   classNameBg?: string
   classNameInputBg?: string
-  classNameInputBgDark?: string
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
   styleType?: number
@@ -28,7 +27,6 @@ const UForm1: React.FC<{
   customInputs = [],
   classNameBg,
   classNameInputBg,
-  classNameInputBgDark,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
   styleType = 0,
@@ -87,7 +85,6 @@ const UForm1: React.FC<{
                 onValueChange={(newValue: any) => f.setValue(newValue)}
                 setabilityFlags={f.setabilityFlags}
                 classNameBg={classNameInputBg}
-                classNameBgDark={classNameInputBgDark}
                 classNameHoverBg={classNameInputHoverBg}
                 classNameHoverBgDark={classNameInputHoverBgDark}
                 allowedValues={getAllowedValues(f)}

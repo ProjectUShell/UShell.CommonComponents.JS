@@ -4,7 +4,7 @@ import Dropdown from '../../../_Atoms/Dropdown'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
-import InputField from '../_Atoms/InputField'
+import InputField, { getInputStyleClassName } from '../_Atoms/InputField'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import LookUpSelect from './LookUpSelect'
 import { IDataSourceManagerBase } from 'ushell-modulebase'
@@ -21,12 +21,18 @@ const RelationEditor: React.FC<{
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
+  classNameBgInput?: string
+  classNameBgInputHover?: string
+  classNameBgInputHoverDark?: string
 }> = ({
   initialRelation,
   fields,
   fkRelations,
   onUpdateRelation,
   dataSourceManagerForNavigations,
+  classNameBgInput,
+  classNameBgInputHover,
+  classNameBgInputHoverDark,
 }) => {
   const [currrentField, setCurrentField] = useState<FieldSchema | null>(null)
   const [currentFkRelation, setCurrentFkRelation] = useState<RelationSchema | null>(null)
@@ -158,7 +164,7 @@ const RelationEditor: React.FC<{
   }
 
   return (
-    <div className='flex p-0 gap-1  rounded-sm'>
+    <div className='flex p-0 gap-1 rounded-sm w-full border-0'>
       <DropdownSelect
         forceFocus
         options={getFieldOptions()}
@@ -172,8 +178,9 @@ const RelationEditor: React.FC<{
         }
         onOptionSet={(o) => onFieldSet(o?.value)}
         placeholder='Select a field'
-        inputClassname='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
-               p-2 w-full transition-all bg-bg4 dark:bg-bg4dark'
+        classNameBg={classNameBgInput}
+        classNameHoverBg={classNameBgInputHover}
+        classNameHoverBgDark={classNameBgInputHoverDark}
       ></DropdownSelect>
       <DropdownSelect
         options={getValidOperators(currrentField?.type)}
@@ -182,8 +189,9 @@ const RelationEditor: React.FC<{
         }
         onOptionSet={(o) => onOperatorSet(o?.value)}
         placeholder={currrentField ? 'Select a operator' : 'Select a field first'}
-        inputClassname='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
-               p-2 w-full transition-all bg-bg4 dark:bg-bg4dark'
+        classNameBg={classNameBgInput}
+        classNameHoverBg={classNameBgInputHover}
+        classNameHoverBgDark={classNameBgInputHoverDark}
       ></DropdownSelect>
       {currentFkRelation && dataSourceManagerForNavigations ? (
         <LookUpSelect
@@ -192,16 +200,26 @@ const RelationEditor: React.FC<{
           initialValue={null}
           lookUpRelation={currentFkRelation}
           onValueSet={(keyValues: any[]) => onValueSet(keyValues)}
-          inputClassName='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
-               p-2 w-full transition-all bg-bg4 dark:bg-bg4dark'
+          inputClassName={getInputStyleClassName(
+            0,
+            classNameBgInput,
+            false,
+            classNameBgInputHover,
+            classNameBgInputHoverDark,
+          )}
         ></LookUpSelect>
       ) : (
         <input
           value={currentValue}
           type={EntitySchemaService.getHtmlInputType(currrentField?.type || 'string')}
           onChange={(e) => onValueSet(e.target.value)}
-          className='rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
-               p-2 transition-all bg-bg4 dark:bg-bg4dark outline-none'
+          className={getInputStyleClassName(
+            0,
+            classNameBgInput,
+            false,
+            classNameBgInputHover,
+            classNameBgInputHoverDark,
+          )}
         ></input>
       )}
     </div>

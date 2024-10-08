@@ -15,7 +15,7 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 import PencilAlt from '../../../_Icons/PencilAlt'
-import PresentationChartBar from '../../../_Icons/PresentationChartBar'
+import PresentationChartBar from '../../../_Icons/PresentationChartBarIcon'
 import MenuAlt4 from '../../../_Icons/MenuAlt4'
 
 export const ReportManager1: React.FC<{
@@ -125,7 +125,6 @@ export const ReportManager: React.FC<{
   }, [reportSerivce])
 
   useEffect(() => {
-    console.log('useEffect')
     if (!reportName || reportName == '') {
       return
     }
@@ -152,8 +151,8 @@ export const ReportManager: React.FC<{
 
   if (!entitySchema) return <div>Loading...</div>
   return (
-    <div className='w-full h-full flex flex-col px-2 border-0 border-red-400'>
-      <div className='breadcrumb flex justify-between border-0 border-red-400 w-full mb-4 mt-2'>
+    <div className='UShell_ReportManager w-full h-full flex flex-col px-2 border-0 border-red-400'>
+      <div className='UShell_ReportManager_TopBar flex justify-between border-0 border-red-400 w-full mb-4 mt-2'>
         <ReportManagerBreadcrumb
           reportCollection={reportCollection}
           report={currentReport}

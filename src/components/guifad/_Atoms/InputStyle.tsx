@@ -9,7 +9,6 @@ const InputStyle: React.FC<{
   disabled: boolean
   htmlType: string
   classNameBg?: string
-  classNameBgDark?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
   styleType?: number
@@ -20,7 +19,6 @@ const InputStyle: React.FC<{
   disabled,
   htmlType,
   classNameBg,
-  classNameBgDark,
   classNameHoverBg,
   classNameHoverBgDark,
   styleType = 0,
@@ -28,7 +26,6 @@ const InputStyle: React.FC<{
   const className: string = getInputStyleClassName(
     styleType,
     classNameBg,
-    classNameBgDark,
     disabled,
     classNameHoverBg,
     classNameHoverBgDark,

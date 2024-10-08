@@ -62,9 +62,9 @@ const ReportAreaChart2: React.FC<{
         }}
       >
         <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey={singleFieldName} />
-        <YAxis />
-        <Tooltip />
+        <XAxis dataKey={singleFieldName} stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
+        <YAxis stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
+        <Tooltip contentStyle={{ background: dark ? 'rgb(20,20,20)' : 'white' }} />
         {Object.keys(stackGroups).map((stackId) =>
           stackGroups[stackId].map((sg, i) => (
             <Area

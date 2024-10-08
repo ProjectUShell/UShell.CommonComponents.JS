@@ -32,7 +32,6 @@ const ReportLineChart2: React.FC<{
   })
 
   const singleFieldName = useMemo(() => {
-    return 'name'
     let res: string = ''
     for (let i = 0; i < groupBy.length; ++i) {
       res += groupBy[i]
@@ -59,9 +58,9 @@ const ReportLineChart2: React.FC<{
         }}
       >
         <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey='name' />
-        <YAxis />
-        <Tooltip />
+        <XAxis dataKey={singleFieldName} stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
+        <YAxis stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
+        <Tooltip contentStyle={{ background: dark ? 'rgb(20,20,20)' : 'white' }} />
         <Legend />
         {reportValues.map((rv, i) => (
           <Line

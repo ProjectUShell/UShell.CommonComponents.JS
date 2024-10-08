@@ -153,16 +153,18 @@ export const ReportChart1Inner: React.FC<{
           stackBy={report.stackBy || []}
           reportValues={report.reportValues || []}
           dark={dark}
+          donut={false}
         ></ReportPieChart2>
       )}
       {report.type == 'Donut' && (
-        <ReportPieChart
+        <ReportPieChart2
           data={data.page}
-          xFields={report.groupBy || []}
-          yGroups={report.reportValues || []}
-          yFields={yValues}
+          groupBy={report.groupBy || []}
+          stackBy={report.stackBy || []}
+          reportValues={report.reportValues || []}
+          dark={dark}
           donut={true}
-        ></ReportPieChart>
+        ></ReportPieChart2>
       )}
     </div>
   )

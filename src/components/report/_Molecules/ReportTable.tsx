@@ -32,8 +32,8 @@ const ReportTable: React.FC<{
 
   const columns = useMemo(() => {
     const c: TableColumn[] = []
-    if (!data) return []
-    if (data.page.length == 0) {
+    if (!data?.page) return []
+    if (data.page?.length == 0) {
       report.groupBy?.sort().forEach((g) => {
         c.push({ fieldName: g, fieldType: 'string', key: g, label: g, sortable: true })
       })
@@ -83,7 +83,7 @@ const ReportTable: React.FC<{
     <div className='border-0 border-blue-500 h-full'>
       <Table
         columns={columns}
-        records={data.page}
+        records={data.page || []}
         onSortingParamsChange={(sp, csp) => {
           setSortingParams([csp])
         }}

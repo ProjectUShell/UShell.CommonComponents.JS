@@ -9,7 +9,6 @@ const GuidInputField: React.FC<{
   onValueChange: (newValue: any) => void
   disabled: boolean
   classNameBg?: string
-  classNameBgDark?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
   styleType?: number
@@ -20,7 +19,6 @@ const GuidInputField: React.FC<{
   onValueChange,
   disabled,
   classNameBg,
-  classNameBgDark,
   classNameHoverBg,
   classNameHoverBgDark,
   styleType = 0,
@@ -43,7 +41,6 @@ const GuidInputField: React.FC<{
         onValueChange={onValueChange}
         setCurrentValue={setCurrentValue}
         classNameBg={classNameBg}
-        classNameBgDark={classNameBgDark}
         classNameHoverBg={classNameHoverBg}
         classNameHoverBgDark={classNameHoverBgDark}
         styleType={styleType}

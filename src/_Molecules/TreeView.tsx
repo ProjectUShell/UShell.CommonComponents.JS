@@ -97,23 +97,25 @@ const TreeViewInner: React.FC<{
       {nodes.map((n: TreeNode, i) => (
         <div key={i} className='flex flex-col '>
           <div
-            className={`border-b dark:border-bg8dark   ${
-              selectedNode == n.id ? 'bg-prim2 dark:bg-prim6' : 'hover:bg-bg6 dark:hover:bg-bg4dark'
+            className={`border-b border-navigationBorder dark:border-navigationBorderDark   ${
+              selectedNode == n.id
+                ? 'bg-prim2 dark:bg-prim6'
+                : 'hover:bg-navigationHover dark:hover:bg-navigationHoverDark'
             }`}
             onClick={(e) => {
               e.stopPropagation()
               toggleClose(n.id)
             }}
           >
-            <div className='flex gap-1 p-1.5' style={{ marginLeft: depth * 30 }}>
+            <div className='flex gap-1 p-3' style={{ marginLeft: depth * 30 }}>
               {n.children && n.children.length > 0 && (
                 <button>
                   <ChevrodnDownIcon size={3} rotate={close[n.id] ? 270 : 360}></ChevrodnDownIcon>
                 </button>
               )}
-              <p className={`select-none ${n.children.length > 0 ? 'font-bold' : ''} `}>
+              <div className={`select-none ${n.children.length > 0 ? 'font-bold' : ''} `}>
                 {n.render('')}
-              </p>
+              </div>
             </div>
           </div>
           {!close[n.id] && n.children.length > 0 && (

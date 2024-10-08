@@ -42,7 +42,7 @@ const layoutDescription: LayoutDescriptionRoot = {
 const EntityTableBasic = () => {
   // return <div></div>
   return (
-    <div className='border-0 border-menuBorder p-2 bg-bg1'>
+    <div className='border-0 border-menuBorder p-2 bg-bg1 dark:bg-bg1dark'>
       <EntityTable
         dataSource={dataSource}
         entitySchema={carEntitySchema}

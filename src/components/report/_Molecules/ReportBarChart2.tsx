@@ -50,6 +50,7 @@ const ReportBarChart2: React.FC<{
   return (
     <ResponsiveContainer width='100%' height='100%'>
       <BarChart
+        style={{}}
         width={500}
         height={300}
         data={data3}
@@ -61,11 +62,10 @@ const ReportBarChart2: React.FC<{
         }}
       >
         <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey={singleFieldName} />
-        <YAxis />
-        <Tooltip />
+        <XAxis dataKey={singleFieldName} stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
+        <YAxis stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
+        <Tooltip contentStyle={{ background: dark ? 'rgb(20,20,20)' : 'white' }} />
         <Legend />
-        {/* <Bar dataKey='Action' stackId='a' fill='#8884d8' /> */}
         {Object.keys(stackGroups).map((stackId) =>
           stackGroups[stackId].map((sg, i) => (
             <Bar dataKey={sg} stackId={stackId} fill={getReportColor(i, dark)} />

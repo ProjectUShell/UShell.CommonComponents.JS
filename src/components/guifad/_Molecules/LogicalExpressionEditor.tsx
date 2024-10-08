@@ -37,12 +37,20 @@ const LogicalExpressionEditor: React.FC<{
   fields: FieldSchema[]
   fkRelations: RelationSchema[]
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
+  classNameBg?: string
+  classNameBgInput?: string
+  classNameBgInputHover?: string
+  classNameBgInputHoverDark?: string
 }> = ({
   intialExpression,
   fields,
   fkRelations,
   onUpdateExpression,
   dataSourceManagerForNavigations,
+  classNameBg,
+  classNameBgInput,
+  classNameBgInputHover,
+  classNameBgInputHoverDark,
 }) => {
   const [originalExpression, setOriginalExpression] = useState<LogicalExpression | null>(
     getCopy(intialExpression),
@@ -59,7 +67,7 @@ const LogicalExpressionEditor: React.FC<{
   // console.log('initialExpression LE1', intialExpression)
   return (
     <div
-      className='bg-bg2 dark:bg-bg1dark p-2 rounded-md shadow-md'
+      className={`UShell_LogicalExpressionEditor p-2 rounded-md shadow-md ${classNameBg || ''} `}
       onKeyDown={(e) => {
         if (e.key == 'Enter' && isExpressionValid(expression)) {
           onUpdateExpression(expression!)
@@ -74,6 +82,10 @@ const LogicalExpressionEditor: React.FC<{
         }}
         expression={expression}
         dataSourceManagerForNavigations={dataSourceManagerForNavigations}
+        classNameBg={classNameBg}
+        classNameBgInput={classNameBgInput}
+        classNameBgInputHover={classNameBgInputHover}
+        classNameBgInputHoverDark={classNameBgInputHoverDark}
       ></LogicalExpressionTree>
       <div className='flex gap-1 justify-end border-t pt-1 border-gray-400'>
         <button
