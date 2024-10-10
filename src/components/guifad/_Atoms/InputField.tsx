@@ -17,6 +17,7 @@ const InputField: React.FC<{
   classNameHoverBgDark?: string
   multiLine?: boolean
   styleType?: number
+  readOnly?: boolean
 }> = ({
   label,
   inputType,
@@ -29,6 +30,7 @@ const InputField: React.FC<{
   classNameHoverBgDark,
   multiLine = false,
   styleType = 0,
+  readOnly = false,
 }) => {
   const [currentValue, setCurrentValue] = useState<any>(initialValue)
   useEffect(() => {
@@ -50,7 +52,7 @@ const InputField: React.FC<{
     setCurrentValue(getInitialValue(initialValue))
   }, [initialValue, inputType])
   const fixAfterCreation: boolean = setabilityFlags < 6 //TODO adjust setability check after Fix in EntityAnnotations
-  const disabled: boolean = fixAfterCreation && initialValue && initialValue != ''
+  const disabled: boolean = readOnly || (fixAfterCreation && initialValue && initialValue != '')
   const classNameInput: string = getInputStyleClassName(
     styleType,
     classNameBg,
@@ -92,6 +94,7 @@ const InputField: React.FC<{
     if (allowedValues) {
       return (
         <DropdownSelect
+          disabled={disabled}
           classNameBg={classNameBg}
           classNameHoverBg={classNameHoverBg}
           classNameHoverBgDark={classNameHoverBgDark}
@@ -163,7 +166,7 @@ export function getInputStyleClassName(
             ? 'border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6'
             : 'border-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6'
         }          
-        ${classNameBg || 'bg-content dark:bg-contentDark'}
+        ${classNameBg || 'bg-bg3 dark:bg-bg2dark'}
         ${
           disabled
             ? ''

@@ -23,6 +23,7 @@ const UForm: React.FC<{
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
   styleType?: number
+  readOnly?: boolean
 }> = ({
   fieldsToDisplay,
   currentEntity,
@@ -37,6 +38,7 @@ const UForm: React.FC<{
   classNameInputHoverBg,
   classNameInputHoverBgDark,
   styleType = 0,
+  readOnly = false,
 }) => {
   return (
     <UForm1
@@ -80,6 +82,7 @@ const UForm: React.FC<{
       classNameInputBg={classNameInputBg}
       classNameInputHoverBg={classNameInputHoverBg}
       classNameInputHoverBgDark={classNameInputHoverBgDark}
+      readOnly={readOnly}
     ></UForm1>
   )
 

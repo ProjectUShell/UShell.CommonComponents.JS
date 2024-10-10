@@ -29,6 +29,12 @@ const EntityForm: React.FC<{
   entityLayout?: EntityLayout
   labelPosition?: 'top' | 'left'
   toolbar?: 'top' | 'bottom'
+  readOnly?: boolean
+  classNameBg?: string
+  classNameInputBg?: string
+  classNameInputHoverBg?: string
+  classNameInputHoverBgDark?: string
+  styleType?: number
 }> = ({
   dataSourceManager,
   dataSource,
@@ -40,6 +46,12 @@ const EntityForm: React.FC<{
   entityLayout,
   labelPosition = 'top',
   toolbar = 'top',
+  readOnly = false,
+  classNameBg,
+  classNameInputBg,
+  classNameInputHoverBg,
+  classNameInputHoverBgDark,
+  styleType = 0,
 }) => {
   // states
   const [currentEntity, setCurrentEntity] = useState({ ...entity })
@@ -138,21 +150,27 @@ const EntityForm: React.FC<{
         entityLayout={entityLayout}
         labelPosition={labelPosition}
         setDirty={setDirty}
+        readOnly={readOnly}
+        classNameBg={classNameBg}
+        classNameInputBg={classNameInputBg}
+        classNameInputHoverBg={classNameInputHoverBg}
+        classNameInputHoverBgDark={classNameInputHoverBgDark}
+        styleType={styleType}
       ></EntityFormInner>
       {toolbar == 'bottom' && (
         <div
           className={`UShell_EntityForm_ToolbarBottom flex justify-end gap-2 p-1 px-4 rounded-sm 
-             my-0 bg-toolbar dark:bg-toolbarDark`}
+             my-0 `}
         >
           <button
-            className={`rounded-sm p-2 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark cursor-pointer`}
+            className={`rounded-sm p-2 hover:bg-contentHover dark:hover:bg-contentHoverDark cursor-pointer`}
             onClick={(e) => cancel()}
           >
             Cancel
           </button>
 
           <button
-            className={`rounded-sm p-2 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark cursor-pointer`}
+            className={`rounded-sm p-2 hover:bg-contentHover dark:hover:bg-contentHoverDark cursor-pointer`}
             onClick={(e) => save()}
           >
             Ok

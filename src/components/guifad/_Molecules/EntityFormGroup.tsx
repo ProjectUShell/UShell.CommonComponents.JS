@@ -23,6 +23,12 @@ const EntityFormGroup: React.FC<{
   partitions: LayoutPartition[]
   labelPosition: 'left' | 'top'
   fieldLayouts: FieldLayout[]
+  readOnly: boolean
+  classNameBg?: string
+  classNameInputBg?: string
+  classNameInputHoverBg?: string
+  classNameInputHoverBgDark?: string
+  styleType?: number
 }> = ({
   label,
   allFields,
@@ -36,6 +42,12 @@ const EntityFormGroup: React.FC<{
   partitions,
   labelPosition,
   fieldLayouts,
+  readOnly,
+  classNameBg,
+  classNameInputBg,
+  classNameInputHoverBg,
+  classNameInputHoverBgDark,
+  styleType = 0,
 }) => {
   return (
     <>
@@ -60,6 +72,12 @@ const EntityFormGroup: React.FC<{
                     partitions={p.children}
                     labelPosition={labelPosition}
                     fieldLayouts={fieldLayouts}
+                    readOnly={readOnly}
+                    classNameBg={classNameBg}
+                    classNameInputBg={classNameInputBg}
+                    classNameInputHoverBg={classNameInputHoverBg}
+                    classNameInputHoverBgDark={classNameInputHoverBgDark}
+                    styleType={styleType}
                   ></EntityFormGroup>
                 </div>
               ))}
@@ -67,7 +85,7 @@ const EntityFormGroup: React.FC<{
         </Group>
       )}
       {(fieldsToDisplay.length > 0 || fkRelationsToDisplay.length > 0) && (
-        <Group name={label} className='overflow-auto1 bg-bg1 dark:bg-bg2dark p-1 rounded-md'>
+        <Group name={label} className='p-1'>
           <UForm
             changeLookUpValues={changeLookUpValues}
             changeValue={changeValue}
@@ -77,6 +95,12 @@ const EntityFormGroup: React.FC<{
             fkRelationsToDisplay={fkRelationsToDisplay}
             labelPosition={labelPosition}
             fieldLayouts={fieldLayouts}
+            readOnly={readOnly}
+            classNameBg={classNameBg}
+            classNameInputBg={classNameInputBg}
+            classNameInputHoverBg={classNameInputHoverBg}
+            classNameInputHoverBgDark={classNameInputHoverBgDark}
+            styleType={styleType}
           ></UForm>
         </Group>
       )}

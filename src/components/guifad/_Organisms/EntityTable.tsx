@@ -51,6 +51,12 @@ const EntityTable: React.FC<{
   selectedRecord?: any | null
   onCreateRecord?: () => void
   classNameBgToolbar?: string
+  enableCrud?: boolean
+  enableParentFilter?: boolean
+  enableQueryEditor?: boolean
+  enableSearch?: boolean
+  formStyleType?: number
+  formLabelPosition?: 'left' | 'top'
 }> = ({
   dataSourceManagerForNavigations: dataSourceManager,
   dataSource,
@@ -65,6 +71,12 @@ const EntityTable: React.FC<{
   onCreateRecord,
   layoutDescription,
   classNameBgToolbar,
+  enableCrud = true,
+  enableParentFilter = true,
+  enableQueryEditor = true,
+  formStyleType = 0,
+  formLabelPosition = 'top',
+  enableSearch = true,
 }) => {
   console.log('get queryClient')
   const qcc: any = QueryClientContext
@@ -86,6 +98,12 @@ const EntityTable: React.FC<{
           onCreateRecord={onCreateRecord}
           layoutDescription={layoutDescription}
           classNameBgToolbar={classNameBgToolbar}
+          enableCrud={enableCrud}
+          formStyleType={formStyleType}
+          formLabelPosition={formLabelPosition}
+          enableParentFilter={enableParentFilter}
+          enableQueryEditor={enableQueryEditor}
+          enableSearch={enableSearch}
         ></EntityTableInternal>
       </QueryClientProvider>
     )
@@ -102,6 +120,12 @@ const EntityTable: React.FC<{
       onSelectedRecordsChange={onSelectedRecordsChange}
       selectedRecord={selectedRecord}
       onCreateRecord={onCreateRecord}
+      enableCrud={enableCrud}
+      formStyleType={formStyleType}
+      formLabelPosition={formLabelPosition}
+      enableParentFilter={enableParentFilter}
+      enableQueryEditor={enableQueryEditor}
+      enableSearch={enableSearch}
     ></EntityTableInternal>
   )
 }
@@ -119,6 +143,12 @@ const EntityTableInternal: React.FC<{
   selectedRecord?: any | null
   onCreateRecord?: () => void
   classNameBgToolbar?: string
+  enableCrud: boolean
+  enableParentFilter: boolean
+  enableSearch: boolean
+  enableQueryEditor: boolean
+  formStyleType: number
+  formLabelPosition: 'left' | 'top'
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -133,6 +163,12 @@ const EntityTableInternal: React.FC<{
   onCreateRecord,
   layoutDescription,
   classNameBgToolbar,
+  enableCrud,
+  enableParentFilter,
+  enableQueryEditor,
+  enableSearch,
+  formStyleType = 0,
+  formLabelPosition,
 }) => {
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
@@ -357,71 +393,81 @@ const EntityTableInternal: React.FC<{
   return (
     <>
       <div className='UShell_EntityTable flex flex-col h-full'>
-        <div
-          className={`UShell_EntityTable_Toolbar 
+        {(enableCrud || enableParentFilter || enableQueryEditor || enableSearch) && (
+          <div
+            className={`UShell_EntityTable_Toolbar 
             ${classNameBgToolbar || 'bg-toolbar dark:bg-toolbarDark'}
             border-toolbarBorder dark:border-toolbarBorderDark 
             rounded-sm border flex justify-between items-center my-1`}
-        >
-          <div className={`flex justify-end p-1 ${className} rounded-md`}>
-            <button
-              className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
-              onClick={(e) => addRecord()}
-            >
-              <PlusCircleIcon></PlusCircleIcon>
-            </button>
-            <button
-              className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
-              onClick={(e) => deleteRecords()}
-            >
-              <TrashIcon></TrashIcon>
-            </button>
-          </div>
-          <div className={`flex p-1 ${className} rounded-md `}>
-            <div className='p-0'>
-              <SearchBar
-                onSearch={(searchText: string) => {
-                  setUniversalSearchText(searchText)
-                }}
-              ></SearchBar>
-            </div>
+          >
+            {enableCrud && (
+              <div className={`flex justify-end p-1 ${className} rounded-md`}>
+                <button
+                  className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                  onClick={(e) => addRecord()}
+                >
+                  <PlusCircleIcon></PlusCircleIcon>
+                </button>
+                <button
+                  className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                  onClick={(e) => deleteRecords()}
+                >
+                  <TrashIcon></TrashIcon>
+                </button>
+              </div>
+            )}
+            <div className={`flex p-1 ${className} rounded-md `}>
+              {enableSearch && (
+                <div className='p-0'>
+                  <SearchBar
+                    onSearch={(searchText: string) => {
+                      setUniversalSearchText(searchText)
+                    }}
+                  ></SearchBar>
+                </div>
+              )}
 
-            <button
-              className={`hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark p-1 rounded-md ${
-                filterByEntityName[dataSource.entitySchema!.name]?.length > 0
-                  ? 'text-green-600'
-                  : ''
-              }`}
-              onClick={() => setFilterTagsVisible((x) => !x)}
-            >
-              <div id='ShowFilterTagsButton'>
-                <AdjustmentsHorizontalIcon size={5}></AdjustmentsHorizontalIcon>
-              </div>
-              <Tooltip targetId='ShowFilterTagsButton'>
-                <div className='bg-bg1 dark:bg-bg1dark text-textone dark:text-textonedark w-20'>
-                  {filterTagsVisible ? 'Hide Filters' : 'Show Filters'}
-                </div>
-              </Tooltip>
-            </button>
-            <button
-              className={`hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark p-1 rounded-md ${
-                useParentFilter ? 'text-green-600' : ''
-              }`}
-              onClick={() => setUseParentFilter((x) => !x)}
-            >
-              <div id='ParentFilterButton'>
-                <ArrowUturnUpd size={5} className=''></ArrowUturnUpd>
-              </div>
-              <Tooltip targetId='ParentFilterButton'>
-                <div className=' bg-bg1 dark:bg-bg1dark text-textone dark:text-textonedark  w-40'>
-                  {useParentFilter ? 'Disable Parent Filter' : 'Activate Parent Filter'}
-                </div>
-              </Tooltip>
-            </button>
+              {(enableQueryEditor || enableSearch) && (
+                <button
+                  className={`hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark p-1 rounded-md ${
+                    filterByEntityName[dataSource.entitySchema!.name]?.length > 0
+                      ? 'text-green-600'
+                      : ''
+                  }`}
+                  onClick={() => setFilterTagsVisible((x) => !x)}
+                >
+                  <div id='ShowFilterTagsButton'>
+                    <AdjustmentsHorizontalIcon size={5}></AdjustmentsHorizontalIcon>
+                  </div>
+                  <Tooltip targetId='ShowFilterTagsButton'>
+                    <div className='bg-bg1 dark:bg-bg1dark text-textone dark:text-textonedark w-20'>
+                      {filterTagsVisible ? 'Hide Filters' : 'Show Filters'}
+                    </div>
+                  </Tooltip>
+                </button>
+              )}
+              {enableParentFilter && (
+                <button
+                  className={`hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark p-1 rounded-md ${
+                    useParentFilter ? 'text-green-600' : ''
+                  }`}
+                  onClick={() => setUseParentFilter((x) => !x)}
+                >
+                  <div id='ParentFilterButton'>
+                    <ArrowUturnUpd size={5} className=''></ArrowUturnUpd>
+                  </div>
+                  <Tooltip targetId='ParentFilterButton'>
+                    <div className=' bg-bg1 dark:bg-bg1dark text-textone dark:text-textonedark  w-40'>
+                      {useParentFilter ? 'Disable Parent Filter' : 'Activate Parent Filter'}
+                    </div>
+                  </Tooltip>
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
         <div>
-          {filterTagsVisible && (
+          {(enableQueryEditor || enableSearch) && filterTagsVisible && (
             <div className='FilterBar flex justify-between'>
               <FilterTagBar
                 dataSourceManagerForNavigations={dataSourceManagerForNavigations}
@@ -445,57 +491,59 @@ const EntityTableInternal: React.FC<{
                   // setFilter(uf)
                 }}
               ></FilterTagBar>
-              <div className='flex'>
-                <DropdownButton
-                  className=''
-                  rightOffset={1}
-                  topOffset={1}
-                  buttonContent={
-                    <FunnelIcon
-                      size={6}
-                      className='hover:bg-tableHover dark:hover:bg-tableHoverDark rounded-sm p-0.5'
-                    ></FunnelIcon>
-                  }
-                  initialOpen={{ o: false }}
-                >
-                  <div className='border-2 dark:border-bg7dark'>
-                    <LogicalExpressionEditor
-                      classNameBg='bg-menu dark:bg-navigationDark'
-                      // classNameBgDark='bg-red-200'
-                      intialExpression={null}
-                      fields={dataSource.entitySchema!.fields}
-                      fkRelations={
-                        dataSourceManagerForNavigations
-                          ? EntitySchemaService.getRelationsByFilter(
-                              dataSourceManagerForNavigations.getSchemaRoot(),
-                              (r) => r.foreignEntityName == dataSource.entitySchema!.name,
-                            )
-                          : []
-                      }
-                      dataSourceManagerForNavigations={dataSourceManagerForNavigations}
-                      onUpdateExpression={(e) => {
-                        setFilterByEntityName(
-                          (ofi: { [entityName: string]: LogicalExpression[] }) => {
-                            const newF: any = { ...ofi }
-                            if (newF[entitySchema.name]) {
-                              newF[entitySchema.name] = [...newF[entitySchema.name], e]
-                            } else {
-                              newF[entitySchema.name] = [e]
-                            }
-                            return newF
-                          },
-                        )
-                        // setFilter((f) => [...f, e])
-                      }}
-                    ></LogicalExpressionEditor>
-                  </div>
-                </DropdownButton>
-                <QueryLibrary
-                  expressions={filterByEntityName[dataSource.entitySchema!.name] || []}
-                  entityName={dataSource.entitySchema!.name}
-                  applySavedQuery={(q: LogicalExpression[]) => applyQuery(q)}
-                ></QueryLibrary>
-              </div>
+              {enableQueryEditor && (
+                <div className='flex'>
+                  <DropdownButton
+                    className=''
+                    rightOffset={1}
+                    topOffset={1}
+                    buttonContent={
+                      <FunnelIcon
+                        size={6}
+                        className='hover:bg-tableHover dark:hover:bg-tableHoverDark rounded-sm p-0.5'
+                      ></FunnelIcon>
+                    }
+                    initialOpen={{ o: false }}
+                  >
+                    <div className='border-2 dark:border-bg7dark'>
+                      <LogicalExpressionEditor
+                        classNameBg='bg-menu dark:bg-navigationDark'
+                        // classNameBgDark='bg-red-200'
+                        intialExpression={null}
+                        fields={dataSource.entitySchema!.fields}
+                        fkRelations={
+                          dataSourceManagerForNavigations
+                            ? EntitySchemaService.getRelationsByFilter(
+                                dataSourceManagerForNavigations.getSchemaRoot(),
+                                (r) => r.foreignEntityName == dataSource.entitySchema!.name,
+                              )
+                            : []
+                        }
+                        dataSourceManagerForNavigations={dataSourceManagerForNavigations}
+                        onUpdateExpression={(e) => {
+                          setFilterByEntityName(
+                            (ofi: { [entityName: string]: LogicalExpression[] }) => {
+                              const newF: any = { ...ofi }
+                              if (newF[entitySchema.name]) {
+                                newF[entitySchema.name] = [...newF[entitySchema.name], e]
+                              } else {
+                                newF[entitySchema.name] = [e]
+                              }
+                              return newF
+                            },
+                          )
+                          // setFilter((f) => [...f, e])
+                        }}
+                      ></LogicalExpressionEditor>
+                    </div>
+                  </DropdownButton>
+                  <QueryLibrary
+                    expressions={filterByEntityName[dataSource.entitySchema!.name] || []}
+                    entityName={dataSource.entitySchema!.name}
+                    applySavedQuery={(q: LogicalExpression[]) => applyQuery(q)}
+                  ></QueryLibrary>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -548,6 +596,9 @@ const EntityTableInternal: React.FC<{
           entityLayout={layoutDescription?.entityLayouts.find(
             (el) => el.entityName == entitySchema.name,
           )}
+          readOnly={!enableCrud}
+          styleType={formStyleType}
+          labelPosition={formLabelPosition}
         ></EntityFormModal>
       )}
     </>

@@ -26,6 +26,12 @@ const EntityFormInner: React.FC<{
   onChange: (updatedEntity: any) => void
   entityLayout?: EntityLayout
   labelPosition?: 'top' | 'left'
+  readOnly?: boolean
+  classNameBg?: string
+  classNameInputBg?: string
+  classNameInputHoverBg?: string
+  classNameInputHoverBgDark?: string
+  styleType?: number
 }> = ({
   dataSourceManager,
   dataSource,
@@ -35,6 +41,12 @@ const EntityFormInner: React.FC<{
   onChange,
   entityLayout,
   labelPosition = 'top',
+  readOnly = false,
+  classNameBg,
+  classNameInputBg,
+  classNameInputHoverBg,
+  classNameInputHoverBgDark,
+  styleType = 0,
 }) => {
   // states
   const [currentEntity, setCurrentEntity] = useState({ ...entity })
@@ -160,6 +172,12 @@ const EntityFormInner: React.FC<{
             partitions={p.children}
             labelPosition={labelPosition}
             fieldLayouts={entityLayout?.fieldLayouts || []}
+            readOnly={readOnly}
+            classNameBg={classNameBg}
+            classNameInputBg={classNameInputBg}
+            classNameInputHoverBg={classNameInputHoverBg}
+            classNameInputHoverBgDark={classNameInputHoverBgDark}
+            styleType={styleType}
           ></EntityFormGroup>
         ))}
       <div className='flex gap-1 w-full '>
@@ -182,6 +200,12 @@ const EntityFormInner: React.FC<{
                 partitions={p.children}
                 labelPosition={labelPosition}
                 fieldLayouts={entityLayout?.fieldLayouts || []}
+                readOnly={readOnly}
+                classNameBg={classNameBg}
+                classNameInputBg={classNameInputBg}
+                classNameInputHoverBg={classNameInputHoverBg}
+                classNameInputHoverBgDark={classNameInputHoverBgDark}
+                styleType={styleType}
               ></EntityFormGroup>
             </div>
           ))}
@@ -202,6 +226,12 @@ const EntityFormInner: React.FC<{
           partitions={[]}
           labelPosition={labelPosition}
           fieldLayouts={entityLayout?.fieldLayouts || []}
+          readOnly={readOnly}
+          classNameBg={classNameBg}
+          classNameInputBg={classNameInputBg}
+          classNameInputHoverBg={classNameInputHoverBg}
+          classNameInputHoverBgDark={classNameInputHoverBgDark}
+          styleType={styleType}
         ></EntityFormGroup>
       )}
     </div>

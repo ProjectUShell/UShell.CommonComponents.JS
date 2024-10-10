@@ -20,6 +20,7 @@ const UForm1: React.FC<{
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
   styleType?: number
+  readOnly?: boolean
 }> = ({
   fieldsToDisplay,
   labelPosition,
@@ -30,6 +31,7 @@ const UForm1: React.FC<{
   classNameInputHoverBg,
   classNameInputHoverBgDark,
   styleType = 0,
+  readOnly = false,
 }) => {
   function getLabel(f: FieldInputInfo) {
     const fieldLayout: FieldLayout | undefined = fieldLayouts.find((fl) => fl.fieldName == f.name)
@@ -45,14 +47,16 @@ const UForm1: React.FC<{
     <div className='flex gap-6'>
       {labelPosition == 'left' && (
         <div
-          className={`my-2 h-full flex flex-col gap-2
+          className={`my-2 h-full flex flex-col gap-6
       ${classNameBg || ''}`}
         >
           {fieldsToDisplay.map((f) => (
             <div className='flex items-baseline border-0 border-red-400'>
               <label
-                style={{ borderBottomColor: 'transparent' }}
-                className='whitespace-nowrap p-3 text-sm align-baseline border-b-2 border-b-transparent'
+                style={{ borderColor: 'transparent' }}
+                className={`whitespace-nowrap p-3 text-sm align-baseline ${
+                  styleType == 0 ? 'border-b-2' : 'border-2'
+                }  border-b-transparent`}
               >
                 {getLabel(f)}
               </label>
@@ -68,7 +72,7 @@ const UForm1: React.FC<{
         </div>
       )}
       <div
-        className={`my-2 h-full w-full flex flex-col gap-2
+        className={`my-2 h-full w-full flex flex-col gap-6
       ${classNameBg || ''}`}
       >
         {fieldsToDisplay.map((f) => {
@@ -90,6 +94,7 @@ const UForm1: React.FC<{
                 allowedValues={getAllowedValues(f)}
                 multiLine={fieldLayout ? fieldLayout.textIsMultiLine : false}
                 styleType={styleType}
+                readOnly={readOnly}
               ></InputField>
             </div>
           )

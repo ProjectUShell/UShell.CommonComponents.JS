@@ -13,6 +13,7 @@ const DropdownSelect: React.FC<{
   onOptionSet?: (o: Option | null) => void
   placeholder?: string
   forceFocus?: boolean
+  disabled?: boolean
   topOffset?: number
   bottomOffset?: number
   styleType?: number
@@ -25,6 +26,7 @@ const DropdownSelect: React.FC<{
   onOptionSet,
   placeholder,
   forceFocus,
+  disabled = false,
   topOffset,
   bottomOffset,
   styleType = 0,
@@ -185,11 +187,12 @@ const DropdownSelect: React.FC<{
       >
         <input
           autoFocus={forceFocus}
+          disabled={disabled}
           className={`w-full focus:z-50 relative outline-none             
             ${getInputStyleClassName(
               styleType,
               classNameBg,
-              false,
+              disabled,
               classNameHoverBg,
               classNameHoverBgDark,
             )}`}
