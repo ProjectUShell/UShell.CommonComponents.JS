@@ -5,11 +5,14 @@ import { ObjectGraphDataSource } from '../data/ObjectGraphDataSource'
 import { LayoutDescriptionRoot } from '../[Move2LayoutDescription]/LayoutDescriptionRoot'
 import { EntityLayout } from '../[Move2LayoutDescription]/EntityLayout'
 
+const brandField: FieldSchema = new FieldSchema('Brand', 'string')
+brandField.filterable = 1
 const carEntitySchema: EntitySchema = {
   fields: [
     new FieldSchema('Id', 'int32'),
     new FieldSchema('DateOfConstruction', 'datetime'),
-    new FieldSchema('Brand', 'string'),
+    brandField,
+    new FieldSchema('InternalField', 'string'),
   ],
   indices: [{ name: 'Id', memberFieldNames: ['Id'], unique: true }],
   inheritedEntityName: '',
@@ -26,17 +29,17 @@ const dataSource: ObjectGraphDataSource = new ObjectGraphDataSource(
   'Cars',
 )
 
+const carLayout: EntityLayout = new EntityLayout('Car', [
+  { fieldName: 'DateOfConstruction', displayLabel: 'Date of Construction' },
+  {
+    fieldName: 'Brand',
+    displayLabel: 'Brand',
+    dropdownStaticEntries: { Bmw: 'Bmw', Audi: 'Audi', Fiat: 'Fiat', Renault: 'Renault' },
+  },
+])
+carLayout.tableFields = ['DateOfConstruction', 'Brand']
 const layoutDescription: LayoutDescriptionRoot = {
-  entityLayouts: [
-    new EntityLayout('Car', [
-      { fieldName: 'DateOfConstruction', displayLabel: 'Date of Construction' },
-      {
-        fieldName: 'Brand',
-        displayLabel: 'Brand',
-        dropdownStaticEntries: { Bmw: 'Bmw', Audi: 'Audi', Fiat: 'Fiat', Renault: 'Renault' },
-      },
-    ]),
-  ],
+  entityLayouts: [carLayout],
 }
 
 const EntityTableBasic = () => {

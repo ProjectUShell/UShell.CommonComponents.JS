@@ -34,6 +34,9 @@ import EntityFormModal from './EntityFormModal'
 import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutDescriptionRoot'
 import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
 import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
+import AvailableValuesFilter, {
+  renderCustomAvailableValuesFilter,
+} from '../../../_Molecules/AvailableValuesFilter'
 
 const EntityTable: React.FC<{
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
@@ -141,6 +144,9 @@ const EntityTableInternal: React.FC<{
   const [filterByEntityName, setFilterByEntityName] = useState<{
     [entityName: string]: LogicalExpression[]
   }>(loadFilter())
+  const [columnFilters, setColumnFilters] = useState<{
+    [columnName: string]: LogicalExpression
+  }>({})
   const [useParentFilter, setUseParentFilter] = useState(true)
   const [reloadTrigger, setReloadTrigger] = useState(0)
 
@@ -191,51 +197,73 @@ const EntityTableInternal: React.FC<{
   }, [filterByEntityName])
 
   const columns: TableColumn[] = useMemo(() => {
-    const newColumns: TableColumn[] = dataSource.entitySchema!.fields.map((f) => {
-      const foreignKeyRelations: RelationSchema[] = dataSourceManagerForNavigations
-        ? EntitySchemaService.getRelationsByFilter(
-            dataSourceManagerForNavigations.getSchemaRoot(),
-            (r) => r.foreignEntityName == entitySchema.name && r.foreignKeyIndexName == f.name,
-          )
-        : []
+    const entityLayout: EntityLayout | undefined = layoutDescription?.entityLayouts.find(
+      (el) => el.entityName == entitySchema.name,
+    )
+    const newColumns: TableColumn[] = dataSource
+      .entitySchema!.fields.filter((f) => {
+        if (!entityLayout) return true
+        if (!entityLayout.tableFields) return true
+        return entityLayout.tableFields.includes(f.name)
+      })
+      .map((f) => {
+        const foreignKeyRelations: RelationSchema[] = dataSourceManagerForNavigations
+          ? EntitySchemaService.getRelationsByFilter(
+              dataSourceManagerForNavigations.getSchemaRoot(),
+              (r) => r.foreignEntityName == entitySchema.name && r.foreignKeyIndexName == f.name,
+            )
+          : []
 
-      if (dataSourceManagerForNavigations && foreignKeyRelations.length > 0) {
-        const fkRelation: RelationSchema = foreignKeyRelations[0]
-        if (fkRelation.foreignNavigationName && fkRelation.foreignNavigationName != '') {
-          return {
-            label: fkRelation.foreignNavigationName,
-            fieldName: fkRelation.foreignNavigationName,
-            fieldType: f.type,
-            key: fkRelation.foreignNavigationName,
-            onRenderCell: (cellValue) => {
-              return (
-                <div>
-                  {EntitySchemaService.getLabel(
-                    dataSourceManagerForNavigations.getSchemaRoot(),
-                    fkRelation.primaryEntityName,
-                    cellValue,
-                  )}
-                </div>
-              )
-            },
+        if (dataSourceManagerForNavigations && foreignKeyRelations.length > 0) {
+          const fkRelation: RelationSchema = foreignKeyRelations[0]
+          if (fkRelation.foreignNavigationName && fkRelation.foreignNavigationName != '') {
+            return {
+              label: fkRelation.foreignNavigationName,
+              fieldName: fkRelation.foreignNavigationName,
+              fieldType: f.type,
+              key: fkRelation.foreignNavigationName,
+              onRenderCell: (cellValue) => {
+                return (
+                  <div>
+                    {EntitySchemaService.getLabel(
+                      dataSourceManagerForNavigations.getSchemaRoot(),
+                      fkRelation.primaryEntityName,
+                      cellValue,
+                    )}
+                  </div>
+                )
+              },
+            }
           }
         }
-      }
-      const entityLayout: EntityLayout | undefined = layoutDescription?.entityLayouts.find(
-        (el) => el.entityName == entitySchema.name,
-      )
-      const fieldLayout: FieldLayout | undefined = entityLayout?.fieldLayouts.find(
-        (fl) => fl.fieldName.toLocaleLowerCase() == f.name.toLocaleLowerCase(),
-      )
-      console.log('fieldLayout', fieldLayout)
-      return {
-        label: fieldLayout ? fieldLayout.displayLabel : f.name,
-        fieldName: f.name,
-        fieldType: f.type,
-        key: f.name,
-        sortable: true,
-      }
-    })
+
+        const fieldLayout: FieldLayout | undefined = entityLayout?.fieldLayouts.find(
+          (fl) => fl.fieldName.toLocaleLowerCase() == f.name.toLocaleLowerCase(),
+        )
+        console.log('fieldLayout', fieldLayout)
+        return {
+          label: fieldLayout ? fieldLayout.displayLabel : f.name,
+          fieldName: f.name,
+          fieldType: f.type,
+          key: f.name,
+          sortable: true,
+          renderFilter:
+            f.filterable > 0
+              ? (filter, onFilterChanged, column, availableRecords) =>
+                  renderCustomAvailableValuesFilter(
+                    fieldLayout && fieldLayout.dropdownStaticEntries
+                      ? Object.keys(fieldLayout.dropdownStaticEntries).map(
+                          //TODO_RWE respect labels!
+                          (av) => fieldLayout.dropdownStaticEntries![av],
+                        )
+                      : availableRecords.map((r) => r[f.name]),
+                    filter,
+                    onFilterChanged,
+                    column,
+                  )
+              : undefined,
+        }
+      })
     return newColumns
     // setColumns(newColumns)
     // dataSource.getRecords().then((r) => {
@@ -272,6 +300,9 @@ const EntityTableInternal: React.FC<{
         result.subTree.push(parentFilter)
       }
     }
+    Object.keys(columnFilters).forEach((c) => {
+      result.subTree.push(columnFilters[c])
+    })
     return result
   }
 
@@ -286,6 +317,7 @@ const EntityTableInternal: React.FC<{
       parentSchema,
       dataSourceManagerForNavigations,
       useParentFilter,
+      columnFilters,
     ],
     queryFn: () => {
       try {
@@ -493,6 +525,10 @@ const EntityTableInternal: React.FC<{
               })
             }}
             rowHeight={1}
+            initialFilters={columnFilters}
+            onFilterChanged={(filterByColumn: { [c: string]: LogicalExpression }) => {
+              setColumnFilters({ ...filterByColumn })
+            }}
           ></Table>
         )}
       </div>

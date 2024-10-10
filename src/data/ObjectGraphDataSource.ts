@@ -7,6 +7,7 @@ import {
   PaginatedList,
 } from 'fusefx-repositorycontract'
 import { IDataSource } from 'ushell-modulebase'
+import { applyFilter } from '../utils/LogicUtils'
 
 export class ObjectGraphDataSource implements IDataSource {
   dataSourceUid: string = crypto.randomUUID()
@@ -59,7 +60,11 @@ export class ObjectGraphDataSource implements IDataSource {
     sortingParams?: SortingField[],
   ): Promise<PaginatedList> {
     return new Promise<PaginatedList>((res) => {
-      const result: any[] = this.objectGraph[this.propertyPath]
+      console.log('getRecords', filter)
+      let result: any[] = this.objectGraph[this.propertyPath]
+      if (filter) {
+        result = applyFilter(result, filter)
+      }
       return res({ page: result, total: result.length })
     })
   }

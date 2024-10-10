@@ -42,7 +42,7 @@ const FilterTagBar: React.FC<{
           ></FilterTag>
         </div>
       ))}
-      {filters.length == 0 && <div className='p-2.5'>No Filters</div>}
+      {filters.length == 0 && <div className='p-2.5'>No Queries</div>}
     </div>
   )
 }

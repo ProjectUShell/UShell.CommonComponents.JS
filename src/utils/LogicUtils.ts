@@ -57,6 +57,7 @@ export function buildIsInFilter(fieldName: string, values: any[]): LogicalExpres
 }
 
 export function applyFilter(records: any[], filter: LogicalExpression) {
+  console.log('applyFilter', filter)
   const result: any[] = []
   for (let r of records) {
     if (satisfiesFilter(r, filter)) {
@@ -113,6 +114,13 @@ export function satisfiesFilter(record: any, filter: LogicalExpression): boolean
   let machesAll: boolean = true
   for (let p of filter?.predicates) {
     if (satisfiesPredicate(record, p)) {
+      matchesOne = true
+    } else {
+      machesAll = false
+    }
+  }
+  for (let f of filter?.subTree) {
+    if (satisfiesFilter(record, f)) {
       matchesOne = true
     } else {
       machesAll = false
