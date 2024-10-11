@@ -22,6 +22,8 @@ const EntityFormModal: React.FC<{
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
   styleType?: number
+  uow?: any
+  persistUow?: (uow: any) => void
 }> = ({
   dataSourceManager,
   dataSource,
@@ -36,6 +38,8 @@ const EntityFormModal: React.FC<{
   classNameInputHoverBg,
   classNameInputHoverBgDark,
   styleType = 0,
+  uow,
+  persistUow,
 }) => {
   return (
     <Modal marginY={10} marginX={30}>
@@ -56,6 +60,8 @@ const EntityFormModal: React.FC<{
           classNameInputHoverBg={classNameInputHoverBg}
           classNameInputHoverBgDark={classNameInputHoverBgDark}
           styleType={styleType}
+          uow={uow}
+          persistUow={persistUow}
         ></EntityForm>
       </div>
     </Modal>

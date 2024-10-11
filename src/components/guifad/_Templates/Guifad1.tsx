@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 import Breadcrumb from '../_Organisms/Breadcrumb'
-import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
+import { IDataSource, IDataSourceManagerBase, IWidgetHost } from 'ushell-modulebase'
 import StructureNavigation from '../_Organisms/StructureNavigation'
 import { EntitySchema, RelationSchema } from 'fusefx-modeldescription'
 import EntityTable from '../_Organisms/EntityTable'
@@ -17,7 +17,9 @@ const Guifad1: React.FC<{
   dataSourceManager: IDataSourceManagerWidget
   layoutDescription: LayoutDescriptionRoot
   enterRecord?: (r: any, entitySchema: EntitySchema) => void
-}> = ({ rootNode, dataSourceManager, layoutDescription, enterRecord }) => {
+  uow: any
+  persistUow: ((uow: any) => void) | undefined
+}> = ({ rootNode, dataSourceManager, layoutDescription, enterRecord, uow, persistUow }) => {
   // states
   const [nodes, setCurrentNodes] = useState<ObjectGraphNode[]>([rootNode])
   const [currentRecord, setCurrentRecord] = useState<any | null>(null)
@@ -27,11 +29,27 @@ const Guifad1: React.FC<{
 
   // useEffects
   useEffect(() => {
-    setCurrentNodes([rootNode])
-    setCurrentRecord(rootNode.record)
+    if (!uow) uow = {}
+    uow.nodes?.forEach((n: ObjectGraphNode) => {
+      n.dataSource =
+        dataSourceManager.tryGetDataSource(n.dataSource.entitySchema!.name) || n.dataSource
+    })
+    setCurrentNodes(uow.nodes || [rootNode])
+    setCurrentRecord(uow.currentRecord || rootNode.record)
     setCurrentRelation(null)
-    setCurrentMode(rootNode.record ? 'details' : 'list')
+    setCurrentMode(uow.currentMode ? uow.currentMode : rootNode.record ? 'details' : 'list')
+    setDirty(uow.dirty ? uow.dirty : false)
   }, [rootNode])
+
+  useEffect(() => {
+    if (!persistUow) return
+    if (!uow) uow = {}
+    uow.nodes = nodes
+    uow.currentRecord = currentRecord
+    uow.currentMode = currentMode
+    uow.dirty = dirty
+    persistUow(uow)
+  }, [nodes, currentRecord, currentMode, dirty])
 
   // guards
   if (!rootNode.dataSource) {
@@ -91,6 +109,8 @@ const Guifad1: React.FC<{
     setCurrentRecord(newRecord)
     setCurrentMode('details')
   }
+
+  console.log('render guifad', node)
   return (
     <div className='w-full h-full flex flex-col overflow-hidden text-sm bg-bg1 dark:bg-bg1dark border-0 border-red-400'>
       <div className='w-full h-full flex overflow-hidden text-sm bg-content dark:bg-contentDark'>
@@ -199,6 +219,8 @@ const Guifad1: React.FC<{
                   (el) => el.entityName == node.dataSource.entitySchema?.name,
                 )}
                 styleType={1}
+                uow={uow}
+                persistUow={persistUow}
               ></EntityForm>
             )}
           </div>

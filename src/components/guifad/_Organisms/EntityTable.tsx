@@ -357,12 +357,14 @@ const EntityTableInternal: React.FC<{
     ],
     queryFn: () => {
       try {
+        console.debug('EntityTable reloading', dataSource)
         return dataSource.getRecords(
           buildFilterExpression(),
           pagingParams,
           sortingParamsByEntityName[entitySchema.name],
         )
       } catch (error) {
+        console.error('error in getRecords', error)
         return null
       }
     },

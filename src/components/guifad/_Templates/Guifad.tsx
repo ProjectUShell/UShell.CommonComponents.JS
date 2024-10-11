@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
+import { IDataSource, IDataSourceManagerBase, IWidgetHost } from 'ushell-modulebase'
 import { EntitySchema } from 'fusefx-modeldescription'
 import Guifad1 from './Guifad1'
 import { ObjectGraphNode } from '../ObjectGraphNode'
@@ -12,17 +12,21 @@ import { IDataSourceManagerWidget } from './IDataSourceManagerWidget'
 // IDataSourceManager: getDataSource, getNavigations
 // TODO wenn kein rootEntityName => Auswahl der EntityTypes darstellen
 const Guifad: React.FC<{
-  dataSourceManager: IDataSourceManagerWidget
+  dataSourceManager: IWidgetHost
   rootEntityName: string
   layoutDescription?: LayoutDescriptionRoot
   record?: any
   enterRecord?: (r: any, entitySchema: EntitySchema) => void
+  uow?: any
+  persistUow?: (uow: any) => void
 }> = ({
   dataSourceManager,
   rootEntityName,
   record,
   enterRecord,
   layoutDescription = { entityLayouts: [], semanticVersion: '0', timestampUtc: '0' },
+  uow,
+  persistUow,
 }) => {
   const [rootDataSource, setRootDataSource] = useState<IDataSource | null>(null)
 
@@ -48,6 +52,8 @@ const Guifad: React.FC<{
       rootNode={rootNode}
       enterRecord={enterRecord}
       layoutDescription={layoutDescription}
+      uow={uow}
+      persistUow={persistUow}
     ></Guifad1>
   )
 }

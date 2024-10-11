@@ -48,7 +48,7 @@ const TabControl: React.FC<{
 
   return (
     <div
-      className={`USHell_TabContainer h-full flex flex-col w-screen overflow-hidden border-4 border-red-400
+      className={`USHell_TabContainer h-full flex flex-col w-screen overflow-hidden border-0 border-red-400
      ${classNameContainerBg || 'bg-menu dark:bg-menuDark'} `}
     >
       <ul
@@ -84,7 +84,7 @@ const TabControl: React.FC<{
         ))}
         {/* <div className="border-b border-bg6 dark:border-bg3dark w-full"></div> */}
       </ul>
-      <div className='h-full flex flex-col mt-0 border-4 border-blue-400 overflow-hidden'>
+      <div className='h-full flex flex-col mt-0 border-0 border-blue-400 overflow-hidden'>
         {tabItems[activeTabIndex]?.renderMethod && tabItems[activeTabIndex]?.renderMethod!()}
       </div>
     </div>

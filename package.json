@@ -65,7 +65,7 @@
     "style-loader": "^3.3.2",
     "styled-components": "^6.1.8",
     "tailwindcss-cli": "^0.1.2",
-    "ushell-modulebase": "^1.0.21",
+    "ushell-modulebase": "^1.0.22",
     "ushell-portfoliodescription": "^0.3.7"
   },
   "browserslist": {

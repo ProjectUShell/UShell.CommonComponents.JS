@@ -35,6 +35,8 @@ const EntityForm: React.FC<{
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
   styleType?: number
+  uow?: any
+  persistUow?: (uow: any) => void
 }> = ({
   dataSourceManager,
   dataSource,
@@ -52,11 +54,30 @@ const EntityForm: React.FC<{
   classNameInputHoverBg,
   classNameInputHoverBgDark,
   styleType = 0,
+  uow,
+  persistUow,
 }) => {
   // states
   const [currentEntity, setCurrentEntity] = useState({ ...entity })
   const [error, setError] = useState<any>(null)
   const [dirtyLocal, setDirtyLocal] = useState<boolean>(dirty)
+
+  // useEffects
+
+  useEffect(() => setDirtyLocal(dirty), [dirty])
+  useEffect(() => {
+    if (!dirty) return
+    if (!uow) return
+    if (!uow.editingEntity) return
+    setCurrentEntity(uow.editingEntity)
+  }, [])
+
+  useEffect(() => {
+    if (!persistUow) return
+    if (!uow) uow = {}
+    uow.editingEntity = currentEntity
+    persistUow(uow)
+  }, [currentEntity])
 
   if (error) {
     return (
@@ -88,9 +109,12 @@ const EntityForm: React.FC<{
   function cancel() {
     console.log('cancel')
     setCurrentEntity({ ...entity })
-    setDirty ? setDirty(false) : setDirtyLocal(false)
+    setDirty && setDirty(false)
+    setDirtyLocal(false)
     onCanceled && onCanceled()
   }
+
+  console.log('render EntityForm', dirty)
 
   return (
     <div className='UShell_EntityForm flex flex-col h-full overflow-hidden'>
@@ -144,18 +168,23 @@ const EntityForm: React.FC<{
       <EntityFormInner
         dataSource={dataSource}
         dirty={dirty}
-        entity={entity}
-        onChange={(ce) => setCurrentEntity(ce)}
+        entity={currentEntity}
+        onChange={(ce) => setCurrentEntity({ ...ce })}
         dataSourceManager={dataSourceManager}
         entityLayout={entityLayout}
         labelPosition={labelPosition}
-        setDirty={setDirty}
+        setDirty={(d) => {
+          setDirty && setDirty(d)
+          setDirtyLocal(d)
+        }}
         readOnly={readOnly}
         classNameBg={classNameBg}
         classNameInputBg={classNameInputBg}
         classNameInputHoverBg={classNameInputHoverBg}
         classNameInputHoverBgDark={classNameInputHoverBgDark}
         styleType={styleType}
+        uow={uow}
+        persistUow={persistUow || (() => {})}
       ></EntityFormInner>
       {toolbar == 'bottom' && (
         <div

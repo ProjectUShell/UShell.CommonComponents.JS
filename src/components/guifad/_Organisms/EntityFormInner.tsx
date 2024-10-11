@@ -32,6 +32,8 @@ const EntityFormInner: React.FC<{
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
   styleType?: number
+  uow: any
+  persistUow: (uow: any) => void
 }> = ({
   dataSourceManager,
   dataSource,
@@ -47,15 +49,18 @@ const EntityFormInner: React.FC<{
   classNameInputHoverBg,
   classNameInputHoverBgDark,
   styleType = 0,
+  uow,
+  persistUow,
 }) => {
   // states
-  const [currentEntity, setCurrentEntity] = useState({ ...entity })
+  // const [currentEntity, setCurrentEntity] = useState({ ...entity })
   const [fkRelations, setFkRelations] = useState<RelationSchema[]>([])
   const [fieldsToDisplay, setFieldsToDisplay] = useState<FieldSchema[]>([])
   const [error, setError] = useState<any>(null)
   const [dirtyLocal, setDirtyLocal] = useState<boolean>(dirty)
 
   // effects
+
   useEffect(() => {
     try {
       const nonLookupfkRelations: RelationSchema[] = dataSourceManager
@@ -113,18 +118,16 @@ const EntityFormInner: React.FC<{
     if (field.type == 'Int32') {
       newValue = Number.parseInt(newValue)
     }
-    setValue(currentEntity, field.name, newValue)
-    setCurrentEntity({ ...currentEntity })
-    onChange(currentEntity)
+    setValue(entity, field.name, newValue)
+    onChange(entity)
   }
 
   function changeLookUpValues(l: RelationSchema, keyValues: any) {
     setDirty ? setDirty(true) : setDirtyLocal(true)
 
-    currentEntity[l.foreignNavigationName] = { label: '', key: keyValues }
-    currentEntity[l.foreignKeyIndexName] = keyValues
-    setCurrentEntity({ ...currentEntity })
-    onChange(currentEntity)
+    entity[l.foreignNavigationName] = { label: '', key: keyValues }
+    entity[l.foreignKeyIndexName] = keyValues
+    onChange(entity)
   }
 
   function getCoveredFields(partitions: LayoutPartition[]): string[] {
@@ -161,7 +164,7 @@ const EntityFormInner: React.FC<{
             label={p.name}
             allFields={fieldsToDisplay}
             fieldsToDisplay={fieldsToDisplay.filter((f) => p.fields.includes(f.name))}
-            currentEntity={currentEntity}
+            currentEntity={entity}
             changeValue={changeValue}
             fkRelations={fkRelations}
             fkRelationsToDisplay={fkRelations.filter((fk) =>
@@ -189,7 +192,7 @@ const EntityFormInner: React.FC<{
                 label={p.name}
                 allFields={fieldsToDisplay}
                 fieldsToDisplay={fieldsToDisplay.filter((f) => p.fields.includes(f.name))}
-                currentEntity={currentEntity}
+                currentEntity={entity}
                 changeValue={changeValue}
                 fkRelations={fkRelations}
                 fkRelationsToDisplay={fkRelations.filter((fk) =>
@@ -215,7 +218,7 @@ const EntityFormInner: React.FC<{
           label={dataSource.entitySchema!.name}
           allFields={fieldsToDisplay}
           fieldsToDisplay={fieldsToDisplay.filter((f) => getRemainingFields().includes(f.name))}
-          currentEntity={currentEntity}
+          currentEntity={entity}
           changeValue={changeValue}
           fkRelations={fkRelations}
           fkRelationsToDisplay={fkRelations.filter((f) =>

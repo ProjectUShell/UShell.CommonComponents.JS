@@ -80,7 +80,7 @@ const UForm1: React.FC<{
             (fl) => fl.fieldName == f.name,
           )
           return (
-            <div className='border-0 border-red-400'>
+            <div key={f.name} className='border-0 border-red-400'>
               <InputField
                 key={f.name}
                 inputType={f.type}
