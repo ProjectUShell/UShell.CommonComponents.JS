@@ -14,7 +14,6 @@ const LookUpSelect: React.FC<{
   inputClassName?: string
   styleType?: number
   classNameBg?: string
-  classNameBgDark?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
   showLabel?: boolean
@@ -25,7 +24,6 @@ const LookUpSelect: React.FC<{
   onValueSet,
   styleType,
   classNameBg,
-  classNameBgDark,
   classNameHoverBg,
   classNameHoverBgDark,
   showLabel = true,
@@ -81,6 +79,7 @@ const LookUpSelect: React.FC<{
         classNameBg={classNameBg}
         classNameHoverBg={classNameHoverBg}
         classNameHoverBgDark={classNameHoverBgDark}
+        styleType={styleType}
       ></DropdownSelect>
     </div>
   )

@@ -97,7 +97,7 @@ const EntityForm: React.FC<{
       {toolbar == 'top' && (
         <div
           className={`UShell_EntityForm_Toolbar bg-toolbar dark:bg-toolbarDark flex justify-start p-1 rounded-sm 
-        border border-toolbarBorder dark:border-toolbarBorderDark my-1`}
+            border border-toolbarBorder dark:border-toolbarBorderDark my-1`}
         >
           {setDirty && dirty && (
             <button

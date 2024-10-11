@@ -166,7 +166,7 @@ export function getInputStyleClassName(
             ? 'border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6'
             : 'border-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6'
         }          
-        ${classNameBg || 'bg-bg3 dark:bg-bg2dark'}
+        ${classNameBg || 'bg-bg3 dark:bg-bg3dark'}
         ${
           disabled
             ? ''

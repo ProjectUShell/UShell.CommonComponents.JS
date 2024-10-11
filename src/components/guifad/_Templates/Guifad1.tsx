@@ -198,6 +198,7 @@ const Guifad1: React.FC<{
                 entityLayout={layoutDescription.entityLayouts.find(
                   (el) => el.entityName == node.dataSource.entitySchema?.name,
                 )}
+                styleType={1}
               ></EntityForm>
             )}
           </div>

@@ -152,7 +152,7 @@ const EntityFormInner: React.FC<{
     return fkRelations.map((f) => f.primaryEntityName).filter((fn) => !coveredFields.includes(fn))
   }
   return (
-    <div className='flex flex-col h-full overflow-auto'>
+    <div className='UShell_EntityForm_Inner flex flex-col h-full overflow-auto pr-1'>
       {entityLayout?.partitions
         .filter((p) => p.type == 'group')
         .map((p, i) => (

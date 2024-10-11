@@ -72,6 +72,7 @@ const UForm: React.FC<{
                 p-3 w-full transition-all bg-bg4 dark:bg-bg4dark              
               `}
                     showLabel={labelPosition == 'top'}
+                    styleType={styleType}
                   ></LookUpSelect>
                 ),
               }
