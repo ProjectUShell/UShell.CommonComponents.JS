@@ -404,7 +404,7 @@ const EntityTableInternal: React.FC<{
             className={`UShell_EntityTable_Toolbar 
             ${classNameBgToolbar || 'bg-toolbar dark:bg-toolbarDark'}
             border-toolbarBorder dark:border-toolbarBorderDark 
-            rounded-sm border flex justify-between items-center my-1`}
+            rounded-sm border flex justify-between items-center my-0`}
           >
             {enableCrud && (
               <div className={`flex justify-end p-1 ${className} rounded-md`}>

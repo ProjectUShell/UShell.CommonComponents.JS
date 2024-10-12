@@ -475,7 +475,7 @@ const Table: React.FC<{
                     USHell_Table_th
                     ${
                       tableColors?.header ||
-                      'bg-tableHead dark:bg-tableHeadDark hover:bg-tableHover dark:hover:bg-tableHoverDark border-y-0 border-backgroundfour dark:border-backgroundfourdark'
+                      'bg-tableHead dark:bg-tableHeadDark hover:bg-tableHover dark:hover:bg-tableHoverDark border-b-2 border-tableBorder dark:border-tableBorderDark'
                     }
                   cursor-pointer select-none`}
                   onClick={(e) => {
