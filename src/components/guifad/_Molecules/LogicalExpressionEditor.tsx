@@ -67,7 +67,9 @@ const LogicalExpressionEditor: React.FC<{
   // console.log('initialExpression LE1', intialExpression)
   return (
     <div
-      className={`UShell_LogicalExpressionEditor p-2 rounded-md shadow-md ${classNameBg || ''} `}
+      className={`UShell_LogicalExpressionEditor border-2 dark:border-bg7dark p-2 rounded-md shadow-md ${
+        classNameBg || ''
+      } `}
       onKeyDown={(e) => {
         if (e.key == 'Enter' && isExpressionValid(expression)) {
           onUpdateExpression(expression!)
@@ -87,9 +89,9 @@ const LogicalExpressionEditor: React.FC<{
         classNameBgInputHover={classNameBgInputHover}
         classNameBgInputHoverDark={classNameBgInputHoverDark}
       ></LogicalExpressionTree>
-      <div className='flex gap-1 justify-end border-t pt-1 border-gray-400'>
+      <div className='flex gap-1 justify-end border-t pt-1 border-contetBorder dark:border-navigationBorderDark'>
         <button
-          className='bg-backgroundthree dark:bg-backgroundthreedark p-1 rounded-md disabled:text-gray-400'
+          className='hover:bg-contentHover hover:dark:bg-contentHoverDark p-1 rounded-md disabled:text-gray-400'
           onClick={(e) => {
             setExpression(originalExpression ? getCopy(originalExpression) : getEmptyExpression())
           }}
@@ -97,7 +99,7 @@ const LogicalExpressionEditor: React.FC<{
           Cancel
         </button>
         <button
-          className='bg-backgroundthree dark:bg-backgroundthreedark p-1 rounded-md disabled:text-gray-400'
+          className='hover:bg-contentHover hover:dark:bg-contentHoverDark p-1 rounded-md disabled:text-gray-400'
           disabled={!isExpressionValid(expression)}
           onClick={(e) => {
             onUpdateExpression(expression!)

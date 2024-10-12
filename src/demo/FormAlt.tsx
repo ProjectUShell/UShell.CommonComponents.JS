@@ -33,6 +33,7 @@ const FormAlt = () => {
             type: 'guid',
             value: id,
             setValue: (v) => setId(v),
+            required: false,
           },
           {
             name: 'FirstName',
@@ -40,6 +41,7 @@ const FormAlt = () => {
             type: 'string',
             value: firstName,
             setValue: (v) => setFirstName(v),
+            required: false,
           },
           {
             name: 'DateOfBirth',
@@ -47,6 +49,7 @@ const FormAlt = () => {
             type: 'date',
             value: dateOfBirth,
             setValue: (v) => setDateOfBirth(v),
+            required: false,
           },
           {
             name: 'FavColor',
@@ -54,6 +57,7 @@ const FormAlt = () => {
             type: 'string',
             value: favColor,
             setValue: (v) => setFavColor(v),
+            required: false,
           },
           {
             name: 'Description',
@@ -61,6 +65,7 @@ const FormAlt = () => {
             type: 'string',
             value: description,
             setValue: (v) => setDescription(v),
+            required: false,
           },
         ]}
         labelPosition='left'

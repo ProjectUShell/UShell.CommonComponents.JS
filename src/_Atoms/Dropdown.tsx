@@ -43,85 +43,34 @@ const Dropdown: React.FC<{
     }
   }, [setIsOpen])
 
-  const dummy: React.FC = () => {
-    return (
-      <div className='top-0'>
-        <div className='top-1'></div>
-        <div className='top-2'></div>
-        <div className='top-3'></div>
-        <div className='top-4'></div>
-        <div className='top-5'></div>
-        <div className='top-6'></div>
-        <div className='top-7'></div>
-        <div className='top-8'></div>
-        <div className='-top-1'></div>
-        <div className='-top-2'></div>
-        <div className='-top-3'></div>
-        <div className='-top-4'></div>
-        <div className='-top-5'></div>
-        <div className='-top-6'></div>
-        <div className='-top-7'></div>
-        <div className='-top-8'></div>
-        <div className='bottom-1'></div>
-        <div className='bottom-2'></div>
-        <div className='bottom-3'></div>
-        <div className='bottom-4'></div>
-        <div className='bottom-5'></div>
-        <div className='bottom-6'></div>
-        <div className='bottom-7'></div>
-        <div className='bottom-8'></div>
-        <div className='-top-1'></div>
-        <div className='-top-2'></div>
-        <div className='-top-3'></div>
-        <div className='-top-4'></div>
-        <div className='-top-5'></div>
-        <div className='-top-6'></div>
-        <div className='-top-7'></div>
-        <div className='-top-8'></div>
-        <div className='right-0'></div>
-        <div className='right-1'></div>
-        <div className='right-2'></div>
-        <div className='right-3'></div>
-        <div className='right-4'></div>
-        <div className='right-5'></div>
-        <div className='right-6'></div>
-        <div className='right-7'></div>
-        <div className='right-8'></div>
-        <div className='-right-1'></div>
-        <div className='-right-2'></div>
-        <div className='-right-3'></div>
-        <div className='-right-4'></div>
-        <div className='-right-5'></div>
-        <div className='-right-6'></div>
-        <div className='-right-7'></div>
-        <div className='-right-8'></div>
-        <div className='left-0'></div>
-        <div className='left-1'></div>
-        <div className='left-2'></div>
-        <div className='left-3'></div>
-        <div className='left-4'></div>
-        <div className='left-5'></div>
-        <div className='left-6'></div>
-        <div className='left-7'></div>
-        <div className='left-8'></div>
-        <div className='-left-1'></div>
-        <div className='-left-2'></div>
-        <div className='-left-3'></div>
-        <div className='-left-4'></div>
-        <div className='-left-5'></div>
-        <div className='-left-6'></div>
-        <div className='-left-7'></div>
-        <div className='-left-8'></div>
-      </div>
-    )
+  function tryFindFixedParent(el: HTMLElement): HTMLElement | null {
+    let parentElement: HTMLElement | null = el.parentElement
+    while (parentElement) {
+      console.log('try find fixed parent', parentElement.className)
+      if (parentElement.style.position == 'fixed') {
+        return parentElement
+      }
+      if (parentElement.className.includes('UShell_Modal_Inner')) {
+        console.log('found fixed')
+        return parentElement
+      }
+      parentElement = parentElement.parentElement
+    }
+    console.log('not found fixed')
+    return null
   }
 
   function getTop(): number | undefined {
     const el = document.getElementById(refId)
     if (!el) return undefined
     const t = el.getBoundingClientRect().top + el.getBoundingClientRect().height
+
     const hHalf = window.innerHeight / 2
     if (t <= hHalf) {
+      const fixedParent: HTMLElement | null = tryFindFixedParent(el)
+      if (fixedParent) {
+        return t - fixedParent.getBoundingClientRect().top
+      }
       return t
     } else {
       return undefined
@@ -130,9 +79,18 @@ const Dropdown: React.FC<{
   function getBottom(): number | undefined {
     const el = document.getElementById(refId)
     if (!el) return undefined
+
     const t = el.getBoundingClientRect().top + el.getBoundingClientRect().height
     const hHalf = window.innerHeight / 2
     if (t > hHalf) {
+      const fixedParent: HTMLElement | null = tryFindFixedParent(el)
+      if (fixedParent) {
+        return (
+          window.innerHeight -
+          el.getBoundingClientRect().top -
+          fixedParent.getBoundingClientRect().top
+        )
+      }
       return window.innerHeight - el.getBoundingClientRect().top
     } else {
       return undefined
@@ -144,6 +102,10 @@ const Dropdown: React.FC<{
     const l = el.getBoundingClientRect().left
     const wHalf = window.innerWidth / 2
     if (l <= wHalf) {
+      const fixedParent: HTMLElement | null = tryFindFixedParent(el)
+      if (fixedParent) {
+        return l - fixedParent.getBoundingClientRect().left
+      }
       return l
     } else {
       return undefined
@@ -155,6 +117,12 @@ const Dropdown: React.FC<{
     const r = window.innerWidth - el.getBoundingClientRect().right
     const wHalf = window.innerWidth / 2
     if (r < wHalf) {
+      const fixedParent: HTMLElement | null = tryFindFixedParent(el)
+      if (fixedParent) {
+        return (
+          r - (fixedParent.getBoundingClientRect().left - fixedParent.getBoundingClientRect().width)
+        )
+      }
       return r
     } else {
       return undefined

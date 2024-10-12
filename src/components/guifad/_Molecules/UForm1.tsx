@@ -6,6 +6,7 @@ export class FieldInputInfo {
   name: string = ''
   type: string = ''
   setabilityFlags: number = 0
+  required: boolean = false
   value: any
   setValue: (v: any) => void = () => {}
 }
@@ -98,6 +99,7 @@ const UForm1: React.FC<{
                 styleType={styleType}
                 readOnly={readOnly}
                 isCreation={isCreation}
+                required={f.required}
               ></InputField>
             </div>
           )

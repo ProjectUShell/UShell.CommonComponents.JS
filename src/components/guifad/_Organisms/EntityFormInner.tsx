@@ -150,10 +150,12 @@ const EntityFormInner: React.FC<{
     return fieldsToDisplay.map((f) => f.name).filter((fn) => !coveredFields.includes(fn))
   }
   function getRemainingFkRelations(): string[] {
-    if (!entityLayout) return fieldsToDisplay.map((f) => f.name)
+    if (!entityLayout) return fkRelations.map((f) => f.primaryEntityName)
     const coveredFields: string[] = getCoveredFields(entityLayout.partitions)
     return fkRelations.map((f) => f.primaryEntityName).filter((fn) => !coveredFields.includes(fn))
   }
+
+  console.log('render EntityFormInner', getRemainingFkRelations())
   return (
     <div className='UShell_EntityForm_Inner flex flex-col h-full overflow-auto pr-1'>
       {entityLayout?.partitions

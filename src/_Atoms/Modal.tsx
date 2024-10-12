@@ -16,12 +16,12 @@ const Modal: React.FC<{
   }, [])
   return (
     <div
-      className='fixed top-0 left-0 right-0 bottom-0
+      className='UShell_Modal fixed top-0 left-0 right-0 bottom-0
      z-40 w-full h-full bg-black bg-transparent1 bg-opacity-50 border-0 border-red-400'
     >
       <div
         style={{ left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }}
-        className={`${
+        className={`UShell_Modal_Inner ${
           full ? 'w1-fit h1-fit' : 'w1-24 h1-24'
         } fixed bg-opacity-100 z-50  border-0 border-blue-400 transition-all duration-1000`}
       >

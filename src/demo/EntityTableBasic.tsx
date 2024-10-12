@@ -7,9 +7,11 @@ import { EntityLayout } from '../[Move2LayoutDescription]/EntityLayout'
 
 const brandField: FieldSchema = new FieldSchema('Brand', 'string')
 brandField.filterable = 1
+const idField: FieldSchema = new FieldSchema('Id', 'int32')
+idField.required = true
 const carEntitySchema: EntitySchema = {
   fields: [
-    new FieldSchema('Id', 'int32'),
+    idField,
     new FieldSchema('DateOfConstruction', 'datetime'),
     brandField,
     new FieldSchema('InternalField', 'string'),

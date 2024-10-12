@@ -513,9 +513,9 @@ const EntityTableInternal: React.FC<{
                     }
                     initialOpen={{ o: false }}
                   >
-                    <div className='border-2 dark:border-bg7dark'>
+                    <div className=''>
                       <LogicalExpressionEditor
-                        classNameBg='bg-menu dark:bg-navigationDark'
+                        classNameBg='bg-content dark:bg-contentDark'
                         // classNameBgDark='bg-red-200'
                         intialExpression={null}
                         fields={dataSource.entitySchema!.fields}
