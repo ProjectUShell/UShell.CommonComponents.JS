@@ -167,7 +167,7 @@ const InputField: React.FC<{
       <div className='flex items-center'>
         <div className='w-full'>{renderInnerInput()}</div>
         {errors != null && (
-          <div id={id} className='text-red-500 dark:text-red-400 pl-1'>
+          <div id={id} className='text-red-500 dark:text-red-400 pl-1 w-8'>
             <ExclamationCircleIcon></ExclamationCircleIcon>
             <Tooltip targetId={id}>
               <div className='whitespace-nowrap p-2 border-0 bg-content dark:bg-contentDark border-contentBorder dark:border-contentBorderDark'>
@@ -193,8 +193,8 @@ export function getInputStyleClassName(
   return `text-sm rounded-sm p-3 outline-none block w-full transition-all 
      border-bg7 dark:border-bg7dark ${
        hasErrors
-         ? 'focus:border-red-500 focus:dark:border-red-400'
-         : 'focus:border-prim4 focus:dark:border-prim6'
+         ? 'focus:border-red-500 dark:focus:border-red-400'
+         : 'focus:border-prim4 dark:focus:border-prim6'
      }
         ${styleType == 0 ? 'border-b-2   ' : 'border-2 '}          
         ${classNameBg || 'bg-bg3 dark:bg-bg3dark'}
