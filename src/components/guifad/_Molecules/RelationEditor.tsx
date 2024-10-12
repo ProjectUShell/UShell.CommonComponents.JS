@@ -206,6 +206,7 @@ const RelationEditor: React.FC<{
             false,
             classNameBgInputHover,
             classNameBgInputHoverDark,
+            false,
           )}
         ></LookUpSelect>
       ) : (
@@ -219,6 +220,7 @@ const RelationEditor: React.FC<{
             false,
             classNameBgInputHover,
             classNameBgInputHoverDark,
+            false,
           )}
         ></input>
       )}

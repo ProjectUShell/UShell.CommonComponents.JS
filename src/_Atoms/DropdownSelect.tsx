@@ -195,6 +195,7 @@ const DropdownSelect: React.FC<{
               disabled,
               classNameHoverBg,
               classNameHoverBgDark,
+              false,
             )}`}
           onClick={(e) => setOpen(true)}
           value={currentText || ''}

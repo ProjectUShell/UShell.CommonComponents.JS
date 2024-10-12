@@ -94,6 +94,7 @@ const DropdownMultiSelect: React.FC<{
               false,
               classNameHoverBg,
               classNameHoverBgDark,
+              false,
             )}`}
           onClick={(e) => setOpen(true)}
           value={getLabel()}

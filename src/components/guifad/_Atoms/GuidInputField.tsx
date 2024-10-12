@@ -12,6 +12,7 @@ const GuidInputField: React.FC<{
   classNameHoverBg?: string
   classNameHoverBgDark?: string
   styleType?: number
+  hasErrors: boolean
 }> = ({
   initialValue,
   currentValue,
@@ -22,6 +23,7 @@ const GuidInputField: React.FC<{
   classNameHoverBg,
   classNameHoverBgDark,
   styleType = 0,
+  hasErrors,
 }) => {
   console.log('initialValue', initialValue)
 
@@ -44,6 +46,7 @@ const GuidInputField: React.FC<{
         classNameHoverBg={classNameHoverBg}
         classNameHoverBgDark={classNameHoverBgDark}
         styleType={styleType}
+        hasErrors={hasErrors}
       ></InputStyle>
       {!disabled && (
         <button

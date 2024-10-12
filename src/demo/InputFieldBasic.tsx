@@ -14,12 +14,14 @@ const InputFieldBasic = () => {
         inputType='guid'
         label='Id'
         onValueChange={(v) => setId(v)}
+        required
       ></InputField>
       <InputField
         initialValue={firstName}
         inputType='string'
         label='First Name'
         onValueChange={(v) => setFirstName(v)}
+        required
       ></InputField>
       <InputField
         initialValue={dateOfBirth}

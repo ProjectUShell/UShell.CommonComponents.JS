@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Dropdown from './Dropdown'
 
 const Tooltip: React.FC<{ targetId: string; children: any }> = ({ targetId, children }) => {
   const [show, setShow] = useState(false)
@@ -46,13 +47,23 @@ const Tooltip: React.FC<{ targetId: string; children: any }> = ({ targetId, chil
   return (
     <>
       {show && (
-        <div
-          style={{ left: pos.x, top: pos.y }}
-          className='fixed flex z-40 rounded-md p-1
+        <>
+          <Dropdown refId={targetId}>
+            <div
+              className='flex z-40 rounded-md p-1
               bg-bg1 dark:bg-bg1dark shadow-md border dark:border-bg3dark'
-        >
-          {children}
-        </div>
+            >
+              {children}
+            </div>
+          </Dropdown>
+          {/* <div
+            style={{ left: pos.x, top: pos.y }}
+            className='fixed flex z-40 rounded-md p-1
+              bg-bg1 dark:bg-bg1dark shadow-md border dark:border-bg3dark'
+          >
+            {children}
+          </div> */}
+        </>
       )}
     </>
   )

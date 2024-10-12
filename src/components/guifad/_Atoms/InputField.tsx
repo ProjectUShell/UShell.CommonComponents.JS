@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import GuidInputField from './GuidInputField'
 import InputStyle from './InputStyle'
 import BoolInputField from './BoolInputField'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
+import ExclamationCircleIcon from '../../../_Icons/ExclamationCircleIcon'
+import Tooltip from '../../../_Atoms/Tooltip'
 
 const InputField: React.FC<{
   label: string | null
@@ -19,6 +21,7 @@ const InputField: React.FC<{
   styleType?: number
   readOnly?: boolean
   isCreation?: boolean
+  required?: boolean
 }> = ({
   label,
   inputType,
@@ -33,6 +36,7 @@ const InputField: React.FC<{
   styleType = 0,
   readOnly = false,
   isCreation = false,
+  required = false,
 }) => {
   const [currentValue, setCurrentValue] = useState<any>(initialValue)
   useEffect(() => {
@@ -53,6 +57,9 @@ const InputField: React.FC<{
     }
     setCurrentValue(getInitialValue(initialValue))
   }, [initialValue, inputType])
+
+  const id: string = useMemo(() => crypto.randomUUID(), [])
+
   const fixAfterCreation: boolean = setabilityFlags < 6 //TODO adjust setability check after Fix in EntityAnnotations
   const disabled: boolean = readOnly || (fixAfterCreation && !isCreation)
   const classNameInput: string = getInputStyleClassName(
@@ -61,7 +68,16 @@ const InputField: React.FC<{
     disabled,
     classNameHoverBg,
     classNameHoverBgDark,
+    getErrors() != null,
   )
+
+  function getErrors(): string | null {
+    if (required && (!initialValue || initialValue == '')) {
+      return 'Field is required'
+    }
+    return null
+  }
+
   function renderInnerInput() {
     if (inputType.toLocaleLowerCase() == 'guid') {
       return (
@@ -75,6 +91,7 @@ const InputField: React.FC<{
           classNameHoverBg={classNameHoverBg}
           classNameHoverBgDark={classNameHoverBgDark}
           styleType={styleType}
+          hasErrors={getErrors() != null}
         ></GuidInputField>
       )
     }
@@ -127,21 +144,19 @@ const InputField: React.FC<{
       )
     }
     return (
-      <InputStyle
-        htmlType={EntitySchemaService.getHtmlInputType(inputType)}
-        currentValue={currentValue}
+      <input
         disabled={disabled}
-        initialValue={initialValue}
-        onValueChange={onValueChange}
-        setCurrentValue={setCurrentValue}
-        classNameBg={classNameBg}
-        classNameHoverBg={classNameHoverBg}
-        classNameHoverBgDark={classNameHoverBgDark}
-        styleType={styleType}
-      ></InputStyle>
+        className={classNameInput}
+        type={EntitySchemaService.getHtmlInputType(inputType)}
+        value={currentValue}
+        onChange={(e) => {
+          onValueChange(e.target.value)
+          setCurrentValue(e.target.value)
+        }}
+      ></input>
     )
   }
-
+  const errors: string | null = getErrors()
   return (
     <div className={`w-full ${false ? 'flex justify-between gap-2 items-baseline ' : ''}`}>
       {label && (
@@ -149,7 +164,19 @@ const InputField: React.FC<{
           {label}
         </label>
       )}
-      <div className='w-full'>{renderInnerInput()}</div>
+      <div className='flex items-center'>
+        <div className='w-full'>{renderInnerInput()}</div>
+        {errors != null && (
+          <div id={id} className='text-red-500 dark:text-red-400 pl-1'>
+            <ExclamationCircleIcon></ExclamationCircleIcon>
+            <Tooltip targetId={id}>
+              <div className='whitespace-nowrap p-2 border-0 bg-content dark:bg-contentDark border-contentBorder dark:border-contentBorderDark'>
+                {errors}
+              </div>
+            </Tooltip>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -161,13 +188,15 @@ export function getInputStyleClassName(
   disabled: boolean,
   classNameHoverBg: string | undefined,
   classNameHoverBgDark: string | undefined,
+  hasErrors: boolean,
 ): string {
-  return `text-sm rounded-sm p-3 outline-none block w-full transition-all
-        ${
-          styleType == 0
-            ? 'border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6'
-            : 'border-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6'
-        }          
+  return `text-sm rounded-sm p-3 outline-none block w-full transition-all 
+     border-bg7 dark:border-bg7dark ${
+       hasErrors
+         ? 'focus:border-red-500 focus:dark:border-red-400'
+         : 'focus:border-prim4 focus:dark:border-prim6'
+     }
+        ${styleType == 0 ? 'border-b-2   ' : 'border-2 '}          
         ${classNameBg || 'bg-bg3 dark:bg-bg3dark'}
         ${
           disabled
