@@ -189,6 +189,7 @@ const EntityTableInternal: React.FC<{
   const [universalSearchText, setUniversalSearchText] = useState('')
   const [filterTagsVisible, setFilterTagsVisible] = useState(true)
   const [detailsVisible, setDetailsVisible] = useState(false)
+  const [isCreation, setIsCreation] = useState(false)
 
   function forceReload() {
     setReloadTrigger((r) => r + 1)
@@ -380,6 +381,7 @@ const EntityTableInternal: React.FC<{
   function addRecord() {
     if (!onCreateRecord) {
       setDetailsVisible(true)
+      setIsCreation(true)
       return
     }
     onCreateRecord()
@@ -596,6 +598,7 @@ const EntityTableInternal: React.FC<{
           }
           onChange={() => {
             setDetailsVisible(false)
+            setIsCreation(true)
             forceReload()
           }}
           onCancel={() => setDetailsVisible(false)}
@@ -605,6 +608,7 @@ const EntityTableInternal: React.FC<{
           readOnly={!enableCrud}
           styleType={formStyleType}
           labelPosition={formLabelPosition}
+          isCreation={isCreation}
         ></EntityFormModal>
       )}
     </>

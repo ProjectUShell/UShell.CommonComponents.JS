@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
+import { IDataSource } from 'ushell-modulebase'
 import FloppyDiskIcon from '../../../_Icons/FloppyDiskIcon'
-import Group from '../_Atoms/Group'
-import InputField from '../_Atoms/InputField'
-import { getForeignKeyValue, getValue, setValue } from '../../../utils/StringUtils'
 import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import XMarkIcon from '../../../_Icons/XMarkIcon'
-import { IndexSchema } from 'fusefx-modeldescription'
-import { EntitySchemaService } from '../../../data/EntitySchemaService'
-import LookUpSelect from '../_Molecules/LookUpSelect'
 import BoltIcon from '../../../_Icons/BoltIcon'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
-import { EntityLayout, LayoutPartition } from '../../../[Move2LayoutDescription]/EntityLayout'
-import EntityFormGroup from '../_Molecules/EntityFormGroup'
+import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
 import Modal from '../../../_Atoms/Modal'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import EntityFormInner from './EntityFormInner'
-import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutDescriptionRoot'
 
 const EntityForm: React.FC<{
   dataSource: IDataSource
@@ -37,6 +29,7 @@ const EntityForm: React.FC<{
   styleType?: number
   uow?: any
   persistUow?: (uow: any) => void
+  isCreation: boolean
 }> = ({
   dataSourceManager,
   dataSource,
@@ -56,6 +49,7 @@ const EntityForm: React.FC<{
   styleType = 0,
   uow,
   persistUow,
+  isCreation = false,
 }) => {
   // states
   const [currentEntity, setCurrentEntity] = useState({ ...entity })
@@ -185,6 +179,7 @@ const EntityForm: React.FC<{
         styleType={styleType}
         uow={uow}
         persistUow={persistUow || (() => {})}
+        isCreation={isCreation}
       ></EntityFormInner>
       {toolbar == 'bottom' && (
         <div

@@ -1,10 +1,7 @@
 import React from 'react'
 import { getValue, getForeignKeyValue } from '../../../utils/StringUtils'
-import Group from '../_Atoms/Group'
-import InputField from '../_Atoms/InputField'
 import LookUpSelect from './LookUpSelect'
 import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
-import { IDataSourceManagerBase } from 'ushell-modulebase'
 import UForm1 from './UForm1'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
@@ -24,6 +21,7 @@ const UForm: React.FC<{
   classNameInputHoverBgDark?: string
   styleType?: number
   readOnly?: boolean
+  isCreation?: boolean
 }> = ({
   fieldsToDisplay,
   currentEntity,
@@ -39,6 +37,7 @@ const UForm: React.FC<{
   classNameInputHoverBgDark,
   styleType = 0,
   readOnly = false,
+  isCreation = false,
 }) => {
   return (
     <UForm1
@@ -84,6 +83,7 @@ const UForm: React.FC<{
       classNameInputHoverBg={classNameInputHoverBg}
       classNameInputHoverBgDark={classNameInputHoverBgDark}
       readOnly={readOnly}
+      isCreation={isCreation}
     ></UForm1>
   )
 

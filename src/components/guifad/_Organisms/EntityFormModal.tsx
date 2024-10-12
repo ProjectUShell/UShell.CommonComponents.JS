@@ -4,8 +4,6 @@ import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import Modal from '../../../_Atoms/Modal'
 import EntityForm from './EntityForm'
-import EntityFormInner from './EntityFormInner'
-import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutDescriptionRoot'
 
 const EntityFormModal: React.FC<{
   dataSource: IDataSource
@@ -24,6 +22,7 @@ const EntityFormModal: React.FC<{
   styleType?: number
   uow?: any
   persistUow?: (uow: any) => void
+  isCreation: boolean
 }> = ({
   dataSourceManager,
   dataSource,
@@ -40,6 +39,7 @@ const EntityFormModal: React.FC<{
   styleType = 0,
   uow,
   persistUow,
+  isCreation,
 }) => {
   return (
     <Modal marginY={10} marginX={30}>
@@ -62,6 +62,7 @@ const EntityFormModal: React.FC<{
           styleType={styleType}
           uow={uow}
           persistUow={persistUow}
+          isCreation={isCreation}
         ></EntityForm>
       </div>
     </Modal>

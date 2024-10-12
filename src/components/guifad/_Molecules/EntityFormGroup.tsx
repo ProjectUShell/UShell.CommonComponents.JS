@@ -1,11 +1,7 @@
 import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import React from 'react'
-import { IDataSourceManagerBase } from 'ushell-modulebase'
-import { getValue, getForeignKeyValue } from '../../../utils/StringUtils'
 import Group from '../_Atoms/Group'
-import InputField from '../_Atoms/InputField'
-import LookUpSelect from './LookUpSelect'
-import { EntityLayout, LayoutPartition } from '../../../[Move2LayoutDescription]/EntityLayout'
+import { LayoutPartition } from '../../../[Move2LayoutDescription]/EntityLayout'
 import UForm from './UForm'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
@@ -29,6 +25,7 @@ const EntityFormGroup: React.FC<{
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
   styleType?: number
+  isCreation?: boolean
 }> = ({
   label,
   allFields,
@@ -48,6 +45,7 @@ const EntityFormGroup: React.FC<{
   classNameInputHoverBg,
   classNameInputHoverBgDark,
   styleType = 0,
+  isCreation = false,
 }) => {
   return (
     <>
@@ -78,6 +76,7 @@ const EntityFormGroup: React.FC<{
                     classNameInputHoverBg={classNameInputHoverBg}
                     classNameInputHoverBgDark={classNameInputHoverBgDark}
                     styleType={styleType}
+                    isCreation={isCreation}
                   ></EntityFormGroup>
                 </div>
               ))}
@@ -101,6 +100,7 @@ const EntityFormGroup: React.FC<{
             classNameInputHoverBg={classNameInputHoverBg}
             classNameInputHoverBgDark={classNameInputHoverBgDark}
             styleType={styleType}
+            isCreation={isCreation}
           ></UForm>
         </Group>
       )}

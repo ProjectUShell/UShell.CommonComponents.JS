@@ -21,6 +21,7 @@ const UForm1: React.FC<{
   classNameInputHoverBgDark?: string
   styleType?: number
   readOnly?: boolean
+  isCreation?: boolean
 }> = ({
   fieldsToDisplay,
   labelPosition,
@@ -32,6 +33,7 @@ const UForm1: React.FC<{
   classNameInputHoverBgDark,
   styleType = 0,
   readOnly = false,
+  isCreation = false,
 }) => {
   function getLabel(f: FieldInputInfo) {
     const fieldLayout: FieldLayout | undefined = fieldLayouts.find((fl) => fl.fieldName == f.name)
@@ -95,6 +97,7 @@ const UForm1: React.FC<{
                 multiLine={fieldLayout ? fieldLayout.textIsMultiLine : false}
                 styleType={styleType}
                 readOnly={readOnly}
+                isCreation={isCreation}
               ></InputField>
             </div>
           )

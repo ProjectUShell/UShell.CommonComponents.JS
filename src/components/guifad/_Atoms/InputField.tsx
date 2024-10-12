@@ -18,6 +18,7 @@ const InputField: React.FC<{
   multiLine?: boolean
   styleType?: number
   readOnly?: boolean
+  isCreation?: boolean
 }> = ({
   label,
   inputType,
@@ -31,6 +32,7 @@ const InputField: React.FC<{
   multiLine = false,
   styleType = 0,
   readOnly = false,
+  isCreation = false,
 }) => {
   const [currentValue, setCurrentValue] = useState<any>(initialValue)
   useEffect(() => {
@@ -52,7 +54,7 @@ const InputField: React.FC<{
     setCurrentValue(getInitialValue(initialValue))
   }, [initialValue, inputType])
   const fixAfterCreation: boolean = setabilityFlags < 6 //TODO adjust setability check after Fix in EntityAnnotations
-  const disabled: boolean = readOnly || (fixAfterCreation && initialValue && initialValue != '')
+  const disabled: boolean = readOnly || (fixAfterCreation && !isCreation)
   const classNameInput: string = getInputStyleClassName(
     styleType,
     classNameBg,

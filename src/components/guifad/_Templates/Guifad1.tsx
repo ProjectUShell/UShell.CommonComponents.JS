@@ -25,6 +25,7 @@ const Guifad1: React.FC<{
   const [currentRecord, setCurrentRecord] = useState<any | null>(null)
   const [currentRelation, setCurrentRelation] = useState<RelationSchema | null>(null)
   const [currentMode, setCurrentMode] = useState<'list' | 'details'>('list')
+  const [isCreation, setIsCreation] = useState(false)
   const [dirty, setDirty] = useState(false)
 
   // useEffects
@@ -108,6 +109,7 @@ const Guifad1: React.FC<{
     }
     setCurrentRecord(newRecord)
     setCurrentMode('details')
+    setIsCreation(true)
   }
 
   console.log('render guifad', node)
@@ -215,6 +217,7 @@ const Guifad1: React.FC<{
                 onSaved={(updatedEntity: any) => {
                   setCurrentRecord(updatedEntity)
                   setDirty(false)
+                  setIsCreation(false)
                 }}
                 entityLayout={layoutDescription.entityLayouts.find(
                   (el) => el.entityName == node.dataSource.entitySchema?.name,
@@ -222,6 +225,7 @@ const Guifad1: React.FC<{
                 styleType={1}
                 uow={uow}
                 persistUow={persistUow}
+                isCreation={isCreation}
               ></EntityForm>
             )}
           </div>

@@ -34,6 +34,7 @@ const EntityFormInner: React.FC<{
   styleType?: number
   uow: any
   persistUow: (uow: any) => void
+  isCreation?: boolean
 }> = ({
   dataSourceManager,
   dataSource,
@@ -49,8 +50,7 @@ const EntityFormInner: React.FC<{
   classNameInputHoverBg,
   classNameInputHoverBgDark,
   styleType = 0,
-  uow,
-  persistUow,
+  isCreation,
 }) => {
   // states
   // const [currentEntity, setCurrentEntity] = useState({ ...entity })
@@ -181,6 +181,7 @@ const EntityFormInner: React.FC<{
             classNameInputHoverBg={classNameInputHoverBg}
             classNameInputHoverBgDark={classNameInputHoverBgDark}
             styleType={styleType}
+            isCreation={isCreation}
           ></EntityFormGroup>
         ))}
       <div className='flex gap-1 w-full '>
@@ -209,6 +210,7 @@ const EntityFormInner: React.FC<{
                 classNameInputHoverBg={classNameInputHoverBg}
                 classNameInputHoverBgDark={classNameInputHoverBgDark}
                 styleType={styleType}
+                isCreation={isCreation}
               ></EntityFormGroup>
             </div>
           ))}
@@ -235,6 +237,7 @@ const EntityFormInner: React.FC<{
           classNameInputHoverBg={classNameInputHoverBg}
           classNameInputHoverBgDark={classNameInputHoverBgDark}
           styleType={styleType}
+          isCreation={isCreation}
         ></EntityFormGroup>
       )}
     </div>
