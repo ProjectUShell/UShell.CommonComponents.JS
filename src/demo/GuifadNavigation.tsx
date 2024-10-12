@@ -12,11 +12,11 @@ const GuifadNavigation = () => {
         timestampUtc: '',
         entityLayouts: [
           {
-            dislpayRemainingFields: false,
-            entityName: 'Person',
-            displayLabel: 'Person',
-            displayLabelPlural: 'People',
-            fieldLayouts: [],
+            dislpayRemainingFields: true,
+            entityName: 'Address',
+            displayLabel: 'Address',
+            displayLabelPlural: 'Addresses',
+            fieldLayouts: [{ fieldName: 'IsMainAddress', displayLabel: 'Main' }],
             identityLabelPattern: '',
             isBlEntrypoint: false,
             partitions: [

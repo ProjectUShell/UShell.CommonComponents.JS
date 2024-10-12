@@ -202,6 +202,7 @@ const Guifad1: React.FC<{
                 // schemaRoot={dataSourceManager.getSchemaRoot()}
                 entitySchema={node.dataSource.entitySchema!}
                 parent={node.parent?.record}
+                layoutDescription={layoutDescription}
               ></EntityTable>
             )}
             {currentMode == 'details' && (

@@ -236,6 +236,10 @@ const EntityTableInternal: React.FC<{
     const entityLayout: EntityLayout | undefined = layoutDescription?.entityLayouts.find(
       (el) => el.entityName == entitySchema.name,
     )
+    console.log('entitySchema', entitySchema)
+    console.log('layoutDescription', layoutDescription)
+    console.log('entityLayout', entityLayout)
+
     const newColumns: TableColumn[] = dataSource
       .entitySchema!.fields.filter((f) => {
         if (!entityLayout) return true
