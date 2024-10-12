@@ -55,6 +55,7 @@ const EntityForm: React.FC<{
   const [currentEntity, setCurrentEntity] = useState({ ...entity })
   const [error, setError] = useState<any>(null)
   const [dirtyLocal, setDirtyLocal] = useState<boolean>(dirty)
+  const [errors, setErrors] = useState<{ [fieldName: string]: string | null }>({})
 
   // useEffects
 
@@ -86,7 +87,6 @@ const EntityForm: React.FC<{
   }
 
   function save() {
-    console.log('saving', currentEntity)
     dataSource
       .entityUpdateMethod(currentEntity)
       .then((newEntry: any) => {
@@ -101,14 +101,21 @@ const EntityForm: React.FC<{
   }
 
   function cancel() {
-    console.log('cancel')
     setCurrentEntity({ ...entity })
     setDirty && setDirty(false)
     setDirtyLocal(false)
     onCanceled && onCanceled()
   }
 
-  console.log('render EntityForm', dirty)
+  function isValid(): boolean {
+    console.log('isValid', errors)
+    for (let fn in errors) {
+      console.log('fn error', errors[fn])
+      console.log('fn error check', errors[fn] != null)
+      if (errors[fn] != null) return false
+    }
+    return true
+  }
 
   return (
     <div className='UShell_EntityForm flex flex-col h-full overflow-hidden'>
@@ -146,10 +153,10 @@ const EntityForm: React.FC<{
             </button>
           )}
           <button
-            disabled={!(dirty || dirtyLocal)}
+            disabled={!isValid() || !(dirty || dirtyLocal)}
             className={`rounded-md p-1 
             ${
-              dirty || dirtyLocal
+              !(!isValid() || !(dirty || dirtyLocal))
                 ? 'text-blue-400 dark:text-blue-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
                 : ''
             }`}
@@ -180,6 +187,10 @@ const EntityForm: React.FC<{
         uow={uow}
         persistUow={persistUow || (() => {})}
         isCreation={isCreation}
+        onValidationChanged={(e) => {
+          setErrors(e)
+          console.log('valid changed', e)
+        }}
       ></EntityFormInner>
       {toolbar == 'bottom' && (
         <div

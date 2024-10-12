@@ -25,8 +25,6 @@ const GuidInputField: React.FC<{
   styleType = 0,
   hasErrors,
 }) => {
-  console.log('initialValue', initialValue)
-
   function generateGuid() {
     const guid = crypto.randomUUID()
     onValueChange(guid)

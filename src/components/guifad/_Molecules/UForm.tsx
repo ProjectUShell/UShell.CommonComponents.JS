@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { getValue, getForeignKeyValue } from '../../../utils/StringUtils'
 import LookUpSelect from './LookUpSelect'
 import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
@@ -22,6 +22,7 @@ const UForm: React.FC<{
   styleType?: number
   readOnly?: boolean
   isCreation?: boolean
+  onValidationChanged?: (errors: { [fieldName: string]: string | null }) => void
 }> = ({
   fieldsToDisplay,
   currentEntity,
@@ -38,9 +39,22 @@ const UForm: React.FC<{
   styleType = 0,
   readOnly = false,
   isCreation = false,
+  onValidationChanged,
 }) => {
+  const fieldsToDisplay1 = useMemo(
+    () =>
+      fieldsToDisplay.map((f) => {
+        return {
+          ...f,
+          value: getValue(currentEntity, f.name),
+          setValue: (newValue: any) => changeValue(f, newValue),
+        }
+      }),
+    [fieldsToDisplay, currentEntity],
+  )
   return (
     <UForm1
+      onValidationChanged={onValidationChanged}
       styleType={styleType}
       fieldLayouts={fieldLayouts}
       labelPosition={labelPosition}
@@ -67,9 +81,9 @@ const UForm: React.FC<{
                       changeLookUpValues(fk, keyValues)
                     }}
                     inputClassName={`
-                rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
-                p-3 w-full transition-all bg-bg4 dark:bg-bg4dark              
-              `}
+                      rounded-sm border-b-2 border-bg7 dark:border-bg7dark focus:border-prim4 focus:dark:border-prim6
+                      p-3 w-full transition-all bg-bg4 dark:bg-bg4dark              
+                    `}
                     showLabel={labelPosition == 'top'}
                     styleType={styleType}
                   ></LookUpSelect>

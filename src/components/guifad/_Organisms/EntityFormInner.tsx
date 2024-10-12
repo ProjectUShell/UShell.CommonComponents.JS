@@ -35,6 +35,7 @@ const EntityFormInner: React.FC<{
   uow: any
   persistUow: (uow: any) => void
   isCreation?: boolean
+  onValidationChanged?: (errors: { [fieldName: string]: string | null }) => void
 }> = ({
   dataSourceManager,
   dataSource,
@@ -51,6 +52,7 @@ const EntityFormInner: React.FC<{
   classNameInputHoverBgDark,
   styleType = 0,
   isCreation,
+  onValidationChanged,
 }) => {
   // states
   // const [currentEntity, setCurrentEntity] = useState({ ...entity })
@@ -155,7 +157,6 @@ const EntityFormInner: React.FC<{
     return fkRelations.map((f) => f.primaryEntityName).filter((fn) => !coveredFields.includes(fn))
   }
 
-  console.log('render EntityFormInner', getRemainingFkRelations())
   return (
     <div className='UShell_EntityForm_Inner flex flex-col h-full overflow-auto pr-1'>
       {entityLayout?.partitions
@@ -184,6 +185,7 @@ const EntityFormInner: React.FC<{
             classNameInputHoverBgDark={classNameInputHoverBgDark}
             styleType={styleType}
             isCreation={isCreation}
+            onValidationChanged={onValidationChanged}
           ></EntityFormGroup>
         ))}
       <div className='flex gap-1 w-full '>
@@ -213,6 +215,7 @@ const EntityFormInner: React.FC<{
                 classNameInputHoverBgDark={classNameInputHoverBgDark}
                 styleType={styleType}
                 isCreation={isCreation}
+                onValidationChanged={onValidationChanged}
               ></EntityFormGroup>
             </div>
           ))}
@@ -240,6 +243,7 @@ const EntityFormInner: React.FC<{
           classNameInputHoverBgDark={classNameInputHoverBgDark}
           styleType={styleType}
           isCreation={isCreation}
+          onValidationChanged={onValidationChanged}
         ></EntityFormGroup>
       )}
     </div>

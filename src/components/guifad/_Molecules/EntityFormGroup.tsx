@@ -26,6 +26,7 @@ const EntityFormGroup: React.FC<{
   classNameInputHoverBgDark?: string
   styleType?: number
   isCreation?: boolean
+  onValidationChanged?: (errors: { [fieldName: string]: string | null }) => void
 }> = ({
   label,
   allFields,
@@ -46,6 +47,7 @@ const EntityFormGroup: React.FC<{
   classNameInputHoverBgDark,
   styleType = 0,
   isCreation = false,
+  onValidationChanged,
 }) => {
   return (
     <>
@@ -77,6 +79,7 @@ const EntityFormGroup: React.FC<{
                     classNameInputHoverBgDark={classNameInputHoverBgDark}
                     styleType={styleType}
                     isCreation={isCreation}
+                    onValidationChanged={onValidationChanged}
                   ></EntityFormGroup>
                 </div>
               ))}
@@ -101,6 +104,7 @@ const EntityFormGroup: React.FC<{
             classNameInputHoverBgDark={classNameInputHoverBgDark}
             styleType={styleType}
             isCreation={isCreation}
+            onValidationChanged={onValidationChanged}
           ></UForm>
         </Group>
       )}

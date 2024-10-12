@@ -11,7 +11,7 @@ const InputField: React.FC<{
   label: string | null
   inputType: string
   initialValue: any
-  onValueChange: (newValue: any) => void
+  onValueChange: (newValue: any, errors: string | null) => void
   allowedValues?: { [key: string]: string }
   setabilityFlags?: number
   classNameBg?: string
@@ -68,11 +68,11 @@ const InputField: React.FC<{
     disabled,
     classNameHoverBg,
     classNameHoverBgDark,
-    getErrors() != null,
+    getErrors(initialValue) != null,
   )
 
-  function getErrors(): string | null {
-    if (required && (!initialValue || initialValue == '')) {
+  function getErrors(v: any): string | null {
+    if (required && (v == null || v == undefined || v == '')) {
       return 'Field is required'
     }
     return null
@@ -85,13 +85,13 @@ const InputField: React.FC<{
           initialValue={initialValue}
           currentValue={currentValue}
           setCurrentValue={setCurrentValue}
-          onValueChange={onValueChange}
+          onValueChange={(nv) => onValueChange(nv, getErrors(nv))}
           disabled={disabled}
           classNameBg={classNameBg}
           classNameHoverBg={classNameHoverBg}
           classNameHoverBgDark={classNameHoverBgDark}
           styleType={styleType}
-          hasErrors={getErrors() != null}
+          hasErrors={getErrors(initialValue) != null}
         ></GuidInputField>
       )
     }
@@ -101,7 +101,7 @@ const InputField: React.FC<{
           initialValue={initialValue}
           currentValue={currentValue}
           setCurrentValue={setCurrentValue}
-          onValueChange={onValueChange}
+          onValueChange={(nv) => onValueChange(nv, getErrors(nv))}
           disabled={disabled}
           classNameBg={classNameBg}
           classNameHoverBg={classNameHoverBg}
@@ -123,7 +123,7 @@ const InputField: React.FC<{
           })}
           onOptionSet={(o) => {
             setCurrentValue(o?.value)
-            onValueChange(o?.value)
+            onValueChange(o?.value, getErrors(o?.value))
           }}
           initialOption={{ label: allowedValues[initialValue], value: initialValue }}
         ></DropdownSelect>
@@ -137,7 +137,7 @@ const InputField: React.FC<{
           className={classNameInput}
           value={currentValue}
           onChange={(e) => {
-            onValueChange(e.target.value)
+            onValueChange(e.target.value, getErrors(e.target.value))
             setCurrentValue(e.target.value)
           }}
         ></textarea>
@@ -150,13 +150,13 @@ const InputField: React.FC<{
         type={EntitySchemaService.getHtmlInputType(inputType)}
         value={currentValue}
         onChange={(e) => {
-          onValueChange(e.target.value)
+          onValueChange(e.target.value, getErrors(e.target.value))
           setCurrentValue(e.target.value)
         }}
       ></input>
     )
   }
-  const errors: string | null = getErrors()
+  const errors: string | null = getErrors(initialValue)
   return (
     <div className={`w-full ${false ? 'flex justify-between gap-2 items-baseline ' : ''}`}>
       {label && (
