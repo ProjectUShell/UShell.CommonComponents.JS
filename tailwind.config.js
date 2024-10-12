@@ -161,6 +161,8 @@ module.exports = {
     textColor: ({ after }) => after(['disabled']),
     extend: {
       width: ['focus'],
+      backgroundColor: ['focus'],
+      borderColor: ['focus'],
     },
   },
   plugins: [],
