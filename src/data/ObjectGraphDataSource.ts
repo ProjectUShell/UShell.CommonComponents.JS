@@ -7,7 +7,8 @@ import {
   PaginatedList,
 } from 'fusefx-repositorycontract'
 import { IDataSource } from 'ushell-modulebase'
-import { applyFilter } from '../utils/LogicUtils'
+import { applyFilter, applySorting } from '../utils/LogicUtils'
+import { EntitySchemaService } from './EntitySchemaService'
 
 export class ObjectGraphDataSource implements IDataSource {
   dataSourceUid: string = crypto.randomUUID()
@@ -15,10 +16,17 @@ export class ObjectGraphDataSource implements IDataSource {
 
   private objectGraph: any
   private propertyPath: string
-  constructor(entitySchema: EntitySchema, objectGraph: any, propertyPath: string) {
+  private onGraphChanged: (g: any) => void
+  constructor(
+    entitySchema: EntitySchema,
+    objectGraph: any,
+    propertyPath: string,
+    onGraphChanged?: (g: any) => void,
+  ) {
     this.entitySchema = entitySchema
     this.objectGraph = objectGraph
     this.propertyPath = propertyPath
+    this.onGraphChanged = onGraphChanged || ((g) => {})
   }
 
   entityFactoryMethod() {
@@ -35,6 +43,7 @@ export class ObjectGraphDataSource implements IDataSource {
       } else {
         this.objectGraph[this.propertyPath].push(entity)
       }
+      this.onGraphChanged(this.objectGraph)
       return res(true)
     })
   }
@@ -42,10 +51,20 @@ export class ObjectGraphDataSource implements IDataSource {
     console.log('inserting', entity)
     return new Promise<boolean>((res) => {
       this.objectGraph[this.propertyPath].push(entity)
+      this.onGraphChanged(this.objectGraph)
       return res(true)
     })
   }
-  entityDeleteMethod(entity: any[]) {
+  entityDeleteMethod(entities: any[]) {
+    for (let entity of entities) {
+      const idx: number = EntitySchemaService.findIndexWithMatchingIdentity(
+        this.objectGraph[this.propertyPath],
+        entity,
+        this.entitySchema,
+      )
+      this.objectGraph[this.propertyPath].splice(idx, 1)
+    }
+    this.onGraphChanged(this.objectGraph)
     return new Promise<boolean>((res) => res(true))
   }
   extractIdentityFrom(entity: object): object {
@@ -65,6 +84,16 @@ export class ObjectGraphDataSource implements IDataSource {
       if (filter) {
         result = applyFilter(result, filter)
       }
+      if (sortingParams) {
+        result = applySorting(
+          result,
+          sortingParams,
+          sortingParams.map((sp) => {
+            return { fieldType: this.entitySchema.fields.find((f) => f.name == sp.fieldName)!.type }
+          }),
+        )
+      }
+
       return res({ page: result, total: result.length })
     })
   }

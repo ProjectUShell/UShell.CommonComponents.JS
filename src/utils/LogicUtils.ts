@@ -67,7 +67,12 @@ export function applyFilter(records: any[], filter: LogicalExpression) {
   return result
 }
 
-export function compare1(a: any, b: any, sortingField: SortingField, column: TableColumn): number {
+export function compare1(
+  a: any,
+  b: any,
+  sortingField: SortingField,
+  column: { fieldType: string },
+): number {
   switch (column.fieldType) {
     case 'int32':
       const aNumber: number = a[sortingField.fieldName] as number
@@ -88,7 +93,7 @@ export function compare(
   a: any,
   b: any,
   sortingFields: SortingField[],
-  columns: TableColumn[],
+  columns: { fieldType: string }[],
 ): number {
   console.log('comparing', sortingFields)
   let i: number = 0
@@ -104,7 +109,7 @@ export function compare(
 export function applySorting(
   records: any[],
   sortingFields: SortingField[],
-  columns: TableColumn[],
+  columns: { fieldType: string }[],
 ) {
   return records.sort((a, b) => compare(a, b, sortingFields, columns))
 }

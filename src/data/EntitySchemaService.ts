@@ -44,7 +44,7 @@ export class EntitySchemaService {
     if (!entity) return 'No Entity'
 
     if (entity.label) return entity.label
-    if (entity.label) return entity.label
+    if (entity.Label) return entity.Label
     const entitySchema: EntitySchema | undefined = schemaRoot.entities.find(
       (e) => e.name == primaryEntityName,
     )
@@ -154,5 +154,35 @@ export class EntitySchemaService {
         return 'checkbox'
     }
     return 'text'
+  }
+
+  static findEntryWithMatchingIdentity(entities: any[], entity: any, schema: EntitySchema): any {
+    return entities.find((e) => this.matchInIdentity(e, entity, schema))
+  }
+
+  static findIndexWithMatchingIdentity(entities: any[], entity: any, schema: EntitySchema): number {
+    return entities.findIndex((e) => this.matchInIdentity(e, entity, schema))
+  }
+
+  static matchInIdentity(e1: any, e2: any, schema: EntitySchema): boolean {
+    const key1: any = this.getPrimaryKey(schema, e1)
+    const key2: any = this.getPrimaryKey(schema, e2)
+    return this.compareDeep(key1, key2)
+  }
+
+  static compareDeep(o1: any, o2: any): boolean {
+    const o1IsObject: boolean = typeof o1 == 'object'
+    const o2IsObject: boolean = typeof o2 == 'object'
+    if (o1IsObject !== o2IsObject) return false
+    if (!o1IsObject) return o1 == o2
+    for (let k1 in o1) {
+      const k1ExistsInO2: boolean = k1 in o2
+      if (!k1ExistsInO2) return false
+      const v1: any = o1[k1]
+      const v2: any = o2[k1]
+      const innerResult: boolean = this.compareDeep(v1, v2)
+      if (!innerResult) return false
+    }
+    return true
   }
 }
