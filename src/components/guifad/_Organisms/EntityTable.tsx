@@ -245,6 +245,7 @@ const EntityTableInternal: React.FC<{
       .entitySchema!.fields.filter((f) => {
         if (!entityLayout) return true
         if (!entityLayout.tableFields) return true
+        if (entityLayout.tableFields.length == 0) return true
         return entityLayout.tableFields.includes(f.name)
       })
       .map((f) => {

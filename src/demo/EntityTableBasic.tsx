@@ -9,13 +9,10 @@ const brandField: FieldSchema = new FieldSchema('Brand', 'string')
 brandField.filterable = 1
 const idField: FieldSchema = new FieldSchema('Id', 'int32')
 idField.required = true
+const isOldtimerField: FieldSchema = new FieldSchema('IsOldtimer', 'boolean')
+isOldtimerField.required = true
 const carEntitySchema: EntitySchema = {
-  fields: [
-    idField,
-    new FieldSchema('DateOfConstruction', 'datetime'),
-    brandField,
-    new FieldSchema('InternalField', 'string'),
-  ],
+  fields: [idField, new FieldSchema('DateOfConstruction', 'datetime'), brandField, isOldtimerField],
   indices: [{ name: 'Id', memberFieldNames: ['Id'], unique: true }],
   inheritedEntityName: '',
   isBlEntrypoint: false,
@@ -39,7 +36,7 @@ const carLayout: EntityLayout = new EntityLayout('Car', [
     dropdownStaticEntries: { Bmw: 'Bmw', Audi: 'Audi', Fiat: 'Fiat', Renault: 'Renault' },
   },
 ])
-carLayout.tableFields = ['DateOfConstruction', 'Brand']
+// carLayout.tableFields = ['DateOfConstruction', 'Brand']
 const layoutDescription: LayoutDescriptionRoot = {
   entityLayouts: [carLayout],
 }

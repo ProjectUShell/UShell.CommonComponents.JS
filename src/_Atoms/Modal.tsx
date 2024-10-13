@@ -22,8 +22,8 @@ const Modal: React.FC<{
       <div
         style={{ left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }}
         className={`UShell_Modal_Inner ${
-          full ? 'w1-fit h1-fit' : 'w1-24 h1-24'
-        } fixed bg-opacity-100 z-50  border-0 border-blue-400 transition-all duration-1000`}
+          full ? '' : ''
+        } fixed bg-opacity-100 z-50  border-0 border-blue-400 transition-all duration-1000 max-h-full overflow-hidden flex rounded-md`}
       >
         {terminate && (
           <div className='bg-opacity-0 w-full bg-red-400 py-2 flex justify-end'>
