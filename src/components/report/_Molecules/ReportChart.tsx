@@ -27,6 +27,7 @@ const ReportChart: React.FC<{ reportServiceUrl: string; dark: boolean }> = ({
       reportService={new ReportServiceConnector(reportServiceUrl)}
       report={new ReportDefinition()}
       dark={dark}
+      legend={true}
     ></ReportChart1>
   )
 }
@@ -35,7 +36,8 @@ export const ReportChart1: React.FC<{
   reportService: IReportService
   report: ReportDefinition
   dark: boolean
-}> = ({ reportService, report, dark }) => {
+  legend: boolean
+}> = ({ reportService, report, dark, legend }) => {
   const qcc: any = QueryClientContext
   if (!qcc._currentValue) {
     return (
@@ -44,6 +46,7 @@ export const ReportChart1: React.FC<{
           reportService={reportService}
           report={report}
           dark={dark}
+          legend={legend}
         ></ReportChart1Inner>
       </QueryClientProvider>
     )
@@ -53,6 +56,7 @@ export const ReportChart1: React.FC<{
       reportService={reportService}
       report={report}
       dark={dark}
+      legend={legend}
     ></ReportChart1Inner>
   )
 }
@@ -61,7 +65,8 @@ export const ReportChart1Inner: React.FC<{
   reportService: IReportService
   report: ReportDefinition
   dark: boolean
-}> = ({ reportService, report, dark }) => {
+  legend: boolean
+}> = ({ reportService, report, dark, legend }) => {
   // const yFields = ['count(1)', 'sum(duration)']
   const { isLoading, error, data } = useQuery({
     queryKey: [`report_${report.name}`, report],
@@ -154,6 +159,7 @@ export const ReportChart1Inner: React.FC<{
           reportValues={report.reportValues || []}
           dark={dark}
           donut={false}
+          legend={legend}
         ></ReportPieChart2>
       )}
       {report.type == 'Donut' && (
@@ -164,6 +170,7 @@ export const ReportChart1Inner: React.FC<{
           reportValues={report.reportValues || []}
           dark={dark}
           donut={true}
+          legend={legend}
         ></ReportPieChart2>
       )}
     </div>

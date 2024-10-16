@@ -10,7 +10,8 @@ const ReportPieChart2: React.FC<{
   reportValues: string[]
   dark: boolean
   donut: boolean
-}> = ({ data, groupBy, stackBy, reportValues, dark, donut }) => {
+  legend: boolean
+}> = ({ data, groupBy, stackBy, reportValues, dark, donut, legend }) => {
   console.log('barchart2', {
     groupBy: groupBy,
     stackBy: stackBy,
@@ -43,7 +44,7 @@ const ReportPieChart2: React.FC<{
           ))}
         </Pie>
         <Tooltip />
-        <Legend />
+        {legend && <Legend />}
       </PieChart>
     </ResponsiveContainer>
   )

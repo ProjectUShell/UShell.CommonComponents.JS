@@ -39,7 +39,12 @@ const ReportResultViewer: React.FC<{
           ></ReportTable>
         )}
         {tab == 'chart' && (
-          <ReportChart1 reportService={reportService} report={report} dark={dark}></ReportChart1>
+          <ReportChart1
+            reportService={reportService}
+            report={report}
+            dark={dark}
+            legend={true}
+          ></ReportChart1>
         )}
       </div>
     </div>
