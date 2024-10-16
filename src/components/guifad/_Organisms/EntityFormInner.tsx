@@ -158,12 +158,12 @@ const EntityFormInner: React.FC<{
   }
 
   return (
-    <div className='UShell_EntityForm_Inner flex flex-col h-full overflow-auto pr-1'>
+    <div className='UShell_EntityFormInner flex flex-col h-full overflow-auto pr-1'>
       {entityLayout?.partitions
         .filter((p) => p.type == 'group')
         .map((p, i) => (
           <EntityFormGroup
-            key={i}
+            key={'group' + p.name + i}
             label={p.name}
             allFields={fieldsToDisplay}
             fieldsToDisplay={fieldsToDisplay.filter((f) => p.fields.includes(f.name))}
@@ -188,11 +188,11 @@ const EntityFormInner: React.FC<{
             onValidationChanged={onValidationChanged}
           ></EntityFormGroup>
         ))}
-      <div className='flex gap-1 w-full '>
+      <div className='UShell_EntityFormInner_ColumnGroups flex gap-1 w-full border-0'>
         {entityLayout?.partitions
           .filter((p) => p.type == 'column')
-          .map((p) => (
-            <div key={p.name}>
+          .map((p, i) => (
+            <div key={p.name + i} className='w-full'>
               <EntityFormGroup
                 label={p.name}
                 allFields={fieldsToDisplay}

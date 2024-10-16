@@ -11,7 +11,7 @@ const Group: React.FC<{
   const [collapsed, setCollapsed] = useState(false)
 
   return (
-    <div className={`mb-2 ${className}`}>
+    <div className={`mb-2 w-full border-0 border-red-400 ${className}`}>
       {name && (
         <div className='flex justify-between border-b-0 dark:border-bg4dark pb-1 text-lg'>
           <h2 className='font-medium'>{name}</h2>

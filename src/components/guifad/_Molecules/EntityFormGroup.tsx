@@ -52,7 +52,7 @@ const EntityFormGroup: React.FC<{
   return (
     <>
       {partitions.length > 0 && (
-        <Group name={label} className='p-1 rounded-md'>
+        <Group name={label} className='p-1 rounded-md '>
           <div className='flex gap-1 w-full h-full border-0 border-red-400'>
             {partitions
               .filter((p) => p.type == 'column')

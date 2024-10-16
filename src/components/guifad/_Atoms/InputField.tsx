@@ -157,7 +157,7 @@ const InputField: React.FC<{
         disabled={disabled}
         className={classNameInput}
         type={EntitySchemaService.getHtmlInputType(inputType)}
-        value={currentValue}
+        value={currentValue || ''}
         onChange={(e) => {
           onValueChange(e.target.value, getErrors(e.target.value))
           setCurrentValue(e.target.value)

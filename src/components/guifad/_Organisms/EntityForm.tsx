@@ -107,11 +107,15 @@ const EntityForm: React.FC<{
     onCanceled && onCanceled()
   }
 
+  function updateErrors(newErrors: { [fieldName: string]: string | null }): void {
+    for (let fn in newErrors) {
+      errors[fn] = newErrors[fn]
+    }
+    setErrors({ ...errors })
+  }
+
   function isValid(): boolean {
-    console.log('isValid', errors)
     for (let fn in errors) {
-      console.log('fn error', errors[fn])
-      console.log('fn error check', errors[fn] != null)
       if (errors[fn] != null) return false
     }
     return true
@@ -188,8 +192,7 @@ const EntityForm: React.FC<{
         persistUow={persistUow || (() => {})}
         isCreation={isCreation}
         onValidationChanged={(e) => {
-          setErrors(e)
-          console.log('valid changed', e)
+          updateErrors(e)
         }}
       ></EntityFormInner>
       {toolbar == 'bottom' && (

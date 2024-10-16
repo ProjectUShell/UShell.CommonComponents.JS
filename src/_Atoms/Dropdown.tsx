@@ -46,17 +46,14 @@ const Dropdown: React.FC<{
   function tryFindFixedParent(el: HTMLElement): HTMLElement | null {
     let parentElement: HTMLElement | null = el.parentElement
     while (parentElement) {
-      console.log('try find fixed parent', parentElement.className)
       if (parentElement.style.position == 'fixed') {
         return parentElement
       }
       if (parentElement.className.includes('UShell_Modal_Inner')) {
-        console.log('found fixed')
         return parentElement
       }
       parentElement = parentElement.parentElement
     }
-    console.log('not found fixed')
     return null
   }
 
