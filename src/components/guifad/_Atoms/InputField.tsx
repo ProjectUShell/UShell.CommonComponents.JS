@@ -72,7 +72,7 @@ const InputField: React.FC<{
   )
 
   function getErrors(v: any): string | null {
-    if (required && inputType == 'boolean') {
+    if (required && inputType.startsWith('bool')) {
       const isTrue = v == true
       const isFalse = v == false
       if (isTrue || isFalse) {

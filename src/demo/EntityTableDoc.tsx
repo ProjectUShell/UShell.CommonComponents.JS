@@ -2,6 +2,7 @@ import React from 'react'
 import DocComponent from './DocComponent'
 import EntityTableBasic from './EntityTableBasic'
 import EntityTableOptions from './EntityTableOptions'
+import EntityTableInheritance from './EntityTableInheritance'
 
 const EntityTableDoc = () => {
   return (
@@ -21,6 +22,12 @@ const EntityTableDoc = () => {
           demoExplanation: 'Basic Entity Table',
           demoComponent: <EntityTableOptions></EntityTableOptions>,
           sourceCode: require('!!raw-loader!./EntityTableOptions.tsx').default.toString(),
+        },
+        {
+          demoTitle: 'Entity Table Inheritance',
+          demoExplanation: 'Inheritance Entity Table',
+          demoComponent: <EntityTableInheritance></EntityTableInheritance>,
+          sourceCode: require('!!raw-loader!./EntityTableInheritance.tsx').default.toString(),
         },
       ]}
     ></DocComponent>

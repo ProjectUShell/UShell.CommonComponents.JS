@@ -26,6 +26,7 @@ const dataSource: ObjectGraphDataSource = new ObjectGraphDataSource(
   carEntitySchema,
   { Cars: [{ Id: 1, DateOfConstruction: '2000-01-01', Brand: 'Bmw' }] },
   'Cars',
+  (g: any) => console.log('Entity changed', g),
 )
 
 const carLayout: EntityLayout = new EntityLayout('Car', [

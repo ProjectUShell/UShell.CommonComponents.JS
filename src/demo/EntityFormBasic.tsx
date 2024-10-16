@@ -24,7 +24,12 @@ const carEntitySchema: EntitySchema = {
 }
 
 const car: any = { Id: 1, DateOfConstruction: '2000-01-01', Brand: 'Bmw' }
-const dataSource: ObjectGraphDataSource = new ObjectGraphDataSource(carEntitySchema, {}, '')
+const dataSource: ObjectGraphDataSource = new ObjectGraphDataSource(
+  carEntitySchema,
+  {},
+  '',
+  (g: any) => console.log('Entity changed', g),
+)
 
 const carLayout: EntityLayout = new EntityLayout('Car', [
   { fieldName: 'DateOfConstruction', displayLabel: 'Date of Construction' },

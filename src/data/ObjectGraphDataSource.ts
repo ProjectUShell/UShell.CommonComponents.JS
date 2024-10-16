@@ -9,6 +9,7 @@ import {
 import { IDataSource } from 'ushell-modulebase'
 import { applyFilter, applySorting } from '../utils/LogicUtils'
 import { EntitySchemaService } from './EntitySchemaService'
+import { copyValueFields } from '../utils/ObjectUtils'
 
 export class ObjectGraphDataSource implements IDataSource {
   dataSourceUid: string = crypto.randomUUID()
@@ -35,6 +36,12 @@ export class ObjectGraphDataSource implements IDataSource {
   entityUpdateMethod(entity: any[]) {
     console.log('updating', entity)
     return new Promise<boolean>((res) => {
+      if (this.propertyPath == '') {
+        copyValueFields(entity, this.objectGraph)
+        this.onGraphChanged(this.objectGraph)
+        return res(true)
+      }
+      if (!(this.propertyPath in this.objectGraph)) return res(true)
       const existingEntityIndex: number = this.objectGraph[this.propertyPath].findIndex((e: any) =>
         matchOnPrimaryKeyIndex(e, entity, this.entitySchema),
       )
@@ -50,6 +57,12 @@ export class ObjectGraphDataSource implements IDataSource {
   entityInsertMethod(entity: any[]) {
     console.log('inserting', entity)
     return new Promise<boolean>((res) => {
+      if (this.propertyPath == '') {
+        copyValueFields(entity, this.objectGraph)
+        this.onGraphChanged(this.objectGraph)
+        return res(true)
+      }
+      if (!(this.propertyPath in this.objectGraph)) return res(true)
       this.objectGraph[this.propertyPath].push(entity)
       this.onGraphChanged(this.objectGraph)
       return res(true)

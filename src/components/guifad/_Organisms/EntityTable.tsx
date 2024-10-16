@@ -58,9 +58,73 @@ const EntityTable: React.FC<{
   formStyleType?: number
   formLabelPosition?: 'left' | 'top'
 }> = ({
-  dataSourceManagerForNavigations: dataSourceManager,
+  dataSourceManagerForNavigations,
   dataSource,
-  // schemaRoot,
+  entitySchema,
+  parentSchema,
+  parent,
+  className,
+  onRecordEnter,
+  onSelectedRecordsChange,
+  selectedRecord,
+  onCreateRecord,
+  layoutDescription,
+  classNameBgToolbar,
+  enableCrud = true,
+  enableParentFilter = true,
+  enableQueryEditor = true,
+  formStyleType = 0,
+  formLabelPosition = 'top',
+  enableSearch = true,
+}) => {
+  return (
+    <EntityTable1
+      dataSourceManagerForNavigations={dataSourceManagerForNavigations}
+      dataSource={dataSource}
+      dataSourcesForm={null}
+      entitySchema={entitySchema}
+      parentSchema={parentSchema}
+      parent={parent}
+      className={className}
+      onRecordEnter={onRecordEnter}
+      onSelectedRecordsChange={onSelectedRecordsChange}
+      selectedRecord={selectedRecord}
+      onCreateRecord={onCreateRecord}
+      layoutDescription={layoutDescription}
+      classNameBgToolbar={classNameBgToolbar}
+      enableCrud={enableCrud}
+      enableParentFilter={enableParentFilter}
+      enableQueryEditor={enableQueryEditor}
+      formStyleType={formStyleType}
+      formLabelPosition={formLabelPosition}
+      enableSearch={enableSearch}
+    ></EntityTable1>
+  )
+}
+export const EntityTable1: React.FC<{
+  dataSourceManagerForNavigations?: IDataSourceManagerWidget
+  dataSource: IDataSource
+  dataSourcesForm: IDataSource[] | null
+  parentSchema?: EntitySchema | undefined
+  parent?: any
+  layoutDescription?: LayoutDescriptionRoot
+  entitySchema?: EntitySchema
+  className?: string
+  onRecordEnter?: (r: any) => void
+  onSelectedRecordsChange?: (selectedRecords: any[]) => void
+  selectedRecord?: any | null
+  onCreateRecord?: () => void
+  classNameBgToolbar?: string
+  enableCrud?: boolean
+  enableParentFilter?: boolean
+  enableQueryEditor?: boolean
+  enableSearch?: boolean
+  formStyleType?: number
+  formLabelPosition?: 'left' | 'top'
+}> = ({
+  dataSourceManagerForNavigations,
+  dataSource,
+  dataSourcesForm,
   entitySchema,
   parentSchema,
   parent,
@@ -85,10 +149,9 @@ const EntityTable: React.FC<{
     return (
       <QueryClientProvider client={new QueryClient()}>
         <EntityTableInternal
-          dataSourceManagerForNavigations={dataSourceManager}
+          dataSourceManagerForNavigations={dataSourceManagerForNavigations}
           dataSource={dataSource}
-          // schemaRoot={dataSourceManager.getSchemaRoot()}
-          entitySchema={entitySchema}
+          dataSourcesForm={dataSourcesForm}
           parentSchema={parentSchema}
           parent={parent}
           className={className}
@@ -109,10 +172,9 @@ const EntityTable: React.FC<{
     )
   return (
     <EntityTableInternal
-      dataSourceManagerForNavigations={dataSourceManager}
+      dataSourceManagerForNavigations={dataSourceManagerForNavigations}
       dataSource={dataSource}
-      // schemaRoot={dataSourceManager.getSchemaRoot()}
-      entitySchema={entitySchema}
+      dataSourcesForm={dataSourcesForm}
       parentSchema={parentSchema}
       parent={parent}
       className={className}
@@ -132,11 +194,10 @@ const EntityTable: React.FC<{
 const EntityTableInternal: React.FC<{
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
   dataSource: IDataSource
+  dataSourcesForm: IDataSource[] | null
   parentSchema?: EntitySchema | undefined
   parent?: any
   layoutDescription?: LayoutDescriptionRoot
-  // schemaRoot: SchemaRoot
-  entitySchema: EntitySchema
   className?: string
   onRecordEnter?: (r: any) => void
   onSelectedRecordsChange?: (selectedRecords: any[]) => void
@@ -152,8 +213,7 @@ const EntityTableInternal: React.FC<{
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
-  // schemaRoot,
-  entitySchema,
+  dataSourcesForm,
   parentSchema,
   parent,
   className,
@@ -220,14 +280,17 @@ const EntityTableInternal: React.FC<{
     if (!searchExpression) return
     setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
       const newF: any = { ...ofi }
-      if (newF[entitySchema.name]) {
-        newF[entitySchema.name] = [...newF[entitySchema.name], searchExpression]
+      if (newF[dataSource.entitySchema!.name]) {
+        newF[dataSource.entitySchema!.name] = [
+          ...newF[dataSource.entitySchema!.name],
+          searchExpression,
+        ]
       } else {
-        newF[entitySchema.name] = [searchExpression]
+        newF[dataSource.entitySchema!.name] = [searchExpression]
       }
       return newF
     })
-  }, [universalSearchText, entitySchema.name])
+  }, [universalSearchText, dataSource.entitySchema!.name])
 
   useEffect(() => {
     localStorage.setItem('filterByEntityName', JSON.stringify(filterByEntityName))
@@ -235,11 +298,8 @@ const EntityTableInternal: React.FC<{
 
   const columns: TableColumn[] = useMemo(() => {
     const entityLayout: EntityLayout | undefined = layoutDescription?.entityLayouts.find(
-      (el) => el.entityName == entitySchema.name,
+      (el) => el.entityName == dataSource.entitySchema!.name,
     )
-    console.log('entitySchema', entitySchema)
-    console.log('layoutDescription', layoutDescription)
-    console.log('entityLayout', entityLayout)
 
     const newColumns: TableColumn[] = dataSource
       .entitySchema!.fields.filter((f) => {
@@ -252,7 +312,9 @@ const EntityTableInternal: React.FC<{
         const foreignKeyRelations: RelationSchema[] = dataSourceManagerForNavigations
           ? EntitySchemaService.getRelationsByFilter(
               dataSourceManagerForNavigations.getSchemaRoot(),
-              (r) => r.foreignEntityName == entitySchema.name && r.foreignKeyIndexName == f.name,
+              (r) =>
+                r.foreignEntityName == dataSource.entitySchema!.name &&
+                r.foreignKeyIndexName == f.name,
             )
           : []
 
@@ -311,22 +373,22 @@ const EntityTableInternal: React.FC<{
     // dataSource.getRecords().then((r) => {
     //   setRecords(r)
     // })
-  }, [dataSource, dataSourceManagerForNavigations, entitySchema])
+  }, [dataSource, dataSourceManagerForNavigations])
 
   const getId = useCallback(
-    (e: any) => EntitySchemaService.getPrimaryKey(entitySchema, e),
-    [entitySchema],
+    (e: any) => EntitySchemaService.getPrimaryKey(dataSource.entitySchema!, e),
+    [dataSource],
   )
 
   function applyQuery(queries: LogicalExpression[]) {
     const newF: any = { ...filterByEntityName }
-    newF[entitySchema.name] = queries
+    newF[dataSource.entitySchema!.name] = queries
     setFilterByEntityName(newF)
   }
 
   function buildFilterExpression(): LogicalExpression | undefined {
     const result: LogicalExpression = new LogicalExpression()
-    const filters: LogicalExpression[] = filterByEntityName[entitySchema.name] || []
+    const filters: LogicalExpression[] = filterByEntityName[dataSource.entitySchema!.name] || []
     filters.forEach((f) => result.subTree.push(f))
     if (useParentFilter && dataSourceManagerForNavigations) {
       const parentFilter: LogicalExpression | null =
@@ -367,7 +429,7 @@ const EntityTableInternal: React.FC<{
         return dataSource.getRecords(
           buildFilterExpression(),
           pagingParams,
-          sortingParamsByEntityName[entitySchema.name],
+          sortingParamsByEntityName[dataSource.entitySchema!.name],
         )
       } catch (error) {
         console.error('error in getRecords', error)
@@ -481,7 +543,7 @@ const EntityTableInternal: React.FC<{
               <FilterTagBar
                 dataSourceManagerForNavigations={dataSourceManagerForNavigations}
                 className='mb-1 rounded-md'
-                filters={filterByEntityName[entitySchema.name] || []}
+                filters={filterByEntityName[dataSource.entitySchema!.name] || []}
                 fkRelations={
                   dataSourceManagerForNavigations
                     ? EntitySchemaService.getRelationsByFilter(
@@ -494,7 +556,7 @@ const EntityTableInternal: React.FC<{
                 onUpdateFilters={(uf) => {
                   setFilterByEntityName((ofi: { [entityName: string]: LogicalExpression[] }) => {
                     const newF: any = { ...ofi }
-                    newF[entitySchema.name] = uf
+                    newF[dataSource.entitySchema!.name] = uf
                     return newF
                   })
                   // setFilter(uf)
@@ -533,10 +595,13 @@ const EntityTableInternal: React.FC<{
                           setFilterByEntityName(
                             (ofi: { [entityName: string]: LogicalExpression[] }) => {
                               const newF: any = { ...ofi }
-                              if (newF[entitySchema.name]) {
-                                newF[entitySchema.name] = [...newF[entitySchema.name], e]
+                              if (newF[dataSource.entitySchema!.name]) {
+                                newF[dataSource.entitySchema!.name] = [
+                                  ...newF[dataSource.entitySchema!.name],
+                                  e,
+                                ]
                               } else {
-                                newF[entitySchema.name] = [e]
+                                newF[dataSource.entitySchema!.name] = [e]
                               }
                               return newF
                             },
@@ -557,7 +622,7 @@ const EntityTableInternal: React.FC<{
           )}
         </div>
         {!data ? (
-          <LoadingScreen message={'loading ' + entitySchema.name}></LoadingScreen>
+          <LoadingScreen message={'loading ' + dataSource.entitySchema!.name}></LoadingScreen>
         ) : (
           <Table
             className='overflow-auto h-full'
@@ -573,11 +638,11 @@ const EntityTableInternal: React.FC<{
             pagingParams={pagingParams}
             totalCount={data1!.total}
             onPagingParamsChange={(pp) => setPagingParams(pp)}
-            initialSortingParams={sortingParamsByEntityName[entitySchema.name]}
+            initialSortingParams={sortingParamsByEntityName[dataSource.entitySchema!.name]}
             onSortingParamsChange={(sp) => {
               setSortingParamsByEntityName((o) => {
                 const newSp: any = { ...o }
-                newSp[entitySchema.name] = sp
+                newSp[dataSource.entitySchema!.name] = sp
                 return newSp
               })
             }}
@@ -591,7 +656,7 @@ const EntityTableInternal: React.FC<{
       </div>
       {detailsVisible && (
         <EntityFormModal
-          dataSource={dataSource}
+          dataSources={dataSourcesForm ? dataSourcesForm : [dataSource]}
           dataSourceManager={dataSourceManagerForNavigations}
           dirty={true}
           entity={
@@ -599,12 +664,12 @@ const EntityTableInternal: React.FC<{
           }
           onChange={() => {
             setDetailsVisible(false)
-            setIsCreation(true)
+            setIsCreation(false)
             forceReload()
           }}
           onCancel={() => setDetailsVisible(false)}
           entityLayout={layoutDescription?.entityLayouts.find(
-            (el) => el.entityName == entitySchema.name,
+            (el) => el.entityName == dataSource.entitySchema!.name,
           )}
           readOnly={!enableCrud}
           styleType={formStyleType}

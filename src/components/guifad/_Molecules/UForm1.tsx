@@ -54,7 +54,7 @@ const UForm1: React.FC<{
   }, [errors])
 
   function getErrors(field: FieldInputInfo): string | null {
-    if (field.required && field.type == 'boolean') {
+    if (field.required && field.type.startsWith('bool')) {
       const isTrue = field.value == true
       const isFalse = field.value == false
       if (isTrue || isFalse) {

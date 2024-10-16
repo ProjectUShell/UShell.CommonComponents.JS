@@ -3,10 +3,10 @@ import { IDataSource } from 'ushell-modulebase'
 import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import Modal from '../../../_Atoms/Modal'
-import EntityForm from './EntityForm'
+import EntityForm, { EntityForm1 } from './EntityForm'
 
 const EntityFormModal: React.FC<{
-  dataSource: IDataSource
+  dataSources: IDataSource[]
   dataSourceManager?: IDataSourceManagerWidget
   entity: any
   dirty: boolean
@@ -25,7 +25,7 @@ const EntityFormModal: React.FC<{
   isCreation: boolean
 }> = ({
   dataSourceManager,
-  dataSource,
+  dataSources,
   entity,
   onChange,
   onCancel,
@@ -44,8 +44,8 @@ const EntityFormModal: React.FC<{
   return (
     <Modal marginY={10} marginX={30}>
       <div className='p-2 h-full w-full'>
-        <EntityForm
-          dataSource={dataSource}
+        <EntityForm1
+          dataSources={dataSources}
           dataSourceManager={dataSourceManager}
           dirty={false}
           entity={entity}
@@ -63,7 +63,7 @@ const EntityFormModal: React.FC<{
           uow={uow}
           persistUow={persistUow}
           isCreation={isCreation}
-        ></EntityForm>
+        ></EntityForm1>
       </div>
     </Modal>
   )

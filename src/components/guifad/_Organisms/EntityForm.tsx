@@ -9,6 +9,8 @@ import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
 import Modal from '../../../_Atoms/Modal'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import EntityFormInner from './EntityFormInner'
+import DropdownSelect from '../../../_Atoms/DropdownSelect'
+import { fullfillsSchema } from '../../../utils/ObjectUtils'
 
 const EntityForm: React.FC<{
   dataSource: IDataSource
@@ -51,8 +53,75 @@ const EntityForm: React.FC<{
   persistUow,
   isCreation = false,
 }) => {
+  return (
+    <EntityForm1
+      dataSourceManager={dataSourceManager}
+      dataSources={[dataSource]}
+      entity={entity}
+      dirty={dirty}
+      setDirty={setDirty}
+      onSaved={onSaved}
+      onCanceled={onCanceled}
+      entityLayout={entityLayout}
+      labelPosition={labelPosition}
+      toolbar={toolbar}
+      readOnly={readOnly}
+      classNameBg={classNameBg}
+      classNameInputBg={classNameInputBg}
+      classNameInputHoverBg={classNameInputHoverBg}
+      classNameInputHoverBgDark={classNameInputHoverBgDark}
+      styleType={styleType}
+      uow={uow}
+      persistUow={persistUow}
+      isCreation={isCreation}
+    ></EntityForm1>
+  )
+}
+
+export const EntityForm1: React.FC<{
+  dataSources: IDataSource[]
+  dataSourceManager?: IDataSourceManagerWidget
+  entity: any
+  dirty: boolean
+  setDirty?: (d: boolean) => void
+  onSaved: (updatedEntity: any) => void
+  onCanceled?: () => void
+  entityLayout?: EntityLayout
+  labelPosition?: 'top' | 'left'
+  toolbar?: 'top' | 'bottom'
+  readOnly?: boolean
+  classNameBg?: string
+  classNameInputBg?: string
+  classNameInputHoverBg?: string
+  classNameInputHoverBgDark?: string
+  styleType?: number
+  uow?: any
+  persistUow?: (uow: any) => void
+  isCreation: boolean
+}> = ({
+  dataSourceManager,
+  dataSources,
+  entity,
+  dirty,
+  setDirty,
+  onSaved: onSaved,
+  onCanceled,
+  entityLayout,
+  labelPosition = 'top',
+  toolbar = 'top',
+  readOnly = false,
+  classNameBg,
+  classNameInputBg,
+  classNameInputHoverBg,
+  classNameInputHoverBgDark,
+  styleType = 0,
+  uow,
+  persistUow,
+  isCreation = false,
+}) => {
   // states
   const [currentEntity, setCurrentEntity] = useState({ ...entity })
+  const [currentDataSource, setCurrentDataSource] = useState(guessDataSource())
   const [error, setError] = useState<any>(null)
   const [dirtyLocal, setDirtyLocal] = useState<boolean>(dirty)
   const [errors, setErrors] = useState<{ [fieldName: string]: string | null }>({})
@@ -86,8 +155,15 @@ const EntityForm: React.FC<{
     )
   }
 
+  function guessDataSource(): IDataSource {
+    for (let ds of dataSources) {
+      if (fullfillsSchema(currentEntity, ds.entitySchema!)) return ds
+    }
+    return dataSources[0]
+  }
+
   function save() {
-    dataSource
+    currentDataSource
       .entityUpdateMethod(currentEntity)
       .then((newEntry: any) => {
         if (newEntry) {
@@ -170,8 +246,32 @@ const EntityForm: React.FC<{
           </button>
         </div>
       )}
+      {dataSources.length > 1 && (
+        <div className={`w-full py-4 ${false ? 'flex justify-between gap-2 items-baseline ' : ''}`}>
+          <label className='block mb-2 text-xs font-medium whitespace-nowrap align-baseline'>
+            Type
+          </label>
+          <DropdownSelect
+            disabled={!isCreation}
+            options={dataSources.map((ds) => {
+              return { label: ds.entitySchema!.name, value: ds.entitySchema!.name }
+            })}
+            initialOption={{
+              label: currentDataSource.entitySchema!.name,
+              value: currentDataSource.entitySchema!.name,
+            }}
+            onOptionSet={(o) =>
+              setCurrentDataSource(dataSources.find((ds) => ds.entitySchema!.name == o?.value)!)
+            }
+            styleType={styleType}
+            classNameBg={classNameInputBg}
+            classNameHoverBg={classNameInputHoverBg}
+            classNameHoverBgDark={classNameInputHoverBgDark}
+          ></DropdownSelect>
+        </div>
+      )}
       <EntityFormInner
-        dataSource={dataSource}
+        dataSource={currentDataSource}
         dirty={dirty}
         entity={currentEntity}
         onChange={(ce) => setCurrentEntity({ ...ce })}
