@@ -4,6 +4,8 @@ import EntityTableBasic from './EntityTableBasic'
 import EntityTableOptions from './EntityTableOptions'
 import EntityFormBasic from './EntityFormBasic'
 import EntityFormInheritance from './EntityFormInheritance'
+import EntityFormMultiSelect from './EntityFormMultiSelect'
+import EntityFormLookUpCrud from './EntityFormLookUpCrud'
 
 const EntityFormDoc = () => {
   return (
@@ -23,6 +25,18 @@ const EntityFormDoc = () => {
           demoExplanation: 'Inheritance Entity Table',
           demoComponent: <EntityFormInheritance></EntityFormInheritance>,
           sourceCode: require('!!raw-loader!./EntityFormInheritance.tsx').default.toString(),
+        },
+        {
+          demoTitle: 'Entity with MultiSelect Field',
+          demoExplanation: 'Entity with MultiSelect Field',
+          demoComponent: <EntityFormMultiSelect></EntityFormMultiSelect>,
+          sourceCode: require('!!raw-loader!./EntityFormMultiSelect.tsx').default.toString(),
+        },
+        {
+          demoTitle: 'Entity with Crud LookUp',
+          demoExplanation: 'Entity with Crud LookUp',
+          demoComponent: <EntityFormLookUpCrud></EntityFormLookUpCrud>,
+          sourceCode: require('!!raw-loader!./EntityFormMultiSelect.tsx').default.toString(),
         },
       ]}
     ></DocComponent>

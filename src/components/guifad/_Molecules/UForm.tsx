@@ -41,17 +41,14 @@ const UForm: React.FC<{
   isCreation = false,
   onValidationChanged,
 }) => {
-  const fieldsToDisplay1 = useMemo(
-    () =>
-      fieldsToDisplay.map((f) => {
-        return {
-          ...f,
-          value: getValue(currentEntity, f.name),
-          setValue: (newValue: any) => changeValue(f, newValue),
-        }
-      }),
-    [fieldsToDisplay, currentEntity],
-  )
+  function getAllowCrud(fk: RelationSchema): boolean {
+    const fieldLayout: FieldLayout | undefined = fieldLayouts.find(
+      (fl) => fl.fieldName == fk.foreignKeyIndexName,
+    )
+    if (!fieldLayout) return false
+    return fieldLayout.allowCrudForLookUp || false
+  }
+
   return (
     <UForm1
       onValidationChanged={onValidationChanged}
@@ -86,6 +83,7 @@ const UForm: React.FC<{
                     `}
                     showLabel={labelPosition == 'top'}
                     styleType={styleType}
+                    allowCrud={getAllowCrud(fk)}
                   ></LookUpSelect>
                 ),
               }

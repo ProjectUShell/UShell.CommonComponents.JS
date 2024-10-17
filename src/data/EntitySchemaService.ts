@@ -10,6 +10,10 @@ import { capitalizeFirstLetter, getValue, lowerFirstLetter } from '../utils/Stri
 import { LogicalExpression } from 'fusefx-repositorycontract'
 
 export class EntitySchemaService {
+  static isNumber(fieldType: string) {
+    return ['int32', 'int64', 'integer', 'long'].includes(fieldType.toLocaleLowerCase())
+  }
+
   static getUniversalSearchExpression(
     entitySchema: EntitySchema,
     universalSearchText: string,
@@ -64,13 +68,14 @@ export class EntitySchemaService {
   static getLabelByEntitySchema(entitySchema: EntitySchema, entity: any): string {
     if (!entity) return 'Nope'
     if (entity.label) return entity.label
-    if (entity.label) return entity.label
+    if (entity.Label) return entity.Label
     const labelField: FieldSchema | undefined = entitySchema.fields.find(
       (f: FieldSchema) => f.identityLabel,
     )
     if (labelField) return getValue(entity, labelField.name)
-    if (entity.id) return entity.id
-    if (entity.Id) return entity.Id
+
+    if (entity.id) return entity.id.toLocaleString()
+    if (entity.Id) return entity.Id.toLocaleString()
 
     return '???'
   }

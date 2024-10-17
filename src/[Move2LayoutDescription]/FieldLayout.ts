@@ -20,6 +20,10 @@ export class FieldLayout {
 
   public dropdownMode?: 'none' | 'static' | 'staticAndCustom' | 'staticFromDataSource' = 'none'
 
+  public multiSelectSeparator?: string | null = null
+
+  public allowCrudForLookUp?: boolean = undefined
+
   /** only valid when a field.dropdownMode == 'static'|'staticAndCustom' (in the form of '{'key':'label'}') */
   public dropdownStaticEntries?: { [key: string]: string }
 

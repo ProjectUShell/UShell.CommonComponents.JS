@@ -17,6 +17,7 @@ const LookUpSelect: React.FC<{
   classNameHoverBg?: string
   classNameHoverBgDark?: string
   showLabel?: boolean
+  allowCrud?: boolean
 }> = ({
   dataSourceManager,
   lookUpRelation,
@@ -27,12 +28,15 @@ const LookUpSelect: React.FC<{
   classNameHoverBg,
   classNameHoverBgDark,
   showLabel = true,
+  allowCrud = false,
 }) => {
   const [lookUpList, setLookUpList] = useState<{ label: string; value: string }[]>([])
+  const [renderTrigger, setRenderTrigger] = useState(0)
   const [error, setError] = useState<any>(null)
 
   useEffect(() => {
     try {
+      console.log('reloading LookUpList')
       const dataSource: IDataSource | null = dataSourceManager.tryGetDataSource(
         lookUpRelation.primaryEntityName,
       )
@@ -44,18 +48,35 @@ const LookUpSelect: React.FC<{
       dataSource
         .getEntityRefs(undefined, { pageNumber: 1, pageSize: 200 }, undefined)
         .then((r: PaginatedList) => {
+          console.log('got EntityRefs', r)
           const lul = r.page.map((e: any) => {
             return { value: e.key, label: e.label }
           })
           lul.sort((a, b) => a.label.localeCompare(b.label))
           setLookUpList(lul)
         })
-        .catch((err) => setError('Failed to get Entity Refs'))
+        .catch((err) => setError(`Failed to get Entity Refs: ${err}`))
       setError(null)
     } catch (err) {
       setError(err)
     }
-  }, [lookUpRelation, dataSourceManager])
+  }, [lookUpRelation, dataSourceManager, renderTrigger])
+
+  function createNew(): void {
+    console.log('createNew LookUp')
+    const dataSource: IDataSource | null = dataSourceManager.tryGetDataSource(
+      lookUpRelation.primaryEntityName,
+    )
+    if (!dataSource) {
+      console.error('No DataSource for LookUps', lookUpRelation)
+      setError('No DataSource for LookUps')
+      return
+    }
+
+    dataSource
+      .entityInsertMethod(dataSource.entityFactoryMethod())
+      .then((s) => setRenderTrigger((r) => r + 1))
+  }
 
   if (error) {
     return <ErrorPage messages={[error]}></ErrorPage>
@@ -72,6 +93,7 @@ const LookUpSelect: React.FC<{
       <DropdownSelect
         options={lookUpList}
         onOptionSet={(o) => {
+          console.log('option set', o)
           onValueSet(o?.value)
         }}
         initialOption={lookUpList.find((li) => li.value == initialValue)}
@@ -80,6 +102,27 @@ const LookUpSelect: React.FC<{
         classNameHoverBg={classNameHoverBg}
         classNameHoverBgDark={classNameHoverBgDark}
         styleType={styleType}
+        additionalElements={
+          allowCrud
+            ? [
+                <div
+                  className='w-full flex justify-center items-center align-middle'
+                  key={lookUpRelation.primaryEntityName}
+                >
+                  <button
+                    className='p-2 m-2 w-full bg-green-200 hover:bg-green-300 dark:bg-green-600 dark:hover:bg-green-700 rounded-lg'
+                    onMouseDown={(e) => {
+                      console.log('create New')
+                      createNew()
+                    }}
+                    onMouseEnter={() => console.log('mouse enter')}
+                  >
+                    Create New
+                  </button>
+                </div>,
+              ]
+            : undefined
+        }
       ></DropdownSelect>
     </div>
   )

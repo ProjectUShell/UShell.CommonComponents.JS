@@ -78,6 +78,11 @@ const UForm1: React.FC<{
     if (!fieldLayout) return undefined
     return fieldLayout.dropdownStaticEntries
   }
+  function getAllowedValuesSeparator(f: FieldInputInfo): string | null | undefined {
+    const fieldLayout: FieldLayout | undefined = fieldLayouts.find((fl) => fl.fieldName == f.name)
+    if (!fieldLayout) return undefined
+    return fieldLayout.multiSelectSeparator
+  }
   function onValidation(fieldName: string, error: string | null) {
     // console.log('onValidation', { fn: fieldName, error: error, errors: errors })
     if (!(fieldName in errors)) {
@@ -147,6 +152,7 @@ const UForm1: React.FC<{
                 readOnly={readOnly}
                 isCreation={isCreation}
                 required={f.required}
+                allowedValuesSeparator={getAllowedValuesSeparator(f)}
               ></InputField>
             </div>
           )

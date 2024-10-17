@@ -20,6 +20,7 @@ const DropdownSelect: React.FC<{
   classNameBg?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
+  additionalElements?: JSX.Element[]
 }> = ({
   options,
   initialOption,
@@ -33,6 +34,7 @@ const DropdownSelect: React.FC<{
   classNameBg,
   classNameHoverBg,
   classNameHoverBgDark,
+  additionalElements,
 }) => {
   const [open, setOpen] = useState(false)
   const [currentOption, setCurrentOption] = useState<Option | null | undefined>(initialOption)
@@ -229,9 +231,10 @@ const DropdownSelect: React.FC<{
                 classNameBg || 'bg-content dark:bg-contentDark'
               }`}
             >
+              {additionalElements?.map((ae, i) => ae)}
               {options
                 .filter((o) => currentMatchingOptions.length == 0 || isMatchingOption(o))
-                .map((o) => (
+                .map((o, i) => (
                   <div
                     className={`cursor-default  p-1  ${
                       isCurrentMatchingOption(o) && 'bg1-backgroundtwo dark:bg1-backgroundtwodark'
@@ -240,7 +243,7 @@ const DropdownSelect: React.FC<{
                         ? 'bg-prim2 dark:bg-prim4'
                         : 'hover:bg-bg7 dark:hover:bg-bg7dark'
                     }`}
-                    key={o.value}
+                    key={o.value || i}
                     onMouseDown={(e) => {
                       e.preventDefault()
                       e.stopPropagation()

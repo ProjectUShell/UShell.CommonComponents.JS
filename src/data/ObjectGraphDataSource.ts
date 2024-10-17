@@ -1,4 +1,4 @@
-import { EntitySchema } from 'fusefx-modeldescription'
+import { EntitySchema, FieldSchema, IndexSchema } from 'fusefx-modeldescription'
 import { matchOnPrimaryKeyIndex } from 'fusefx-modeldescription/lib/utils'
 import {
   LogicalExpression,
@@ -31,7 +31,24 @@ export class ObjectGraphDataSource implements IDataSource {
   }
 
   entityFactoryMethod() {
-    return {}
+    const result: any = {}
+    const keyProps: string[] = EntitySchemaService.getPrimaryKeyProps(this.entitySchema)
+
+    for (let fn of this.entitySchema.fields) {
+      if (keyProps.includes(fn.name) && EntitySchemaService.isNumber(fn.type)) {
+        console.log('getR', this.getRecordsInternal())
+        const allIds: number[] = this.getRecordsInternal()
+          .page.map((e) => e[fn.name] as number)
+          .sort()
+
+        const maxId = allIds.length > 0 ? allIds[allIds.length - 1] : 1
+        result[fn.name] = maxId + 1
+      } else {
+        result[fn.name] = fn.defaultValue
+      }
+    }
+    console.log('creating', result)
+    return result
   }
   entityUpdateMethod(entity: any[]) {
     console.log('updating', entity)
@@ -92,23 +109,28 @@ export class ObjectGraphDataSource implements IDataSource {
     sortingParams?: SortingField[],
   ): Promise<PaginatedList> {
     return new Promise<PaginatedList>((res) => {
-      console.log('getRecords', filter)
-      let result: any[] = this.objectGraph[this.propertyPath]
-      if (filter) {
-        result = applyFilter(result, filter)
-      }
-      if (sortingParams) {
-        result = applySorting(
-          result,
-          sortingParams,
-          sortingParams.map((sp) => {
-            return { fieldType: this.entitySchema.fields.find((f) => f.name == sp.fieldName)!.type }
-          }),
-        )
-      }
-
-      return res({ page: result, total: result.length })
+      return res(this.getRecordsInternal(filter, pagingParams, sortingParams))
     })
+  }
+  getRecordsInternal(
+    filter?: LogicalExpression,
+    pagingParams?: PagingParams,
+    sortingParams?: SortingField[],
+  ): PaginatedList {
+    let result: any[] = this.objectGraph[this.propertyPath]
+    if (filter) {
+      result = applyFilter(result, filter)
+    }
+    if (sortingParams) {
+      result = applySorting(
+        result,
+        sortingParams,
+        sortingParams.map((sp) => {
+          return { fieldType: this.entitySchema.fields.find((f) => f.name == sp.fieldName)!.type }
+        }),
+      )
+    }
+    return { page: result, total: result.length }
   }
   getRecord(identityFields: object): Promise<object> {
     throw new Error('Method not implemented.')
@@ -118,6 +140,23 @@ export class ObjectGraphDataSource implements IDataSource {
     pagingParams?: PagingParams,
     sortingParams?: SortingField[],
   ): Promise<PaginatedList> {
+    return this.getRecords(filter, pagingParams, sortingParams).then((pl) => {
+      console.log('getEntityRefs', pl)
+      return {
+        page: pl.page.map((v) => {
+          console.log('map EntityRef', v)
+          const key = EntitySchemaService.getPrimaryKey(this.entitySchema, v)
+          const label = EntitySchemaService.getLabelByEntitySchema(this.entitySchema, v)
+          console.log('key', key)
+          console.log('label', label)
+          return {
+            key: key,
+            label: label,
+          }
+        }),
+        total: pl.total,
+      }
+    })
     return new Promise<PaginatedList>((res) => res({ page: [], total: 0 }))
   }
 }

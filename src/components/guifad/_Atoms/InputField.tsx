@@ -6,6 +6,7 @@ import BoolInputField from './BoolInputField'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import ExclamationCircleIcon from '../../../_Icons/ExclamationCircleIcon'
 import Tooltip from '../../../_Atoms/Tooltip'
+import DropdownMultiSelect from '../../../_Atoms/DropdownMultiSelect'
 
 const InputField: React.FC<{
   label: string | null
@@ -13,6 +14,7 @@ const InputField: React.FC<{
   initialValue: any
   onValueChange: (newValue: any, errors: string | null) => void
   allowedValues?: { [key: string]: string }
+  allowedValuesSeparator?: string | null
   setabilityFlags?: number
   classNameBg?: string
   classNameHoverBg?: string
@@ -28,6 +30,7 @@ const InputField: React.FC<{
   initialValue,
   onValueChange,
   allowedValues,
+  allowedValuesSeparator = null,
   setabilityFlags = 7,
   classNameBg,
   classNameHoverBg,
@@ -120,23 +123,57 @@ const InputField: React.FC<{
       )
     }
     if (allowedValues) {
-      return (
-        <DropdownSelect
-          disabled={disabled}
-          classNameBg={classNameBg}
-          classNameHoverBg={classNameHoverBg}
-          classNameHoverBgDark={classNameHoverBgDark}
-          styleType={styleType}
-          options={Object.keys(allowedValues).map((av) => {
-            return { label: allowedValues[av], value: av }
-          })}
-          onOptionSet={(o) => {
-            setCurrentValue(o?.value)
-            onValueChange(o?.value, getErrors(o?.value))
-          }}
-          initialOption={{ label: allowedValues[initialValue], value: initialValue }}
-        ></DropdownSelect>
-      )
+      if (!allowedValuesSeparator) {
+        return (
+          <DropdownSelect
+            disabled={disabled}
+            classNameBg={classNameBg}
+            classNameHoverBg={classNameHoverBg}
+            classNameHoverBgDark={classNameHoverBgDark}
+            styleType={styleType}
+            options={Object.keys(allowedValues).map((av) => {
+              return { label: allowedValues[av], value: av }
+            })}
+            onOptionSet={(o) => {
+              setCurrentValue(o?.value)
+              onValueChange(o?.value, getErrors(o?.value))
+            }}
+            initialOption={{ label: allowedValues[initialValue], value: initialValue }}
+          ></DropdownSelect>
+        )
+      } else {
+        return (
+          <DropdownMultiSelect
+            classNameBg={classNameBg}
+            classNameHoverBg={classNameHoverBg}
+            classNameHoverBgDark={classNameHoverBgDark}
+            styleType={styleType}
+            options={Object.keys(allowedValues).map((av) => {
+              return { label: allowedValues[av], value: av }
+            })}
+            onOptionsSet={(opts: any[]) => {
+              console.log('options set', opts)
+              const newValue =
+                opts && opts.length > 0
+                  ? opts.reduce(
+                      (o1: any, o2: any, i) =>
+                        i > 0 ? o1 + allowedValuesSeparator + o2.value : o2.value,
+                      '',
+                    )
+                  : ''
+              console.log('newValue', newValue)
+              setCurrentValue(newValue)
+              onValueChange(newValue, getErrors(newValue))
+            }}
+            initialOptions={initialValue
+              ?.toString()
+              .split(allowedValuesSeparator)
+              .map((s: string) => {
+                return { label: s, value: s }
+              })}
+          ></DropdownMultiSelect>
+        )
+      }
     }
     if (EntitySchemaService.getHtmlInputType(inputType) == 'text' && multiLine) {
       return (
