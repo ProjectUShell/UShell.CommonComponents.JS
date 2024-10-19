@@ -35,23 +35,41 @@ export class ObjectGraphDataSource implements IDataSource {
     const keyProps: string[] = EntitySchemaService.getPrimaryKeyProps(this.entitySchema)
 
     for (let fn of this.entitySchema.fields) {
-      if (keyProps.includes(fn.name) && EntitySchemaService.isNumber(fn.type)) {
-        console.log('getR', this.getRecordsInternal())
+      const isKey: boolean = keyProps.includes(fn.name)
+      if (isKey && EntitySchemaService.isNumber(fn.type)) {
         const allIds: number[] = this.getRecordsInternal()
           .page.map((e) => e[fn.name] as number)
           .sort()
 
         const maxId = allIds.length > 0 ? allIds[allIds.length - 1] : 1
         result[fn.name] = maxId + 1
+      } else if (isKey && fn.type.toLocaleLowerCase() == 'guid') {
+        result[fn.name] = crypto.randomUUID()
+      } else if (fn.identityLabel) {
+        const allRunningNumbers: number[] = this.getRecordsInternal()
+          .page.map((r) => {
+            const v: string = r[fn.name].toLocaleLowerCase()
+            if (v.length >= 3) {
+              if (v[v.length - 3] == '(' && v[v.length - 1] == ')') {
+                const rnV: string = v[v.length - 2].toLocaleString()
+                return Number.parseInt(rnV)
+              }
+            }
+            return 0
+          })
+          .sort()
+        const maxRn =
+          allRunningNumbers.length > 0 ? allRunningNumbers[allRunningNumbers.length - 1] : 0
+        result[fn.name] = `New ${this.entitySchema.name} (${maxRn + 1})`
       } else {
         result[fn.name] = fn.defaultValue
       }
     }
-    console.log('creating', result)
+    console.debug('creating', result)
     return result
   }
   entityUpdateMethod(entity: any[]) {
-    console.log('updating', entity)
+    console.debug('updating', entity)
     return new Promise<boolean>((res) => {
       if (this.propertyPath == '') {
         copyValueFields(entity, this.objectGraph)
@@ -72,7 +90,7 @@ export class ObjectGraphDataSource implements IDataSource {
     })
   }
   entityInsertMethod(entity: any[]) {
-    console.log('inserting', entity)
+    console.debug('inserting', entity)
     return new Promise<boolean>((res) => {
       if (this.propertyPath == '') {
         copyValueFields(entity, this.objectGraph)
@@ -141,14 +159,10 @@ export class ObjectGraphDataSource implements IDataSource {
     sortingParams?: SortingField[],
   ): Promise<PaginatedList> {
     return this.getRecords(filter, pagingParams, sortingParams).then((pl) => {
-      console.log('getEntityRefs', pl)
       return {
         page: pl.page.map((v) => {
-          console.log('map EntityRef', v)
           const key = EntitySchemaService.getPrimaryKey(this.entitySchema, v)
           const label = EntitySchemaService.getLabelByEntitySchema(this.entitySchema, v)
-          console.log('key', key)
-          console.log('label', label)
           return {
             key: key,
             label: label,

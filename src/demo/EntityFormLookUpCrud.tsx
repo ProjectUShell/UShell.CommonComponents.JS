@@ -7,8 +7,10 @@ import { EntityLayout } from '../[Move2LayoutDescription]/EntityLayout'
 import EntityForm from '../components/guifad/_Organisms/EntityForm'
 import { IDataSource, IDataSourceManagerWidget } from 'ushell-modulebase'
 
+const manufacturerNameFieldSchema: FieldSchema = new FieldSchema('Name', 'string')
+manufacturerNameFieldSchema.identityLabel = true
 const manufacturerEntitySchema: EntitySchema = {
-  fields: [new FieldSchema('Id', 'int32'), new FieldSchema('Name', 'string')],
+  fields: [new FieldSchema('Id', 'int32'), manufacturerNameFieldSchema],
   indices: [{ name: 'Id', memberFieldNames: ['Id'], unique: true }],
   inheritedEntityName: '',
   isBlEntrypoint: false,

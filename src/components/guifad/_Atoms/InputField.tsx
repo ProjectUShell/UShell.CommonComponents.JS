@@ -152,7 +152,6 @@ const InputField: React.FC<{
               return { label: allowedValues[av], value: av }
             })}
             onOptionsSet={(opts: any[]) => {
-              console.log('options set', opts)
               const newValue =
                 opts && opts.length > 0
                   ? opts.reduce(
@@ -161,7 +160,6 @@ const InputField: React.FC<{
                       '',
                     )
                   : ''
-              console.log('newValue', newValue)
               setCurrentValue(newValue)
               onValueChange(newValue, getErrors(newValue))
             }}
