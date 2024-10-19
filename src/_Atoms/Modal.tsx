@@ -17,7 +17,7 @@ const Modal: React.FC<{
   return (
     <div
       className='UShell_Modal fixed top-0 left-0 right-0 bottom-0
-     z-40 w-full h-full bg-black bg-transparent1 bg-opacity-50 border-0 border-red-400'
+        z-40 w-full h-full bg-black bg-transparent1 bg-opacity-50 border-0 border-red-400'
     >
       <div
         style={{ left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }}
@@ -36,9 +36,13 @@ const Modal: React.FC<{
           </div>
         )}
         <div
+          style={{
+            transform:
+              'translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))',
+          }}
           className={`${
             full ? 'scale-100' : 'scale-50'
-          }  bg-bg1 border-0 border-bg4 dark:bg-bg1dark dark:border-bg4dark shadow-md rounded-sm transition-all`}
+          }  bg-bg1 border-0 border-bg4 dark:bg-bg1dark dark:border-bg4dark shadow-md rounded-sm transition-all duration-1000`}
         >
           {children}
         </div>

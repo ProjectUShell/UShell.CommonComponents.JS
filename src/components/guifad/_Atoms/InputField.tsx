@@ -75,7 +75,7 @@ const InputField: React.FC<{
   )
 
   function getErrors(v: any): string | null {
-    if (required && inputType.startsWith('bool')) {
+    if (required && inputType.toLocaleLowerCase().startsWith('bool')) {
       const isTrue = v == true
       const isFalse = v == false
       if (isTrue || isFalse) {

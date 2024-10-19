@@ -169,6 +169,8 @@ export const EntityForm1: React.FC<{
         if (newEntry) {
           onSaved(newEntry)
         }
+        setDirty && setDirty(false)
+        setDirtyLocal(false)
       })
       .catch((ex) => {
         setError(ex)

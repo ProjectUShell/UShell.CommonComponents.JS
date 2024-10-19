@@ -51,7 +51,7 @@ const EntityFormBasic = () => {
       <EntityForm
         dataSource={dataSource}
         entityLayout={carLayout}
-        dirty={true}
+        dirty={false}
         entity={{}}
         isCreation={true}
         onSaved={() => {}}
