@@ -43,7 +43,7 @@ const EntityFormModal: React.FC<{
 }) => {
   return (
     <Modal marginY={10} marginX={30}>
-      <div className='p-2 h-full w-full'>
+      <div className='p-2 px-4 h-full w-full min-w-80'>
         <EntityForm1
           dataSources={dataSources}
           dataSourceManager={dataSourceManager}
