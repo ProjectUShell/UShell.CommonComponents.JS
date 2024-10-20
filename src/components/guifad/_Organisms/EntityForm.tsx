@@ -146,6 +146,7 @@ export const EntityForm1: React.FC<{
   if (error) {
     return (
       <Modal
+        title='Error'
         terminate={() => {
           setError(null)
         }}

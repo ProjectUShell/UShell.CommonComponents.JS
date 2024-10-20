@@ -37,6 +37,7 @@ const carLayout: EntityLayout = new EntityLayout('Car', [
     dropdownStaticEntries: { Bmw: 'Bmw', Audi: 'Audi', Fiat: 'Fiat', Renault: 'Renault' },
   },
 ])
+carLayout.displayLabel = 'Car'
 // carLayout.tableFields = ['DateOfConstruction', 'Brand']
 const layoutDescription: LayoutDescriptionRoot = {
   entityLayouts: [carLayout],

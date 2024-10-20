@@ -43,6 +43,7 @@ import AccordionDoc from './demo/AccordionDoc'
 import AccordionMenuDoc from './demo/AccordionMenuDoc'
 import EntityTableDoc from './demo/EntityTableDoc'
 import EntityFormDoc from './demo/EntityFormDoc'
+import ModalDoc from './demo/ModalDoc'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -65,6 +66,7 @@ const Demo = () => {
       'Input Field',
       'Accordion',
       'AccordionMenu',
+      'Modal',
     ],
     'FuseFx Components': [
       'Guifad',
@@ -261,6 +263,7 @@ const Demo = () => {
       {currentComponent == 'Input Field' && <InputFieldDoc></InputFieldDoc>}
       {currentComponent == 'Accordion' && <AccordionDoc></AccordionDoc>}
       {currentComponent == 'AccordionMenu' && <AccordionMenuDoc></AccordionMenuDoc>}
+      {currentComponent == 'Modal' && <ModalDoc></ModalDoc>}
       {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
       {currentComponent == 'Schema Manager' && (
         <SchemaManager

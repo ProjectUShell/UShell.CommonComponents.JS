@@ -97,6 +97,7 @@ const EntityFormInner: React.FC<{
   if (error) {
     return (
       <Modal
+        title={`${entityLayout?.displayLabel} Details`}
         terminate={() => {
           setError(null)
         }}
