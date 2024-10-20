@@ -33,7 +33,7 @@ const Modal: React.FC<{
           }}
           className={`${
             full ? 'scale-100' : 'scale-50 rounded-sm'
-          }   shadow-md1 rounded-sm bg-bg1 dark:bg-bg1dark transition-all duration-500`}
+          }   shadow-md1 rounded-sm bg-bg1 dark:bg-bg1dark transition-all duration-500 border-0 border-orange-400 h-full flex flex-col overflow-hidden`}
         >
           <div
             className={`w-full border-b dark:border-bg9dark bg-bg1 dark:bg-bg1dark flex whitespace-nowrap items-center px-2`}
@@ -55,7 +55,7 @@ const Modal: React.FC<{
             //   transform:
             //     'translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))',
             // }}
-            className={``}
+            className={`h-full flex overflow-hidden border-0 border-violet-800`}
           >
             {children}
           </div>

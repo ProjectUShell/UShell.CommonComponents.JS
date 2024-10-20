@@ -43,7 +43,10 @@ const EntityFormModal: React.FC<{
 }) => {
   return (
     <Modal marginY={10} marginX={30} title={`${entityLayout?.displayLabel} Details`}>
-      <div className='p-2 px-4 h-full w-full min-w-80'>
+      <div
+        style={{ minWidth: '50vw', maxHeight: '80vh' }}
+        className='p-0 px-4 h-full1 w-full overflow-hidden flex flex-col border-0 border-yellow-400'
+      >
         <EntityForm1
           dataSources={dataSources}
           dataSourceManager={dataSourceManager}
