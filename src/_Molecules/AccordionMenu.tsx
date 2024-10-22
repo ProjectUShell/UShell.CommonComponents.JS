@@ -35,6 +35,16 @@ const AccordionMenu: React.FC<{
     return item.key == selectedItemKey
   }
 
+  function getSelectedGroupIndex(): number {
+    let result = 0
+    Object.keys(groups).forEach((gk: any, i: number) => {
+      if (groups[gk].items.find((item) => isSelected(item))) {
+        result = i
+      }
+    })
+    return result
+  }
+
   function onItemClick(item: { key: string; command: () => void }) {
     setSelectedItemKey(item.key)
     item.command()
@@ -42,6 +52,7 @@ const AccordionMenu: React.FC<{
 
   return (
     <Accordion
+      initialOpenIndex={getSelectedGroupIndex()}
       items={Object.keys(groups).map((g) => {
         return {
           label: groups[g].label || g,

@@ -5,6 +5,7 @@ import PencilIcon from '../_Icons/PencilIcon'
 const AccordionMenuBasic = () => {
   return (
     <AccordionMenu
+      initialSelectedItemKey='Item2.1'
       groups={{
         'Group 1': {
           label: (

@@ -5,6 +5,7 @@ import ChevrodnDownIcon from '../_Icons/ChevrodnDownIcon'
 
 const Accordion: React.FC<{
   items: { label: string | JSX.Element; content: JSX.Element }[]
+  initialOpenIndex?: number
   multipleOpenAllowed?: boolean
   classNameBgHeader?: string
   classNameBgHeaderActive?: string
@@ -17,8 +18,9 @@ const Accordion: React.FC<{
   classNameBgHeader = '',
   classNameBgHeaderActive = '',
   classNameBgItems = '',
+  initialOpenIndex,
 }) => {
-  const [openIndices, setOpenIndices] = useState<number[]>([0])
+  const [openIndices, setOpenIndices] = useState<number[]>([initialOpenIndex || 0])
 
   function toggleOpen(i: number) {
     if (!multipleOpenAllowed) {

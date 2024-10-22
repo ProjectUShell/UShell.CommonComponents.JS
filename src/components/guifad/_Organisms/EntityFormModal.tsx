@@ -44,7 +44,7 @@ const EntityFormModal: React.FC<{
   return (
     <Modal2 title={`${entityLayout?.displayLabel} Details`}>
       <div
-        style={{ minWidth: '50vw' }}
+        style={{}}
         className='p-0 px-4 h-full1 w-full overflow-hidden flex flex-col border-0 border-yellow-400'
       >
         <EntityForm1

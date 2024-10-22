@@ -43,6 +43,8 @@ const Modal2: React.FC<{
           width: width,
           height: height,
           maxHeight: '90%',
+          transform:
+            'translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))',
         }}
         className={`fixed flex flex-col bg-content dark:bg-contentDark transition-all duration-300 border-0 border-green-400 ${
           full ? '' : 'scale-50'
