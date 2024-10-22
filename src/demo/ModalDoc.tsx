@@ -3,6 +3,7 @@ import DocComponent from './DocComponent'
 import AccordionBasic from './AccordionBasic'
 import AccordionMultiple from './AccordionMultiple'
 import ModalBasic from './ModalBasic'
+import ModalWithEntityTable from './ModalWithEntityTable'
 
 const ModalDoc = () => {
   return (
@@ -16,6 +17,12 @@ const ModalDoc = () => {
           demoExplanation: '...',
           demoComponent: <ModalBasic></ModalBasic>,
           sourceCode: require('!!raw-loader!./ModalBasic.tsx').default.toString(),
+        },
+        {
+          demoTitle: 'ModalWithEntityTable',
+          demoExplanation: '...',
+          demoComponent: <ModalWithEntityTable></ModalWithEntityTable>,
+          sourceCode: require('!!raw-loader!./ModalWithEntityTable.tsx').default.toString(),
         },
       ]}
     ></DocComponent>

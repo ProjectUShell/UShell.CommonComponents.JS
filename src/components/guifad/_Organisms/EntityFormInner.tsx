@@ -6,8 +6,8 @@ import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
 import { EntityLayout, LayoutPartition } from '../../../[Move2LayoutDescription]/EntityLayout'
 import EntityFormGroup from '../_Molecules/EntityFormGroup'
-import Modal from '../../../_Atoms/Modal'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
+import Modal2 from '../../../_Atoms/Modal2'
 
 const EntityFormInner: React.FC<{
   dataSource: IDataSource
@@ -96,14 +96,14 @@ const EntityFormInner: React.FC<{
 
   if (error) {
     return (
-      <Modal
+      <Modal2
         title={`${entityLayout?.displayLabel} Details`}
         terminate={() => {
           setError(null)
         }}
       >
         <ErrorPage messages={[error.toString()]}></ErrorPage>
-      </Modal>
+      </Modal2>
     )
   }
 

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { IDataSource, IDataSourceManagerBase } from 'ushell-modulebase'
+import { IDataSource } from 'ushell-modulebase'
 import Table, { TableColumn } from './Table'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import TrashIcon from '../../../_Icons/TrashIcon'
@@ -8,14 +8,11 @@ import {
   QueryClientContext,
   QueryClientProvider,
   useQuery,
-  useQueryClient,
 } from '@tanstack/react-query'
-import { EntitySchema, SchemaRoot, RelationSchema } from 'fusefx-modeldescription'
+import { EntitySchema, RelationSchema } from 'fusefx-modeldescription'
 import { LogicalExpression, PagingParams, SortingField } from 'fusefx-repositorycontract'
 import { getParentFilter } from '../../../data/DataSourceService'
 import FunnelIcon from '../../../_Icons/FunnelIcon'
-import Modal from '../../../_Atoms/Modal'
-import Dropdown from '../../../_Atoms/Dropdown'
 import DropdownButton from '../../../_Atoms/DropdownButton'
 import LogicalExpressionEditor from '../_Molecules/LogicalExpressionEditor'
 import FilterTagBar from '../_Molecules/FilterTagBar'
@@ -24,19 +21,15 @@ import ArrowUturnUpd from '../../../_Icons/ArrowUturnUpd'
 import Tooltip from '../../../_Atoms/Tooltip'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
 import LoadingScreen from '../../../_Molecules/LoadingScreen'
-import { filter } from 'rxjs'
 import SearchBar from '../../../_Molecules/SearchBar'
 import AdjustmentsHorizontalIcon from '../../../_Icons/AdjustmentsHorizontalIcon'
-import BookmarkSquareIcon from '../../../_Icons/BookmarkSquareIcon'
 import QueryLibrary from './QueryLibrary'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import EntityFormModal from './EntityFormModal'
 import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutDescriptionRoot'
 import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
 import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
-import AvailableValuesFilter, {
-  renderCustomAvailableValuesFilter,
-} from '../../../_Molecules/AvailableValuesFilter'
+import { renderCustomAvailableValuesFilter } from '../../../_Molecules/AvailableValuesFilter'
 
 const EntityTable: React.FC<{
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
@@ -463,7 +456,7 @@ const EntityTableInternal: React.FC<{
 
   return (
     <>
-      <div className='UShell_EntityTable flex flex-col h-full'>
+      <div className='UShell_EntityTable flex flex-col h-full w-full overflow-hidden border-0 border-red-400'>
         {(enableCrud || enableParentFilter || enableQueryEditor || enableSearch) && (
           <div
             className={`UShell_EntityTable_Toolbar 

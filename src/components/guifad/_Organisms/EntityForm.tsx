@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { IDataSource } from 'ushell-modulebase'
 import FloppyDiskIcon from '../../../_Icons/FloppyDiskIcon'
-import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import XMarkIcon from '../../../_Icons/XMarkIcon'
 import BoltIcon from '../../../_Icons/BoltIcon'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
 import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
-import Modal from '../../../_Atoms/Modal'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import EntityFormInner from './EntityFormInner'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import { fullfillsSchema } from '../../../utils/ObjectUtils'
+import Modal2 from '../../../_Atoms/Modal2'
 
 const EntityForm: React.FC<{
   dataSource: IDataSource
@@ -145,14 +144,14 @@ export const EntityForm1: React.FC<{
 
   if (error) {
     return (
-      <Modal
+      <Modal2
         title='Error'
         terminate={() => {
           setError(null)
         }}
       >
         <ErrorPage messages={[error.toString()]}></ErrorPage>
-      </Modal>
+      </Modal2>
     )
   }
 

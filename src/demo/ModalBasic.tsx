@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Accordion from '../_Molecules/Accordion'
-import Modal from '../_Atoms/Modal'
+import Modal2 from '../_Atoms/Modal2'
 
 const ModalBasic = () => {
   const [open, setOpen] = useState(false)
@@ -14,7 +14,7 @@ const ModalBasic = () => {
         Toggle Open
       </button>
       {open && (
-        <Modal title='Example Modal' terminate={() => setOpen(false)}>
+        <Modal2 title='Example Modal' terminate={() => setOpen(false)}>
           <div className='p-4'>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse id nibh quis ante
             pulvinar posuere vitae id odio. Pellentesque at ex gravida, ultrices metus eget,
@@ -27,7 +27,7 @@ const ModalBasic = () => {
             vehicula, tellus quis condimentum facilisis, velit dui egestas mauris, et condimentum
             ante augue non est. Donec rutrum porta orci a placerat.
           </div>
-        </Modal>
+        </Modal2>
       )}
     </>
   )

@@ -2,8 +2,8 @@ import React from 'react'
 import { IDataSource } from 'ushell-modulebase'
 import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
-import Modal from '../../../_Atoms/Modal'
-import EntityForm, { EntityForm1 } from './EntityForm'
+import { EntityForm1 } from './EntityForm'
+import Modal2 from '../../../_Atoms/Modal2'
 
 const EntityFormModal: React.FC<{
   dataSources: IDataSource[]
@@ -42,9 +42,9 @@ const EntityFormModal: React.FC<{
   isCreation,
 }) => {
   return (
-    <Modal marginY={10} marginX={30} title={`${entityLayout?.displayLabel} Details`}>
+    <Modal2 title={`${entityLayout?.displayLabel} Details`}>
       <div
-        style={{ minWidth: '50vw', maxHeight: '80vh' }}
+        style={{ minWidth: '50vw' }}
         className='p-0 px-4 h-full1 w-full overflow-hidden flex flex-col border-0 border-yellow-400'
       >
         <EntityForm1
@@ -68,7 +68,7 @@ const EntityFormModal: React.FC<{
           isCreation={isCreation}
         ></EntityForm1>
       </div>
-    </Modal>
+    </Modal2>
   )
 }
 
