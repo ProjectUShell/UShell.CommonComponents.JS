@@ -119,13 +119,15 @@ export const EntityForm1: React.FC<{
   isCreation = false,
 }) => {
   // states
-  const [currentEntity, setCurrentEntity] = useState({ ...entity })
+  const [currentEntity, setCurrentEntity] = useState<any>({ ...entity })
   const [currentDataSource, setCurrentDataSource] = useState(guessDataSource())
   const [error, setError] = useState<any>(null)
   const [dirtyLocal, setDirtyLocal] = useState<boolean>(dirty)
   const [errors, setErrors] = useState<{ [fieldName: string]: string | null }>({})
 
   // useEffects
+
+  useEffect(() => setCurrentEntity({ ...entity }), [entity])
 
   useEffect(() => setDirtyLocal(dirty), [dirty])
   useEffect(() => {
@@ -199,6 +201,7 @@ export const EntityForm1: React.FC<{
     return true
   }
 
+  console.log('render EntityForm')
   return (
     <div className='UShell_EntityForm flex flex-col h-full w-full overflow-hidden border-0 border-green-400'>
       {toolbar == 'top' && (
