@@ -19,7 +19,18 @@ const Guifad1: React.FC<{
   enterRecord?: (r: any, entitySchema: EntitySchema) => void
   uow: any
   persistUow: ((uow: any) => void) | undefined
-}> = ({ rootNode, dataSourceManager, layoutDescription, enterRecord, uow, persistUow }) => {
+  formStyleType?: number
+  labelPosition?: 'top' | 'left'
+}> = ({
+  rootNode,
+  dataSourceManager,
+  layoutDescription,
+  enterRecord,
+  uow,
+  persistUow,
+  formStyleType = 0,
+  labelPosition = 'top',
+}) => {
   // states
   const [nodes, setCurrentNodes] = useState<ObjectGraphNode[]>([rootNode])
   const [currentRecord, setCurrentRecord] = useState<any | null>(null)
@@ -205,6 +216,8 @@ const Guifad1: React.FC<{
                 entitySchema={node.dataSource.entitySchema!}
                 parent={node.parent?.record}
                 layoutDescription={layoutDescription}
+                formStyleType={formStyleType}
+                formLabelPosition={labelPosition}
               ></EntityTable>
             )}
             {currentMode == 'details' && (
@@ -222,10 +235,11 @@ const Guifad1: React.FC<{
                 entityLayout={layoutDescription.entityLayouts.find(
                   (el) => el.entityName == node.dataSource.entitySchema?.name,
                 )}
-                styleType={1}
+                styleType={formStyleType}
                 uow={uow}
                 persistUow={persistUow}
                 isCreation={isCreation}
+                labelPosition={labelPosition}
               ></EntityForm>
             )}
           </div>

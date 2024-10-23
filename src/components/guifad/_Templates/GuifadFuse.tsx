@@ -16,7 +16,17 @@ const GuifadFuse: React.FC<{
   rootEntityName: string
   layoutDescription?: LayoutDescriptionRoot
   record?: any
-}> = ({ fuseUrl, routePattern, rootEntityName, layoutDescription, record }) => {
+  formStyleType?: number
+  labelPosition?: 'top' | 'left'
+}> = ({
+  fuseUrl,
+  routePattern,
+  rootEntityName,
+  layoutDescription,
+  record,
+  formStyleType = 0,
+  labelPosition = 'top',
+}) => {
   const [dataStore, setDataStore] = useState<FuseDataStore | null | undefined>(undefined)
   const [error, setError] = useState<any>(null)
 
@@ -67,6 +77,8 @@ const GuifadFuse: React.FC<{
         usecaseState.unitOfWork = uow
         localWidgetHost.populateChangedState(usecaseState)
       }}
+      formStyleType={formStyleType}
+      labelPosition={labelPosition}
     ></Guifad>
     // </QueryClientProvider>
   )

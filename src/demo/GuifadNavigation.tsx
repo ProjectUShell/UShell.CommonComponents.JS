@@ -7,6 +7,7 @@ const GuifadNavigation = () => {
       rootEntityName='Person'
       routePattern='body'
       fuseUrl='https://localhost:7288/AccountManagement/'
+      labelPosition='left'
       layoutDescription={{
         semanticVersion: '0',
         timestampUtc: '',
@@ -46,6 +47,16 @@ const GuifadNavigation = () => {
                 children: [],
               },
             ],
+          },
+          {
+            dislpayRemainingFields: true,
+            entityName: 'Person',
+            displayLabel: 'People',
+            displayLabelPlural: 'People',
+            fieldLayouts: [{ fieldName: 'NationalityId', displayLabel: 'The Nation' }],
+            identityLabelPattern: '',
+            isBlEntrypoint: false,
+            partitions: [],
           },
         ],
       }}

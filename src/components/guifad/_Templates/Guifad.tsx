@@ -19,6 +19,8 @@ const Guifad: React.FC<{
   enterRecord?: (r: any, entitySchema: EntitySchema) => void
   uow?: any
   persistUow?: (uow: any) => void
+  formStyleType?: number
+  labelPosition?: 'top' | 'left'
 }> = ({
   dataSourceManager,
   rootEntityName,
@@ -27,6 +29,8 @@ const Guifad: React.FC<{
   layoutDescription = { entityLayouts: [], semanticVersion: '0', timestampUtc: '0' },
   uow,
   persistUow,
+  formStyleType = 0,
+  labelPosition = 'top',
 }) => {
   const [rootDataSource, setRootDataSource] = useState<IDataSource | null>(null)
 
@@ -54,6 +58,8 @@ const Guifad: React.FC<{
       layoutDescription={layoutDescription}
       uow={uow}
       persistUow={persistUow}
+      formStyleType={formStyleType}
+      labelPosition={labelPosition}
     ></Guifad1>
   )
 }
