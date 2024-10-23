@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import InputField from '../_Atoms/InputField'
 import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
+import { RelationSchema } from 'fusefx-modeldescription'
 
 export class FieldInputInfo {
   name: string = ''
@@ -95,6 +96,7 @@ const UForm1: React.FC<{
     errors[fieldName] = error
     setErrors({ ...errors })
   }
+
   return (
     <div className='flex gap-6'>
       {labelPosition == 'left' && (

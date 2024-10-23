@@ -7,6 +7,7 @@ import ErrorPage from '../../../_Molecules/ErrorScreen'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 
 const LookUpSelect: React.FC<{
+  label?: string
   dataSourceManager: IDataSourceManagerWidget
   lookUpRelation: RelationSchema
   initialValue: any
@@ -29,11 +30,14 @@ const LookUpSelect: React.FC<{
   classNameHoverBgDark,
   showLabel = true,
   allowCrud = false,
+  label = lookUpRelation.foreignNavigationName && lookUpRelation.foreignNavigationName != ''
+    ? lookUpRelation.foreignNavigationName
+    : lookUpRelation.foreignKeyIndexName,
 }) => {
   const [lookUpList, setLookUpList] = useState<{ label: string; value: string }[]>([])
   const [renderTrigger, setRenderTrigger] = useState(0)
   const [error, setError] = useState<any>(null)
-
+  console.log('render LookUpSelect', initialValue)
   useEffect(() => {
     try {
       const dataSource: IDataSource | null = dataSourceManager.tryGetDataSource(
@@ -81,13 +85,7 @@ const LookUpSelect: React.FC<{
   }
   return (
     <div>
-      {showLabel && (
-        <label className='block mb-2 text-xs font-medium'>
-          {lookUpRelation.foreignNavigationName && lookUpRelation.foreignNavigationName != ''
-            ? lookUpRelation.foreignNavigationName
-            : lookUpRelation.primaryEntityName}
-        </label>
-      )}
+      {showLabel && <label className='block mb-2 text-xs font-medium'>{label}</label>}
       <DropdownSelect
         options={lookUpList}
         onOptionSet={(o) => {

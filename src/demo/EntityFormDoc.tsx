@@ -6,6 +6,7 @@ import EntityFormBasic from './EntityFormBasic'
 import EntityFormInheritance from './EntityFormInheritance'
 import EntityFormMultiSelect from './EntityFormMultiSelect'
 import EntityFormLookUpCrud from './EntityFormLookUpCrud'
+import EntityFormMultiLookUpSameEntity from './EntityFormMultiLookUpSameEntity'
 
 const EntityFormDoc = () => {
   return (
@@ -37,6 +38,13 @@ const EntityFormDoc = () => {
           demoExplanation: 'Entity with Crud LookUp',
           demoComponent: <EntityFormLookUpCrud></EntityFormLookUpCrud>,
           sourceCode: require('!!raw-loader!./EntityFormMultiSelect.tsx').default.toString(),
+        },
+        {
+          demoTitle: 'EntityFormMultiLookUpSameEntity',
+          demoExplanation: 'EntityFormMultiLookUpSameEntity',
+          demoComponent: <EntityFormMultiLookUpSameEntity></EntityFormMultiLookUpSameEntity>,
+          sourceCode:
+            require('!!raw-loader!./EntityFormMultiLookUpSameEntity.tsx').default.toString(),
         },
       ]}
     ></DocComponent>

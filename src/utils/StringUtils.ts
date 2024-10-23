@@ -20,9 +20,13 @@ export function getValue(entity: any, fieldName: string): any | undefined {
 
 export function getForeignKeyValue(entity: any, rel: RelationSchema) {
   const result: any | undefined = getValue(entity, rel.foreignKeyIndexName)
+  console.log('getForeignKeyValue', result)
+  console.log('entity', entity)
   if (result) return result
+  if (!rel.foreignNavigationName || rel.foreignNavigationName == '') return undefined
   const navValue: any = getValue(entity, rel.foreignNavigationName)
-  if (!navValue) return navValue
+  console.log('navValue', navValue)
+  if (!navValue) return undefined
   if ('key' in navValue) {
     return navValue.key
   }

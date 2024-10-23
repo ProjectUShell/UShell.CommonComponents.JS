@@ -48,6 +48,17 @@ const UForm: React.FC<{
     if (!fieldLayout) return false
     return fieldLayout.allowCrudForLookUp || false
   }
+  function getFkLabel(lookUpRelation: RelationSchema) {
+    if (lookUpRelation.foreignKeyIndexName) {
+      const fieldLayout: FieldLayout | undefined = fieldLayouts.find(
+        (fl) => fl.fieldName == lookUpRelation.foreignKeyIndexName,
+      )
+      if (fieldLayout) return fieldLayout.displayLabel
+    }
+    return lookUpRelation.foreignNavigationName && lookUpRelation.foreignNavigationName != ''
+      ? lookUpRelation.foreignNavigationName
+      : lookUpRelation.foreignKeyIndexName
+  }
 
   return (
     <UForm1
@@ -66,9 +77,10 @@ const UForm: React.FC<{
         dataSourceManager
           ? fkRelationsToDisplay.map((fk, i) => {
               return {
-                label: fk.primaryEntityName,
+                label: getFkLabel(fk),
                 render: () => (
                   <LookUpSelect
+                    label={getFkLabel(fk)}
                     key={i}
                     lookUpRelation={fk}
                     dataSourceManager={dataSourceManager}
