@@ -135,9 +135,7 @@ export const EntityTable1: React.FC<{
   formLabelPosition = 'top',
   enableSearch = true,
 }) => {
-  console.log('get queryClient')
   const qcc: any = QueryClientContext
-  console.log('QueryClientContext', qcc._currentValue)
   if (!qcc._currentValue)
     return (
       <QueryClientProvider client={new QueryClient()}>
@@ -337,7 +335,6 @@ const EntityTableInternal: React.FC<{
         const fieldLayout: FieldLayout | undefined = entityLayout?.fieldLayouts.find(
           (fl) => fl.fieldName.toLocaleLowerCase() == f.name.toLocaleLowerCase(),
         )
-        console.log('fieldLayout', fieldLayout)
         return {
           label: fieldLayout ? fieldLayout.displayLabel : f.name,
           fieldName: f.name,

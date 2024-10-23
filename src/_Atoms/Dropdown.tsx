@@ -85,7 +85,7 @@ const Dropdown: React.FC<{
         return (
           window.innerHeight -
           el.getBoundingClientRect().top -
-          fixedParent.getBoundingClientRect().top
+          fixedParent.getBoundingClientRect().top * 0
         )
       }
       return window.innerHeight - el.getBoundingClientRect().top
@@ -117,8 +117,13 @@ const Dropdown: React.FC<{
       const fixedParent: HTMLElement | null = tryFindFixedParent(el)
       if (fixedParent) {
         return (
-          r - (fixedParent.getBoundingClientRect().left - fixedParent.getBoundingClientRect().width)
+          window.innerWidth -
+          (el.getBoundingClientRect().left + el.getBoundingClientRect().width) -
+          fixedParent.getBoundingClientRect().left
         )
+        // return (
+        //   r + (fixedParent.getBoundingClientRect().left - fixedParent.getBoundingClientRect().width)
+        // )
       }
       return r
     } else {

@@ -63,8 +63,6 @@ const LogicalExpressionEditor: React.FC<{
 
   if (!expression) return <div>Nein</div>
 
-  console.log('expression LE1', expression)
-  // console.log('initialExpression LE1', intialExpression)
   return (
     <div
       className={`UShell_LogicalExpressionEditor border-2 dark:border-bg7dark p-2 rounded-md shadow-md ${

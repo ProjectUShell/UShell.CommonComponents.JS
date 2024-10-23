@@ -57,7 +57,6 @@ export function buildIsInFilter(fieldName: string, values: any[]): LogicalExpres
 }
 
 export function applyFilter(records: any[], filter: LogicalExpression) {
-  console.log('applyFilter', filter)
   const result: any[] = []
   for (let r of records) {
     if (satisfiesFilter(r, filter)) {
@@ -84,7 +83,6 @@ export function compare1(
       const aString: string = a[sortingField.fieldName] as string
       const bString: string = b[sortingField.fieldName] as string
       const localC: number = aString.localeCompare(bString)
-      console.log('compare string', localC)
       return sortingField.descending ? -localC : localC
   }
 }
@@ -95,7 +93,6 @@ export function compare(
   sortingFields: SortingField[],
   columns: { fieldType: string }[],
 ): number {
-  console.log('comparing', sortingFields)
   let i: number = 0
   for (let c of columns) {
     const sf: SortingField = sortingFields[i]

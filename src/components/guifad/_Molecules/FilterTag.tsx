@@ -59,13 +59,14 @@ const FilterTag: React.FC<{
 
   return (
     <DropdownButton
+      className=''
       initialOpen={{ o: open }}
       leftOffset={1}
       topOffset={-1}
       buttonContent={
         <div className='group rounded-sm p-1 bg-bg3 hover:bg-bg4 dark:bg-bg3dark dark:hover:bg-bg1dark flex gap-1'>
-          <button className=''>{getLabel(filter)}</button>
-          <button
+          <div className=''>{getLabel(filter)}</div>
+          <div
             className='hover:bg-bg6 hover:dark:bg-backgroundtwodark w-auto group-hover:visible group-hover:w-auto '
             onClick={(e) => {
               e.preventDefault()
@@ -74,12 +75,13 @@ const FilterTag: React.FC<{
             }}
           >
             <XMarkIcon size={4}></XMarkIcon>
-          </button>
+          </div>
         </div>
       }
     >
-      <div className='border'>
+      <div className=''>
         <LogicalExpressionEditor
+          classNameBg='bg-content dark:bg-contentDark'
           fields={fields}
           fkRelations={fkRelations}
           onUpdateExpression={(e) => {

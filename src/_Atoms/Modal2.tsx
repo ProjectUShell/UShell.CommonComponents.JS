@@ -43,12 +43,9 @@ const Modal2: React.FC<{
           width: width,
           height: height,
           maxHeight: '90%',
-          transform:
-            'translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))',
+          scale: full ? undefined : '50%',
         }}
-        className={`fixed flex flex-col bg-content dark:bg-contentDark transition-all duration-300 border-0 border-green-400 ${
-          full ? '' : 'scale-50'
-        }`}
+        className={`UShell_Modal_Inn1er fixed flex flex-col bg-content dark:bg-contentDark transition-all duration-300 border-0 border-green-400 `}
       >
         <div className='h-full flex flex-col overflow-hidden flex-grow border-0 border-blue-400 p-1 px-2'>
           <div className='w-full flex whitespace-nowrap'>

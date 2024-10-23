@@ -33,9 +33,11 @@ const DropdownButton: React.FC<{
         <Dropdown
           refId={refId}
           setIsOpen={(o) => setOpen(o)}
-          leftOffset={leftOffset}
-          rightOffset={rightOffset}
-          topOffset={topOffset}
+          // leftOffset={leftOffset}
+          leftOffset={0}
+          // rightOffset={rightOffset}
+          // topOffset={topOffset}
+          topOffset={0}
           minWidth={false}
         >
           {children}
