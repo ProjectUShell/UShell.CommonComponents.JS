@@ -36,7 +36,17 @@ const carLayout: EntityLayout = new EntityLayout('Car', [
   {
     fieldName: 'Brand',
     displayLabel: 'Brand',
-    dropdownStaticEntries: { Bmw: 'Bmw', Audi: 'Audi', Fiat: 'Fiat', Renault: 'Renault' },
+    dropdownStaticEntries: {
+      Bmw: 'Bmw',
+      Audi: 'Audi',
+      Fiat: 'Fiat',
+      Renault: 'Renault',
+      Vw: 'Vw',
+      Mercedes: 'Mercedes',
+      Kia: 'Kia',
+      Ford: 'Ford',
+      Opel: 'Opel',
+    },
   },
 ])
 carLayout.displayLabel = 'Car'
