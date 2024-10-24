@@ -104,8 +104,8 @@ const UForm1: React.FC<{
           className={`my-2 h-full flex flex-col gap-6
       ${classNameBg || ''}`}
         >
-          {fieldsToDisplay.map((f) => (
-            <div className='flex items-baseline border-0 border-red-400'>
+          {fieldsToDisplay.map((f, i) => (
+            <div key={i} className='flex items-baseline border-0 border-red-400'>
               <label
                 style={{ borderColor: 'transparent' }}
                 className={`whitespace-nowrap p-3 text-sm align-baseline ${
@@ -116,8 +116,8 @@ const UForm1: React.FC<{
               </label>
             </div>
           ))}
-          {customInputs.map((f) => (
-            <div className='flex items-baseline border-0 border-red-400'>
+          {customInputs.map((f, i) => (
+            <div key={i} className='flex items-baseline border-0 border-red-400'>
               <label
                 style={{ borderBottomColor: 'transparent' }}
                 className='whitespace-nowrap p-3 text-sm align-baseline border-b-2'

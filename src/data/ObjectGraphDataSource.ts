@@ -31,6 +31,7 @@ export class ObjectGraphDataSource implements IDataSource {
   }
 
   entityFactoryMethod() {
+    console.log('entityFactoryMethod')
     const result: any = {}
     const keyProps: string[] = EntitySchemaService.getPrimaryKeyProps(this.entitySchema)
 

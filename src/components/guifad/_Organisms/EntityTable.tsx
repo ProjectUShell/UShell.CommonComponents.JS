@@ -258,7 +258,7 @@ const EntityTableInternal: React.FC<{
   }
 
   useEffect(() => {
-    setSelectedRecords([selectedRecord])
+    setSelectedRecords(selectedRecord ? [selectedRecord] : [])
   }, [selectedRecord])
 
   useEffect(() => {
@@ -415,7 +415,6 @@ const EntityTableInternal: React.FC<{
     ],
     queryFn: () => {
       try {
-        console.debug('EntityTable reloading', dataSource)
         return dataSource.getRecords(
           buildFilterExpression(),
           pagingParams,

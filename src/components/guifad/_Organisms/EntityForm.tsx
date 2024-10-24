@@ -201,7 +201,6 @@ export const EntityForm1: React.FC<{
     return true
   }
 
-  console.log('render EntityForm')
   return (
     <div className='UShell_EntityForm flex flex-col h-full w-full overflow-hidden border-0 border-green-400'>
       {toolbar == 'top' && (

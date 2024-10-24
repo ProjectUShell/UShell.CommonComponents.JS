@@ -37,7 +37,6 @@ const LookUpSelect: React.FC<{
   const [lookUpList, setLookUpList] = useState<{ label: string; value: string }[]>([])
   const [renderTrigger, setRenderTrigger] = useState(0)
   const [error, setError] = useState<any>(null)
-  console.log('render LookUpSelect', initialValue)
   useEffect(() => {
     try {
       const dataSource: IDataSource | null = dataSourceManager.tryGetDataSource(
