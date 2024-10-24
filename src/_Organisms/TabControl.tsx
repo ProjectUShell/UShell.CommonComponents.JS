@@ -48,7 +48,7 @@ const TabControl: React.FC<{
 
   return (
     <div
-      className={`USHell_TabContainer h-full flex flex-col w-screen overflow-hidden border-0 border-red-400
+      className={`USHell_TabContainer h-full flex flex-col w-full overflow-hidden border-0 border-red-400
      ${classNameContainerBg || 'bg-menu dark:bg-menuDark'} `}
     >
       <ul
