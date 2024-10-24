@@ -1,13 +1,13 @@
 {
-  "currentVersion": "1.2.130",
-  "currentVersionWithSuffix": "1.2.130",
+  "currentVersion": "1.2.131",
+  "currentVersionWithSuffix": "1.2.131",
   "releaseType": "official",
-  "previousVersion": "1.2.129",
+  "previousVersion": "1.2.130",
   "changeGrade": "patch",
   "currentMajor": 1,
   "currentMinor": 2,
-  "currentPatch": 130,
+  "currentPatch": 131,
   "versionDateInfo": "2024-10-24",
-  "versionTimeInfo": "17:22:52",
+  "versionTimeInfo": "22:44:25",
   "versionNotes": "- new revision without significant changes\n"
 }
