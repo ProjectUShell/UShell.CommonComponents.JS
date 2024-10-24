@@ -66,7 +66,7 @@ const AccordionMenu: React.FC<{
                   key={i}
                   onClick={() => onItemClick(item)}
                 >
-                  <button className='p-2 '>{item.label}</button>
+                  <div className='p-2 '>{item.label}</div>
                 </div>
               ))}
             </div>

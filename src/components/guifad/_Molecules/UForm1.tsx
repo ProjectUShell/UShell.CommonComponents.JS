@@ -118,7 +118,10 @@ const UForm1: React.FC<{
           ))}
           {customInputs.map((f) => (
             <div className='flex items-baseline border-0 border-red-400'>
-              <label className='whitespace-nowrap p-3 font-medium text-sm align-baseline border-b-2 border-b-transparent'>
+              <label
+                style={{ borderBottomColor: 'transparent' }}
+                className='whitespace-nowrap p-3 font-medium text-sm align-baseline border-b-2'
+              >
                 {f.label}
               </label>
             </div>
