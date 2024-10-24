@@ -120,7 +120,7 @@ const UForm1: React.FC<{
             <div className='flex items-baseline border-0 border-red-400'>
               <label
                 style={{ borderBottomColor: 'transparent' }}
-                className='whitespace-nowrap p-3 font-medium text-sm align-baseline border-b-2'
+                className='whitespace-nowrap p-3 text-sm align-baseline border-b-2'
               >
                 {f.label}
               </label>

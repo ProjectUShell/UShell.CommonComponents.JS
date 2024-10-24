@@ -71,6 +71,14 @@ const carLayout: EntityLayout = new EntityLayout('Car', [
     allowCrudForLookUp: true,
   },
 ])
+carLayout.partitions = [
+  {
+    children: [],
+    fields: ['Id', 'ManufacturerId', 'OriginalManufacturerId'],
+    name: '',
+    type: 'group',
+  },
+]
 
 const EntityFormMultiLookUpSameEntity = () => {
   const [r, setR] = useState(0)

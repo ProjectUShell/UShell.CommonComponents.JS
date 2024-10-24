@@ -147,7 +147,7 @@ const EntityFormInner: React.FC<{
   function getRemainingFkRelations(): string[] {
     if (!entityLayout) return fkRelations.map((f) => f.primaryEntityName)
     const coveredFields: string[] = getCoveredFields(entityLayout.partitions)
-    return fkRelations.map((f) => f.primaryEntityName).filter((fn) => !coveredFields.includes(fn))
+    return fkRelations.map((f) => f.foreignKeyIndexName).filter((fn) => !coveredFields.includes(fn))
   }
 
   return (
@@ -164,7 +164,7 @@ const EntityFormInner: React.FC<{
             changeValue={changeValue}
             fkRelations={fkRelations}
             fkRelationsToDisplay={fkRelations.filter((fk) =>
-              p.fields.includes(fk.primaryEntityName),
+              p.fields.includes(fk.foreignKeyIndexName),
             )}
             dataSourceManager={dataSourceManager}
             changeLookUpValues={changeLookUpValues}
