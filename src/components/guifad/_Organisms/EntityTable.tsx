@@ -50,6 +50,7 @@ const EntityTable: React.FC<{
   enableSearch?: boolean
   formStyleType?: number
   formLabelPosition?: 'left' | 'top'
+  rowHeight?: number
   customColumns?: TableColumn[]
 }> = ({
   dataSourceManagerForNavigations,
@@ -70,6 +71,7 @@ const EntityTable: React.FC<{
   formStyleType = 0,
   formLabelPosition = 'top',
   enableSearch = true,
+  rowHeight = 1,
   customColumns = [],
 }) => {
   return (
