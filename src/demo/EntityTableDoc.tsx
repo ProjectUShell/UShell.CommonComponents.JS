@@ -4,6 +4,7 @@ import EntityTableBasic from './EntityTableBasic'
 import EntityTableOptions from './EntityTableOptions'
 import EntityTableInheritance from './EntityTableInheritance'
 import EntityTableCustomColumns from './EntityTableCustomColumns'
+import EntityTableReloadTrigger from './EntityTableReloadTrigger'
 
 const EntityTableDoc = () => {
   return (
@@ -35,6 +36,12 @@ const EntityTableDoc = () => {
           demoExplanation: 'Entity Table with custom columns',
           demoComponent: <EntityTableCustomColumns></EntityTableCustomColumns>,
           sourceCode: require('!!raw-loader!./EntityTableCustomColumns.tsx').default.toString(),
+        },
+        {
+          demoTitle: 'EntityTableReloadTrigger',
+          demoExplanation: 'EntityTableReloadTrigger',
+          demoComponent: <EntityTableReloadTrigger></EntityTableReloadTrigger>,
+          sourceCode: require('!!raw-loader!./EntityTableReloadTrigger.tsx').default.toString(),
         },
       ]}
     ></DocComponent>

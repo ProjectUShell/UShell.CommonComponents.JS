@@ -52,6 +52,7 @@ const EntityTable: React.FC<{
   formLabelPosition?: 'left' | 'top'
   rowHeight?: number
   customColumns?: TableColumn[]
+  reloadTriggerObject?: any
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -73,6 +74,7 @@ const EntityTable: React.FC<{
   enableSearch = true,
   rowHeight = 1,
   customColumns = [],
+  reloadTriggerObject,
 }) => {
   return (
     <EntityTable1
@@ -96,6 +98,7 @@ const EntityTable: React.FC<{
       formLabelPosition={formLabelPosition}
       enableSearch={enableSearch}
       customColumns={customColumns}
+      reloadTriggerObject={reloadTriggerObject}
     ></EntityTable1>
   )
 }
@@ -121,6 +124,7 @@ export const EntityTable1: React.FC<{
   formLabelPosition?: 'left' | 'top'
   rowHeight?: number
   customColumns?: TableColumn[]
+  reloadTriggerObject?: any
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -143,6 +147,7 @@ export const EntityTable1: React.FC<{
   enableSearch = true,
   rowHeight = 1,
   customColumns = [],
+  reloadTriggerObject,
 }) => {
   const qcc: any = QueryClientContext
   if (!qcc._currentValue)
@@ -169,6 +174,7 @@ export const EntityTable1: React.FC<{
           enableSearch={enableSearch}
           rowHeight={rowHeight}
           customColumns={customColumns}
+          reloadTriggerObject={reloadTriggerObject}
         ></EntityTableInternal>
       </QueryClientProvider>
     )
@@ -192,6 +198,7 @@ export const EntityTable1: React.FC<{
       enableSearch={enableSearch}
       rowHeight={rowHeight}
       customColumns={customColumns}
+      reloadTriggerObject={reloadTriggerObject}
     ></EntityTableInternal>
   )
 }
@@ -216,6 +223,7 @@ const EntityTableInternal: React.FC<{
   formLabelPosition: 'left' | 'top'
   rowHeight: number
   customColumns: TableColumn[]
+  reloadTriggerObject: any
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -237,6 +245,7 @@ const EntityTableInternal: React.FC<{
   formLabelPosition,
   rowHeight,
   customColumns,
+  reloadTriggerObject,
 }) => {
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
@@ -443,6 +452,7 @@ const EntityTableInternal: React.FC<{
       dataSourceManagerForNavigations,
       useParentFilter,
       columnFilters,
+      reloadTriggerObject,
     ],
     queryFn: () => {
       try {
