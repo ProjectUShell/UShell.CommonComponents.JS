@@ -21,7 +21,11 @@ const TabControlCustomColors = () => {
         },
       ]}
       onTabClose={() => {}}
-      classNameContainerBg='bg-content dark:bg-contentDark'
+      classNameContainerBg='bg-menu dark:bg-menuDark'
+      classNameActiveBg='bg-menu dark:bg-menuDark'
+      classNameInactiveBg='bg-content dark:bg-contentDark'
+      classNameHoverBg='hover:bg-contentHover dark:hover:bg-contentHoverDark'
+      styleType={1}
     ></TabControl1>
   )
 }
