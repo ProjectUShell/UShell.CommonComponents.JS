@@ -50,6 +50,7 @@ const EntityTable: React.FC<{
   enableSearch?: boolean
   formStyleType?: number
   formLabelPosition?: 'left' | 'top'
+  customColumns?: TableColumn[]
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -69,6 +70,7 @@ const EntityTable: React.FC<{
   formStyleType = 0,
   formLabelPosition = 'top',
   enableSearch = true,
+  customColumns = [],
 }) => {
   return (
     <EntityTable1
@@ -91,6 +93,7 @@ const EntityTable: React.FC<{
       formStyleType={formStyleType}
       formLabelPosition={formLabelPosition}
       enableSearch={enableSearch}
+      customColumns={customColumns}
     ></EntityTable1>
   )
 }
@@ -114,6 +117,8 @@ export const EntityTable1: React.FC<{
   enableSearch?: boolean
   formStyleType?: number
   formLabelPosition?: 'left' | 'top'
+  rowHeight?: number
+  customColumns?: TableColumn[]
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -134,6 +139,8 @@ export const EntityTable1: React.FC<{
   formStyleType = 0,
   formLabelPosition = 'top',
   enableSearch = true,
+  rowHeight = 1,
+  customColumns = [],
 }) => {
   const qcc: any = QueryClientContext
   if (!qcc._currentValue)
@@ -158,6 +165,8 @@ export const EntityTable1: React.FC<{
           enableParentFilter={enableParentFilter}
           enableQueryEditor={enableQueryEditor}
           enableSearch={enableSearch}
+          rowHeight={rowHeight}
+          customColumns={customColumns}
         ></EntityTableInternal>
       </QueryClientProvider>
     )
@@ -179,6 +188,8 @@ export const EntityTable1: React.FC<{
       enableParentFilter={enableParentFilter}
       enableQueryEditor={enableQueryEditor}
       enableSearch={enableSearch}
+      rowHeight={rowHeight}
+      customColumns={customColumns}
     ></EntityTableInternal>
   )
 }
@@ -201,6 +212,8 @@ const EntityTableInternal: React.FC<{
   enableQueryEditor: boolean
   formStyleType: number
   formLabelPosition: 'left' | 'top'
+  rowHeight: number
+  customColumns: TableColumn[]
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -220,6 +233,8 @@ const EntityTableInternal: React.FC<{
   enableSearch,
   formStyleType = 0,
   formLabelPosition,
+  rowHeight,
+  customColumns,
 }) => {
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
@@ -358,7 +373,21 @@ const EntityTableInternal: React.FC<{
               : undefined,
         }
       })
-    return newColumns
+    customColumns.forEach((cc: TableColumn) => newColumns.push(cc))
+    const sortedColumns: TableColumn[] = []
+    if (entityLayout?.tableFields && entityLayout.tableFields.length > 0) {
+      entityLayout.tableFields.forEach((tf) => {
+        const column: TableColumn | undefined = newColumns.find(
+          (c) => c.fieldName.toLocaleLowerCase() == tf.toLocaleLowerCase(),
+        )
+        if (column) {
+          sortedColumns.push(column)
+        }
+      })
+      return sortedColumns
+    } else {
+      return newColumns
+    }
     // setColumns(newColumns)
     // dataSource.getRecords().then((r) => {
     //   setRecords(r)
@@ -635,7 +664,7 @@ const EntityTableInternal: React.FC<{
                 return newSp
               })
             }}
-            rowHeight={1}
+            rowHeight={rowHeight}
             initialFilters={columnFilters}
             onFilterChanged={(filterByColumn: { [c: string]: LogicalExpression }) => {
               setColumnFilters({ ...filterByColumn })

@@ -191,7 +191,7 @@ const Table2: React.FC<{
       return v
     }
     if (c.onRenderCell) {
-      return c.onRenderCell(v)
+      return c.onRenderCell(v, null)
     }
     if (!v) {
       return v

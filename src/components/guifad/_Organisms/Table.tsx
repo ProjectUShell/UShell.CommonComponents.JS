@@ -18,7 +18,7 @@ export interface TableColumn {
   fieldName: string
   fieldType: string
   key: string
-  onRenderCell?: (cellValue: any) => React.JSX.Element
+  onRenderCell?: (cellValue: any, record: any) => React.JSX.Element
   minCellLength?: number
   maxCellLength?: number
   renderFilter?: (
@@ -255,7 +255,7 @@ const Table: React.FC<{
       return v
     }
     if (c.onRenderCell) {
-      return c.onRenderCell(v)
+      return c.onRenderCell(v, null)
     }
     if (!v) {
       return v
@@ -612,18 +612,6 @@ const Table: React.FC<{
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}
                 >
-                  {/* <td className='w-4 p-4'>
-                          <div className='flex items-center'>
-                            <input
-                              id='checkbox-table-search-1'
-                              type='checkbox'
-                              className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                            />
-                            <label htmlFor='checkbox-table-search-1' className='sr-only'>
-                              checkbox
-                            </label>
-                          </div>
-                        </td> */}
                   {expandableRowProps && expandableRowProps.rowExpandable(r) && (
                     <td
                       className={`px-4 py-${
@@ -662,6 +650,7 @@ const Table: React.FC<{
                       {c.onRenderCell ? (
                         c.onRenderCell(
                           c.fieldName in r ? r[c.fieldName] : r[lowerFirstLetter(c.fieldName)],
+                          r,
                         )
                       ) : (
                         <>
