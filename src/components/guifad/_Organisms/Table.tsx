@@ -65,6 +65,7 @@ const Table: React.FC<{
   tableColors?: TableColors
   useClientFilter?: boolean
   isParent?: (c: any, p: any) => boolean
+  showTree?: boolean
 }> = ({
   columns,
   records,
@@ -86,6 +87,7 @@ const Table: React.FC<{
   tableColors,
   useClientFilter = false,
   isParent,
+  showTree = true,
 }) => {
   const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean }>({})
   const [filterVisible, setFilterVisible] = useState<{ [c: string]: boolean }>({})
@@ -167,7 +169,6 @@ const Table: React.FC<{
   }, [])
 
   function onRowClick(i: number, e: any) {
-    console.log('row click')
     e.preventDefault()
     e.stopPropagation()
     if (e.target.tagName == 'path' || e.target.tagName == 'svg') {
@@ -320,8 +321,6 @@ const Table: React.FC<{
     } else {
       delete filterByColumn[column.fieldName]
     }
-    console.log('onColumnFilterChange', columnFilter)
-    console.log('new filterByColumn', filterByColumn)
     setFilterByColumn({ ...filterByColumn })
     setFilterVisible((fv) => {
       fv[column.fieldName] = false
@@ -430,27 +429,21 @@ const Table: React.FC<{
   }
 
   function isParentRowOpen(record: any): boolean {
-    console.log('chec isParentRowOpen', record)
     const parentIndex: number = record.parentIndex
     if (parentIndex == undefined || parentIndex == -1) return true
-    console.log('parentIndex of is', record, parentIndex)
-    if (parentIndex == 0) {
-      console.log('isRowOpen of parent', isRowOpen(parentIndex))
-    }
+
     return isRowOpen(parentIndex) && isParentRowOpen(filteredRecords[parentIndex])
     console.log('chec isParentRowOpen for parent', filteredRecords[parentIndex])
     return isParentRowOpen(filteredRecords[parentIndex])
   }
 
   function toggleRopOpen(rowIndex: number): void {
-    console.log('setRowOpenState', rowOpenState)
     if (!isParent) return
     if (!(rowIndex in rowOpenState)) {
       rowOpenState[rowIndex] = false
     } else {
       rowOpenState[rowIndex] = !rowOpenState[rowIndex]
     }
-    console.log('setRowOpenState', rowOpenState)
     setRowOpenState({ ...rowOpenState })
   }
 
@@ -468,26 +461,7 @@ const Table: React.FC<{
   let filteredRecords: any[] = records
   if (useClientFilter) {
     for (let f in filterByColumn) {
-      console.log('filterByColumn', f)
       filteredRecords = applyFilter(records, filterByColumn[f])
-    }
-  }
-
-  if (isParent) {
-    //O(n^2)
-    let i = 0
-    for (let potentialChild of filteredRecords) {
-      potentialChild.parentIndex = -1
-      let j = 0
-      for (let potentialParent of filteredRecords) {
-        if (isParent(potentialChild, potentialParent)) {
-          potentialChild.parentIndex = j
-          potentialParent.hasChildren = true
-          break
-        }
-        j++
-      }
-      i++
     }
   }
 
@@ -499,8 +473,92 @@ const Table: React.FC<{
     )
   }
 
-  console.log('rowOpenState', rowOpenState)
-  console.log('filteredRecords', filteredRecords)
+  function sortAgainstNesting1(
+    sortedRecords: any,
+    nestingDepths: any,
+    nestingDepth: number,
+    parentIndex: number,
+  ) {
+    if (!(nestingDepth in nestingDepths)) return
+    const recordsOfNestingDepth: any[] = nestingDepths[nestingDepth]
+    recordsOfNestingDepth.forEach((r) => {
+      if (r.parentIndex == parentIndex) {
+        sortedRecords.push(r)
+        sortAgainstNesting1(sortedRecords, nestingDepths, nestingDepth + 1, r.initialIndex)
+      }
+    })
+  }
+
+  function sortAgainstNesting() {
+    const sortedRecords: any[] = []
+    const nestingDepths: { [nestingDepth: number]: any[] } = {}
+    let i = 0
+    for (let r of filteredRecords) {
+      r.initialIndex = i
+      i++
+      const nestingDepth: number = getNestingDepth(r)
+      if (!(nestingDepth in nestingDepths)) {
+        nestingDepths[nestingDepth] = [r]
+      } else {
+        nestingDepths[nestingDepth].push(r)
+      }
+    }
+    sortAgainstNesting1(sortedRecords, nestingDepths, 0, -1)
+    filteredRecords = sortedRecords
+  }
+  function applySwapping() {
+    sortAgainstNesting()
+    if (!isParent) return
+
+    const swapIndices: { l: number; r: number }[] = []
+    let i = 0
+    for (let potentialChild of filteredRecords) {
+      let j = 0
+      for (let potentialParent of filteredRecords) {
+        if (isParent(potentialChild, potentialParent)) {
+          if (i < j) {
+            swapIndices.push({ l: i, r: j })
+          }
+          break
+        }
+        j++
+      }
+      i++
+    }
+    console.log('swapIndices', swapIndices)
+    for (let swapIndex of swapIndices) {
+      var b = filteredRecords[swapIndex.r]
+      filteredRecords[swapIndex.r] = filteredRecords[swapIndex.l]
+      filteredRecords[swapIndex.l] = b
+    }
+  }
+
+  function calculateNesting() {
+    if (!isParent) return
+    let i = 0
+    for (let potentialChild of filteredRecords) {
+      potentialChild.parentIndex = -1
+      let j = 0
+      for (let potentialParent of filteredRecords) {
+        if (isParent(potentialChild, potentialParent)) {
+          potentialChild.parentIndex = j
+          potentialParent.hasChildren = true
+
+          break
+        }
+        j++
+      }
+      i++
+    }
+  }
+
+  if (isParent) {
+    calculateNesting()
+    applySwapping()
+    calculateNesting()
+  }
+
+  console.log('render table', filteredRecords)
 
   return (
     <div
@@ -625,7 +683,6 @@ const Table: React.FC<{
                       onDragLeave={(e) => e.preventDefault()}
                       onDrag={(e: any) => {
                         e.preventDefault()
-                        console.log('e', e.dataTransfer)
                         if (e.clientX == 0) {
                           return
                         }
@@ -715,7 +772,7 @@ const Table: React.FC<{
                       }
                     >
                       <div className='flex items-center'>
-                        {isParent && j == 0 && (
+                        {isParent && j == 0 && showTree && (
                           <div
                             style={{ marginLeft: `${getNestingDepth(r) * 20}px` }}
                             className='w-6 h-6 items-center align-middle content-center '

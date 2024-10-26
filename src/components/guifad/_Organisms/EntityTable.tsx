@@ -30,6 +30,8 @@ import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutD
 import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
 import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
 import { renderCustomAvailableValuesFilter } from '../../../_Molecules/AvailableValuesFilter'
+import ListBulletIcon from '../../../_Icons/ListBulletIcon'
+import ListTreeIcon from '../../../_Icons/ListTreeIcon'
 
 const EntityTable: React.FC<{
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
@@ -277,6 +279,8 @@ const EntityTableInternal: React.FC<{
   const [filterTagsVisible, setFilterTagsVisible] = useState(true)
   const [detailsVisible, setDetailsVisible] = useState(false)
   const [isCreation, setIsCreation] = useState(false)
+
+  const [showTree, setShowTree] = useState(true)
 
   function forceReload() {
     setReloadTrigger((r) => r + 1)
@@ -527,6 +531,22 @@ const EntityTableInternal: React.FC<{
                 </button>
               </div>
             )}
+            {isParent && (
+              <div className='flex'>
+                <button
+                  className='p-1 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                  onClick={() => setShowTree(false)}
+                >
+                  <ListBulletIcon></ListBulletIcon>
+                </button>
+                <button
+                  className='p-1 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                  onClick={() => setShowTree(true)}
+                >
+                  <ListTreeIcon></ListTreeIcon>
+                </button>
+              </div>
+            )}
             <div className={`flex p-1 ${className} rounded-md `}>
               {enableSearch && (
                 <div className='p-0'>
@@ -692,6 +712,7 @@ const EntityTableInternal: React.FC<{
               setColumnFilters({ ...filterByColumn })
             }}
             isParent={isParent}
+            showTree={showTree}
           ></Table>
         )}
       </div>
