@@ -12,6 +12,8 @@ import MinusCircleIcon from '../../../_Icons/MinusCircleIcon'
 import PaddingDummy from '../../../_Atoms/PaddingDummy'
 import { applyFilter, applySorting } from '../../../utils/LogicUtils'
 import DropdownSelectBasic from '../../../demo/DropdownSelectBasic'
+import ArrowUpIcon from '../../../_Icons/ArrowUpIcon'
+import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
 
 export interface TableColumn {
   label: string
@@ -62,6 +64,7 @@ const Table: React.FC<{
   rowHeight?: number
   tableColors?: TableColors
   useClientFilter?: boolean
+  isParent?: (c: any, p: any) => boolean
 }> = ({
   columns,
   records,
@@ -82,6 +85,7 @@ const Table: React.FC<{
   rowHeight,
   tableColors,
   useClientFilter = false,
+  isParent,
 }) => {
   const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean }>({})
   const [filterVisible, setFilterVisible] = useState<{ [c: string]: boolean }>({})
@@ -99,6 +103,9 @@ const Table: React.FC<{
   const [dragStartWidth, setDragStartWidth] = useState(0)
   const [dragStartWidthNext, setDragStartWidthNext] = useState(0)
   const [dragStartX, setDragStartX] = useState(0)
+
+  // nesting
+  const [rowOpenState, setRowOpenState] = useState<{ [rowIndex: number]: boolean }>({})
 
   const currentWidth = window.innerWidth
 
@@ -160,6 +167,7 @@ const Table: React.FC<{
   }, [])
 
   function onRowClick(i: number, e: any) {
+    console.log('row click')
     e.preventDefault()
     e.stopPropagation()
     if (e.target.tagName == 'path' || e.target.tagName == 'svg') {
@@ -415,6 +423,44 @@ const Table: React.FC<{
     })
   }
 
+  function isRowOpen(rowIndex: number): boolean {
+    if (!isParent) return true
+    if (!(rowIndex in rowOpenState)) return true
+    return rowOpenState[rowIndex]
+  }
+
+  function isParentRowOpen(record: any): boolean {
+    console.log('chec isParentRowOpen', record)
+    const parentIndex: number = record.parentIndex
+    if (parentIndex == undefined || parentIndex == -1) return true
+    console.log('parentIndex of is', record, parentIndex)
+    if (parentIndex == 0) {
+      console.log('isRowOpen of parent', isRowOpen(parentIndex))
+    }
+    return isRowOpen(parentIndex) && isParentRowOpen(filteredRecords[parentIndex])
+    console.log('chec isParentRowOpen for parent', filteredRecords[parentIndex])
+    return isParentRowOpen(filteredRecords[parentIndex])
+  }
+
+  function toggleRopOpen(rowIndex: number): void {
+    console.log('setRowOpenState', rowOpenState)
+    if (!isParent) return
+    if (!(rowIndex in rowOpenState)) {
+      rowOpenState[rowIndex] = false
+    } else {
+      rowOpenState[rowIndex] = !rowOpenState[rowIndex]
+    }
+    console.log('setRowOpenState', rowOpenState)
+    setRowOpenState({ ...rowOpenState })
+  }
+
+  function getNestingDepth(record: any): number {
+    const parentIndex: number = record.parentIndex
+    if (parentIndex == undefined || parentIndex == -1) return 0
+    const parent: any = filteredRecords[parentIndex]
+    return 1 + getNestingDepth(parent)
+  }
+
   const refId: string = useMemo(() => {
     return 'UShell_Table_' + crypto.randomUUID()
   }, [])
@@ -427,6 +473,24 @@ const Table: React.FC<{
     }
   }
 
+  if (isParent) {
+    //O(n^2)
+    let i = 0
+    for (let potentialChild of filteredRecords) {
+      potentialChild.parentIndex = -1
+      let j = 0
+      for (let potentialParent of filteredRecords) {
+        if (isParent(potentialChild, potentialParent)) {
+          potentialChild.parentIndex = j
+          potentialParent.hasChildren = true
+          break
+        }
+        j++
+      }
+      i++
+    }
+  }
+
   if (!onSortingParamsChange && sortingParams) {
     filteredRecords = applySorting(
       filteredRecords,
@@ -434,6 +498,9 @@ const Table: React.FC<{
       sortingParams.map((sp) => columns.find((c) => c.fieldName == sp.fieldName)!),
     )
   }
+
+  console.log('rowOpenState', rowOpenState)
+  console.log('filteredRecords', filteredRecords)
 
   return (
     <div
@@ -647,30 +714,59 @@ const Table: React.FC<{
                         c.key in columnWidths ? { width: getColumnWidth(c.key) } : { maxWidth: 300 }
                       }
                     >
-                      {c.onRenderCell ? (
-                        c.onRenderCell(
-                          c.fieldName in r ? r[c.fieldName] : r[lowerFirstLetter(c.fieldName)],
-                          r,
-                        )
-                      ) : (
-                        <>
-                          {c.fieldName in r
-                            ? getDisplay(
-                                r[c.fieldName],
-                                c,
-                                document.getElementById(`table_cell_${j}_${i}`),
-                              )
-                            : getDisplay(
-                                r[lowerFirstLetter(c.fieldName)],
-                                c,
-                                document.getElementById(`table_cell_${j}_${i}`),
-                              )}
-                        </>
-                      )}
+                      <div className='flex items-center'>
+                        {isParent && j == 0 && (
+                          <div
+                            style={{ marginLeft: `${getNestingDepth(r) * 20}px` }}
+                            className='w-6 h-6 items-center align-middle content-center '
+                          >
+                            {r.hasChildren && (
+                              <div
+                                className='cursor-pointer'
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  toggleRopOpen(i)
+                                }}
+                                onDoubleClick={(e) => {
+                                  e.stopPropagation()
+                                  e.preventDefault()
+                                }}
+                              >
+                                <ChevrodnDownIcon
+                                  size={4}
+                                  rotate={isRowOpen(i) ? 0 : 270}
+                                ></ChevrodnDownIcon>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {c.onRenderCell ? (
+                          c.onRenderCell(
+                            c.fieldName in r ? r[c.fieldName] : r[lowerFirstLetter(c.fieldName)],
+                            r,
+                          )
+                        ) : (
+                          <>
+                            {c.fieldName in r
+                              ? getDisplay(
+                                  r[c.fieldName],
+                                  c,
+                                  document.getElementById(`table_cell_${j}_${i}`),
+                                )
+                              : getDisplay(
+                                  r[lowerFirstLetter(c.fieldName)],
+                                  c,
+                                  document.getElementById(`table_cell_${j}_${i}`),
+                                )}
+                          </>
+                        )}
+                      </div>
                     </td>
                   ))}
                 </tr>
               )
+              if (!isParentRowOpen(r)) return <tr key={i}></tr>
               return rowExpanded[i]
                 ? [
                     renderRow,

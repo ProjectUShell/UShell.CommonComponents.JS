@@ -67,6 +67,7 @@ const EntityTableCustomColumns = () => {
             },
           },
         ]}
+        rowHeight={4}
       ></EntityTable>
     </div>
   )

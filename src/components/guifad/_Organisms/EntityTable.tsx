@@ -53,6 +53,7 @@ const EntityTable: React.FC<{
   rowHeight?: number
   customColumns?: TableColumn[]
   reloadTriggerObject?: any
+  isParent?: (c: any, p: any) => boolean
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -75,6 +76,7 @@ const EntityTable: React.FC<{
   rowHeight = 1,
   customColumns = [],
   reloadTriggerObject,
+  isParent,
 }) => {
   return (
     <EntityTable1
@@ -99,6 +101,8 @@ const EntityTable: React.FC<{
       enableSearch={enableSearch}
       customColumns={customColumns}
       reloadTriggerObject={reloadTriggerObject}
+      rowHeight={rowHeight}
+      isParent={isParent}
     ></EntityTable1>
   )
 }
@@ -125,6 +129,7 @@ export const EntityTable1: React.FC<{
   rowHeight?: number
   customColumns?: TableColumn[]
   reloadTriggerObject?: any
+  isParent?: (c: any, p: any) => boolean
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -148,6 +153,7 @@ export const EntityTable1: React.FC<{
   rowHeight = 1,
   customColumns = [],
   reloadTriggerObject,
+  isParent,
 }) => {
   const qcc: any = QueryClientContext
   if (!qcc._currentValue)
@@ -175,6 +181,7 @@ export const EntityTable1: React.FC<{
           rowHeight={rowHeight}
           customColumns={customColumns}
           reloadTriggerObject={reloadTriggerObject}
+          isParent={isParent}
         ></EntityTableInternal>
       </QueryClientProvider>
     )
@@ -199,6 +206,7 @@ export const EntityTable1: React.FC<{
       rowHeight={rowHeight}
       customColumns={customColumns}
       reloadTriggerObject={reloadTriggerObject}
+      isParent={isParent}
     ></EntityTableInternal>
   )
 }
@@ -224,6 +232,7 @@ const EntityTableInternal: React.FC<{
   rowHeight: number
   customColumns: TableColumn[]
   reloadTriggerObject: any
+  isParent?: (c: any, p: any) => boolean
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -246,6 +255,7 @@ const EntityTableInternal: React.FC<{
   rowHeight,
   customColumns,
   reloadTriggerObject,
+  isParent,
 }) => {
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
@@ -681,6 +691,7 @@ const EntityTableInternal: React.FC<{
             onFilterChanged={(filterByColumn: { [c: string]: LogicalExpression }) => {
               setColumnFilters({ ...filterByColumn })
             }}
+            isParent={isParent}
           ></Table>
         )}
       </div>
