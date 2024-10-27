@@ -11,6 +11,9 @@ const BoolInputField: React.FC<{
   classNameBg?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
+  classNameDropdownBg?: string
+  classNameDropdownHoverBg?: string
+  required: boolean
 }> = ({
   initialValue,
   setCurrentValue,
@@ -20,22 +23,36 @@ const BoolInputField: React.FC<{
   classNameBg,
   classNameHoverBg,
   classNameHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
+  required = false,
 }) => {
+  console.log('initial value', initialValue)
+  const options: { label: string; value: any }[] = [
+    { label: 'Yes', value: 1 },
+    { label: 'No', value: -1 },
+  ]
+  if (!required) {
+    options.push({ label: 'Unset', value: undefined })
+  }
   return (
     <DropdownSelect
-      options={[
-        { label: 'Yes', value: true },
-        { label: 'No', value: false },
-      ]}
+      options={options}
       onOptionSet={(o) => {
-        setCurrentValue(o?.value)
-        onValueChange(o?.value)
+        console.log('option set', o)
+        setCurrentValue(o?.value == undefined ? undefined : o?.value == 1 ? true : false)
+        onValueChange(o?.value == undefined ? undefined : o?.value == 1 ? true : false)
       }}
-      initialOption={{ label: initialValue ? 'Yes' : 'No', value: initialValue }}
+      initialOption={{
+        label: initialValue == undefined ? 'Unset' : initialValue == true ? 'Yes' : 'No',
+        value: initialValue == undefined ? undefined : initialValue == true ? 1 : -1,
+      }}
       topOffset={0}
       classNameBg={classNameBg}
       classNameHoverBg={classNameHoverBg}
       classNameHoverBgDark={classNameHoverBgDark}
+      classNameDropdownBg={classNameDropdownBg}
+      classNameDropdownHoverBg={classNameDropdownHoverBg}
       styleType={styleType}
     ></DropdownSelect>
   )

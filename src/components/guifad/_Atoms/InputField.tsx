@@ -19,6 +19,8 @@ const InputField: React.FC<{
   classNameBg?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
+  classNameDropdownBg?: string
+  classNameDropdownHoverBg?: string
   multiLine?: boolean
   styleType?: number
   readOnly?: boolean
@@ -35,6 +37,8 @@ const InputField: React.FC<{
   classNameBg,
   classNameHoverBg,
   classNameHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
   multiLine = false,
   styleType = 0,
   readOnly = false,
@@ -47,6 +51,7 @@ const InputField: React.FC<{
       const htmlType: string = EntitySchemaService.getHtmlInputType(inputType)
       if (htmlType == 'date') {
         if (!initialValue) {
+          return undefined
           return new Date().toISOString().replace(/T.*/, '')
         }
         return new Date(initialValue).toISOString().replace(/T.*/, '')
@@ -113,27 +118,39 @@ const InputField: React.FC<{
           initialValue={initialValue}
           currentValue={currentValue}
           setCurrentValue={setCurrentValue}
-          onValueChange={(nv) => onValueChange(nv, getErrors(nv))}
+          onValueChange={(nv) => {
+            console.log('onValueChange 0', nv)
+            onValueChange(nv, getErrors(nv))
+          }}
           disabled={disabled}
           classNameBg={classNameBg}
           classNameHoverBg={classNameHoverBg}
           classNameHoverBgDark={classNameHoverBgDark}
+          classNameDropdownBg={classNameDropdownBg}
+          classNameDropdownHoverBg={classNameDropdownHoverBg}
           styleType={styleType}
+          required={required}
         ></BoolInputField>
       )
     }
     if (allowedValues) {
       if (!allowedValuesSeparator) {
+        const options: any[] = Object.keys(allowedValues).map((av) => {
+          return { label: allowedValues[av], value: av }
+        })
+        if (!required) {
+          options.push({ label: 'Unset', value: undefined })
+        }
         return (
           <DropdownSelect
             disabled={disabled}
             classNameBg={classNameBg}
             classNameHoverBg={classNameHoverBg}
             classNameHoverBgDark={classNameHoverBgDark}
+            classNameDropdownBg={classNameDropdownBg}
+            classNameDropdownHoverBg={classNameDropdownHoverBg}
             styleType={styleType}
-            options={Object.keys(allowedValues).map((av) => {
-              return { label: allowedValues[av], value: av }
-            })}
+            options={options}
             onOptionSet={(o) => {
               setCurrentValue(o?.value)
               onValueChange(o?.value, getErrors(o?.value))

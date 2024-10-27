@@ -22,6 +22,8 @@ const UForm1: React.FC<{
   classNameInputBg?: string
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
+  classNameDropdownBg?: string
+  classNameDropdownHoverBg?: string
   styleType?: number
   readOnly?: boolean
   isCreation?: boolean
@@ -35,6 +37,8 @@ const UForm1: React.FC<{
   classNameInputBg,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
   styleType = 0,
   readOnly = false,
   isCreation = false,
@@ -144,6 +148,7 @@ const UForm1: React.FC<{
                 label={labelPosition == 'top' ? getLabel(f) : null}
                 initialValue={f.value}
                 onValueChange={(newValue: any, err: string | null) => {
+                  console.log('onValueChange', newValue)
                   f.setValue(newValue)
                   onValidation(f.name, err)
                 }}
@@ -151,6 +156,8 @@ const UForm1: React.FC<{
                 classNameBg={classNameInputBg}
                 classNameHoverBg={classNameInputHoverBg}
                 classNameHoverBgDark={classNameInputHoverBgDark}
+                classNameDropdownBg={classNameDropdownBg}
+                classNameDropdownHoverBg={classNameDropdownHoverBg}
                 allowedValues={getAllowedValues(f)}
                 multiLine={fieldLayout ? fieldLayout.textIsMultiLine : false}
                 styleType={styleType}

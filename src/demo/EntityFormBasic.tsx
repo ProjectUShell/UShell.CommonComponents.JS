@@ -8,6 +8,7 @@ import EntityForm from '../components/guifad/_Organisms/EntityForm'
 
 const brandField: FieldSchema = new FieldSchema('Brand', 'string')
 brandField.filterable = 1
+brandField.required = false
 const idField: FieldSchema = new FieldSchema('Id', 'int32')
 idField.required = true
 const isOldtimerField: FieldSchema = new FieldSchema('IsOldtimer', 'boolean')
@@ -66,6 +67,7 @@ const EntityFormBasic = () => {
         entity={{}}
         isCreation={true}
         onSaved={() => {}}
+        classNameDropdownBg='bg-red-200'
       ></EntityForm>
     </div>
   )

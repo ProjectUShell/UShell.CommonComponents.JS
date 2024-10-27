@@ -27,6 +27,8 @@ const FieldForm: React.FC<{ field: FieldSchema; onChange: () => void }> = ({ fie
         <label className='block mb-2 text-xs font-medium'>Type</label>
         <div className='cursor-default text-md rounded-md bg-bg2 dark:bg-bg2dark block w-full p-0 outline-none'>
           <DropdownSelect
+            classNameDropdownBg=''
+            classNameDropdownHoverBg=''
             options={[
               { value: 'String', label: 'String' },
               { value: 'Date', label: 'Date' },

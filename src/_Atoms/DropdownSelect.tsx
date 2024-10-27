@@ -20,6 +20,8 @@ const DropdownSelect: React.FC<{
   classNameBg?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
+  classNameDropdownBg?: string
+  classNameDropdownHoverBg?: string
   additionalElements?: JSX.Element[]
 }> = ({
   options,
@@ -34,6 +36,8 @@ const DropdownSelect: React.FC<{
   classNameBg,
   classNameHoverBg,
   classNameHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
   additionalElements,
 }) => {
   const [open, setOpen] = useState(false)
@@ -228,7 +232,7 @@ const DropdownSelect: React.FC<{
           >
             <div
               className={`w-full h-full overflow-auto flex flex-col p-0 border-2 dark:border-bg4dark  ${
-                classNameBg || 'bg-content dark:bg-contentDark'
+                classNameDropdownBg || 'bg-content dark:bg-contentDark'
               }`}
             >
               {additionalElements?.map((ae, i) => ae)}

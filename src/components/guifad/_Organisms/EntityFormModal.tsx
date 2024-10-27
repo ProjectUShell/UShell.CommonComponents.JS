@@ -19,6 +19,8 @@ const EntityFormModal: React.FC<{
   classNameInputBg?: string
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
+  classNameDropdownBg: string
+  classNameDropdownHoverBg: string
   styleType?: number
   uow?: any
   persistUow?: (uow: any) => void
@@ -37,6 +39,8 @@ const EntityFormModal: React.FC<{
   classNameInputBg,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
   styleType = 0,
   uow,
   persistUow,
@@ -72,6 +76,8 @@ const EntityFormModal: React.FC<{
           classNameInputBg={classNameInputBg}
           classNameInputHoverBg={classNameInputHoverBg}
           classNameInputHoverBgDark={classNameInputHoverBgDark}
+          classNameDropdownBg={classNameDropdownBg}
+          classNameDropdownHoverBg={classNameDropdownHoverBg}
           styleType={styleType}
           uow={uow}
           persistUow={persistUow}

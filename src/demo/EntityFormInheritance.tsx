@@ -94,6 +94,8 @@ const EntityFormInheritance = () => {
         entity={{}}
         isCreation={true}
         onSaved={() => {}}
+        classNameDropdownBg=''
+        classNameDropdownHoverBg=''
       ></EntityForm1>
     </div>
   )

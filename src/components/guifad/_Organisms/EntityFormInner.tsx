@@ -23,6 +23,8 @@ const EntityFormInner: React.FC<{
   classNameInputBg?: string
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
+  classNameDropdownBg?: string
+  classNameDropdownHoverBg?: string
   styleType?: number
   uow: any
   persistUow: (uow: any) => void
@@ -42,6 +44,8 @@ const EntityFormInner: React.FC<{
   classNameInputBg,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
   styleType = 0,
   isCreation,
   onValidationChanged,
@@ -113,6 +117,9 @@ const EntityFormInner: React.FC<{
     if (field.type == 'Int32') {
       newValue = Number.parseInt(newValue)
     }
+    if (field.type.toLocaleLowerCase().startsWith('bool')) {
+      console.log('new bool', newValue)
+    }
     setValue(entity, field.name, newValue)
     onChange(entity)
   }
@@ -176,6 +183,8 @@ const EntityFormInner: React.FC<{
             classNameInputBg={classNameInputBg}
             classNameInputHoverBg={classNameInputHoverBg}
             classNameInputHoverBgDark={classNameInputHoverBgDark}
+            classNameDropdownBg={classNameDropdownBg}
+            classNameDropdownHoverBg={classNameDropdownHoverBg}
             styleType={styleType}
             isCreation={isCreation}
             onValidationChanged={onValidationChanged}
@@ -206,6 +215,8 @@ const EntityFormInner: React.FC<{
                 classNameInputBg={classNameInputBg}
                 classNameInputHoverBg={classNameInputHoverBg}
                 classNameInputHoverBgDark={classNameInputHoverBgDark}
+                classNameDropdownBg={classNameDropdownBg}
+                classNameDropdownHoverBg={classNameDropdownHoverBg}
                 styleType={styleType}
                 isCreation={isCreation}
                 onValidationChanged={onValidationChanged}
@@ -234,6 +245,8 @@ const EntityFormInner: React.FC<{
           classNameInputBg={classNameInputBg}
           classNameInputHoverBg={classNameInputHoverBg}
           classNameInputHoverBgDark={classNameInputHoverBgDark}
+          classNameDropdownBg={classNameDropdownBg}
+          classNameDropdownHoverBg={classNameDropdownHoverBg}
           styleType={styleType}
           isCreation={isCreation}
           onValidationChanged={onValidationChanged}

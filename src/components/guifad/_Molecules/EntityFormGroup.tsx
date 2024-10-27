@@ -24,6 +24,8 @@ const EntityFormGroup: React.FC<{
   classNameInputBg?: string
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
+  classNameDropdownBg?: string
+  classNameDropdownHoverBg?: string
   styleType?: number
   isCreation?: boolean
   onValidationChanged?: (errors: { [fieldName: string]: string | null }) => void
@@ -45,6 +47,8 @@ const EntityFormGroup: React.FC<{
   classNameInputBg,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
   styleType = 0,
   isCreation = false,
   onValidationChanged,
@@ -77,6 +81,8 @@ const EntityFormGroup: React.FC<{
                     classNameInputBg={classNameInputBg}
                     classNameInputHoverBg={classNameInputHoverBg}
                     classNameInputHoverBgDark={classNameInputHoverBgDark}
+                    classNameDropdownBg={classNameDropdownBg}
+                    classNameDropdownHoverBg={classNameDropdownHoverBg}
                     styleType={styleType}
                     isCreation={isCreation}
                     onValidationChanged={onValidationChanged}
@@ -102,6 +108,8 @@ const EntityFormGroup: React.FC<{
             classNameInputBg={classNameInputBg}
             classNameInputHoverBg={classNameInputHoverBg}
             classNameInputHoverBgDark={classNameInputHoverBgDark}
+            classNameDropdownBg={classNameDropdownBg}
+            classNameDropdownHoverBg={classNameDropdownHoverBg}
             styleType={styleType}
             isCreation={isCreation}
             onValidationChanged={onValidationChanged}

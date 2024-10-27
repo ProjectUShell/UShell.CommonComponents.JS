@@ -745,6 +745,8 @@ const EntityTableInternal: React.FC<{
           styleType={formStyleType}
           labelPosition={formLabelPosition}
           isCreation={isCreation}
+          classNameDropdownBg=''
+          classNameDropdownHoverBg=''
         ></EntityFormModal>
       )}
     </>

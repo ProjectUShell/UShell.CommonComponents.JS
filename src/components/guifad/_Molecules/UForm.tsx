@@ -19,6 +19,8 @@ const UForm: React.FC<{
   classNameInputBg?: string
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
+  classNameDropdownBg?: string
+  classNameDropdownHoverBg?: string
   styleType?: number
   readOnly?: boolean
   isCreation?: boolean
@@ -36,6 +38,8 @@ const UForm: React.FC<{
   classNameInputBg,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
   styleType = 0,
   readOnly = false,
   isCreation = false,
@@ -69,7 +73,10 @@ const UForm: React.FC<{
         return {
           ...f,
           value: getValue(currentEntity, f.name),
-          setValue: (newValue: any) => changeValue(f, newValue),
+          setValue: (newValue: any) => {
+            console.log('changing value', newValue)
+            changeValue(f, newValue)
+          },
         }
       })}
       customInputs={
@@ -105,6 +112,8 @@ const UForm: React.FC<{
       classNameInputBg={classNameInputBg}
       classNameInputHoverBg={classNameInputHoverBg}
       classNameInputHoverBgDark={classNameInputHoverBgDark}
+      classNameDropdownBg={classNameDropdownBg}
+      classNameDropdownHoverBg={classNameDropdownHoverBg}
       readOnly={readOnly}
       isCreation={isCreation}
     ></UForm1>

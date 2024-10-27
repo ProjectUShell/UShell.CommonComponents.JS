@@ -27,6 +27,8 @@ const EntityForm: React.FC<{
   classNameInputBg?: string
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
+  classNameDropdownBg?: string
+  classNameDropdownHoverBg?: string
   styleType?: number
   uow?: any
   persistUow?: (uow: any) => void
@@ -47,6 +49,8 @@ const EntityForm: React.FC<{
   classNameInputBg,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
   styleType = 0,
   uow,
   persistUow,
@@ -69,6 +73,8 @@ const EntityForm: React.FC<{
       classNameInputBg={classNameInputBg}
       classNameInputHoverBg={classNameInputHoverBg}
       classNameInputHoverBgDark={classNameInputHoverBgDark}
+      classNameDropdownBg={classNameDropdownBg}
+      classNameDropdownHoverBg={classNameDropdownHoverBg}
       styleType={styleType}
       uow={uow}
       persistUow={persistUow}
@@ -93,6 +99,8 @@ export const EntityForm1: React.FC<{
   classNameInputBg?: string
   classNameInputHoverBg?: string
   classNameInputHoverBgDark?: string
+  classNameDropdownBg?: string
+  classNameDropdownHoverBg?: string
   styleType?: number
   uow?: any
   persistUow?: (uow: any) => void
@@ -113,6 +121,8 @@ export const EntityForm1: React.FC<{
   classNameInputBg,
   classNameInputHoverBg,
   classNameInputHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
   styleType = 0,
   uow,
   persistUow,
@@ -211,7 +221,7 @@ export const EntityForm1: React.FC<{
     }
     return true
   }
-
+  // console.log('entity', entity)
   return (
     <div className='UShell_EntityForm flex flex-col h-full w-full overflow-hidden border-0 border-green-400'>
       {toolbar == 'top' && (
@@ -267,6 +277,8 @@ export const EntityForm1: React.FC<{
             Type
           </label>
           <DropdownSelect
+            classNameDropdownBg={classNameDropdownBg}
+            classNameDropdownHoverBg={classNameDropdownHoverBg}
             disabled={!isCreation}
             options={dataSources.map((ds) => {
               return { label: ds.entitySchema!.name, value: ds.entitySchema!.name }
@@ -302,6 +314,8 @@ export const EntityForm1: React.FC<{
         classNameInputBg={classNameInputBg}
         classNameInputHoverBg={classNameInputHoverBg}
         classNameInputHoverBgDark={classNameInputHoverBgDark}
+        classNameDropdownBg={classNameDropdownBg}
+        classNameDropdownHoverBg={classNameDropdownHoverBg}
         styleType={styleType}
         uow={uow}
         persistUow={persistUow || (() => {})}

@@ -4,6 +4,8 @@ import DropdownSelect from '../_Atoms/DropdownSelect'
 const DropdownSelectBasic = () => {
   return (
     <DropdownSelect
+      classNameDropdownBg=''
+      classNameDropdownHoverBg=''
       options={[
         { label: 'Option A', value: 1 },
         { label: 'Option B', value: 2 },
