@@ -55,7 +55,7 @@ const animalLayout: EntityLayout = new EntityLayout('Animal', [
   {
     fieldName: 'Color',
     displayLabel: 'Color',
-    dropdownStaticEntries: { Bmw: 'Red', Audi: 'Black', Fiat: 'Brown', Renault: 'White' },
+    dropdownStaticEntries: { Bmw: 'Red', Audi: 'Black', Black: 'Brown', Renault: 'White' },
   },
 ])
 animalLayout.displayLabel = 'Animal'
@@ -64,7 +64,7 @@ const catLayout: EntityLayout = new EntityLayout('Cat', [
   {
     fieldName: 'Color',
     displayLabel: 'Color',
-    dropdownStaticEntries: { Bmw: 'Red', Audi: 'Black', Fiat: 'Brown', Renault: 'White' },
+    dropdownStaticEntries: { Bmw: 'Red', Audi: 'Black', Black: 'Brown', Renault: 'White' },
   },
   {
     fieldName: 'BigCat',
@@ -96,7 +96,7 @@ const dataSourceAnimal: ObjectGraphDataSource = new ObjectGraphDataSource(
   zoo,
   'animals',
   (g: any) => {
-    console.log('Cat changed', g)
+    console.log('Animal changed', g)
   },
 )
 const dataSourceCat: ObjectGraphDataSource = new ObjectGraphDataSource(

@@ -56,6 +56,7 @@ const EntityTable: React.FC<{
   customColumns?: TableColumn[]
   reloadTriggerObject?: any
   isParent?: (c: any, p: any) => boolean
+  onRecordsChanged?: () => void
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -79,6 +80,7 @@ const EntityTable: React.FC<{
   customColumns = [],
   reloadTriggerObject,
   isParent,
+  onRecordsChanged,
 }) => {
   return (
     <EntityTable1
@@ -105,6 +107,7 @@ const EntityTable: React.FC<{
       reloadTriggerObject={reloadTriggerObject}
       rowHeight={rowHeight}
       isParent={isParent}
+      onRecordsChanged={onRecordsChanged}
     ></EntityTable1>
   )
 }
@@ -132,6 +135,7 @@ export const EntityTable1: React.FC<{
   customColumns?: TableColumn[]
   reloadTriggerObject?: any
   isParent?: (c: any, p: any) => boolean
+  onRecordsChanged?: () => void
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -156,6 +160,7 @@ export const EntityTable1: React.FC<{
   customColumns = [],
   reloadTriggerObject,
   isParent,
+  onRecordsChanged,
 }) => {
   const qcc: any = QueryClientContext
   if (!qcc._currentValue)
@@ -184,6 +189,7 @@ export const EntityTable1: React.FC<{
           customColumns={customColumns}
           reloadTriggerObject={reloadTriggerObject}
           isParent={isParent}
+          onRecordsChanged={onRecordsChanged}
         ></EntityTableInternal>
       </QueryClientProvider>
     )
@@ -209,6 +215,7 @@ export const EntityTable1: React.FC<{
       customColumns={customColumns}
       reloadTriggerObject={reloadTriggerObject}
       isParent={isParent}
+      onRecordsChanged={onRecordsChanged}
     ></EntityTableInternal>
   )
 }
@@ -235,6 +242,7 @@ const EntityTableInternal: React.FC<{
   customColumns: TableColumn[]
   reloadTriggerObject: any
   isParent?: (c: any, p: any) => boolean
+  onRecordsChanged?: () => void
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -258,6 +266,7 @@ const EntityTableInternal: React.FC<{
   customColumns,
   reloadTriggerObject,
   isParent,
+  onRecordsChanged,
 }) => {
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
@@ -534,14 +543,10 @@ const EntityTableInternal: React.FC<{
             {isParent && (
               <div className='flex'>
                 <button
-                  className='p-1 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
-                  onClick={() => setShowTree(false)}
-                >
-                  <ListBulletIcon></ListBulletIcon>
-                </button>
-                <button
-                  className='p-1 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
-                  onClick={() => setShowTree(true)}
+                  className={`p-1 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark ${
+                    showTree ? 'text-green-600 dark:text-green-400' : 'text-gray-400'
+                  }`}
+                  onClick={() => setShowTree((x) => !x)}
                 >
                   <ListTreeIcon></ListTreeIcon>
                 </button>
@@ -732,6 +737,7 @@ const EntityTableInternal: React.FC<{
             setDetailsVisible(false)
             setIsCreation(false)
             forceReload()
+            onRecordsChanged && onRecordsChanged()
           }}
           onCancel={() => setDetailsVisible(false)}
           entityLayouts={layoutDescription?.entityLayouts}

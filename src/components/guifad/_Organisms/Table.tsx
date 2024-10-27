@@ -428,13 +428,12 @@ const Table: React.FC<{
     return rowOpenState[rowIndex]
   }
 
-  function isParentRowOpen(record: any): boolean {
-    const parentIndex: number = record.parentIndex
+  function isParentRowOpen1(recordIndex: number): boolean {
+    if (!isParent) return true
+    const parentIndex: number = nestingInfo[recordIndex].parentIndex
     if (parentIndex == undefined || parentIndex == -1) return true
 
-    return isRowOpen(parentIndex) && isParentRowOpen(filteredRecords[parentIndex])
-    console.log('chec isParentRowOpen for parent', filteredRecords[parentIndex])
-    return isParentRowOpen(filteredRecords[parentIndex])
+    return isRowOpen(parentIndex) && isParentRowOpen1(parentIndex)
   }
 
   function toggleRopOpen(rowIndex: number): void {
@@ -452,6 +451,12 @@ const Table: React.FC<{
     if (parentIndex == undefined || parentIndex == -1) return 0
     const parent: any = filteredRecords[parentIndex]
     return 1 + getNestingDepth(parent)
+  }
+  function getNestingDepth1(recordIndex: number): number {
+    const parentIndex: number = nestingInfo[recordIndex].parentIndex
+    if (parentIndex == undefined || parentIndex == -1) return 0
+    const parent: any = filteredRecords[parentIndex]
+    return 1 + getNestingDepth1(parentIndex)
   }
 
   const refId: string = useMemo(() => {
@@ -506,32 +511,6 @@ const Table: React.FC<{
     sortAgainstNesting1(sortedRecords, nestingDepths, 0, -1)
     filteredRecords = sortedRecords
   }
-  function applySwapping() {
-    sortAgainstNesting()
-    if (!isParent) return
-
-    const swapIndices: { l: number; r: number }[] = []
-    let i = 0
-    for (let potentialChild of filteredRecords) {
-      let j = 0
-      for (let potentialParent of filteredRecords) {
-        if (isParent(potentialChild, potentialParent)) {
-          if (i < j) {
-            swapIndices.push({ l: i, r: j })
-          }
-          break
-        }
-        j++
-      }
-      i++
-    }
-    console.log('swapIndices', swapIndices)
-    for (let swapIndex of swapIndices) {
-      var b = filteredRecords[swapIndex.r]
-      filteredRecords[swapIndex.r] = filteredRecords[swapIndex.l]
-      filteredRecords[swapIndex.l] = b
-    }
-  }
 
   function calculateNesting() {
     if (!isParent) return
@@ -552,13 +531,64 @@ const Table: React.FC<{
     }
   }
 
-  if (isParent) {
-    calculateNesting()
-    applySwapping()
-    calculateNesting()
+  const nestingInfo: {
+    [index: number]: { initialIndex: number; parentIndex: number; hasChildren: boolean }
+  } = {}
+  function calculateNesting2() {
+    if (!isParent) return
+    let i = 0
+    for (let potentialChild of filteredRecords) {
+      if (!(i in nestingInfo)) {
+        nestingInfo[i] = {
+          initialIndex: potentialChild.initialIndex,
+          hasChildren: false,
+          parentIndex: -1,
+        }
+      }
+      potentialChild.parentIndex = -1
+      let j = 0
+      for (let potentialParent of filteredRecords) {
+        if (!(j in nestingInfo)) {
+          nestingInfo[j] = {
+            initialIndex: potentialChild.initialIndex,
+            hasChildren: false,
+            parentIndex: -1,
+          }
+        }
+        if (isParent(potentialChild, potentialParent)) {
+          nestingInfo[i].parentIndex = j
+          nestingInfo[j].hasChildren = true
+          break
+        }
+        j++
+      }
+      i++
+    }
+    filteredRecords.forEach((fr) => {
+      delete fr.initialIndex
+      delete fr.hasChildren
+      delete fr.parentIndex
+    })
   }
 
-  console.log('render table', filteredRecords)
+  if (isParent) {
+    filteredRecords.forEach((fr) => (fr.hasChildren = false))
+    calculateNesting()
+    sortAgainstNesting()
+    calculateNesting2()
+  }
+
+  console.log(
+    'render table',
+    filteredRecords.map((r) => {
+      return {
+        currentIndex: r.currentIndex,
+        parentIndex: r.parentIndex,
+        hasChildren: r.hasChildren,
+      }
+    }),
+    nestingInfo,
+  )
 
   return (
     <div
@@ -774,10 +804,10 @@ const Table: React.FC<{
                       <div className='flex items-center'>
                         {isParent && j == 0 && showTree && (
                           <div
-                            style={{ marginLeft: `${getNestingDepth(r) * 20}px` }}
+                            style={{ marginLeft: `${getNestingDepth1(i) * 20}px` }}
                             className='w-6 h-6 items-center align-middle content-center '
                           >
-                            {r.hasChildren && (
+                            {nestingInfo[i].hasChildren && (
                               <div
                                 className='cursor-pointer'
                                 onClick={(e) => {
@@ -823,7 +853,7 @@ const Table: React.FC<{
                   ))}
                 </tr>
               )
-              if (!isParentRowOpen(r)) return <tr key={i}></tr>
+              if (!isParentRowOpen1(i)) return <tr key={i}></tr>
               return rowExpanded[i]
                 ? [
                     renderRow,

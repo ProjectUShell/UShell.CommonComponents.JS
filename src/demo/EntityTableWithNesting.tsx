@@ -97,7 +97,7 @@ const workItemLayout: EntityLayout = new EntityLayout('WorkItem', [
   {
     fieldName: 'WorkItemType',
     displayLabel: 'Type',
-    dropdownStaticEntries: { Feature: 'Feature', ChangeRequest: 'Change Request', Pbi: 'Pbi' },
+    dropdownStaticEntries: { Feature: 'Feature', ChangeRequest: 'ChangeRequest', Pbi: 'Pbi' },
   },
 ])
 workItemLayout.displayLabel = 'Work Item'
