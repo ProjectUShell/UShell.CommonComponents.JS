@@ -59,7 +59,6 @@ const UForm: React.FC<{
       ? lookUpRelation.foreignNavigationName
       : lookUpRelation.foreignKeyIndexName
   }
-
   return (
     <UForm1
       onValidationChanged={onValidationChanged}

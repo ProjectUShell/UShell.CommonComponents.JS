@@ -12,7 +12,7 @@ const EntityFormModal: React.FC<{
   dirty: boolean
   onChange: (updatedEntity: any) => void
   onCancel: () => void
-  entityLayout?: EntityLayout
+  entityLayouts?: EntityLayout[]
   labelPosition?: 'top' | 'left'
   readOnly?: boolean
   classNameBg?: string
@@ -23,13 +23,14 @@ const EntityFormModal: React.FC<{
   uow?: any
   persistUow?: (uow: any) => void
   isCreation: boolean
+  title?: string
 }> = ({
   dataSourceManager,
   dataSources,
   entity,
   onChange,
   onCancel,
-  entityLayout,
+  entityLayouts,
   labelPosition = 'top',
   readOnly = false,
   classNameBg,
@@ -40,9 +41,18 @@ const EntityFormModal: React.FC<{
   uow,
   persistUow,
   isCreation,
+  title,
 }) => {
   return (
-    <Modal2 title={`${entityLayout?.displayLabel} Details`}>
+    <Modal2
+      title={
+        title && title != ''
+          ? title
+          : `${
+              entityLayouts && entityLayouts.length > 0 ? entityLayouts[0].displayLabel : ''
+            } Details`
+      }
+    >
       <div
         style={{}}
         className='p-0 px-4 h-full1 w-full overflow-hidden flex flex-col border-0 border-yellow-400'
@@ -54,7 +64,7 @@ const EntityFormModal: React.FC<{
           entity={entity}
           onSaved={onChange}
           onCanceled={onCancel}
-          entityLayout={entityLayout}
+          entityLayouts={entityLayouts}
           labelPosition={labelPosition}
           toolbar='bottom'
           readOnly={readOnly}

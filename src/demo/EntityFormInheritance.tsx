@@ -89,7 +89,7 @@ const EntityFormInheritance = () => {
     <div className='border-0 border-menuBorder p-2 bg-bg1 dark:bg-bg1dark w-full'>
       <EntityForm1
         dataSources={[dataSource, dataSourceCat, dataSourceDog]}
-        entityLayout={animalLayout}
+        entityLayouts={[animalLayout]}
         dirty={true}
         entity={{}}
         isCreation={true}

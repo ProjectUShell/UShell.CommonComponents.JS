@@ -179,7 +179,7 @@ const DropdownSelect: React.FC<{
     return 'UShell_DropdownSelect_' + crypto.randomUUID()
   }, [])
   return (
-    <div className='w-full' onBlur={(e) => setOpen(false)}>
+    <div className='UShell_DropdownSelect w-full' onBlur={(e) => setOpen(false)}>
       {/* <button onClick={(e) => setOpen(true)}> */}
       <div
         id={refId}

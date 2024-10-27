@@ -62,14 +62,18 @@ const RelationEditor: React.FC<{
   }, [initialRelation, fields, fkRelations])
 
   function getFieldOptions(): { label: string; value: any }[] {
-    const result = fields.map((f) => {
-      return { label: f.name, value: f.name }
-    })
-    for (const fkRelation of fkRelations) {
-      result.push({
-        label: fkRelation.foreignNavigationName,
-        value: fkRelation.foreignNavigationName,
+    const result = fields
+      .filter((f) => f.name && f.name != '')
+      .map((f) => {
+        return { label: f.name, value: f.name }
       })
+    for (const fkRelation of fkRelations) {
+      if (fkRelation.foreignNavigationName && fkRelation.foreignNavigationName != '') {
+        result.push({
+          label: fkRelation.foreignNavigationName,
+          value: fkRelation.foreignNavigationName,
+        })
+      }
     }
     return result
   }

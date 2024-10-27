@@ -194,7 +194,7 @@ const EntityFormInner: React.FC<{
                 changeValue={changeValue}
                 fkRelations={fkRelations}
                 fkRelationsToDisplay={fkRelations.filter((fk) =>
-                  p.fields.includes(fk.primaryEntityName),
+                  p.fields.includes(fk.foreignKeyIndexName),
                 )}
                 dataSourceManager={dataSourceManager}
                 changeLookUpValues={changeLookUpValues}
@@ -222,7 +222,7 @@ const EntityFormInner: React.FC<{
           changeValue={changeValue}
           fkRelations={fkRelations}
           fkRelationsToDisplay={fkRelations.filter((f) =>
-            getRemainingFkRelations().includes(f.primaryEntityName),
+            getRemainingFkRelations().includes(f.foreignKeyIndexName),
           )}
           dataSourceManager={dataSourceManager}
           changeLookUpValues={changeLookUpValues}

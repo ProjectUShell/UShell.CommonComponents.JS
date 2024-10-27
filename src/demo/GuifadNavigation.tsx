@@ -53,10 +53,13 @@ const GuifadNavigation = () => {
             entityName: 'Person',
             displayLabel: 'People',
             displayLabelPlural: 'People',
-            fieldLayouts: [{ fieldName: 'NationalityId', displayLabel: 'The Nation' }],
+            fieldLayouts: [
+              { fieldName: 'NationalityId', displayLabel: 'The Nation' },
+              { fieldName: 'FirstName', displayLabel: 'First Name' },
+            ],
             identityLabelPattern: '',
             isBlEntrypoint: false,
-            partitions: [],
+            partitions: [{ children: [], fields: [], name: '', type: 'group' }],
           },
         ],
       }}

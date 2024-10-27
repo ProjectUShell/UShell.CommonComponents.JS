@@ -50,7 +50,7 @@ const dogEntitySchema: EntitySchema = {
   summary: 'Dogs...',
 }
 
-const animalLayout: EntityLayout = new EntityLayout('Car', [
+const animalLayout: EntityLayout = new EntityLayout('Animal', [
   { fieldName: 'DateOfBirth', displayLabel: 'Date of Birthn' },
   {
     fieldName: 'Color',
@@ -58,8 +58,35 @@ const animalLayout: EntityLayout = new EntityLayout('Car', [
     dropdownStaticEntries: { Bmw: 'Red', Audi: 'Black', Fiat: 'Brown', Renault: 'White' },
   },
 ])
+animalLayout.displayLabel = 'Animal'
+const catLayout: EntityLayout = new EntityLayout('Cat', [
+  { fieldName: 'DateOfBirth', displayLabel: 'Date of Birthn' },
+  {
+    fieldName: 'Color',
+    displayLabel: 'Color',
+    dropdownStaticEntries: { Bmw: 'Red', Audi: 'Black', Fiat: 'Brown', Renault: 'White' },
+  },
+  {
+    fieldName: 'BigCat',
+    displayLabel: 'Big?',
+  },
+])
+catLayout.displayLabel = 'Cat'
+const dogLayout: EntityLayout = new EntityLayout('Dog', [
+  { fieldName: 'DateOfBirth', displayLabel: 'Date of Birthn' },
+  {
+    fieldName: 'Color',
+    displayLabel: 'Color',
+    dropdownStaticEntries: { Bmw: 'Red', Audi: 'Black', Fiat: 'Brown', Renault: 'White' },
+  },
+  {
+    fieldName: 'FightingDog',
+    displayLabel: 'Fighting?',
+  },
+])
+dogLayout.displayLabel = 'Dog'
 const layoutDescription: LayoutDescriptionRoot = {
-  entityLayouts: [animalLayout],
+  entityLayouts: [animalLayout, catLayout, dogLayout],
 }
 
 const zoo: any = { cats: [], dogs: [], animals: [] }

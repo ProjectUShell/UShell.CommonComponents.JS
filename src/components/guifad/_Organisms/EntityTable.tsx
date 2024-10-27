@@ -722,7 +722,11 @@ const EntityTableInternal: React.FC<{
           dataSourceManager={dataSourceManagerForNavigations}
           dirty={true}
           entity={
-            selectedRecords.length == 1 ? selectedRecords[0] : dataSource.entityFactoryMethod()
+            isCreation
+              ? dataSource.entityFactoryMethod()
+              : selectedRecords.length == 1
+              ? selectedRecords[0]
+              : dataSource.entityFactoryMethod()
           }
           onChange={() => {
             setDetailsVisible(false)
@@ -730,9 +734,7 @@ const EntityTableInternal: React.FC<{
             forceReload()
           }}
           onCancel={() => setDetailsVisible(false)}
-          entityLayout={layoutDescription?.entityLayouts.find(
-            (el) => el.entityName == dataSource.entitySchema!.name,
-          )}
+          entityLayouts={layoutDescription?.entityLayouts}
           readOnly={!enableCrud}
           styleType={formStyleType}
           labelPosition={formLabelPosition}

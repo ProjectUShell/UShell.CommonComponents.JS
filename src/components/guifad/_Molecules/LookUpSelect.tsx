@@ -83,7 +83,7 @@ const LookUpSelect: React.FC<{
     return <ErrorPage messages={[error]}></ErrorPage>
   }
   return (
-    <div>
+    <>
       {showLabel && <label className='block mb-2 text-xs font-medium'>{label}</label>}
       <DropdownSelect
         options={lookUpList}
@@ -116,7 +116,7 @@ const LookUpSelect: React.FC<{
             : undefined
         }
       ></DropdownSelect>
-    </div>
+    </>
   )
 }
 

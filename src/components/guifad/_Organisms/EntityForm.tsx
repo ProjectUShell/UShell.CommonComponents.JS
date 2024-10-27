@@ -61,7 +61,7 @@ const EntityForm: React.FC<{
       setDirty={setDirty}
       onSaved={onSaved}
       onCanceled={onCanceled}
-      entityLayout={entityLayout}
+      entityLayouts={entityLayout ? [entityLayout] : []}
       labelPosition={labelPosition}
       toolbar={toolbar}
       readOnly={readOnly}
@@ -85,7 +85,7 @@ export const EntityForm1: React.FC<{
   setDirty?: (d: boolean) => void
   onSaved: (updatedEntity: any) => void
   onCanceled?: () => void
-  entityLayout?: EntityLayout
+  entityLayouts?: EntityLayout[]
   labelPosition?: 'top' | 'left'
   toolbar?: 'top' | 'bottom'
   readOnly?: boolean
@@ -105,7 +105,7 @@ export const EntityForm1: React.FC<{
   setDirty,
   onSaved: onSaved,
   onCanceled,
-  entityLayout,
+  entityLayouts,
   labelPosition = 'top',
   toolbar = 'top',
   readOnly = false,
@@ -121,6 +121,9 @@ export const EntityForm1: React.FC<{
   // states
   const [currentEntity, setCurrentEntity] = useState<any>({ ...entity })
   const [currentDataSource, setCurrentDataSource] = useState(guessDataSource())
+  const [currentEntityLayout, setCurrentEntityLayout] = useState<EntityLayout | undefined>(
+    undefined,
+  )
   const [error, setError] = useState<any>(null)
   const [dirtyLocal, setDirtyLocal] = useState<boolean>(dirty)
   const [errors, setErrors] = useState<{ [fieldName: string]: string | null }>({})
@@ -143,6 +146,14 @@ export const EntityForm1: React.FC<{
     uow.editingEntity = currentEntity
     persistUow(uow)
   }, [currentEntity])
+
+  useEffect(() => {
+    if (!currentDataSource) return
+    const entityLayout: EntityLayout | undefined = entityLayouts?.find(
+      (el) => el.entityName == currentDataSource.entitySchema?.name,
+    )
+    setCurrentEntityLayout(entityLayout)
+  }, [currentDataSource])
 
   if (error) {
     return (
@@ -280,7 +291,7 @@ export const EntityForm1: React.FC<{
         entity={currentEntity}
         onChange={(ce) => setCurrentEntity({ ...ce })}
         dataSourceManager={dataSourceManager}
-        entityLayout={entityLayout}
+        entityLayout={currentEntityLayout}
         labelPosition={labelPosition}
         setDirty={(d) => {
           setDirty && setDirty(d)
