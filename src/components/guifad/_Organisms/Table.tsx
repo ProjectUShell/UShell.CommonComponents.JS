@@ -181,7 +181,7 @@ const Table: React.FC<{
     setSelectedRows((sr) => {
       return newSr
     })
-    const selectedRecords: any[] = records.filter((r, i) => newSr[i])
+    const selectedRecords: any[] = filteredRecords.filter((r, i) => newSr[i])
 
     if (onSelectedRecordsChange) {
       onSelectedRecordsChange(selectedRecords)
