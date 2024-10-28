@@ -45,7 +45,7 @@ const Modal2: React.FC<{
           maxHeight: '90%',
           scale: full ? undefined : '50%',
         }}
-        className={`UShell_Modal_Inn1er fixed flex flex-col bg-content dark:bg-contentDark transition-all duration-300 border-0 border-green-400 `}
+        className={`UShell_Modal_Inn1er fixed flex flex-col bg-content dark:bg-contentDark transition-all duration-300 border-0 border-green-400 rounded-md`}
       >
         <div className='h-full flex flex-col overflow-hidden flex-grow border-0 border-blue-400 p-1 px-2'>
           <div className='w-full flex whitespace-nowrap'>
