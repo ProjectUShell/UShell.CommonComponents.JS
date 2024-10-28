@@ -34,7 +34,7 @@ const StructureNavigation: React.FC<{
 }) => {
   return (
     <div className={`pl-2 text-md ${className}`}>
-      <h1 className='pb-2 font-bold border-r border-navigationBorder dark:border-navigationBorderDark'>
+      <h1 className='pb-2 font-bold border-r border-navigationBorder dark:border-navigationBorderDark whitespace-normal'>
         {currentRecord
           ? entitySchema.name +
             ' ' +
@@ -58,7 +58,7 @@ const StructureNavigation: React.FC<{
       )}
       <button
         disabled={!currentRecord}
-        className={`w-full flex gap-1 items-center  ${
+        className={`w-full flex gap-1 items-center mb-1  ${
           !currentRecord ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
         } ${
           mode == 'details'
@@ -69,7 +69,7 @@ const StructureNavigation: React.FC<{
       >
         <PencilIcon></PencilIcon>Details
       </button>
-      <div className='w-full border-b border-r border-navigationBorder dark:border-navigationBorderDark'></div>
+      <div className='w-full border-b-2 border-r border-navigationBorder dark:border-navigationBorderDark'></div>
       <div className='border-r border-navigationBorder dark:border-navigationBorderDark'>
         {EntitySchemaService.getRelations(schemaRoot, entitySchema, false).map((er) => (
           <button
