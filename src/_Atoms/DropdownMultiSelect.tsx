@@ -118,9 +118,9 @@ const DropdownMultiSelect: React.FC<{
             >
               {options.map((o) => (
                 <div
-                  className={`cursor-default  p-1 ${
+                  className={`cursor-default  p-2 ${
                     isOptionSelected(o)
-                      ? 'bg-prim2 dark:bg-prim4'
+                      ? 'bg-prim2 dark:bg-prim2Dark'
                       : 'hover:bg-bg7 dark:hover:bg-bg7dark'
                   }`}
                   key={o.value}

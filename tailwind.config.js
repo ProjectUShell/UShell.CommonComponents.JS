@@ -3,6 +3,8 @@ hue = 255
 sat = 5
 satDark = 5
 
+primaryColorHue = 225
+
 lightCurve = [0, 1, 2, 3, 4, 5, 7, 9, 11, 13, 15, 18, 21, 24]
 lightCurveDark = [0, 1, 2, 3, 4, 5, 7, 9, 11, 13, 15, 18, 21, 24]
 ligthCurveWeight = 1.2
@@ -27,6 +29,19 @@ function getBg(i, d) {
   }
 }
 
+function getPrimaryColor(i, d) {
+  if (d) return getPrimaryColorDark(i)
+  primaryLight = 93 - i * 4
+  primarySat = 100 - i * 6
+  return 'hsl(' + primaryColorHue + ',' + primarySat + '%,' + primaryLight + '%)'
+}
+
+function getPrimaryColorDark(i) {
+  primaryLight = 25 + i * 5
+  primarySat = 80 + i * 2
+  return 'hsl(' + primaryColorHue + ',' + primarySat + '%,' + primaryLight + '%)'
+}
+
 module.exports = {
   darkMode: 'class',
   content: [
@@ -47,6 +62,7 @@ module.exports = {
         texttest: '#d2bab0',
         textone: 'var(--color-text-one)',
         texttwo: 'var(--color-text-two)',
+        text3: '#0000FF',
         backgroundone: 'rgb(var(--color-background-one))',
         backgroundtwo: 'rgb(var(--color-background-two))',
         backgroundthree: 'rgb(var(--color-background-three))',
@@ -82,12 +98,34 @@ module.exports = {
         bg8dark: getBg(7, 1),
         bg9dark: getBg(8, 1),
         bg10dark: getBg(9, 1),
-        prim1: 'var(--color-prim-100)',
-        prim2: 'var(--color-prim-200)',
-        prim3: 'var(--color-prim-300)',
-        prim4: 'var(--color-prim-400)',
-        prim5: 'var(--color-prim-500)',
-        prim6: 'var(--color-prim-600)',
+        // prim1: 'var(--color-prim-100)',
+        // prim2: 'var(--color-prim-200)',
+        // prim3: 'var(--color-prim-300)',
+        // prim4: 'var(--color-prim-400)',
+        // prim5: 'var(--color-prim-500)',
+        // prim6: 'var(--color-prim-600)',
+        prim1: getPrimaryColor(0),
+        prim2: getPrimaryColor(1),
+        prim3: getPrimaryColor(2),
+        prim4: getPrimaryColor(3),
+        prim5: getPrimaryColor(4),
+        prim6: getPrimaryColor(5),
+        prim7: getPrimaryColor(6),
+        prim8: getPrimaryColor(7),
+        prim9: getPrimaryColor(8),
+        prim10: getPrimaryColor(9),
+        prim11: getPrimaryColor(10),
+        prim1Dark: getPrimaryColor(0, 1),
+        prim2Dark: getPrimaryColor(1, 1),
+        prim3Dark: getPrimaryColor(2, 1),
+        prim4Dark: getPrimaryColor(3, 1),
+        prim5Dark: getPrimaryColor(4, 1),
+        prim6Dark: getPrimaryColor(5, 1),
+        prim7Dark: getPrimaryColor(6, 1),
+        prim8Dark: getPrimaryColor(7, 1),
+        prim9Dark: getPrimaryColor(8, 1),
+        prim10Dark: getPrimaryColor(9, 1),
+        prim11Dark: getPrimaryColor(10, 1),
         content: modern ? getBg(0) : getBg(0),
         contentBorder: modern ? getBg(8) : getBg(8),
         contentHover: modern ? getBg(4) : getBg(4),
@@ -154,6 +192,12 @@ module.exports = {
         hairlineNavigationDark: modern ? getBg(0, 1) : getBg(0, 1),
         // ...
       },
+    },
+    fontFamily: {
+      sans: ['ui-sans-serif', 'system-ui'],
+      serif: ['ui-serif', 'Georgia'],
+      mono: ['ui-monospace', 'SFMono-Regular'],
+      display: ['Optimistic Text', 'ui-sans-serif', 'system-ui', 'sans-serif'],
     },
   },
   variants: {

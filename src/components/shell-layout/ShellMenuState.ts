@@ -26,12 +26,15 @@ export function getItemState(shellMenuState: ShellMenuState, itemId: string): Me
   if (itemState) {
     return itemState
   }
-  const newItemState = { collapsed: true }
+  const newItemState = { collapsed: false }
   shellMenuState.menuItemStateById[itemId] = newItemState
   return newItemState
 }
 
-export async function toggleFolderCollapse(shellMenuState: ShellMenuState, itemId: string): Promise<ShellMenuState> {
+export async function toggleFolderCollapse(
+  shellMenuState: ShellMenuState,
+  itemId: string,
+): Promise<ShellMenuState> {
   const itemState: MenuItemState = getItemState(shellMenuState, itemId)
   itemState.collapsed = !itemState.collapsed
   saveShellMenuState(shellMenuState)

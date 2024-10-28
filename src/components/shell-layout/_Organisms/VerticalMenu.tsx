@@ -8,6 +8,7 @@ import {
   loadShellMenuState,
   toggleFolderCollapse,
 } from '../ShellMenuState'
+import ChevronRightIcon from '../../../_Icons/ChevronRightIcon'
 
 const VerticalMenu: React.FC<{
   menuItems: MenuItem[]
@@ -61,15 +62,15 @@ const VerticalMenuInternal: React.FC<{
         <div key={mi.id}>
           <li
             key={mi.id}
-            className={`flex items-center gap-x-4 py-2 px-6 rounded-as ${depthCssClass} ${
+            className={`flex items-center gap-x-4 py-3 px-6 rounded-l-lg ${depthCssClass} ${
               mi.type !== 'Group'
                 ? (menuItemHoverClassName && menuItemHoverClassName !== ''
                     ? menuItemHoverClassName
                     : ' ') + ' cursor-pointer'
                 : ''
-            } ${mi.type == 'Command' ? 'mt-0 font-normal' : 'mt-4 font-bold'} ${
+            } ${mi.type == 'Command' ? 'mt-0' : 'mt-4 font-bold'} ${
               shellMenuState.activeItemId == mi.id
-                ? 'bg-prim1 dark:bg-prim6 border-r-2 border-texttwo dark:border-menuBorderDark'
+                ? 'bg-prim2 dark:bg-prim2Dark border-r-2 border-texttwo dark:border-menuBorderDark'
                 : 'hover:bg-menuHover dark:hover:bg-menuHoverDark'
             }`}
             onClick={() => {
@@ -83,8 +84,22 @@ const VerticalMenuInternal: React.FC<{
             }}
           >
             {mi.icon && <span className='text-2xl block float-left'>{mi.icon}</span>}
-            <span className={`flex-1`}>{mi.label}</span>
-            {mi.type == 'Folder' && <ChevronDown />}
+            <span
+              className={`flex-1 ${
+                mi.type == 'Command'
+                  ? 'text-sm font-medium text-texttwo dark:text-texttwodark'
+                  : 'font-bold text-base'
+              }`}
+            >
+              {mi.label}
+            </span>
+            {mi.type == 'Folder' && (
+              <ChevronRightIcon
+                size={1.2}
+                strokeWidth={2.5}
+                rotate={getItemState(shellMenuState!, mi.id).collapsed ? 0 : 90}
+              />
+            )}
           </li>
 
           {mi.type == 'Group' && (

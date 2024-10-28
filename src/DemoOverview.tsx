@@ -92,7 +92,7 @@ const Demo = () => {
     return {
       label: dc,
       id: dc,
-      type: subComponents[dc] ? 'Group' : 'Command',
+      type: subComponents[dc] ? 'Folder' : 'Command',
       command: (e) => {
         setCurrentComponent(dc)
       },

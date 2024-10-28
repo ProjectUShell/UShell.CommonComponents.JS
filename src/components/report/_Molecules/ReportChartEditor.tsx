@@ -166,7 +166,7 @@ const ReportChartEditor: React.FC<{
             className={`flex align-middle gap-1 p-2 pr-6 select-none border-l-4 
            ${
              reportChartDefinition.type == e.label
-               ? 'bg-prim3 dark:bg-prim6 border-prim6 dark:border-prim2'
+               ? 'bg-prim3 dark:bg-prim4Dark border-prim6 dark:border-prim7Dark'
                : 'hover:bg-contentHover dark:hover:bg-contentHoverDark border-transparent'
            }`}
             onClick={() => {

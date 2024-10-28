@@ -39,17 +39,20 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
           return (
             <div key={mi.id}>
               <div
+                style={{ zIndex: 51 }}
+                id={mi.id}
                 ref={buttonRef}
-                className={`relative flex items-center justify-between z-50 
+                className={`relative flex items-center justify-between text-texttwo text-sm font-medium 
                 px-2 py-2  hover:text-textone   hover:bg-menuHover dark:hover:bg-menuHoverDark cursor-pointer ${
                   mi.children && openStateById[mi.id]
                     ? 'bg-menuHover dark:bg-menuHoverDark text-textone dark:text-textonedark border-l-2 border-prim1 dark:border-prim6'
-                    : 'border-l-2 border-menu dark:border-menuDark text-texttwo dark:text-textonedark'
+                    : 'border-l-2 border-menu dark:border-menuDark dark:text-textonedark'
                 }`}
                 onClick={() => {
                   setiIsOpen(mi.id, true)
                 }}
                 onMouseEnter={() => {
+                  console.log('mouse enter', openStateById)
                   let oneIsOpen: boolean = false
                   for (let k in openStateById) {
                     if (openStateById[k]) {
@@ -63,22 +66,20 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
                 }}
               >
                 <div className='px-1'> {mi.label}</div>
-                {mi.children && <ChevronDown size={4}></ChevronDown>}
+                {mi.children && <ChevronDown size={4} strokeWidth={2.5}></ChevronDown>}
               </div>
               {mi.children && openStateById[mi.id] && (
                 <Dropdown
-                  topOffset={0}
-                  rightOffset={0}
                   setIsOpen={() => {
                     setiIsOpen(mi.id, false)
                   }}
                   className='bg-menuHover dark:bg-menuHoverDark rounded-sm'
-                  minWidth={true}
-                  refId={buttonRef.id}
+                  minWidth={false}
+                  refId={mi.id}
                 >
                   <div
                     className='bg-menuHover dark:bg-menuHoverDark
-                     border-l-2 border-prim1 dark:border-prim6 rounded-sm shadow-lg shadow-bg6 dark:shadow-black ronded-b-md'
+                     border-l-2 border-l-prim1 dark:border-l-prim6 dark:border-menuBorderDark border-b border-r rounded-sm shadow-lg shadow-bg6 dark:shadow-black ronded-b-md'
                   >
                     <div
                       onClick={() => {

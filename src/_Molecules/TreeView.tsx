@@ -99,7 +99,7 @@ const TreeViewInner: React.FC<{
           <div
             className={`border-b border-navigationBorder dark:border-navigationBorderDark   ${
               selectedNode == n.id
-                ? 'bg-prim2 dark:bg-prim6'
+                ? 'bg-prim2 dark:bg-prim2Dark'
                 : 'hover:bg-navigationHover dark:hover:bg-navigationHoverDark'
             }`}
             onClick={(e) => {

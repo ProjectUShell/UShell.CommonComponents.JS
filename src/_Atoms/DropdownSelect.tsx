@@ -240,11 +240,11 @@ const DropdownSelect: React.FC<{
                 .filter((o) => currentMatchingOptions.length == 0 || isMatchingOption(o))
                 .map((o, i) => (
                   <div
-                    className={`cursor-default  p-1  ${
+                    className={`cursor-default  p-2  ${
                       isCurrentMatchingOption(o) && 'bg1-backgroundtwo dark:bg1-backgroundtwodark'
                     } ${
                       currentOption?.value == o.value
-                        ? 'bg-prim2 dark:bg-prim4'
+                        ? 'bg-prim2 dark:bg-prim2Dark'
                         : 'hover:bg-bg7 dark:hover:bg-bg7dark'
                     }`}
                     key={o.value || i}
