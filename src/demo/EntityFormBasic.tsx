@@ -9,12 +9,21 @@ import EntityForm from '../components/guifad/_Organisms/EntityForm'
 const brandField: FieldSchema = new FieldSchema('Brand', 'string')
 brandField.filterable = 1
 brandField.required = false
+const priceField: FieldSchema = new FieldSchema('Price', 'float')
+priceField.filterable = 1
+
 const idField: FieldSchema = new FieldSchema('Id', 'int32')
 idField.required = true
 const isOldtimerField: FieldSchema = new FieldSchema('IsOldtimer', 'boolean')
 isOldtimerField.required = true
 const carEntitySchema: EntitySchema = {
-  fields: [idField, new FieldSchema('DateOfConstruction', 'datetime'), brandField, isOldtimerField],
+  fields: [
+    idField,
+    new FieldSchema('DateOfConstruction', 'datetime'),
+    brandField,
+    isOldtimerField,
+    priceField,
+  ],
   indices: [{ name: 'Id', memberFieldNames: ['Id'], unique: true }],
   inheritedEntityName: '',
   isBlEntrypoint: false,
@@ -49,6 +58,7 @@ const carLayout: EntityLayout = new EntityLayout('Car', [
       Opel: 'Opel',
     },
   },
+  { fieldName: 'Price', displayLabel: 'Price 123', unit: 'EUR' },
 ])
 carLayout.displayLabel = 'Car'
 carLayout.partitions = [

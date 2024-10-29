@@ -14,13 +14,14 @@ import { applyFilter, applySorting } from '../../../utils/LogicUtils'
 import DropdownSelectBasic from '../../../demo/DropdownSelectBasic'
 import ArrowUpIcon from '../../../_Icons/ArrowUpIcon'
 import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
+import ChevronRightIcon from '../../../_Icons/ChevronRightIcon'
 
 export interface TableColumn {
   label: string
   fieldName: string
   fieldType: string
   key: string
-  onRenderCell?: (cellValue: any, record: any) => React.JSX.Element
+  onRenderCell?: (cellValue: any, record: any) => React.JSX.Element | string
   minCellLength?: number
   maxCellLength?: number
   renderFilter?: (
@@ -578,17 +579,7 @@ const Table: React.FC<{
     calculateNesting2()
   }
 
-  console.log(
-    'render table',
-    filteredRecords.map((r) => {
-      return {
-        currentIndex: r.currentIndex,
-        parentIndex: r.parentIndex,
-        hasChildren: r.hasChildren,
-      }
-    }),
-    nestingInfo,
-  )
+  console.log('render table', filteredRecords)
 
   return (
     <div
@@ -820,10 +811,11 @@ const Table: React.FC<{
                                   e.preventDefault()
                                 }}
                               >
-                                <ChevrodnDownIcon
-                                  size={4}
-                                  rotate={isRowOpen(i) ? 0 : 270}
-                                ></ChevrodnDownIcon>
+                                <ChevronRightIcon
+                                  size={1.0}
+                                  strokeWidth={3.5}
+                                  rotate={isRowOpen(i) ? 90 : 0}
+                                ></ChevronRightIcon>
                               </div>
                             )}
                           </div>

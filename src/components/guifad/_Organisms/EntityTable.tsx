@@ -32,6 +32,15 @@ import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
 import { renderCustomAvailableValuesFilter } from '../../../_Molecules/AvailableValuesFilter'
 import ListBulletIcon from '../../../_Icons/ListBulletIcon'
 import ListTreeIcon from '../../../_Icons/ListTreeIcon'
+import ArchiveBoxArrowDown from '../../../_Icons/ArchiveBoxArrowDown'
+import {
+  exportTableToCsv,
+  exportTableToTsv,
+  exportToCsv,
+  exportToTsv,
+  saveFile,
+} from '../../../utils/IoUtils'
+import Menu, { Menu1 } from '../../../_Molecules/Menu'
 
 const EntityTable: React.FC<{
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
@@ -439,7 +448,7 @@ const EntityTableInternal: React.FC<{
     setFilterByEntityName(newF)
   }
 
-  function buildFilterExpression(): LogicalExpression | undefined {
+  function buildFilterExpression(): LogicalExpression {
     const result: LogicalExpression = new LogicalExpression()
     const filters: LogicalExpression[] = filterByEntityName[dataSource.entitySchema!.name] || []
     filters.forEach((f) => result.subTree.push(f))
@@ -524,22 +533,123 @@ const EntityTableInternal: React.FC<{
             border-toolbarBorder dark:border-toolbarBorderDark 
             rounded-sm border flex justify-between items-center my-0`}
           >
-            {enableCrud && (
-              <div className={`flex justify-end p-1 ${className} rounded-md`}>
-                <button
-                  className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
-                  onClick={(e) => addRecord()}
-                >
-                  <PlusCircleIcon></PlusCircleIcon>
-                </button>
-                <button
-                  className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
-                  onClick={(e) => deleteRecords()}
-                >
-                  <TrashIcon></TrashIcon>
-                </button>
-              </div>
-            )}
+            <div className='flex'>
+              {enableCrud && (
+                <div className={`flex justify-end p-1 ${className} rounded-md`}>
+                  <button
+                    className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                    onClick={(e) => addRecord()}
+                  >
+                    <PlusCircleIcon></PlusCircleIcon>
+                  </button>
+                  <button
+                    className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                    onClick={(e) => deleteRecords()}
+                  >
+                    <TrashIcon></TrashIcon>
+                  </button>
+                </div>
+              )}
+              <DropdownButton
+                buttonContent={
+                  <div className='hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark p-1 rounded-md'>
+                    <ArchiveBoxArrowDown></ArchiveBoxArrowDown>
+                  </div>
+                }
+              >
+                <div className='bg-menu dark:bg-menuDark p-0 border dark:border-menuBorderDark'>
+                  <Menu1
+                    styleType={1}
+                    direction='Vertical'
+                    menuItems={[
+                      {
+                        id: 'Table_Raw_Export',
+                        label: 'Export Raw Data',
+                        selectable: false,
+                        type: 'SubMenu',
+                        children: [
+                          {
+                            id: 'Table_Raw_Export_Csv',
+                            label: 'To Csv',
+                            selectable: false,
+                            type: 'Command',
+                            command: () => {
+                              exportToCsv(
+                                dataSource,
+                                buildFilterExpression(),
+                                sortingParamsByEntityName[dataSource.entitySchema!.name],
+                              ).then((b) => {
+                                saveFile(b)
+                              })
+                            },
+                            children: [],
+                          },
+                          {
+                            id: 'Table_Raw_Export_Tsv',
+                            label: 'To Tsv',
+                            selectable: false,
+                            type: 'Command',
+                            command: () => {
+                              exportToTsv(
+                                dataSource,
+                                buildFilterExpression(),
+                                sortingParamsByEntityName[dataSource.entitySchema!.name],
+                              ).then((b) => {
+                                saveFile(b)
+                              })
+                            },
+                            children: [],
+                          },
+                        ],
+                      },
+                      {
+                        id: 'Table_Table_Export',
+                        label: 'Export Table Data',
+                        selectable: false,
+                        type: 'SubMenu',
+                        children: [
+                          {
+                            id: 'Table_Table_Export_Csv',
+                            label: 'To Csv',
+                            selectable: false,
+                            type: 'Command',
+                            command: () => {
+                              exportTableToCsv(
+                                dataSource,
+                                buildFilterExpression(),
+                                sortingParamsByEntityName[dataSource.entitySchema!.name],
+                                columns,
+                              ).then((b) => {
+                                saveFile(b)
+                              })
+                            },
+                            children: [],
+                          },
+                          {
+                            id: 'Table_Table_Export_Tsv',
+                            label: 'To Tsv',
+                            selectable: false,
+                            type: 'Command',
+                            command: () => {
+                              exportTableToTsv(
+                                dataSource,
+                                buildFilterExpression(),
+                                sortingParamsByEntityName[dataSource.entitySchema!.name],
+                                columns,
+                              ).then((b) => {
+                                saveFile(b)
+                              })
+                            },
+                            children: [],
+                          },
+                        ],
+                      },
+                    ]}
+                  ></Menu1>
+                </div>
+              </DropdownButton>
+            </div>
+
             {isParent && (
               <div className='flex'>
                 <button

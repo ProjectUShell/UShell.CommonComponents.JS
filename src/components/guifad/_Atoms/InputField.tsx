@@ -7,6 +7,7 @@ import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import ExclamationCircleIcon from '../../../_Icons/ExclamationCircleIcon'
 import Tooltip from '../../../_Atoms/Tooltip'
 import DropdownMultiSelect from '../../../_Atoms/DropdownMultiSelect'
+import '../../../../src/App.css'
 
 const InputField: React.FC<{
   label: string | null
@@ -26,6 +27,8 @@ const InputField: React.FC<{
   readOnly?: boolean
   isCreation?: boolean
   required?: boolean
+  numberDecimals?: number
+  unit?: string
 }> = ({
   label,
   inputType,
@@ -44,6 +47,8 @@ const InputField: React.FC<{
   readOnly = false,
   isCreation = false,
   required = false,
+  numberDecimals = 0,
+  unit,
 }) => {
   const [currentValue, setCurrentValue] = useState<any>(initialValue)
   useEffect(() => {
@@ -204,8 +209,29 @@ const InputField: React.FC<{
         ></textarea>
       )
     }
+    console.log('unit', unit)
+    if (unit) {
+      return (
+        // <div className={`before:content-['${unit}'] ` + classNameInput}>
+        // <div className={`before:content-['${unit}']`}>
+        <div data-content={unit} className={`Unit overflow-hidden w-full ` + classNameInput}>
+          <input
+            style={{ width: currentValue ? 'calc(100% - 25px)' : 'calc(100% - 20px)' }}
+            step={numberDecimals}
+            value={currentValue ? currentValue.toLocaleString('en') : ''}
+            onChange={(e) => {
+              onValueChange(e.target.value, getErrors(e.target.value))
+              setCurrentValue(e.target.value)
+            }}
+            type={EntitySchemaService.getHtmlInputType(inputType)}
+            className='px-1 outline-none bg-transparent overflow-hidden'
+          ></input>
+        </div>
+      )
+    }
     return (
       <input
+        step={numberDecimals}
         disabled={disabled}
         className={classNameInput}
         type={EntitySchemaService.getHtmlInputType(inputType)}

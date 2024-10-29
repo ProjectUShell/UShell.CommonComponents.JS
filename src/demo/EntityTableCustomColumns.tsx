@@ -59,11 +59,7 @@ const EntityTableCustomColumns = () => {
             key: 'CompField',
             label: 'Computed Description',
             onRenderCell: (cv: any, r: any) => {
-              return (
-                <div className='whitespace-nowrap'>
-                  {r.IsOldtimer ? <div>Old {r.Brand}</div> : <div>New {r.Brand}</div>}
-                </div>
-              )
+              return r.IsOldtimer ? `Old ${r.Brand}` : `New ${r.Brand}`
             },
           },
         ]}

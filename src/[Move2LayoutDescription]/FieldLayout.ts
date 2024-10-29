@@ -76,4 +76,6 @@ export class FieldLayout {
   public hidden?: boolean = false
 
   public controlPreference?: ControlPreference
+
+  public unit?: string
 }

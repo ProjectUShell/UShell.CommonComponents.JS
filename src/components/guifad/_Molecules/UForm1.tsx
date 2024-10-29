@@ -88,6 +88,11 @@ const UForm1: React.FC<{
     if (!fieldLayout) return undefined
     return fieldLayout.multiSelectSeparator
   }
+  function getUnit(f: FieldInputInfo): string | null | undefined {
+    const fieldLayout: FieldLayout | undefined = fieldLayouts.find((fl) => fl.fieldName == f.name)
+    if (!fieldLayout) return undefined
+    return fieldLayout.unit
+  }
   function onValidation(fieldName: string, error: string | null) {
     // console.log('onValidation', { fn: fieldName, error: error, errors: errors })
     if (!(fieldName in errors)) {
@@ -165,6 +170,8 @@ const UForm1: React.FC<{
                 isCreation={isCreation}
                 required={f.required}
                 allowedValuesSeparator={getAllowedValuesSeparator(f)}
+                numberDecimals={fieldLayout ? fieldLayout.numberDecimals : 0}
+                unit={fieldLayout && fieldLayout.unit}
               ></InputField>
             </div>
           )

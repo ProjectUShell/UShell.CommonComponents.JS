@@ -22,13 +22,78 @@ const Modal2: React.FC<{
   width,
   height,
 }) => {
+  const sizeRefId: string = crypto.randomUUID()
+
+  return (
+    <>
+      <div
+        id={sizeRefId}
+        className='fixed flex overflow-hidden flex-grow invisible border-4 border-green-400'
+      >
+        {children}
+      </div>
+      <Modal2Internal
+        title={title}
+        terminate={terminate}
+        children={children}
+        top={top}
+        bottom={bottom}
+        left={left}
+        right={right}
+        width={width}
+        height={height}
+        sizeRefId={sizeRefId}
+      ></Modal2Internal>
+    </>
+  )
+}
+const Modal2Internal: React.FC<{
+  title: string
+  terminate?: (() => void) | undefined
+  children: any
+  top?: string | undefined
+  bottom?: string | undefined
+  left?: string | undefined
+  right?: string | undefined
+  width?: string | undefined
+  height?: string | undefined
+  sizeRefId: string
+}> = ({
+  title,
+  terminate,
+  children,
+  top = '20px',
+  bottom,
+  left = '20%',
+  right = '20%',
+  width,
+  height,
+  sizeRefId,
+}) => {
   const [full, setFull] = useState(false)
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
+    if (!ready) {
+      setTimeout(() => {
+        setReady(true)
+      }, 10)
+      return
+    }
     setTimeout(() => {
       setFull(true)
     }, 1)
-  }, [])
+  }, [ready])
+
+  const sizeRefEl: any = document.getElementById(sizeRefId)
+
+  const sizeRect = sizeRefEl?.getBoundingClientRect()
+  if (!sizeRefEl) return <></>
+  const width1 = sizeRect.width + 10
+  const height1 = sizeRect.height + 100
+  const left1 = (window.innerWidth - width1) / 2
+  const height2 = height1 > window.innerHeight * 0.9 ? window.innerHeight * 0.9 : height1
+  const top1 = (window.innerHeight - height2) / 2
   return (
     <div
       className='UShell_Modal fixed top-0 left-0 right-0 bottom-0
@@ -36,12 +101,12 @@ const Modal2: React.FC<{
     >
       <div
         style={{
-          top: top,
-          bottom: '20px',
-          left: left,
-          right: right,
-          width: width,
-          height: height,
+          top: top1,
+          // bottom: '20px',
+          left: left1,
+          // right: right,
+          width: width1,
+          height: height2,
           maxHeight: '90%',
           scale: full ? undefined : '50%',
         }}

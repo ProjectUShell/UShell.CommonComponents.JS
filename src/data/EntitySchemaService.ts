@@ -151,6 +151,9 @@ export class EntitySchemaService {
   static getHtmlInputType(propertyType: string) {
     switch (propertyType.toLocaleLowerCase()) {
       case 'int32':
+      case 'int64':
+      case 'float':
+      case 'decimal':
         return 'number'
       case 'datetime':
         return 'date'

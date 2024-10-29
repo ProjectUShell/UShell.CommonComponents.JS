@@ -1,4 +1,4 @@
-import { LogicalExpression, SortingField } from 'fusefx-repositorycontract'
+import { LogicalExpression, PagingParams, SortingField } from 'fusefx-repositorycontract'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 import { TableColumn } from '../components/guifad/_Organisms/Table'
 
@@ -109,6 +109,15 @@ export function applySorting(
   columns: { fieldType: string }[],
 ) {
   return records.sort((a, b) => compare(a, b, sortingFields, columns))
+}
+
+export function applyPaging(records: any[], pagingParams: PagingParams) {
+  console.log('applyPaging', pagingParams)
+
+  return records.slice(
+    (pagingParams.pageNumber - 1) * pagingParams.pageSize,
+    pagingParams.pageNumber * pagingParams.pageSize,
+  )
 }
 
 export function satisfiesFilter(record: any, filter: LogicalExpression): boolean {

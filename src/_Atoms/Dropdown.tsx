@@ -10,6 +10,7 @@ const Dropdown: React.FC<{
   refId: string
   className?: string
   minWidth?: boolean
+  direction?: 'x' | 'y'
 }> = ({
   setIsOpen,
   children,
@@ -20,6 +21,7 @@ const Dropdown: React.FC<{
   refId,
   className,
   minWidth,
+  direction = 'y',
 }) => {
   const [render, setRender] = useState(0)
 
@@ -60,10 +62,12 @@ const Dropdown: React.FC<{
   function getTop(): number | undefined {
     const el = document.getElementById(refId)
     if (!el) return undefined
-    const t = el.getBoundingClientRect().top + el.getBoundingClientRect().height
+    const tCheck = el.getBoundingClientRect().top + el.getBoundingClientRect().height
+    const t =
+      el.getBoundingClientRect().top + (direction == 'y' ? el.getBoundingClientRect().height : 0)
 
     const hHalf = window.innerHeight / 2
-    if (t <= hHalf) {
+    if (tCheck <= hHalf) {
       const fixedParent: HTMLElement | null = tryFindFixedParent(el)
       if (fixedParent) {
         return t - fixedParent.getBoundingClientRect().top
@@ -77,9 +81,10 @@ const Dropdown: React.FC<{
     const el = document.getElementById(refId)
     if (!el) return undefined
 
+    const tCheck = el.getBoundingClientRect().top + el.getBoundingClientRect().height
     const t = el.getBoundingClientRect().top + el.getBoundingClientRect().height
     const hHalf = window.innerHeight / 2
-    if (t > hHalf) {
+    if (tCheck > hHalf) {
       const fixedParent: HTMLElement | null = tryFindFixedParent(el)
       if (fixedParent) {
         return (
@@ -88,7 +93,11 @@ const Dropdown: React.FC<{
           fixedParent.getBoundingClientRect().top * 0
         )
       }
-      return window.innerHeight - el.getBoundingClientRect().top
+      return (
+        window.innerHeight -
+        el.getBoundingClientRect().top -
+        (direction == 'x' ? el.getBoundingClientRect().height : 0)
+      )
     } else {
       return undefined
     }
@@ -96,7 +105,8 @@ const Dropdown: React.FC<{
   function getLeft(): number | undefined {
     const el = document.getElementById(refId)
     if (!el) return 100
-    const l = el.getBoundingClientRect().left
+    const l =
+      el.getBoundingClientRect().left + (direction == 'x' ? el.getBoundingClientRect().width : 0)
     const wHalf = window.innerWidth / 2
     if (l <= wHalf) {
       const fixedParent: HTMLElement | null = tryFindFixedParent(el)
@@ -111,7 +121,10 @@ const Dropdown: React.FC<{
   function getRight(): number | undefined {
     const el = document.getElementById(refId)
     if (!el) return 100
-    const r = window.innerWidth - el.getBoundingClientRect().right
+    const r =
+      window.innerWidth -
+      el.getBoundingClientRect().right +
+      (direction == 'x' ? el.getBoundingClientRect().width : 0)
     const wHalf = window.innerWidth / 2
     if (r < wHalf) {
       const fixedParent: HTMLElement | null = tryFindFixedParent(el)
@@ -153,7 +166,7 @@ const Dropdown: React.FC<{
       {setIsOpen && (
         <button
           id='button1'
-          className='fixed z-50 cursor-default inset-0 bg-black bg-opacity-0'
+          className='fixed z-0 cursor-default inset-0 bg-black bg-opacity-0'
           onClick={(e) => {
             e.stopPropagation()
             e.preventDefault()

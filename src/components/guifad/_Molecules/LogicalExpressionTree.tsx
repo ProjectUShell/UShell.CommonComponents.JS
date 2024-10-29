@@ -92,7 +92,7 @@ const LogicalExpressionTree: React.FC<{
   return (
     <div className={`UShell_LogicalExpressionTree p-2 rounded-md text-sm ${classNameBg || ''}`}>
       <div className='-ml-3'>
-        <ChevrodnDownIcon rotate={135} size={4}></ChevrodnDownIcon>
+        <ChevrodnDownIcon rotate={135} size={1.5}></ChevrodnDownIcon>
       </div>
 
       {expression.predicates.map((a, i) => (
@@ -142,7 +142,7 @@ const LogicalExpressionTree: React.FC<{
         </div>
       ))}
       <div className='-ml-3'>
-        <ChevrodnDownIcon rotate={45} size={4}></ChevrodnDownIcon>
+        <ChevrodnDownIcon rotate={45} size={1.5}></ChevrodnDownIcon>
       </div>
     </div>
   )

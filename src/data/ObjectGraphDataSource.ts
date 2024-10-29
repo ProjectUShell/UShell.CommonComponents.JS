@@ -7,7 +7,7 @@ import {
   PaginatedList,
 } from 'fusefx-repositorycontract'
 import { IDataSource } from 'ushell-modulebase'
-import { applyFilter, applySorting } from '../utils/LogicUtils'
+import { applyFilter, applyPaging, applySorting } from '../utils/LogicUtils'
 import { EntitySchemaService } from './EntitySchemaService'
 import { copyValueFields } from '../utils/ObjectUtils'
 
@@ -148,6 +148,9 @@ export class ObjectGraphDataSource implements IDataSource {
           return { fieldType: this.entitySchema.fields.find((f) => f.name == sp.fieldName)!.type }
         }),
       )
+    }
+    if (pagingParams) {
+      result = applyPaging(result, pagingParams)
     }
     return { page: result, total: result.length }
   }
