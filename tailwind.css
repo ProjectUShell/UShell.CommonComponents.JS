@@ -54,3 +54,7 @@
 ::-webkit-scrollbar-thumb {
   background: #888;
 }
+
+.Unit::before {
+  content: attr(data-content);
+}

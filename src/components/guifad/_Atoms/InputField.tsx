@@ -7,7 +7,6 @@ import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import ExclamationCircleIcon from '../../../_Icons/ExclamationCircleIcon'
 import Tooltip from '../../../_Atoms/Tooltip'
 import DropdownMultiSelect from '../../../_Atoms/DropdownMultiSelect'
-import '../../../../src/App.css'
 
 const InputField: React.FC<{
   label: string | null
