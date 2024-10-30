@@ -20,7 +20,7 @@ const GlobalElementsContainer = () => {
       setGlobalElements({ ...globalElements })
     }
     removeGlobalElementMethod = (id) => {
-      if (id in globalElements) return
+      if (!(id in globalElements)) return
       delete globalElements[id]
       setGlobalElements({ ...globalElements })
     }
@@ -29,9 +29,9 @@ const GlobalElementsContainer = () => {
   return (
     <>
       {Object.keys(globalElements).map((gek) => (
-        <div className='fixed inset-0 w-full h-full z-50 bg-red-400' key={gek}>
-          {globalElements[gek]}
-        </div>
+        // <div className='fixed inset-0  bg-red-400 z-50' key={gek}>
+        <>{globalElements[gek]}</>
+        // </div>
       ))}
     </>
   )

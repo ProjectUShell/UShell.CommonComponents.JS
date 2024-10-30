@@ -9,8 +9,6 @@ const EntitySelection: React.FC<{
   layoutDescription?: LayoutDescriptionRoot
   className?: string
   classNameBgToolbar?: string
-  enableQueryEditor?: boolean
-  enableSearch?: boolean
   rowHeight?: number
   reloadTriggerObject?: any
   onRecordSelected: (r: any) => void
@@ -20,7 +18,6 @@ const EntitySelection: React.FC<{
   className,
   layoutDescription,
   classNameBgToolbar,
-  enableSearch = true,
   rowHeight = 1,
   reloadTriggerObject,
   onRecordSelected,
@@ -47,7 +44,6 @@ const EntitySelection: React.FC<{
         className={className}
         layoutDescription={layoutDescription}
         classNameBgToolbar={classNameBgToolbar}
-        enableSearch={enableSearch}
         rowHeight={rowHeight}
         reloadTriggerObject={reloadTriggerObject}
         entitySchema={dataSource.entitySchema!}

@@ -6,6 +6,7 @@ import { ObjectGraphDataSource } from '../data/ObjectGraphDataSource'
 import EntityTable from '../components/guifad/_Organisms/EntityTable'
 import Modal2 from '../_Atoms/Modal2'
 import EntitySelection from '../_Organisms/EntitySelection'
+import { showNotification } from '../_Molecules/Notification'
 
 const brandField: FieldSchema = new FieldSchema('Brand', 'string')
 brandField.filterable = 1
@@ -73,6 +74,9 @@ const EntitySelectionBasic = () => {
             dataSource={dataSource}
             layoutDescription={layoutDescription}
             onRecordSelected={(r) => {
+              r
+                ? showNotification(`Record selected: ${r.Brand}`, 'Success')
+                : showNotification(`No Record selected`, 'Warn')
               setOpen(false)
             }}
           ></EntitySelection>
