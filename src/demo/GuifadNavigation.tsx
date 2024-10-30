@@ -56,6 +56,7 @@ const GuifadNavigation = () => {
             fieldLayouts: [
               { fieldName: 'NationalityId', displayLabel: 'The Nation' },
               { fieldName: 'FirstName', displayLabel: 'First Name' },
+              { fieldName: 'InsuranceContract.PersonId', displayLabel: 'Insurance Contracts' },
             ],
             identityLabelPattern: '',
             isBlEntrypoint: false,

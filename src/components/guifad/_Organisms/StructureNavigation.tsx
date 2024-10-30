@@ -6,6 +6,8 @@ import ListIcon from '../../../_Icons/ListIcon'
 import FolderIcon from '../../shell-layout/_Icons/FolderIcon'
 import PencilIcon from '../../../_Icons/PencilIcon'
 import { lowerFirstLetter } from '../../../utils/StringUtils'
+import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
+import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
 
 const StructureNavigation: React.FC<{
   currentRecord: any
@@ -16,9 +18,10 @@ const StructureNavigation: React.FC<{
   onRelationEnter: (rel: RelationSchema) => void
   setMode: (mode: 'list' | 'details') => void
   mode: 'list' | 'details'
-  relation: RelationSchema | null
+  currentRelation: RelationSchema | null
   className?: string
   dirty: boolean
+  entityLayout?: EntityLayout
 }> = ({
   currentRecord,
   hideList,
@@ -28,10 +31,33 @@ const StructureNavigation: React.FC<{
   setMode,
   onRelationEnter,
   mode,
-  relation,
+  currentRelation,
   className,
   dirty,
+  entityLayout,
 }) => {
+  function getNavigationDiplayLabel(er: RelationSchema) {
+    console.log('getNav Display', entityLayout)
+    if (!entityLayout)
+      return er.primaryNavigationName && er.primaryNavigationName != ''
+        ? er.primaryNavigationName
+        : er.foreignEntityName
+    const fieldLayout: FieldLayout | undefined = entityLayout.fieldLayouts.find((f) => {
+      if (!f.fieldName.includes('.')) return false
+      const idxOfDot = f.fieldName.indexOf('.')
+      const foreignEntityName: string = f.fieldName.substring(0, idxOfDot)
+      const foreignPropertyName: string = f.fieldName.substring(idxOfDot + 1)
+      return (
+        foreignPropertyName == er.foreignKeyIndexName && foreignEntityName == er.foreignEntityName
+      )
+    })
+    if (!fieldLayout)
+      return er.primaryNavigationName && er.primaryNavigationName != ''
+        ? er.primaryNavigationName
+        : er.foreignEntityName
+    return fieldLayout.displayLabel
+  }
+
   return (
     <div className={`pl-2 text-md ${className}`}>
       <h1 className='pb-2 font-bold border-r border-navigationBorder dark:border-navigationBorderDark whitespace-normal'>
@@ -80,7 +106,7 @@ const StructureNavigation: React.FC<{
                 ? 'text-gray-400 hover:cursor-default'
                 : 'hover:cursor-pointer'
             } rounded-md p-1 ${
-              relation?.primaryNavigationName == er.primaryNavigationName
+              currentRelation?.primaryNavigationName == er.primaryNavigationName
                 ? !currentRecord || dirty
                   ? ''
                   : 'underline'
@@ -90,9 +116,7 @@ const StructureNavigation: React.FC<{
             onDoubleClick={() => onRelationEnter(er)}
           >
             <FolderIcon></FolderIcon>
-            {er.primaryNavigationName && er.primaryNavigationName != ''
-              ? er.primaryNavigationName
-              : er.foreignEntityName}
+            {getNavigationDiplayLabel(er)}
           </button>
         ))}
       </div>

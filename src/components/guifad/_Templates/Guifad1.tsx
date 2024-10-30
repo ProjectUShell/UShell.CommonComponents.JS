@@ -145,9 +145,12 @@ const Guifad1: React.FC<{
               onRelationEnter={(rel: RelationSchema) => enterRelation(rel, null)}
               setMode={(mode: 'list' | 'details') => setCurrentMode(mode)}
               mode={currentMode}
-              relation={currentRelation}
+              currentRelation={currentRelation}
               className='w-full h-1/2 '
               dirty={dirty}
+              entityLayout={layoutDescription.entityLayouts.find(
+                (el) => el.entityName == node.dataSource.entitySchema?.name,
+              )}
             ></StructureNavigation>
           </div>
           <div className='w-full h-full max-w-full border-t-2 border-navigationBorder dark:border-navigationBorderDark border-r mt-0'>
