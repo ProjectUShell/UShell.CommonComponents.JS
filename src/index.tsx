@@ -28,6 +28,7 @@ import UForm from './components/guifad/_Molecules/UForm'
 import UForm1 from './components/guifad/_Molecules/UForm1'
 import EntityForm from './components/guifad/_Organisms/EntityForm'
 import EntityTable from './components/guifad/_Organisms/EntityTable'
+import GlobalElementsContainer from './GlobalElementsContainer'
 
 // export { MyComponent }
 
@@ -55,9 +56,12 @@ export { EntityTable }
 
 export * from './components/shell-layout/_Templates/ShellLayout'
 
+const root2 = ReactDOM.createRoot(document.getElementById('root2') as HTMLElement)
+root2.render(<GlobalElementsContainer></GlobalElementsContainer>)
+
 /***ONLY-NEEDED-FOR-DEMO***
 
- const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
- root.render(<Demo></Demo>)
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+root.render(<Demo></Demo>)
 
 ***ONLY-NEEDED-FOR-DEMO***/
