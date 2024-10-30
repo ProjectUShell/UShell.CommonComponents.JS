@@ -14,6 +14,7 @@ const AccordionMenu: React.FC<{
       }[]
     }
   }
+  onGroupChanged?: (groupName: string) => void
   initialSelectedItemKey?: string
   classNameBgHeader?: string
   classNameBgHeaderActive?: string
@@ -22,6 +23,7 @@ const AccordionMenu: React.FC<{
   classNameBgItemSelected?: string
 }> = ({
   groups,
+  onGroupChanged,
   classNameBgHeader = 'hover:bg-bg8 dark:hover:bg-bg8dark',
   classNameBgHeaderActive = 'bg-bg8 dark:bg-bg8dark',
   classNameBgItems = 'bg-content dark:bg-contentDark',
@@ -53,8 +55,14 @@ const AccordionMenu: React.FC<{
   return (
     <Accordion
       initialOpenIndex={getSelectedGroupIndex()}
-      items={Object.keys(groups).map((g) => {
+      onItemToggled={(groupName: string, open: boolean) => {
+        if (open) {
+          onGroupChanged && onGroupChanged(groupName)
+        }
+      }}
+      items={Object.keys(groups).map((g: string) => {
         return {
+          id: g,
           label: groups[g].label || g,
           content: (
             <div className='flex flex-col py-1'>

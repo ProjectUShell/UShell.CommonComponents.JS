@@ -6,6 +6,7 @@ const AccordionMenuBasic = () => {
   return (
     <AccordionMenu
       initialSelectedItemKey='Item2.1'
+      onGroupChanged={(groupName: string) => console.log('Group changed', groupName)}
       groups={{
         'Group 1': {
           label: (

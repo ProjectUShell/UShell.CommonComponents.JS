@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ArrowUpIcon from '../_Icons/ArrowUpIcon'
 import ArrowLeftStartOnRectangle from '../_Icons/ArrowLeftStartOnRectangle'
 import ChevrodnDownIcon from '../_Icons/ChevrodnDownIcon'
 
 const Accordion: React.FC<{
-  items: { label: string | JSX.Element; content: JSX.Element }[]
+  items: { id: string; label: string | JSX.Element; content: JSX.Element }[]
+  onItemToggled?: (itemId: string, open: boolean) => void
   initialOpenIndex?: number
   multipleOpenAllowed?: boolean
   classNameBgHeader?: string
@@ -14,6 +15,7 @@ const Accordion: React.FC<{
   classNameBgItemSelected?: string
 }> = ({
   items,
+  onItemToggled,
   multipleOpenAllowed = false,
   classNameBgHeader = '',
   classNameBgHeaderActive = '',
@@ -27,14 +29,19 @@ const Accordion: React.FC<{
       if (openIndices.includes(i)) {
         const nextI: number = i == items.length - 1 ? 0 : i + 1
         setOpenIndices([nextI])
+        onItemToggled && onItemToggled(items[nextI].id, true)
+        onItemToggled && onItemToggled(items[i].id, false)
       } else {
         setOpenIndices([i])
+        onItemToggled && onItemToggled(items[i].id, true)
       }
     } else {
       if (openIndices.includes(i)) {
         setOpenIndices([...openIndices].filter((ix) => ix != i))
+        onItemToggled && onItemToggled(items[i].id, false)
       } else {
         setOpenIndices([...openIndices, i])
+        onItemToggled && onItemToggled(items[i].id, true)
       }
     }
   }
