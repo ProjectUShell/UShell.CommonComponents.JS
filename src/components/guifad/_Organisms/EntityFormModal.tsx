@@ -59,7 +59,7 @@ const EntityFormModal: React.FC<{
     >
       <div
         style={{}}
-        className='p-0 px-4 h-full1 w-full overflow-hidden flex flex-col border-0 border-yellow-400'
+        className='p-0 px-4 h-full1 w-full min-w-80 overflow-hidden flex flex-col border-0 border-yellow-400'
       >
         <EntityForm1
           dataSources={dataSources}

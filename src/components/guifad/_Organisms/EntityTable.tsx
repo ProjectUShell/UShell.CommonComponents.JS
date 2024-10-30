@@ -280,7 +280,7 @@ const EntityTableInternal: React.FC<{
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
   // const [columns, setColumns] = useState<TableColumn[]>([])
-  const [pagingParams, setPagingParams] = useState<PagingParams>({ pageNumber: 1, pageSize: 10 })
+  const [pagingParams, setPagingParams] = useState<PagingParams>({ pageNumber: 1, pageSize: 50 })
   const [sortingParamsByEntityName, setSortingParamsByEntityName] = useState<{
     [entityName: string]: SortingField[]
   }>({})

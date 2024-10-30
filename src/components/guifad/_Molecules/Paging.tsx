@@ -35,7 +35,7 @@ const Paging: React.FC<{
       <div>
         <label className='my-auto mx-1  text-sm'>Page Size:</label>
         <select
-          defaultValue={pagingParams.pageSize}
+          defaultValue={pagingParams.pageSize > 0 ? pagingParams.pageSize : 50}
           onChange={(e) =>
             console.log(
               'select',

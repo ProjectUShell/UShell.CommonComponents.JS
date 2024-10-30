@@ -46,6 +46,8 @@ import EntityFormDoc from './demo/EntityFormDoc'
 import ModalDoc from './demo/ModalDoc'
 import DialogDoc from './demo/DialogDoc'
 import MenuDoc from './demo/MenuDoc'
+import EntitySelectionDoc from './demo/EntitySelectionDoc'
+import NotificationDoc from './demo/NotificationDoc'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -69,8 +71,10 @@ const Demo = () => {
       'Accordion',
       'AccordionMenu',
       'Modal',
+      'Notification',
       'Dialog',
       'Menu',
+      'EntitySelection',
     ],
     'FuseFx Components': [
       'Guifad',
@@ -270,6 +274,8 @@ const Demo = () => {
       {currentComponent == 'Modal' && <ModalDoc></ModalDoc>}
       {currentComponent == 'Dialog' && <DialogDoc></DialogDoc>}
       {currentComponent == 'Menu' && <MenuDoc></MenuDoc>}
+      {currentComponent == 'EntitySelection' && <EntitySelectionDoc></EntitySelectionDoc>}
+      {currentComponent == 'Notification' && <NotificationDoc></NotificationDoc>}
       {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
       {currentComponent == 'Schema Manager' && (
         <SchemaManager
