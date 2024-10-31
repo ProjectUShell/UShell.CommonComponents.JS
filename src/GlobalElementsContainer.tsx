@@ -5,6 +5,7 @@ let addGlobalElementMethod: (id: string, element: React.JSX.Element) => void = (
 let removeGlobalElementMethod: (id: string) => void = () => {}
 
 export function addGlobalElement(id: string, element: React.JSX.Element) {
+  console.log('call addGlobalElementMethod')
   addGlobalElementMethod(id, element)
 }
 export function removeGlobalElement(id: string) {
@@ -15,9 +16,11 @@ const GlobalElementsContainer = () => {
   const [globalElements, setGlobalElements] = useState<{ [id: string]: React.JSX.Element }>({})
 
   useEffect(() => {
+    console.log('register global elements methds')
     addGlobalElementMethod = (id, el) => {
       if (id in globalElements) return
       globalElements[id] = el
+      console.log('adding global element', id, globalElements)
       setGlobalElements({ ...globalElements })
     }
     removeGlobalElementMethod = (id) => {

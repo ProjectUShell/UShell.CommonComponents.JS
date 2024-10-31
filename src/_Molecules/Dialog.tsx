@@ -92,6 +92,7 @@ export function showDialog2(
 ) {
   const id = crypto.randomUUID()
   let t: any = null
+  console.log('attemt to add global element', id)
   addGlobalElement(
     id,
     <Dialog
