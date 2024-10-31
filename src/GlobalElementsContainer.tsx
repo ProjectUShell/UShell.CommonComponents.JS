@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ColorMode, loadShellSettings } from './components/shell-layout/ShellSettings'
+import ReactDOM from 'react-dom/client'
 
 let addGlobalElementMethod: (id: string, element: React.JSX.Element) => void = () => {
   console.log('empty addGlobalElementMethod is called')
@@ -8,13 +9,21 @@ let removeGlobalElementMethod: (id: string) => void = () => {}
 
 export function addGlobalElement(id: string, element: React.JSX.Element) {
   console.log('call addGlobalElementMethod')
+
   addGlobalElementMethod(id, element)
 }
 export function removeGlobalElement(id: string) {
   removeGlobalElementMethod(id)
 }
 
-const GlobalElementsContainer = () => {
+const globalElements: React.JSX.Element[] = []
+
+export function forceGlobalElement(el: React.JSX.Element) {
+  const root2 = ReactDOM.createRoot(document.getElementById('root2') as HTMLElement)
+  root2.render(el)
+}
+
+const GlobalElementsContainer: React.FC<{}> = ({}) => {
   const [globalElements, setGlobalElements] = useState<{ [id: string]: React.JSX.Element }>({})
 
   useEffect(() => {
