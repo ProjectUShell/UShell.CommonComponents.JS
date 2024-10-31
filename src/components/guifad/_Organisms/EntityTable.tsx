@@ -41,6 +41,7 @@ import {
   saveFile,
 } from '../../../utils/IoUtils'
 import Menu, { Menu1 } from '../../../_Molecules/Menu'
+import { showDialog2 } from '../../../_Molecules/Dialog'
 
 const EntityTable: React.FC<{
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
@@ -516,11 +517,20 @@ const EntityTableInternal: React.FC<{
     if (selectedRecords.length == 0) {
       return
     }
-    dataSource.entityDeleteMethod(selectedRecords).then((r) => {
-      setSelectedRecords([])
-      onSelectedRecordsChange && onSelectedRecordsChange([])
-      forceReload()
-    })
+    showDialog2(
+      'Confirm Deletion',
+      ['Cancel', 'Ok'],
+      <div className='p-2'>{`Are you sure you want to delete?`}</div>,
+      (r) => {
+        if (r == 'Ok') {
+          dataSource.entityDeleteMethod(selectedRecords).then((r) => {
+            setSelectedRecords([])
+            onSelectedRecordsChange && onSelectedRecordsChange([])
+            forceReload()
+          })
+        }
+      },
+    )
   }
 
   return (

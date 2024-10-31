@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { ColorMode, loadShellSettings } from './components/shell-layout/ShellSettings'
 
 let addGlobalElementMethod: (id: string, element: React.JSX.Element) => void = () => {}
 let removeGlobalElementMethod: (id: string) => void = () => {}
@@ -27,13 +28,13 @@ const GlobalElementsContainer = () => {
   }, [])
   console.log('global elements', globalElements)
   return (
-    <>
+    <div className={`${loadShellSettings().colorMode == ColorMode.Dark && 'dark'}`}>
       {Object.keys(globalElements).map((gek) => (
         // <div className='fixed inset-0  bg-red-400 z-50' key={gek}>
-        <>{globalElements[gek]}</>
+        <div key={gek}>{globalElements[gek]}</div>
         // </div>
       ))}
-    </>
+    </div>
   )
 }
 

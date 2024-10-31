@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Accordion from '../_Molecules/Accordion'
-import Dialog, { DialogResult, showDialog } from '../_Molecules/Dialog'
+import Dialog, { DialogResult, showDialog, showDialog2 } from '../_Molecules/Dialog'
 
 const DialogBasic = () => {
   const [dialog, setDialog] = useState<React.JSX.Element | null>(null)
@@ -22,6 +22,17 @@ const DialogBasic = () => {
     )
   }
 
+  function deleteSomething2() {
+    showDialog2(
+      'Delete?',
+      ['Cancel', 'Ok'],
+      <div>Do you really want to delete something?</div>,
+      (r) => {
+        console.log('result', r)
+      },
+    )
+  }
+
   return (
     <>
       <button
@@ -31,6 +42,14 @@ const DialogBasic = () => {
         }}
       >
         Delete Something
+      </button>
+      <button
+        className='hover:bg-bg1 dark:hover:bg-bg1dark p-2 border dark:border-bg8dark text-red-400'
+        onClick={() => {
+          deleteSomething2()
+        }}
+      >
+        Delete Something 2
       </button>
       {dialog}
     </>
