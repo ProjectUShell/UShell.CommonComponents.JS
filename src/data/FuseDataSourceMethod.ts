@@ -81,7 +81,11 @@ export class FuseDataSourceMethod implements IDataSource {
         sortedBy: sortingParams?.map((sp) => (sp.descending ? '^' + sp.fieldName : sp.fieldName)),
       })
       .then((r) => {
-        return { page: r.return, total: 1000 }
+        return this.dataStore
+          .post(this.url + `Get${this.entitySchema!.name}Count`, { filter: filter })
+          .then((c) => {
+            return { page: r.return, total: c.return }
+          })
       })
   }
   getRecord(identityFields: object): Promise<object> {

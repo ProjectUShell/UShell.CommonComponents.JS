@@ -31,8 +31,8 @@ const Paging: React.FC<{
   }, [pagingParams, total])
 
   return (
-    <nav className='cc_paging flex items-center justify-between pt-4' aria-label='Table navigation'>
-      <div>
+    <nav className='cc_paging flex items-center justify-between pt-3' aria-label='Table navigation'>
+      <div className=''>
         <label className='my-auto mx-1  text-sm'>Page Size:</label>
         <select
           defaultValue={pagingParams.pageSize > 0 ? pagingParams.pageSize : 50}
@@ -57,15 +57,17 @@ const Paging: React.FC<{
           of <span className='font-semibold text-gray-900 dark:text-white'>{total}</span>
         </span>
       </div>
-      <div></div>
-      <ul className='inline-flex -space-x-px text-sm h-8'>
+
+      <ul className='inline-flex justify-between -space-x-px text-sm gap-1'>
         <li className=''>
           <button
             disabled={pagingParams.pageNumber == 1}
             onClick={(e) =>
               onPagingParamsChange({ ...pagingParams, pageNumber: pagingParams.pageNumber - 1 })
             }
-            className='flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+            className='cursor-pointer py-1 flex items-center justify-center px-1 ml-0
+             leading-tight text-gray-500  rounded-l-lg hover:bg-gray-100 hover:text-gray-700
+              dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
           >
             Previous
           </button>
@@ -74,12 +76,12 @@ const Paging: React.FC<{
           <li key={p}>
             <button
               onClick={(e) => onPagingParamsChange({ ...pagingParams, pageNumber: p })}
-              className={`flex items-center justify-center px-3 h-8 leading-tight
-               text-gray-500  border border-gray-300 hover:bg-gray-100 
-                dark:border-gray-700 dark:text-gray-400  dark:hover:text-white
+              className={`py-1 flex rounded-full items-center justify-center px-2 leading-tight
+                hover:bg-gray-100 
+                dark:border-gray-700  dark:hover:text-white
                 ${
                   p == pagingParams.pageNumber
-                    ? 'bg-blue-300 dark:bg-blue-200'
+                    ? 'bg-prim1 dark:bg-prim3Dark'
                     : 'hover:text-gray-700 dark:hover:bg-gray-700'
                 }`}
             >
@@ -93,7 +95,9 @@ const Paging: React.FC<{
             onClick={(e) =>
               onPagingParamsChange({ ...pagingParams, pageNumber: pagingParams.pageNumber + 1 })
             }
-            className='flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+            className='cursor-pointer py-1 flex items-center justify-center px-1 
+              leading-tight text-gray-500 rounded-r-lg hover:bg-gray-100 hover:text-gray-700
+               dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
           >
             Next
           </button>

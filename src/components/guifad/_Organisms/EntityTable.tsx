@@ -570,7 +570,7 @@ const EntityTableInternal: React.FC<{
                         children: [
                           {
                             id: 'Table_Raw_Export_Csv',
-                            label: 'To Csv',
+                            label: 'Export To Csv',
                             selectable: false,
                             type: 'Command',
                             command: () => {
@@ -586,7 +586,7 @@ const EntityTableInternal: React.FC<{
                           },
                           {
                             id: 'Table_Raw_Export_Tsv',
-                            label: 'To Tsv',
+                            label: 'Export To Tsv',
                             selectable: false,
                             type: 'Command',
                             command: () => {
@@ -610,7 +610,7 @@ const EntityTableInternal: React.FC<{
                         children: [
                           {
                             id: 'Table_Table_Export_Csv',
-                            label: 'To Csv',
+                            label: 'Export To Csv',
                             selectable: false,
                             type: 'Command',
                             command: () => {
@@ -627,7 +627,7 @@ const EntityTableInternal: React.FC<{
                           },
                           {
                             id: 'Table_Table_Export_Tsv',
-                            label: 'To Tsv',
+                            label: 'Export To Tsv',
                             selectable: false,
                             type: 'Command',
                             command: () => {

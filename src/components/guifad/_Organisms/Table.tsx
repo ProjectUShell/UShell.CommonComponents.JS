@@ -860,7 +860,8 @@ const Table: React.FC<{
           </tbody>
         </table>
       </div>
-      {pagingParams && onPagingParamsChange && (!totalCount || totalCount > records.length) && (
+      {/* (!totalCount || totalCount > records.length) && */}
+      {pagingParams && onPagingParamsChange && (
         <Paging
           pagingParams={pagingParams}
           total={totalCount ? totalCount : 0}
