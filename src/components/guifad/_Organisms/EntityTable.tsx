@@ -42,6 +42,7 @@ import {
 } from '../../../utils/IoUtils'
 import Menu, { Menu1 } from '../../../_Molecules/Menu'
 import { showDialog2 } from '../../../_Molecules/Dialog'
+import { showNotification } from '../../../_Molecules/Notification'
 
 const EntityTable: React.FC<{
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
@@ -527,6 +528,11 @@ const EntityTableInternal: React.FC<{
             setSelectedRecords([])
             onSelectedRecordsChange && onSelectedRecordsChange([])
             forceReload()
+            if (r) {
+              showNotification('Entity Deleted', 'Success')
+            } else {
+              showNotification('Deletion of Entity failed', 'Error')
+            }
           })
         }
       },

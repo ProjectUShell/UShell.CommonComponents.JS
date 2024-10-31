@@ -24,21 +24,21 @@ const Notification: React.FC<{ content: string; level: NotificationLevel }> = ({
       style={{ zIndex: 60, top: ready ? '5%' : '10%', right: '5%', borderRadius: '0.2rem' }}
       className={`fixed bg-red-400 p-6  border-l-4 flex flex-col gap-2 transition-all ${
         level == 'Success'
-          ? 'bg-green-400 dark:bg-green-400 border-green-700'
+          ? 'bg-green-400 dark:bg-green-700 border-green-700 dark:border-green-900'
           : level == 'Error'
-          ? 'bg-red-400 dark:bg-red-400 border-red-700'
+          ? 'bg-red-400 dark:bg-red-700 border-red-700 dark:border-red-900'
           : level == 'Warn'
-          ? 'bg-yellow-400 dark:bg-yellow-400 border-yellow-700'
-          : 'bg-blue-400 dark:bg-blue-400 border-blue-700'
+          ? 'bg-yellow-400 dark:bg-yellow-700 border-yellow-700 dark:border-yellow-900'
+          : 'bg-blue-400 dark:bg-blue-700 border-blue-700 dark:border-blue-900'
       }`}
     >
-      <div className='text-opacity-65 text-gray-600'>
+      <div className='text-opacity-65 text-gray-600 dark:text-gray-200 px-4'>
         {level == 'Success' && <CheckIcon></CheckIcon>}
         {level == 'Error' && <ExclamationTriangleIcon></ExclamationTriangleIcon>}
         {level == 'Warn' && <ExclamationTriangleIcon></ExclamationTriangleIcon>}
         {level == 'Info' && <InformationCircleIcon></InformationCircleIcon>}
       </div>
-      {content}
+      <div className='px-4'>{content}</div>
     </div>
   )
 }
@@ -52,7 +52,7 @@ export function showNotification(
   setTimeout(() => {
     console.log('removing')
     removeGlobalElement(id)
-  }, 1000)
+  }, 3000)
 }
 
 export default Notification

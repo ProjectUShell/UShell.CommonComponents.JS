@@ -31,7 +31,9 @@ const GlobalElementsContainer = () => {
     <div className={`${loadShellSettings().colorMode == ColorMode.Dark && 'dark'}`}>
       {Object.keys(globalElements).map((gek) => (
         // <div className='fixed inset-0  bg-red-400 z-50' key={gek}>
-        <div key={gek}>{globalElements[gek]}</div>
+        <div key={gek} className='bg-content dark:bg-contentDark dark:text-textonedark'>
+          {globalElements[gek]}
+        </div>
         // </div>
       ))}
     </div>
