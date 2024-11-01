@@ -164,6 +164,7 @@ export const EntityForm1: React.FC<{
       (el) => el.entityName == currentDataSource.entitySchema?.name,
     )
     setCurrentEntityLayout(entityLayout)
+    setErrors({})
   }, [currentDataSource])
 
   if (error) {
@@ -287,9 +288,9 @@ export const EntityForm1: React.FC<{
               label: currentDataSource.entitySchema!.name,
               value: currentDataSource.entitySchema!.name,
             }}
-            onOptionSet={(o) =>
+            onOptionSet={(o) => {
               setCurrentDataSource(dataSources.find((ds) => ds.entitySchema!.name == o?.value)!)
-            }
+            }}
             styleType={styleType}
             classNameBg={classNameInputBg}
             classNameHoverBg={classNameInputHoverBg}
