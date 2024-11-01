@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { addGlobalElement, removeGlobalElement } from '../GlobalElementsContainer'
+import {
+  addGlobalElement,
+  addGlobalElement2,
+  removeGlobalElement,
+} from '../GlobalElementsContainer'
 import CheckIcon from '../_Icons/CheckIcon'
 import ExclamationCircleIcon from '../_Icons/ExclamationCircleIcon'
 import ExclamationTriangleIcon from '../_Icons/ExclamationTriangleIcon'
@@ -48,7 +52,7 @@ export function showNotification(
   level: 'Success' | 'Warn' | 'Error' | 'Info' = 'Info',
 ) {
   const id = crypto.randomUUID()
-  addGlobalElement(id, <Notification content={content} level={level}></Notification>)
+  addGlobalElement2(id, <Notification content={content} level={level}></Notification>)
   setTimeout(() => {
     console.log('removing')
     removeGlobalElement(id)

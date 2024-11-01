@@ -1,7 +1,11 @@
 import React from 'react'
 import Modal2 from '../_Atoms/Modal2'
 import ReactDOM from 'react-dom'
-import { addGlobalElement, removeGlobalElement } from '../GlobalElementsContainer'
+import {
+  addGlobalElement,
+  addGlobalElement2,
+  removeGlobalElement,
+} from '../GlobalElementsContainer'
 
 export type DialogResult = 'Ok' | 'Cancel'
 
@@ -93,7 +97,7 @@ export function showDialog2(
   const id = crypto.randomUUID()
   let t: any = null
   console.log('attemt to add global element', id)
-  addGlobalElement(
+  addGlobalElement2(
     id,
     <Dialog
       buttons={buttons}
