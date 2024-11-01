@@ -54,7 +54,6 @@ export function showNotification(
   const id = crypto.randomUUID()
   addGlobalElement2(id, <Notification content={content} level={level}></Notification>)
   setTimeout(() => {
-    console.log('removing')
     removeGlobalElement(id)
   }, 3000)
 }

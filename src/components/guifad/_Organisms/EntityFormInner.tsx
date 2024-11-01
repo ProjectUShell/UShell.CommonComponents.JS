@@ -7,7 +7,8 @@ import ErrorPage from '../../../_Molecules/ErrorScreen'
 import { EntityLayout, LayoutPartition } from '../../../[Move2LayoutDescription]/EntityLayout'
 import EntityFormGroup from '../_Molecules/EntityFormGroup'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
-import Modal2 from '../../../_Atoms/Modal2'
+import Modal2 from '../../../_Atoms/Modal2Old'
+import Modal3 from '../../../_Atoms/Modal3'
 
 const EntityFormInner: React.FC<{
   dataSource: IDataSource
@@ -100,14 +101,14 @@ const EntityFormInner: React.FC<{
 
   if (error) {
     return (
-      <Modal2
+      <Modal3
         title={`${entityLayout?.displayLabel} Details`}
         terminate={() => {
           setError(null)
         }}
       >
         <ErrorPage messages={[error.toString()]}></ErrorPage>
-      </Modal2>
+      </Modal3>
     )
   }
 
@@ -118,7 +119,6 @@ const EntityFormInner: React.FC<{
       newValue = Number.parseInt(newValue)
     }
     if (field.type.toLocaleLowerCase().startsWith('bool')) {
-      console.log('new bool', newValue)
     }
     setValue(entity, field.name, newValue)
     onChange(entity)

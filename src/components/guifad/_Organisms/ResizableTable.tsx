@@ -23,7 +23,6 @@ const ResizableTable: React.FC<TableProps> = ({ columns, data }) => {
     if (idx >= 0 && idx < columns.length - 1) {
       const nextKey: string = columns[idx + 1].key
       const newNextWidth: number = Math.max(dragStartWidthNext - widthDelta, 150)
-      console.log('newNextWidth', newNextWidth)
       newWidths[nextKey] = newNextWidth
       // setColumnWidths({ ...columnWidths, [nextKey]: oldNextWidth - newWidth })
     }
@@ -52,7 +51,6 @@ const ResizableTable: React.FC<TableProps> = ({ columns, data }) => {
   function initColumnWidth(key: string) {
     if (key in columnWidths) return
     columnWidths[key] = document.getElementById(`column_${key}`)!.clientWidth
-    console.log('columnwidth p1', document.getElementById('column_p1')?.clientWidth)
   }
 
   // return (
@@ -73,7 +71,6 @@ const ResizableTable: React.FC<TableProps> = ({ columns, data }) => {
   //     </div>
   //   </div>
   // )
-  console.log('table', columns)
 
   return (
     <div

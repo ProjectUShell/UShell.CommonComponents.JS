@@ -60,7 +60,6 @@ const VerticalMenuInternal: React.FC<{
     onMenuStateChanged({ ...menuState })
   }
   const [activeSubMenuItem, setActiveSubMenuItem] = useState<MenuItem | null>(null)
-  console.log('activeSubMenuItem', activeSubMenuItem)
   return (
     <ul
       className={`select-none text-sm  rounded-sm border-0 border-red-400 ${

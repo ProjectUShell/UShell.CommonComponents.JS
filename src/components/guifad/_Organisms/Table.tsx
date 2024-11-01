@@ -579,8 +579,6 @@ const Table: React.FC<{
     calculateNesting2()
   }
 
-  console.log('render table', filteredRecords)
-
   return (
     <div
       className={`cc_table_0  overflow-hidden shadow-lg1 drop-shadow-md1 

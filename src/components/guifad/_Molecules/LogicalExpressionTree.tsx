@@ -57,7 +57,6 @@ const LogicalExpressionTree: React.FC<{
       expression.subTree = []
     }
     onUpdateExpression({ ...expression })
-    console.log('expression', expression)
   }
 
   function appendRelation(
@@ -86,8 +85,6 @@ const LogicalExpressionTree: React.FC<{
       onUpdateExpression({ ...expression })
     }
   }
-
-  // console.log('expression LE', expression)
 
   return (
     <div className={`UShell_LogicalExpressionTree p-2 rounded-md text-sm ${classNameBg || ''}`}>

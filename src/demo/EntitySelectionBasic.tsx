@@ -4,9 +4,10 @@ import { EntityLayout } from '../[Move2LayoutDescription]/EntityLayout'
 import { LayoutDescriptionRoot } from '../[Move2LayoutDescription]/LayoutDescriptionRoot'
 import { ObjectGraphDataSource } from '../data/ObjectGraphDataSource'
 import EntityTable from '../components/guifad/_Organisms/EntityTable'
-import Modal2 from '../_Atoms/Modal2'
+import Modal2 from '../_Atoms/Modal2Old'
 import EntitySelection from '../_Organisms/EntitySelection'
 import { showNotification } from '../_Molecules/Notification'
+import Modal3 from '../_Atoms/Modal3'
 
 const brandField: FieldSchema = new FieldSchema('Brand', 'string')
 brandField.filterable = 1
@@ -69,7 +70,7 @@ const EntitySelectionBasic = () => {
         Select Entity
       </button>
       {open && (
-        <Modal2 top='20px' bottom='20px' left='20%' right='20%' height='100%' title='Example Modal'>
+        <Modal3 top='20px' bottom='20px' left='20%' right='20%' height='100%' title='Example Modal'>
           <EntitySelection
             dataSource={dataSource}
             layoutDescription={layoutDescription}
@@ -80,7 +81,7 @@ const EntitySelectionBasic = () => {
               setOpen(false)
             }}
           ></EntitySelection>
-        </Modal2>
+        </Modal3>
       )}
     </>
   )

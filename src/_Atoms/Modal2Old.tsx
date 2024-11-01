@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import XMark from '../components/shell-layout/_Icons/XMark'
 
-const Modal2: React.FC<{
+const Modal2Old: React.FC<{
   title: string
   terminate?: (() => void) | undefined
   children: any
@@ -138,4 +138,4 @@ const Modal2Internal: React.FC<{
   )
 }
 
-export default Modal2
+export default Modal2Old

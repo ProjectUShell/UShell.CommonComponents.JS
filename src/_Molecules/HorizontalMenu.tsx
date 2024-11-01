@@ -53,7 +53,6 @@ const HorizontalMenu: React.FC<{
                   setiIsOpen(mi.id, true)
                 }}
                 onMouseEnter={() => {
-                  console.log('mouse enter', openStateById)
                   let oneIsOpen: boolean = false
                   for (let k in openStateById) {
                     if (openStateById[k]) {

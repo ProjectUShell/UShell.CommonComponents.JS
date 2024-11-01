@@ -3,7 +3,8 @@ import { IDataSource } from 'ushell-modulebase'
 import { EntityLayout } from '../../../[Move2LayoutDescription]/EntityLayout'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import { EntityForm1 } from './EntityForm'
-import Modal2 from '../../../_Atoms/Modal2'
+import Modal2 from '../../../_Atoms/Modal2Old'
+import Modal3 from '../../../_Atoms/Modal3'
 
 const EntityFormModal: React.FC<{
   dataSources: IDataSource[]
@@ -48,7 +49,7 @@ const EntityFormModal: React.FC<{
   title,
 }) => {
   return (
-    <Modal2
+    <Modal3
       title={
         title && title != ''
           ? title
@@ -84,7 +85,7 @@ const EntityFormModal: React.FC<{
           isCreation={isCreation}
         ></EntityForm1>
       </div>
-    </Modal2>
+    </Modal3>
   )
 }
 

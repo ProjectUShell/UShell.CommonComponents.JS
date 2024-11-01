@@ -123,7 +123,6 @@ const InputField: React.FC<{
           currentValue={currentValue}
           setCurrentValue={setCurrentValue}
           onValueChange={(nv) => {
-            console.log('onValueChange 0', nv)
             onValueChange(nv, getErrors(nv))
           }}
           disabled={disabled}
@@ -208,7 +207,6 @@ const InputField: React.FC<{
         ></textarea>
       )
     }
-    console.log('unit', unit)
     if (unit) {
       return (
         // <div className={`before:content-['${unit}'] ` + classNameInput}>

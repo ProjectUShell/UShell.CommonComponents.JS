@@ -74,7 +74,6 @@ const UForm: React.FC<{
           ...f,
           value: getValue(currentEntity, f.name),
           setValue: (newValue: any) => {
-            console.log('changing value', newValue)
             changeValue(f, newValue)
           },
         }

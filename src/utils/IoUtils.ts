@@ -89,7 +89,6 @@ function exportTableToSvInternal(
       }
 
       const pageResult: string = serializeTableToSv(pl.page, separator, columns)
-      console.log('pageResult', pageResult)
       currentResult += pageResult
       return exportTableToSvInternal(
         dataSource,
@@ -108,7 +107,6 @@ function serializeTableToSv(page: any[], separator: string, columns: TableColumn
 
   page.forEach((r, i) => {
     let line: string = ''
-    console.log('export record', r, columns)
     columns.forEach((c, j) => {
       const cellValue: any =
         c.fieldName in r

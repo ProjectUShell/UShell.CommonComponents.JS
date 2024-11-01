@@ -94,7 +94,6 @@ const UForm1: React.FC<{
     return fieldLayout.unit
   }
   function onValidation(fieldName: string, error: string | null) {
-    // console.log('onValidation', { fn: fieldName, error: error, errors: errors })
     if (!(fieldName in errors)) {
       errors[fieldName] = error
       setErrors({ ...errors })
@@ -153,7 +152,6 @@ const UForm1: React.FC<{
                 label={labelPosition == 'top' ? getLabel(f) : null}
                 initialValue={f.value}
                 onValueChange={(newValue: any, err: string | null) => {
-                  console.log('onValueChange', newValue)
                   f.setValue(newValue)
                   onValidation(f.name, err)
                 }}

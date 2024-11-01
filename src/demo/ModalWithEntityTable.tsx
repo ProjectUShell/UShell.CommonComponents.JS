@@ -4,7 +4,7 @@ import { EntityLayout } from '../[Move2LayoutDescription]/EntityLayout'
 import { LayoutDescriptionRoot } from '../[Move2LayoutDescription]/LayoutDescriptionRoot'
 import { ObjectGraphDataSource } from '../data/ObjectGraphDataSource'
 import EntityTable from '../components/guifad/_Organisms/EntityTable'
-import Modal2 from '../_Atoms/Modal2'
+import Modal3 from '../_Atoms/Modal3'
 
 const brandField: FieldSchema = new FieldSchema('Brand', 'string')
 brandField.filterable = 1
@@ -67,7 +67,7 @@ const ModalWithEntityTable = () => {
         Toggle Open
       </button>
       {open && (
-        <Modal2
+        <Modal3
           top='20px'
           bottom='20px'
           left='20%'
@@ -81,7 +81,7 @@ const ModalWithEntityTable = () => {
             entitySchema={carEntitySchema}
             layoutDescription={layoutDescription}
           ></EntityTable>
-        </Modal2>
+        </Modal3>
       )}
     </>
   )

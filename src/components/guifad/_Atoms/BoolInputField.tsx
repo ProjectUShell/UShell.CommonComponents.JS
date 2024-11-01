@@ -27,7 +27,6 @@ const BoolInputField: React.FC<{
   classNameDropdownHoverBg,
   required = false,
 }) => {
-  console.log('initial value', initialValue)
   const options: { label: string; value: any }[] = [
     { label: 'Yes', value: 1 },
     { label: 'No', value: -1 },
@@ -39,7 +38,6 @@ const BoolInputField: React.FC<{
     <DropdownSelect
       options={options}
       onOptionSet={(o) => {
-        console.log('option set', o)
         setCurrentValue(o?.value == undefined ? undefined : o?.value == 1 ? true : false)
         onValueChange(o?.value == undefined ? undefined : o?.value == 1 ? true : false)
       }}

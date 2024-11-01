@@ -37,10 +37,7 @@ const Paging: React.FC<{
         <select
           defaultValue={pagingParams.pageSize > 0 ? pagingParams.pageSize : 50}
           onChange={(e) =>
-            console.log(
-              'select',
-              onPagingParamsChange({ ...pagingParams, pageSize: Number.parseInt(e.target.value) }),
-            )
+            onPagingParamsChange({ ...pagingParams, pageSize: Number.parseInt(e.target.value) })
           }
           className='bg-backgroundone dark:bg-backgroundonedark mr-2 rounded-md text-sm'
         >

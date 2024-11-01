@@ -53,7 +53,7 @@ export class FuseDataSourceBody implements IDataSource {
       })
   }
   entityDeleteMethod(entities: any[]): Promise<boolean> {
-    console.log('delete', entities)
+    console.debug('delete', entities)
     const idsToDelete: any[] = entities.map((e) =>
       EntitySchemaService.getPrimaryKey(this.entitySchema!, e),
     )
@@ -63,7 +63,6 @@ export class FuseDataSourceBody implements IDataSource {
         keysToDelete: idsToDelete,
       })
       .then((r) => {
-        console.log('res del', r)
         return r
       })
   }

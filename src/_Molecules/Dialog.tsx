@@ -1,11 +1,12 @@
 import React from 'react'
-import Modal2 from '../_Atoms/Modal2'
+import Modal2 from '../_Atoms/Modal2Old'
 import ReactDOM from 'react-dom'
 import {
   addGlobalElement,
   addGlobalElement2,
   removeGlobalElement,
 } from '../GlobalElementsContainer'
+import Modal3 from '../_Atoms/Modal3'
 
 export type DialogResult = 'Ok' | 'Cancel'
 
@@ -22,7 +23,7 @@ const Dialog: React.FC<{
   children: any
 }> = ({ top, bottom, left, right, height, width, title, buttons, onResult, children }) => {
   return (
-    <Modal2
+    <Modal3
       title={title}
       top={top}
       bottom={bottom}
@@ -45,7 +46,7 @@ const Dialog: React.FC<{
           ))}
         </div>
       </div>
-    </Modal2>
+    </Modal3>
   )
 }
 

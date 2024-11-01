@@ -112,8 +112,6 @@ export function applySorting(
 }
 
 export function applyPaging(records: any[], pagingParams: PagingParams) {
-  console.log('applyPaging', pagingParams)
-
   return records.slice(
     (pagingParams.pageNumber - 1) * pagingParams.pageSize,
     pagingParams.pageNumber * pagingParams.pageSize,

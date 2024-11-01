@@ -9,7 +9,8 @@ import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget
 import EntityFormInner from './EntityFormInner'
 import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import { fullfillsSchema } from '../../../utils/ObjectUtils'
-import Modal2 from '../../../_Atoms/Modal2'
+import Modal2 from '../../../_Atoms/Modal2Old'
+import Modal3 from '../../../_Atoms/Modal3'
 
 const EntityForm: React.FC<{
   dataSource: IDataSource
@@ -167,14 +168,14 @@ export const EntityForm1: React.FC<{
 
   if (error) {
     return (
-      <Modal2
+      <Modal3
         title='Error'
         terminate={() => {
           setError(null)
         }}
       >
         <ErrorPage messages={[error.toString()]}></ErrorPage>
-      </Modal2>
+      </Modal3>
     )
   }
 
@@ -221,7 +222,6 @@ export const EntityForm1: React.FC<{
     }
     return true
   }
-  // console.log('entity', entity)
   return (
     <div className='UShell_EntityForm flex flex-col h-full w-full overflow-hidden border-0 border-green-400'>
       {toolbar == 'top' && (

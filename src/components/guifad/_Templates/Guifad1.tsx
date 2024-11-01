@@ -123,7 +123,6 @@ const Guifad1: React.FC<{
     setIsCreation(true)
   }
 
-  console.log('render guifad', node)
   return (
     <div className='w-full h-full flex flex-col overflow-hidden text-sm bg-bg1 dark:bg-bg1dark border-0 border-red-400'>
       <div className='w-full h-full flex overflow-hidden text-sm bg-content dark:bg-contentDark'>
@@ -166,9 +165,7 @@ const Guifad1: React.FC<{
                   onRecordEnter={(r: any) => {
                     enterRelation(currentRelation, r)
                   }}
-                  onSelectedRecordsChange={(sr: any[]) => {
-                    console.log('sr', sr)
-                  }}
+                  onSelectedRecordsChange={(sr: any[]) => {}}
                   parentSchema={node.dataSource.entitySchema!}
                   schemaRoot={dataSourceManager.getSchemaRoot()}
                   parent={currentRecord}
@@ -187,10 +184,8 @@ const Guifad1: React.FC<{
                 setCurrentRecord(r)
                 setCurrentNodes(n)
                 const newMode = r ? 'details' : 'list'
-                console.log('breadcrumb node clicked', { n: n, r: r })
                 const currentNode: ObjectGraphNode = n[n.length - 1]
                 if (currentNode.record && !currentNode.parent) {
-                  console.log('breadcrumb node clicked currentNode', currentNode)
                   setCurrentRecord(currentNode.record)
                   setCurrentMode('details')
                 }
