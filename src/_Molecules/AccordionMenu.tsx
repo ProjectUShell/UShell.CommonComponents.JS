@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Accordion from './Accordion'
 import { onlyUnique } from '../utils/ArrayUtils'
 import VerticalMenu from '../components/shell-layout/_Organisms/VerticalMenu'
@@ -31,7 +31,11 @@ const AccordionMenu: React.FC<{
   classNameBgItemSelected = 'bg-contentHover dark:bg-contentHoverDark',
   initialSelectedItemKey = '',
 }) => {
-  const [selectedItemKey, setSelectedItemKey] = useState(initialSelectedItemKey)
+  const [selectedItemKey, setSelectedItemKey] = useState<string | null>(null)
+
+  useEffect(() => {
+    setSelectedItemKey(initialSelectedItemKey)
+  }, [initialSelectedItemKey])
 
   function isSelected(item: { key: string }) {
     return item.key == selectedItemKey
@@ -52,6 +56,7 @@ const AccordionMenu: React.FC<{
     item.command()
   }
 
+  if (!selectedItemKey) return <></>
   return (
     <Accordion
       initialOpenIndex={getSelectedGroupIndex()}
