@@ -193,4 +193,36 @@ export class EntitySchemaService {
     }
     return true
   }
+
+  static clone(o: any, entitySchema: EntitySchema): any {
+    const result: any = {}
+    const primProps: string[] = this.getPrimaryKeyProps(entitySchema)
+    const primPropsLowered: string[] = primProps.map((pp) => pp.toLocaleLowerCase())
+    for (let f of entitySchema.fields) {
+      if (f.dbGeneratedIdentity) continue
+      let valueToSet: any = undefined
+      let forceValue: boolean = false
+      if (primPropsLowered.includes(f.name.toLocaleLowerCase())) {
+        if (f.type.toLocaleLowerCase() == 'guid') {
+          valueToSet = crypto.randomUUID()
+          forceValue = true
+        }
+        if (['int32', 'int', 'integer'].includes(f.type.toLocaleLowerCase())) {
+          valueToSet = 0
+          forceValue = true
+        }
+      }
+      const lowerFieldName: string = lowerFirstLetter(f.name)
+      const lowExsists: boolean = lowerFieldName in o
+      if (lowExsists) {
+        result[lowerFieldName] = forceValue ? valueToSet : o[lowerFieldName]
+      }
+      const capFieldName: string = capitalizeFirstLetter(f.name)
+      const capExists: boolean = capFieldName in o
+      if (capExists) {
+        result[capFieldName] = forceValue ? valueToSet : o[capFieldName]
+      }
+    }
+    return result
+  }
 }

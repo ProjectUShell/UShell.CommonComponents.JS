@@ -152,7 +152,7 @@ const TableDemo = () => {
       <Table
         columns={columns}
         records={records}
-        selectedRecord={records[0]}
+        selectedRecords={[records[0]]}
         onSelectedRecordsChange={() => {
           // setCurrentFilter(currentFilter)
         }}

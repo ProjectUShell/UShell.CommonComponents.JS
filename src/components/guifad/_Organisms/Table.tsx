@@ -53,7 +53,7 @@ const Table: React.FC<{
   classNameHeader?: string
   onRecordEnter?: (r: any) => void
   onSelectedRecordsChange?: (selectedRecords: any[]) => void
-  selectedRecord?: any
+  selectedRecords?: any
   pagingParams?: PagingParams
   totalCount?: number
   onPagingParamsChange?: (p: PagingParams) => void
@@ -75,7 +75,7 @@ const Table: React.FC<{
   classNameHeader,
   onRecordEnter,
   onSelectedRecordsChange,
-  selectedRecord,
+  selectedRecords,
   pagingParams,
   totalCount,
   onPagingParamsChange,
@@ -143,16 +143,20 @@ const Table: React.FC<{
       return res
     }
     function getIntialSelectedRows(): { [index: number]: boolean } {
-      if (!selectedRecord) {
+      if (!selectedRecords) {
         return []
       }
-      const i: number = records.findIndex((r) => getIdInternal(r) == getIdInternal(selectedRecord))
       const newSr: { [index: number]: boolean } = {}
-      newSr[i] = true
+      for (let selectedRecord of selectedRecords) {
+        const i: number = records.findIndex(
+          (r) => getIdInternal(r) == getIdInternal(selectedRecord),
+        )
+        newSr[i] = true
+      }
       return newSr
     }
     setSelectedRows(getIntialSelectedRows())
-  }, [records, selectedRecord, getId])
+  }, [records, selectedRecords, getId])
 
   useEffect(() => {
     approxColumnWidth()

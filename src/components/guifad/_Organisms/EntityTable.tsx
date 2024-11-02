@@ -43,6 +43,8 @@ import {
 import Menu, { Menu1 } from '../../../_Molecules/Menu'
 import { showDialog2 } from '../../../_Molecules/Dialog'
 import { showNotification } from '../../../_Molecules/Notification'
+import DocumentDuplicate from '../../../_Icons/DocumentDuplicateIcon'
+import DocumentDuplicateIcon from '../../../_Icons/DocumentDuplicateIcon'
 
 const EntityTable: React.FC<{
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
@@ -317,9 +319,10 @@ const EntityTableInternal: React.FC<{
     return result
   }
 
-  useEffect(() => {
-    setSelectedRecords(selectedRecord ? [selectedRecord] : [])
-  }, [selectedRecord])
+  //TODO do this correctly!
+  // useEffect(() => {
+  //   setSelectedRecords(selectedRecord ? [selectedRecord] : [])
+  // }, [selectedRecord])
 
   useEffect(() => {
     if (universalSearchText == '') return
@@ -521,7 +524,11 @@ const EntityTableInternal: React.FC<{
     showDialog2(
       'Confirm Deletion',
       ['Cancel', 'Ok'],
-      <div className='p-2'>{`Are you sure you want to delete?`}</div>,
+      <div className='p-2'>{`Are you sure you want to delete ${
+        selectedRecords.length == 1
+          ? 'the selected record'
+          : `the ${selectedRecords.length} selected records`
+      }?`}</div>,
       (r) => {
         if (r == 'Ok') {
           dataSource.entityDeleteMethod(selectedRecords).then((r) => {
@@ -529,7 +536,7 @@ const EntityTableInternal: React.FC<{
             onSelectedRecordsChange && onSelectedRecordsChange([])
             forceReload()
             if (r) {
-              showNotification('Entity Deleted', 'Success')
+              showNotification('Deletion successful', 'Success')
             } else {
               showNotification('Deletion of Entity failed', 'Error')
             }
@@ -539,6 +546,18 @@ const EntityTableInternal: React.FC<{
     )
   }
 
+  function cloneRecord() {
+    if (!(selectedRecords.length == 1)) return
+    const clonedRecord: any = EntitySchemaService.clone(
+      selectedRecords[0],
+      dataSource.entitySchema!,
+    )
+    dataSource.entityInsertMethod(clonedRecord).then((v) => {
+      onRecordsChanged && onRecordsChanged()
+      setReloadTrigger((r) => r + 1)
+    })
+  }
+  console.log('selected recrords', selectedRecords)
   return (
     <>
       <div className='UShell_EntityTable flex flex-col h-full w-full overflow-hidden border-0 border-red-400'>
@@ -553,13 +572,29 @@ const EntityTableInternal: React.FC<{
               {enableCrud && (
                 <div className={`flex justify-end p-1 ${className} rounded-md`}>
                   <button
-                    className='rounded-md p-1 text-green-600 dark:text-green-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                    className='rounded-md p-1 text-green-600 dark:text-green-600 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
                     onClick={(e) => addRecord()}
                   >
                     <PlusCircleIcon></PlusCircleIcon>
                   </button>
                   <button
-                    className='rounded-md p-1 text-red-600 dark:text-red-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                    disabled={selectedRecords.length != 1}
+                    className={`rounded-md p-1 ${
+                      selectedRecords.length == 1
+                        ? 'text-green-600 dark:text-green-600 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                        : 'cursor-default text-gray-400 dark:text-gray-600'
+                    } `}
+                    onClick={(e) => cloneRecord()}
+                  >
+                    <DocumentDuplicateIcon></DocumentDuplicateIcon>
+                  </button>
+                  <button
+                    disabled={selectedRecords.length == 0}
+                    className={`rounded-md p-1 ${
+                      selectedRecords.length != 0
+                        ? 'text-red-600 dark:text-red-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                        : 'cursor-default text-gray-400 dark:text-gray-600'
+                    } `}
                     onClick={(e) => deleteRecords()}
                   >
                     <TrashIcon></TrashIcon>
@@ -825,7 +860,8 @@ const EntityTableInternal: React.FC<{
               onSelectedRecordsChange && onSelectedRecordsChange(sr)
               setSelectedRecords(sr)
             }}
-            selectedRecord={selectedRecords.length > 1 ? null : selectedRecord}
+            selectedRecords={selectedRecords}
+            // selectedRecord={selectedRecords.length > 1 ? null : selectedRecords[0]} //TODO do this correctly!!!
             pagingParams={pagingParams}
             totalCount={data1!.total}
             onPagingParamsChange={(pp) => setPagingParams(pp)}
