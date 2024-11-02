@@ -557,7 +557,6 @@ const EntityTableInternal: React.FC<{
       setReloadTrigger((r) => r + 1)
     })
   }
-  console.log('selected recrords', selectedRecords)
   return (
     <>
       <div className='UShell_EntityTable flex flex-col h-full w-full overflow-hidden border-0 border-red-400'>

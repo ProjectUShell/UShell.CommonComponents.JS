@@ -179,9 +179,9 @@ const Table: React.FC<{
     if (e.target.tagName == 'path' || e.target.tagName == 'svg') {
       return
     }
-    const newSelectedValue = !selectedRows[i]
+    const newSelectedValue = !finalSelectedRows[i]
     if (!e.ctrlKey && !newSelectedValue) return
-    const newSr = e.ctrlKey ? { ...selectedRows } : {}
+    const newSr = e.ctrlKey ? { ...finalSelectedRows } : {}
     newSr[i] = newSelectedValue
     setSelectedRows((sr) => {
       return newSr
@@ -469,6 +469,7 @@ const Table: React.FC<{
   }, [])
 
   let filteredRecords: any[] = records
+  let finalSelectedRows: { [index: number]: boolean } = selectedRows
   if (useClientFilter) {
     for (let f in filterByColumn) {
       filteredRecords = applyFilter(records, filterByColumn[f])
@@ -568,6 +569,16 @@ const Table: React.FC<{
         j++
       }
       i++
+    }
+    if (selectedRows) {
+      finalSelectedRows = {}
+      for (let selectedRowIndex in selectedRows) {
+        const newIndex: number = filteredRecords.findIndex(
+          (fr) => fr.initialIndex == selectedRowIndex,
+        )
+        finalSelectedRows[newIndex] = selectedRows[selectedRowIndex]
+      }
+      console.log('finalSelectedRows', finalSelectedRows)
     }
     filteredRecords.forEach((fr) => {
       delete fr.initialIndex
@@ -752,7 +763,7 @@ const Table: React.FC<{
                 <tr
                   key={i}
                   className={`border-t border-b border-tableBorder dark:border-tableBorderDark  ${
-                    selectedRows[i]
+                    finalSelectedRows[i]
                       ? 'bg-prim1 dark:bg-prim2Dark text-textonedark'
                       : 'bg-table dark:bg-tableDark hover:bg-tableHover dark:hover:bg-tableHoverDark'
                   } text-sm`}
