@@ -27,8 +27,7 @@ const TopBar: React.FC<{
         text-textone dark:text-textonedark shadow-md shadow-topbarshadow1 dark:shadow-none dark:border-topbarBorderDark '
     >
       <div className='flex justify-between items-center py-1'>
-        <div className='flex items-center py-2'>
-          <h1>{title}</h1>
+        <div className='flex gap-1 items-center content-center py-2'>
           {layoutMode == LayoutMode.Vertical && (
             <button className='ml-4' onClick={() => toggleSidebarOpen()}>
               <svg
@@ -47,6 +46,7 @@ const TopBar: React.FC<{
               </svg>
             </button>
           )}
+          <h1>{title}</h1>
         </div>
 
         <div className='Search'></div>
