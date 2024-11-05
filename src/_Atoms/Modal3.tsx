@@ -11,6 +11,7 @@ const Modal3: React.FC<{
   right?: string | undefined
   width?: string | undefined
   height?: string | undefined
+  classNameBg?: string
 }> = ({
   title,
   terminate,
@@ -21,6 +22,7 @@ const Modal3: React.FC<{
   right = '20%',
   width,
   height,
+  classNameBg,
 }) => {
   const [full, setFull] = useState(false)
   const [ready, setReady] = useState(false)
@@ -63,9 +65,9 @@ const Modal3: React.FC<{
           scale: full || !sizes ? undefined : '50%',
         }}
         className={`UShell_Modal_Inn1er ${!sizes && 'invisible'} fixed flex flex-col
-           bg-content dark:bg-contentDark dark:text-textonedark ${
-             beginTransition && 'transition-all duration-300 '
-           }  border-0 border-green-400 rounded-md`}
+           ${classNameBg || ' bg-content dark:bg-contentDark '} dark:text-textonedark ${
+          beginTransition && 'transition-all duration-300 '
+        }  border-0 border-green-400 rounded-md`}
       >
         <div className='h-full flex flex-col overflow-hidden flex-grow border-0 border-blue-400 p-1 px-2'>
           <div className='w-full flex whitespace-nowrap'>
