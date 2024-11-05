@@ -765,7 +765,11 @@ const Table: React.FC<{
                   className={`border-t border-b border-tableBorder dark:border-tableBorderDark  ${
                     finalSelectedRows[i]
                       ? 'bg-prim1 dark:bg-prim2Dark text-textonedark'
-                      : 'bg-table dark:bg-tableDark hover:bg-tableHover dark:hover:bg-tableHoverDark'
+                      : `${tableColors?.cell ? tableColors.cell : 'bg-table dark:bg-tableDark'} ${
+                          tableColors?.cellHover
+                            ? tableColors.cellHover
+                            : 'hover:bg-tableHover dark:hover:bg-tableHoverDark'
+                        }  `
                   } text-sm`}
                   onClick={(e) => onRowClick(i, e)}
                   onDoubleClick={(e) => onRowDoubleClick(i, e)}

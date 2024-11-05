@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { IDataSource } from 'ushell-modulebase'
-import Table, { TableColumn } from './Table'
+import Table, { TableColors, TableColumn } from './Table'
 import PlusCircleIcon from '../../../_Icons/PlusCircleIcon'
 import TrashIcon from '../../../_Icons/TrashIcon'
 import {
@@ -70,6 +70,7 @@ const EntityTable: React.FC<{
   reloadTriggerObject?: any
   isParent?: (c: any, p: any) => boolean
   onRecordsChanged?: () => void
+  tableColors?: TableColors
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -94,6 +95,7 @@ const EntityTable: React.FC<{
   reloadTriggerObject,
   isParent,
   onRecordsChanged,
+  tableColors,
 }) => {
   return (
     <EntityTable1
@@ -121,6 +123,7 @@ const EntityTable: React.FC<{
       rowHeight={rowHeight}
       isParent={isParent}
       onRecordsChanged={onRecordsChanged}
+      tableColors={tableColors}
     ></EntityTable1>
   )
 }
@@ -149,6 +152,7 @@ export const EntityTable1: React.FC<{
   reloadTriggerObject?: any
   isParent?: (c: any, p: any) => boolean
   onRecordsChanged?: () => void
+  tableColors?: TableColors
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -174,6 +178,7 @@ export const EntityTable1: React.FC<{
   reloadTriggerObject,
   isParent,
   onRecordsChanged,
+  tableColors,
 }) => {
   const qcc: any = QueryClientContext
   if (!qcc._currentValue)
@@ -203,6 +208,7 @@ export const EntityTable1: React.FC<{
           reloadTriggerObject={reloadTriggerObject}
           isParent={isParent}
           onRecordsChanged={onRecordsChanged}
+          tableColors={tableColors}
         ></EntityTableInternal>
       </QueryClientProvider>
     )
@@ -229,6 +235,7 @@ export const EntityTable1: React.FC<{
       reloadTriggerObject={reloadTriggerObject}
       isParent={isParent}
       onRecordsChanged={onRecordsChanged}
+      tableColors={tableColors}
     ></EntityTableInternal>
   )
 }
@@ -256,6 +263,7 @@ const EntityTableInternal: React.FC<{
   reloadTriggerObject: any
   isParent?: (c: any, p: any) => boolean
   onRecordsChanged?: () => void
+  tableColors?: TableColors
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -280,6 +288,7 @@ const EntityTableInternal: React.FC<{
   reloadTriggerObject,
   isParent,
   onRecordsChanged,
+  tableColors,
 }) => {
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
@@ -879,6 +888,7 @@ const EntityTableInternal: React.FC<{
             }}
             isParent={isParent}
             showTree={showTree}
+            tableColors={tableColors}
           ></Table>
         )}
       </div>
