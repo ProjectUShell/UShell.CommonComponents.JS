@@ -48,6 +48,7 @@ import DialogDoc from './demo/DialogDoc'
 import MenuDoc from './demo/MenuDoc'
 import EntitySelectionDoc from './demo/EntitySelectionDoc'
 import NotificationDoc from './demo/NotificationDoc'
+import IconsDemo from './demo/IconsDemo'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -86,7 +87,14 @@ const Demo = () => {
     ],
     'Dynamic Reports': ['ReportService', 'ReportManager', 'ReportDashboard'],
     'Schema Editor': ['Schema Manager', 'Editor', 'Schema Guifad'],
-    Technical: ['ColorDemo', 'TableDemo', 'ResizeTable', 'DropdownButtonDemo', 'ResizeTable2'],
+    Technical: [
+      'ColorDemo',
+      'TableDemo',
+      'ResizeTable',
+      'DropdownButtonDemo',
+      'ResizeTable2',
+      'Icons',
+    ],
   }
 
   const [schemaName, setSchemaName] = useState('')
@@ -277,6 +285,7 @@ const Demo = () => {
       {currentComponent == 'EntitySelection' && <EntitySelectionDoc></EntitySelectionDoc>}
       {currentComponent == 'Notification' && <NotificationDoc></NotificationDoc>}
       {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
+      {currentComponent == 'Icons' && <IconsDemo></IconsDemo>}
       {currentComponent == 'Schema Manager' && (
         <SchemaManager
           schemaProvider={new LocalStorageSchemaProvider()}

@@ -29,6 +29,7 @@ import UForm1 from './components/guifad/_Molecules/UForm1'
 import EntityForm from './components/guifad/_Organisms/EntityForm'
 import EntityTable from './components/guifad/_Organisms/EntityTable'
 import GlobalElementsContainer from './GlobalElementsContainer'
+import { getIcon } from './utils/IconLib'
 
 // export { MyComponent }
 
@@ -53,6 +54,7 @@ export { UForm }
 export { UForm1 }
 export { EntityForm }
 export { EntityTable }
+export { getIcon }
 
 export * from './components/shell-layout/_Templates/ShellLayout'
 
