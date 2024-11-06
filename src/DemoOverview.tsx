@@ -49,6 +49,7 @@ import MenuDoc from './demo/MenuDoc'
 import EntitySelectionDoc from './demo/EntitySelectionDoc'
 import NotificationDoc from './demo/NotificationDoc'
 import IconsDemo from './demo/IconsDemo'
+import MultiButtonDoc from './demo/MultiButtonDoc'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -76,6 +77,7 @@ const Demo = () => {
       'Dialog',
       'Menu',
       'EntitySelection',
+      'MultiButton',
     ],
     'FuseFx Components': [
       'Guifad',
@@ -284,6 +286,7 @@ const Demo = () => {
       {currentComponent == 'Menu' && <MenuDoc></MenuDoc>}
       {currentComponent == 'EntitySelection' && <EntitySelectionDoc></EntitySelectionDoc>}
       {currentComponent == 'Notification' && <NotificationDoc></NotificationDoc>}
+      {currentComponent == 'MultiButton' && <MultiButtonDoc></MultiButtonDoc>}
       {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
       {currentComponent == 'Icons' && <IconsDemo></IconsDemo>}
       {currentComponent == 'Schema Manager' && (
