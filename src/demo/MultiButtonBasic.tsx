@@ -4,7 +4,7 @@ import MultiButton from '../_Atoms/MultiButton'
 
 const MultiButtonBasic = () => {
   return (
-    <div className='flex'>
+    <div className='flex justify-end'>
       <MultiButton
         buttons={[
           {
@@ -20,7 +20,10 @@ const MultiButtonBasic = () => {
             },
           },
         ]}
-        classNameHoverBorder='hover:border-menuBorder dark:hover:border-menuBorderDark'
+        classNameButton='text-sm bg-prim4 dark:bg-prim7Dark p-2  hover:bg-toolbarHover dark:hover:bg-prim8Dark'
+        classNameBg='text-sm bg-prim4 dark:bg-prim7Dark hover:bg-toolbarHover dark:hover:bg-prim8Dark'
+        classNameDropdownBorder='border-gray-600'
+        classNameHoverBorder=''
       ></MultiButton>
     </div>
   )

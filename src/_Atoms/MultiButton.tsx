@@ -27,7 +27,6 @@ const MultiButton: React.FC<{
       >
         <button
           style={{ borderColor: 'inherit' }}
-          id={id}
           className={`${
             classNameButton || 'p-1 hover:bg-contentHover dark:hover:bg-contentHoverDark'
           }  border-transparent1 border-r1 `}
@@ -37,6 +36,7 @@ const MultiButton: React.FC<{
         </button>
         {buttons.length > 1 && (
           <button
+            id={id}
             style={{ borderColor: 'inherit' }}
             onClick={() => setOpen(true)}
             className={` ${
@@ -50,7 +50,7 @@ const MultiButton: React.FC<{
       {open && (
         <Dropdown refId={id} setIsOpen={(o) => setOpen(o)} minWidth={false}>
           <div
-            className={`flex flex-col w-full border mt-1 py-1 ${
+            className={`flex flex-col w-full border mt-0 py-1 ${
               classNameDropdownBorder || 'border-transparent'
             } ${classNameBg || 'bg-content dark:bg-contentDark'}`}
           >
