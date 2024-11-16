@@ -62,7 +62,26 @@ export class ObjectGraphDataSource implements IDataSource {
           allRunningNumbers.length > 0 ? allRunningNumbers[allRunningNumbers.length - 1] : 0
         result[fn.name] = `New ${this.entitySchema.name} (${maxRn + 1})`
       } else {
-        result[fn.name] = fn.defaultValue
+        if (fn.defaultValue) {
+          result[fn.name] = fn.defaultValue
+        } else if (fn.required) {
+          switch (fn.type) {
+            case 'int32':
+            case 'int64':
+            case 'float':
+            case 'decimal':
+            case 'bool':
+            case 'boolean':
+              result[fn.name] = 0
+              break
+            case 'datetime':
+              result[fn.name] = new Date(1900, 1, 1)
+              break
+            case 'string':
+            default:
+              result[fn.name] = 'text'
+          }
+        }
       }
     }
     console.debug('creating', result)
