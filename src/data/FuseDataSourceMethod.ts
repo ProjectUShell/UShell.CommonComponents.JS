@@ -23,7 +23,7 @@ export class FuseDataSourceMethod implements IDataSource {
   dataStore: FuseDataStore
   entitySchema?: EntitySchema | undefined
   entityFactoryMethod(): any {
-    return {}
+    return EntitySchemaService.createNewEntity(this.entitySchema!)
   }
   entityUpdateMethod(entity: any[]): Promise<boolean> {
     return this.dataStore

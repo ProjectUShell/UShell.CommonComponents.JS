@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Table, { TableColumn } from '../components/guifad/_Organisms/Table'
 
 const columns: TableColumn[] = [
@@ -39,9 +39,19 @@ const records: any[] = [
   },
 ]
 const TableDemoBasic = () => {
+  const [sr, setSr] = useState<any>(records[1])
+  console.log('render Demo Table', sr)
   return (
     <div className='w-full'>
       <Table
+        selectedRecords={sr ? [sr] : []}
+        onSelectedRecordsChange={(nsr) => {
+          if (nsr.length > 0) {
+            setSr(nsr[0])
+          } else {
+            setSr(null)
+          }
+        }}
         columns={columns}
         records={records}
         tableColors={{ header: 'bg-bg7 dark:bg-bg6dark hover:bg-bg9 dark:hover:bg-bg8dark' }}

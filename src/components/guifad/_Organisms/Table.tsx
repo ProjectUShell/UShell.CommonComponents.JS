@@ -90,7 +90,7 @@ const Table: React.FC<{
   isParent,
   showTree = true,
 }) => {
-  const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean }>({})
+  const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean } | null>(null)
   const [filterVisible, setFilterVisible] = useState<{ [c: string]: boolean }>({})
   const [filterByColumn, setFilterByColumn] = useState<{ [c: string]: LogicalExpression }>(
     initialFilters ? initialFilters : {},
@@ -128,7 +128,8 @@ const Table: React.FC<{
     setSortingParams(initialSortingParams)
   }, [initialSortingParams])
 
-  useEffect(() => {
+  const finalSelectedRows0: { [index: number]: boolean } = useMemo(() => {
+    if (selectedRows) return selectedRows
     function getIdInternal(e: any): any {
       let res: any = null
       if (getId) {
@@ -155,8 +156,38 @@ const Table: React.FC<{
       }
       return newSr
     }
-    setSelectedRows(getIntialSelectedRows())
-  }, [records, selectedRecords, getId])
+    return getIntialSelectedRows()
+  }, [selectedRows, selectedRecords])
+
+  // useEffect(() => {
+  //   function getIdInternal(e: any): any {
+  //     let res: any = null
+  //     if (getId) {
+  //       res = getId(e)
+  //     } else {
+  //       let idField = 'id'
+  //       if (!(idField in e)) {
+  //         idField = 'Id'
+  //       }
+  //       res = e[idField]
+  //     }
+  //     return res
+  //   }
+  //   function getIntialSelectedRows(): { [index: number]: boolean } {
+  //     if (!selectedRecords) {
+  //       return []
+  //     }
+  //     const newSr: { [index: number]: boolean } = {}
+  //     for (let selectedRecord of selectedRecords) {
+  //       const i: number = records.findIndex(
+  //         (r) => getIdInternal(r) == getIdInternal(selectedRecord),
+  //       )
+  //       newSr[i] = true
+  //     }
+  //     return newSr
+  //   }
+  //   setSelectedRows(getIntialSelectedRows())
+  // }, [records, selectedRecords, getId])
 
   useEffect(() => {
     approxColumnWidth()
@@ -186,10 +217,10 @@ const Table: React.FC<{
     setSelectedRows((sr) => {
       return newSr
     })
-    const selectedRecords: any[] = filteredRecords.filter((r, i) => newSr[i])
+    const selectedRecords1: any[] = filteredRecords.filter((r, i) => newSr[i])
 
     if (onSelectedRecordsChange) {
-      onSelectedRecordsChange(selectedRecords)
+      onSelectedRecordsChange(selectedRecords1)
     }
   }
 
@@ -262,59 +293,67 @@ const Table: React.FC<{
   }
 
   function getDisplay(v: any, c: TableColumn, test: any) {
-    if (c.fieldType.toLocaleLowerCase() == 'bool' || c.fieldType.toLocaleLowerCase() == 'boolean') {
-      return v ? 'Yes' : 'No'
-    }
-    if (!test) {
-      return v
-    }
     if (c.onRenderCell) {
       return c.onRenderCell(v, null)
     }
-    if (!v) {
-      return v
+    if (c.fieldType.toLocaleLowerCase() == 'bool' || c.fieldType.toLocaleLowerCase() == 'boolean') {
+      return v ? 'Yes' : 'No'
     }
-    if (!v.length) {
-      return v
+    if (
+      c.fieldType.toLocaleLowerCase() == 'date' ||
+      c.fieldType.toLocaleLowerCase() == 'datetime'
+    ) {
+      // cons
+      return new Date(v).toLocaleDateString('de')
     }
-    if (!c.maxCellLength) {
-      return v
-    }
-    const charLength = 0.875 * 4
-    const vLength = charLength * v.length
-    const maxCellLength: number = c.maxCellLength ? c.maxCellLength : 20
-    const maxVLength = maxCellLength * charLength
+    return v
+    // if (!test) {
+    //   return v
+    // }
+    // if (!v) {
+    //   return v
+    // }
+    // if (!v.length) {
+    //   return v
+    // }
+    // if (!c.maxCellLength) {
+    //   return v
+    // }
+    // const charLength = 0.875 * 4
+    // const vLength = charLength * v.length
+    // const maxCellLength: number = c.maxCellLength ? c.maxCellLength : 20
+    // const maxVLength = maxCellLength * charLength
 
     // if (maxVLength < test?.offsetWidth) {
     //   return v
     // }
-    const textWidth = getTextWidth(v, getCanvasFont(test)) + 50
-    if (textWidth > test.clientWidth) {
-      const textLength = v.length
-      let desiredWidth: number = maxCellLength > test.clientWidth ? maxCellLength : test.clientWidth
-      if (widthDelta < 0) {
-        desiredWidth = ((currentWidth + widthDelta) / currentWidth) * test.clientWidth
-        if (desiredWidth < maxCellLength) {
-          desiredWidth = maxCellLength
-        }
-        // desiredWidth = maxCellLength
-      }
-      if (widthDelta == 0) {
-        desiredWidth = maxCellLength
-      }
-      const ratio = desiredWidth / textWidth
-      const desiredTextLength: number = ratio * textLength
-      const s: string = v
-      return v
-      return s.substring(0, desiredTextLength)
-      return s.substring(0, desiredTextLength - 3) + '...'
-    }
-    return v
-    if (v.length > maxCellLength) {
-      const s: string = v
-      return s.substring(0, maxCellLength) + '...'
-    }
-    return v
+    // const textWidth = getTextWidth(v, getCanvasFont(test)) + 50
+    // if (textWidth > test.clientWidth) {
+    //   const textLength = v.length
+    //   let desiredWidth: number = maxCellLength > test.clientWidth ? maxCellLength : test.clientWidth
+    //   if (widthDelta < 0) {
+    //     desiredWidth = ((currentWidth + widthDelta) / currentWidth) * test.clientWidth
+    //     if (desiredWidth < maxCellLength) {
+    //       desiredWidth = maxCellLength
+    //     }
+    //     // desiredWidth = maxCellLength
+    //   }
+    //   if (widthDelta == 0) {
+    //     desiredWidth = maxCellLength
+    //   }
+    //   const ratio = desiredWidth / textWidth
+    //   const desiredTextLength: number = ratio * textLength
+    //   const s: string = v
+    //   return v
+    //   return s.substring(0, desiredTextLength)
+    //   return s.substring(0, desiredTextLength - 3) + '...'
+    // }
+    // return v
+    // if (v.length > maxCellLength) {
+    //   const s: string = v
+    //   return s.substring(0, maxCellLength) + '...'
+    // }
+    // return v
   }
 
   function onColumnFilterChange(columnFilter: LogicalExpression | null, column: TableColumn) {
@@ -469,7 +508,7 @@ const Table: React.FC<{
   }, [])
 
   let filteredRecords: any[] = records
-  let finalSelectedRows: { [index: number]: boolean } = selectedRows
+  let finalSelectedRows: { [index: number]: boolean } = finalSelectedRows0
   if (useClientFilter) {
     for (let f in filterByColumn) {
       filteredRecords = applyFilter(records, filterByColumn[f])
@@ -570,13 +609,13 @@ const Table: React.FC<{
       }
       i++
     }
-    if (selectedRows) {
+    if (finalSelectedRows0) {
       finalSelectedRows = {}
-      for (let selectedRowIndex in selectedRows) {
+      for (let selectedRowIndex in finalSelectedRows0) {
         const newIndex: number = filteredRecords.findIndex(
           (fr) => fr.initialIndex == selectedRowIndex,
         )
-        finalSelectedRows[newIndex] = selectedRows[selectedRowIndex]
+        finalSelectedRows[newIndex] = finalSelectedRows0[selectedRowIndex]
       }
       console.log('finalSelectedRows', finalSelectedRows)
     }
@@ -593,6 +632,9 @@ const Table: React.FC<{
     sortAgainstNesting()
     calculateNesting2()
   }
+
+  console.log('Table selected rows', finalSelectedRows0)
+  console.log('Table selected records', selectedRecords)
 
   return (
     <div

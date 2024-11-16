@@ -18,19 +18,19 @@ const TableDoc = () => {
           demoComponent: <TableDemoBasic></TableDemoBasic>,
           sourceCode: require('!!raw-loader!./TableDemoBasic.tsx').default.toString(),
         },
-        {
-          demoTitle: 'Client Filter',
-          demoExplanation: 'Basic Table with clientside filtering',
-          demoComponent: <TableDemoClientFilter></TableDemoClientFilter>,
-          sourceCode: require('!!raw-loader!./TableDemoClientFilter.tsx').default.toString(),
-        },
-        {
-          demoTitle: 'Client Filter and Sorting',
-          demoExplanation: 'Basic Table with clientside filtering and sorting',
-          demoComponent: <TableDemoClientFilterAndSorting></TableDemoClientFilterAndSorting>,
-          sourceCode:
-            require('!!raw-loader!./TableDemoClientFilterAndSorting.tsx').default.toString(),
-        },
+        // {
+        //   demoTitle: 'Client Filter',
+        //   demoExplanation: 'Basic Table with clientside filtering',
+        //   demoComponent: <TableDemoClientFilter></TableDemoClientFilter>,
+        //   sourceCode: require('!!raw-loader!./TableDemoClientFilter.tsx').default.toString(),
+        // },
+        // {
+        //   demoTitle: 'Client Filter and Sorting',
+        //   demoExplanation: 'Basic Table with clientside filtering and sorting',
+        //   demoComponent: <TableDemoClientFilterAndSorting></TableDemoClientFilterAndSorting>,
+        //   sourceCode:
+        //     require('!!raw-loader!./TableDemoClientFilterAndSorting.tsx').default.toString(),
+        // },
       ]}
     ></DocComponent>
   )

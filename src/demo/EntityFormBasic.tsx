@@ -63,7 +63,7 @@ const carLayout: EntityLayout = new EntityLayout('Car', [
 carLayout.displayLabel = 'Car'
 carLayout.partitions = [
   { type: 'column', name: '', children: [], fields: ['Id', 'Brand'] },
-  { type: 'column', name: '', children: [], fields: ['DateOfConstruction', 'IsOldtimer'] },
+  { type: 'column', name: '', children: [], fields: ['IsOldtimer', 'DateOfConstruction'] },
 ]
 
 const EntityFormBasic = () => {

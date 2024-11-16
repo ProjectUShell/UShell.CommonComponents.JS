@@ -157,6 +157,19 @@ const EntityFormInner: React.FC<{
     return fkRelations.map((f) => f.foreignKeyIndexName).filter((fn) => !coveredFields.includes(fn))
   }
 
+  function getPartitionFields(p: LayoutPartition): FieldSchema[] {
+    const result: FieldSchema[] = []
+    p.fields.forEach((lf) => {
+      const field: FieldSchema | undefined = fieldsToDisplay.find(
+        (ftd) => ftd.name.toLocaleLowerCase() == lf.toLocaleLowerCase(),
+      )
+      if (field) {
+        result.push(field)
+      }
+    })
+    return result
+  }
+
   return (
     <div className='UShell_EntityFormInner flex flex-col h-full overflow-auto pr-1'>
       {entityLayout?.partitions
@@ -166,7 +179,7 @@ const EntityFormInner: React.FC<{
             key={'group' + p.name + i}
             label={p.name}
             allFields={fieldsToDisplay}
-            fieldsToDisplay={fieldsToDisplay.filter((f) => p.fields.includes(f.name))}
+            fieldsToDisplay={getPartitionFields(p)}
             currentEntity={entity}
             changeValue={changeValue}
             fkRelations={fkRelations}
@@ -198,7 +211,7 @@ const EntityFormInner: React.FC<{
               <EntityFormGroup
                 label={p.name}
                 allFields={fieldsToDisplay}
-                fieldsToDisplay={fieldsToDisplay.filter((f) => p.fields.includes(f.name))}
+                fieldsToDisplay={getPartitionFields(p)}
                 currentEntity={entity}
                 changeValue={changeValue}
                 fkRelations={fkRelations}

@@ -42,7 +42,6 @@ carLayout.displayLabel = 'Car'
 const layoutDescription: LayoutDescriptionRoot = {
   entityLayouts: [carLayout],
 }
-
 const EntityTableBasic = () => {
   // return <div></div>
   return (

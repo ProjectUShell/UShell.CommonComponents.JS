@@ -225,4 +225,40 @@ export class EntitySchemaService {
     }
     return result
   }
+
+  static createNewEntity(entitySchema: EntitySchema) {
+    const result: any = {}
+    const keyProps: string[] = EntitySchemaService.getPrimaryKeyProps(entitySchema)
+
+    for (let fn of entitySchema.fields) {
+      const isKey: boolean = keyProps.includes(fn.name)
+      if (isKey && EntitySchemaService.isNumber(fn.type)) {
+      } else if (isKey && fn.type.toLocaleLowerCase() == 'guid') {
+        result[fn.name] = crypto.randomUUID()
+      } else {
+        if (fn.defaultValue) {
+          result[fn.name] = fn.defaultValue
+        } else if (fn.required) {
+          switch (fn.type) {
+            case 'int32':
+            case 'int64':
+            case 'float':
+            case 'decimal':
+            case 'bool':
+            case 'boolean':
+              result[fn.name] = 0
+              break
+            case 'datetime':
+              result[fn.name] = new Date(1900, 1, 1)
+              break
+            case 'string':
+            default:
+              result[fn.name] = 'text'
+          }
+        }
+      }
+    }
+    console.debug('creating', result)
+    return result
+  }
 }
