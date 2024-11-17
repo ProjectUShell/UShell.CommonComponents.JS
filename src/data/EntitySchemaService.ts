@@ -214,13 +214,30 @@ export class EntitySchemaService {
       }
       const lowerFieldName: string = lowerFirstLetter(f.name)
       const lowExsists: boolean = lowerFieldName in o
-      if (lowExsists) {
-        result[lowerFieldName] = forceValue ? valueToSet : o[lowerFieldName]
-      }
       const capFieldName: string = capitalizeFirstLetter(f.name)
       const capExists: boolean = capFieldName in o
-      if (capExists) {
-        result[capFieldName] = forceValue ? valueToSet : o[capFieldName]
+      if (!lowExsists && !capExists) continue
+      const finalFieldName: string = lowExsists ? lowerFieldName : capFieldName
+      if (forceValue) {
+        result[finalFieldName] = valueToSet
+      } else {
+        let finalValue: any = o[finalFieldName]
+        if (f.identityLabel) {
+          const copyMarker: string = ' - copy'
+          const valueAsString: string = finalValue.toLocaleString()
+          const indexOfCopy: number = valueAsString.indexOf(copyMarker)
+          if (indexOfCopy >= 0) {
+            const numberOfCopiesString = valueAsString
+              .substring(indexOfCopy + copyMarker.length + 2)
+              .trim()
+            const numberOfCopies: number = (Number.parseInt(numberOfCopiesString) || 0) + 1
+            finalValue = valueAsString.substring(0, copyMarker.length) + copyMarker
+            finalValue += ` (${numberOfCopies}) `
+          } else {
+            finalValue += copyMarker
+          }
+        }
+        result[finalFieldName] = finalValue
       }
     }
     return result

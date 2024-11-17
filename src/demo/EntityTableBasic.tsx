@@ -5,6 +5,8 @@ import { ObjectGraphDataSource } from '../data/ObjectGraphDataSource'
 import { LayoutDescriptionRoot } from '../[Move2LayoutDescription]/LayoutDescriptionRoot'
 import { EntityLayout } from '../[Move2LayoutDescription]/EntityLayout'
 
+const nameField: FieldSchema = new FieldSchema('Name', 'string')
+nameField.identityLabel = true
 const brandField: FieldSchema = new FieldSchema('Brand', 'string')
 brandField.filterable = 1
 const idField: FieldSchema = new FieldSchema('Id', 'int32')
@@ -16,6 +18,7 @@ const carEntitySchema: EntitySchema = {
     idField,
     new FieldSchema('DateOfConstruction', 'datetime'),
     brandField,
+    nameField,
     isOldtimerField,
     new FieldSchema('Price', 'int32'),
   ],
@@ -30,7 +33,11 @@ const carEntitySchema: EntitySchema = {
 
 const dataSource: ObjectGraphDataSource = new ObjectGraphDataSource(
   carEntitySchema,
-  { Cars: [{ Id: 1, DateOfConstruction: '2000-01-01', Brand: 'Bmw', IsOldtimer: false }] },
+  {
+    Cars: [
+      { Id: 1, DateOfConstruction: '2000-01-01', Brand: 'Bmw', IsOldtimer: false, Name: 'My Car' },
+    ],
+  },
   'Cars',
   (g: any) => console.log('Entity changed', g),
 )
