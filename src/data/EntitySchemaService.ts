@@ -279,6 +279,16 @@ export class EntitySchemaService {
         return null
       }
     }
+    const isNumber = ['int32', 'int64', 'decimal', 'float', 'long', 'int', 'integer'].includes(
+      inputType.toLocaleLowerCase(),
+    )
+    if (required && isNumber) {
+      if (v == null || v == undefined) {
+        return 'Field is required'
+      } else {
+        return null
+      }
+    }
     if (required && (v == null || v == undefined || v == '')) {
       return 'Field is required'
     }

@@ -88,6 +88,7 @@ const InputField: React.FC<{
   }
 
   function renderInnerInput() {
+    const htmlType: string = EntitySchemaService.getHtmlInputType(inputType)
     if (inputType.toLocaleLowerCase() == 'guid') {
       return (
         <GuidInputField
@@ -104,6 +105,7 @@ const InputField: React.FC<{
         ></GuidInputField>
       )
     }
+
     if (inputType.toLocaleLowerCase() == 'bool' || inputType.toLocaleLowerCase() == 'boolean') {
       return (
         <BoolInputField
@@ -220,7 +222,7 @@ const InputField: React.FC<{
         disabled={disabled}
         className={classNameInput}
         type={EntitySchemaService.getHtmlInputType(inputType)}
-        value={currentValue || ''}
+        value={currentValue} //|| (htmlType == 'number' ? 0 : '')
         onChange={(e) => {
           onValueChange(e.target.value, getErrors(e.target.value))
           setCurrentValue(e.target.value)

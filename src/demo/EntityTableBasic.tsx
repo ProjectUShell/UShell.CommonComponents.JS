@@ -12,7 +12,13 @@ idField.required = true
 const isOldtimerField: FieldSchema = new FieldSchema('IsOldtimer', 'boolean')
 isOldtimerField.required = true
 const carEntitySchema: EntitySchema = {
-  fields: [idField, new FieldSchema('DateOfConstruction', 'datetime'), brandField, isOldtimerField],
+  fields: [
+    idField,
+    new FieldSchema('DateOfConstruction', 'datetime'),
+    brandField,
+    isOldtimerField,
+    new FieldSchema('Price', 'int32'),
+  ],
   indices: [{ name: 'Id', memberFieldNames: ['Id'], unique: true }],
   inheritedEntityName: '',
   isBlEntrypoint: false,
