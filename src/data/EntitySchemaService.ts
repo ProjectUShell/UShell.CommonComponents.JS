@@ -253,12 +253,35 @@ export class EntitySchemaService {
               break
             case 'string':
             default:
-              result[fn.name] = 'text'
+              result[fn.name] = ''
           }
         }
       }
     }
     console.debug('creating', result)
     return result
+  }
+
+  static getErrors(v: any, required: boolean, inputType: string): string | null {
+    if (required && inputType.toLocaleLowerCase().startsWith('bool')) {
+      const isTrue = v == true
+      const isFalse = v == false
+      if (isTrue || isFalse) {
+        return null
+      } else {
+        return 'Field is required'
+      }
+    }
+    if (required && inputType.toLocaleLowerCase().startsWith('string')) {
+      if (v == null || v == undefined) {
+        return 'Field is required'
+      } else {
+        return null
+      }
+    }
+    if (required && (v == null || v == undefined || v == '')) {
+      return 'Field is required'
+    }
+    return null
   }
 }

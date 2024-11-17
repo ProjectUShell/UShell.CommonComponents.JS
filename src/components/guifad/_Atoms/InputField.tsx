@@ -84,19 +84,7 @@ const InputField: React.FC<{
   )
 
   function getErrors(v: any): string | null {
-    if (required && inputType.toLocaleLowerCase().startsWith('bool')) {
-      const isTrue = v == true
-      const isFalse = v == false
-      if (isTrue || isFalse) {
-        return null
-      } else {
-        return 'Field is required'
-      }
-    }
-    if (required && (v == null || v == undefined || v == '')) {
-      return 'Field is required'
-    }
-    return null
+    return EntitySchemaService.getErrors(v, required, inputType)
   }
 
   function renderInnerInput() {

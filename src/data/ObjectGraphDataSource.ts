@@ -79,7 +79,7 @@ export class ObjectGraphDataSource implements IDataSource {
               break
             case 'string':
             default:
-              result[fn.name] = 'text'
+              result[fn.name] = ''
           }
         }
       }

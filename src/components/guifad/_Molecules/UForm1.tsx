@@ -59,19 +59,7 @@ const UForm1: React.FC<{
   }, [errors])
 
   function getErrors(field: FieldInputInfo): string | null {
-    if (field.required && field.type.toLocaleLowerCase().startsWith('bool')) {
-      const isTrue = field.value == true
-      const isFalse = field.value == false
-      if (isTrue || isFalse) {
-        return null
-      } else {
-        return 'Field is required'
-      }
-    }
-    if (field.required && (field.value == null || field.value == undefined || field.value == '')) {
-      return 'Field is required'
-    }
-    return null
+    return EntitySchemaService.getErrors(field.value, field.required, field.type)
   }
   function getLabel(f: FieldInputInfo) {
     const fieldLayout: FieldLayout | undefined = fieldLayouts.find((fl) => fl.fieldName == f.name)
