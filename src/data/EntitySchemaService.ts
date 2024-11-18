@@ -256,7 +256,7 @@ export class EntitySchemaService {
         if (fn.defaultValue) {
           result[fn.name] = fn.defaultValue
         } else if (fn.required) {
-          switch (fn.type) {
+          switch (fn.type.toLocaleLowerCase()) {
             case 'int32':
             case 'int64':
             case 'float':
