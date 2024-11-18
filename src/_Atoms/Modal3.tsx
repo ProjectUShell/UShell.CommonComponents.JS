@@ -69,9 +69,9 @@ const Modal3: React.FC<{
           beginTransition && 'transition-all duration-300 '
         }  border-0 border-green-400 rounded-md`}
       >
-        <div className='h-full flex flex-col overflow-hidden flex-grow border-0 border-blue-400 p-1 px-2'>
-          <div className='w-full flex whitespace-nowrap'>
-            <div className='align-middle font-medium py-2'>{title}</div>
+        <div className='h-full flex flex-col overflow-hidden flex-grow border-0  border-blue-400 p-1 px-0'>
+          <div className='w-full flex whitespace-nowrap border-b dark:border-toolbarBorderDark'>
+            <div className='align-middle font-medium p-3 text-lg'>{title}</div>
             {terminate && (
               <div className='bg-opacity-0 w-full bg-red-400 py-2 flex justify-end'>
                 <button

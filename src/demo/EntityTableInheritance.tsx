@@ -10,7 +10,12 @@ colorField.filterable = 1
 const idField: FieldSchema = new FieldSchema('Id', 'int32')
 idField.required = true
 const animalEntitySchema: EntitySchema = {
-  fields: [idField, new FieldSchema('DateOfBirth', 'datetime'), colorField],
+  fields: [
+    idField,
+    new FieldSchema('DateOfBirth', 'datetime'),
+    colorField,
+    new FieldSchema('Size', 'int32'),
+  ],
   indices: [{ name: 'Id', memberFieldNames: ['Id'], unique: true }],
   inheritedEntityName: '',
   isBlEntrypoint: false,
@@ -19,12 +24,15 @@ const animalEntitySchema: EntitySchema = {
   primaryKeyIndexName: 'Id',
   summary: 'Animals...',
 }
+
 const catEntitySchema: EntitySchema = {
   fields: [
     idField,
     new FieldSchema('DateOfBirth', 'datetime'),
     colorField,
     new FieldSchema('BigCat', 'bool'),
+    new FieldSchema('CatSize', 'int32'),
+    new FieldSchema('Size', 'int32'),
   ],
   indices: [{ name: 'Id', memberFieldNames: ['Id'], unique: true }],
   inheritedEntityName: '',
@@ -72,6 +80,16 @@ const catLayout: EntityLayout = new EntityLayout('Cat', [
   },
 ])
 catLayout.displayLabel = 'Cat'
+catLayout.partitions = [
+  {
+    type: 'group',
+    fields: [],
+    children: [
+      { type: 'column', fields: ['Id', 'DateOfBirth'] },
+      { type: 'column', fields: ['Color', 'BigCat'] },
+    ],
+  },
+]
 const dogLayout: EntityLayout = new EntityLayout('Dog', [
   { fieldName: 'DateOfBirth', displayLabel: 'Date of Birthn' },
   {
@@ -133,6 +151,7 @@ const EntityTableInheritance = () => {
         dataSource={dataSourceAnimal}
         dataSourcesForm={[dataSourceCat, dataSourceDog]}
         layoutDescription={layoutDescription}
+        minWidthInput={20}
       ></EntityTable1>
     </div>
   )

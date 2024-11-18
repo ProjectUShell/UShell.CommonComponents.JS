@@ -19,6 +19,7 @@ const DropdownMultiSelect: React.FC<{
   classNameBg?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
+  minWidth?: number
 }> = ({
   options,
   initialOptions = [],
@@ -31,6 +32,7 @@ const DropdownMultiSelect: React.FC<{
   classNameBg,
   classNameHoverBg,
   classNameHoverBgDark,
+  minWidth,
 }) => {
   const [open, setOpen] = useState(false)
   const [currentOptions, setCurrentOptions] = useState<Option[]>(initialOptions)
@@ -85,6 +87,7 @@ const DropdownMultiSelect: React.FC<{
          bg-bg1 dark:bg-bg2dark border-0 border-red-400'
       >
         <input
+          style={{ minWidth: minWidth ? `${minWidth}rem` : undefined }}
           readOnly
           autoFocus={forceFocus}
           className={`w-full focus:z-50 relative outline-none             

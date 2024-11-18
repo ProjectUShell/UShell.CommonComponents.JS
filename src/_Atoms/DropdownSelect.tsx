@@ -23,6 +23,7 @@ const DropdownSelect: React.FC<{
   classNameDropdownBg?: string
   classNameDropdownHoverBg?: string
   additionalElements?: JSX.Element[]
+  minWidth?: number
 }> = ({
   options,
   initialOption,
@@ -39,6 +40,7 @@ const DropdownSelect: React.FC<{
   classNameDropdownBg,
   classNameDropdownHoverBg,
   additionalElements,
+  minWidth,
 }) => {
   const [open, setOpen] = useState(false)
   const [currentOption, setCurrentOption] = useState<Option | null | undefined>(initialOption)
@@ -194,6 +196,7 @@ const DropdownSelect: React.FC<{
         <input
           autoFocus={forceFocus}
           disabled={disabled}
+          style={{ minWidth: minWidth ? `${minWidth}rem` : undefined }}
           className={`w-full focus:z-50 relative outline-none             
             ${getInputStyleClassName(
               styleType,

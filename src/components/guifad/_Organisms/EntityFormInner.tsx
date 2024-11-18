@@ -31,6 +31,7 @@ const EntityFormInner: React.FC<{
   persistUow: (uow: any) => void
   isCreation?: boolean
   onValidationChanged?: (errors: { [fieldName: string]: string | null }) => void
+  minWidthInput?: number
 }> = ({
   dataSourceManager,
   dataSource,
@@ -50,6 +51,7 @@ const EntityFormInner: React.FC<{
   styleType = 0,
   isCreation,
   onValidationChanged,
+  minWidthInput,
 }) => {
   // states
   // const [currentEntity, setCurrentEntity] = useState({ ...entity })
@@ -140,7 +142,7 @@ const EntityFormInner: React.FC<{
           result.push(fn)
         }
       }
-      for (let fn of getCoveredFields(p.children)) {
+      for (let fn of getCoveredFields(p.children || [])) {
         result.push(fn)
       }
     }
@@ -176,6 +178,7 @@ const EntityFormInner: React.FC<{
         .filter((p) => p.type == 'group')
         .map((p, i) => (
           <EntityFormGroup
+            minWidthInput={minWidthInput}
             key={'group' + p.name + i}
             label={p.name}
             allFields={fieldsToDisplay}
@@ -188,7 +191,7 @@ const EntityFormInner: React.FC<{
             )}
             dataSourceManager={dataSourceManager}
             changeLookUpValues={changeLookUpValues}
-            partitions={p.children}
+            partitions={p.children || []}
             labelPosition={labelPosition}
             fieldLayouts={entityLayout?.fieldLayouts || []}
             readOnly={readOnly}
@@ -207,7 +210,7 @@ const EntityFormInner: React.FC<{
         {entityLayout?.partitions
           .filter((p) => p.type == 'column')
           .map((p, i) => (
-            <div key={p.name + i} className='w-full'>
+            <div key={p.name || '' + i} className='w-full'>
               <EntityFormGroup
                 label={p.name}
                 allFields={fieldsToDisplay}
@@ -220,7 +223,7 @@ const EntityFormInner: React.FC<{
                 )}
                 dataSourceManager={dataSourceManager}
                 changeLookUpValues={changeLookUpValues}
-                partitions={p.children}
+                partitions={p.children || []}
                 labelPosition={labelPosition}
                 fieldLayouts={entityLayout?.fieldLayouts || []}
                 readOnly={readOnly}
@@ -233,6 +236,7 @@ const EntityFormInner: React.FC<{
                 styleType={styleType}
                 isCreation={isCreation}
                 onValidationChanged={onValidationChanged}
+                minWidthInput={minWidthInput}
               ></EntityFormGroup>
             </div>
           ))}
@@ -263,6 +267,7 @@ const EntityFormInner: React.FC<{
           styleType={styleType}
           isCreation={isCreation}
           onValidationChanged={onValidationChanged}
+          minWidthInput={minWidthInput}
         ></EntityFormGroup>
       )}
     </div>

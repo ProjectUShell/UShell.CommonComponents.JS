@@ -34,6 +34,7 @@ const EntityForm: React.FC<{
   uow?: any
   persistUow?: (uow: any) => void
   isCreation: boolean
+  minWidthInput?: number
 }> = ({
   dataSourceManager,
   dataSource,
@@ -56,6 +57,7 @@ const EntityForm: React.FC<{
   uow,
   persistUow,
   isCreation = false,
+  minWidthInput,
 }) => {
   return (
     <EntityForm1
@@ -80,6 +82,7 @@ const EntityForm: React.FC<{
       uow={uow}
       persistUow={persistUow}
       isCreation={isCreation}
+      minWidthInput={minWidthInput}
     ></EntityForm1>
   )
 }
@@ -106,6 +109,7 @@ export const EntityForm1: React.FC<{
   uow?: any
   persistUow?: (uow: any) => void
   isCreation: boolean
+  minWidthInput?: number
 }> = ({
   dataSourceManager,
   dataSources,
@@ -128,6 +132,7 @@ export const EntityForm1: React.FC<{
   uow,
   persistUow,
   isCreation = false,
+  minWidthInput,
 }) => {
   // states
   const [currentEntity, setCurrentEntity] = useState<any>({ ...entity })
@@ -289,6 +294,11 @@ export const EntityForm1: React.FC<{
               value: currentDataSource.entitySchema!.name,
             }}
             onOptionSet={(o) => {
+              const newDataSource: IDataSource = dataSources.find(
+                (ds) => ds.entitySchema!.name == o?.value,
+              )!
+              const newEntity: any = newDataSource.entityFactoryMethod()
+              setCurrentEntity(newEntity)
               setCurrentDataSource(dataSources.find((ds) => ds.entitySchema!.name == o?.value)!)
             }}
             styleType={styleType}
@@ -324,6 +334,7 @@ export const EntityForm1: React.FC<{
         onValidationChanged={(e) => {
           updateErrors(e)
         }}
+        minWidthInput={minWidthInput}
       ></EntityFormInner>
       {toolbar == 'bottom' && (
         <div

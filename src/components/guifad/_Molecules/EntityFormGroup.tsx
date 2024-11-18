@@ -29,6 +29,7 @@ const EntityFormGroup: React.FC<{
   styleType?: number
   isCreation?: boolean
   onValidationChanged?: (errors: { [fieldName: string]: string | null }) => void
+  minWidthInput?: number
 }> = ({
   label,
   allFields,
@@ -52,6 +53,7 @@ const EntityFormGroup: React.FC<{
   styleType = 0,
   isCreation = false,
   onValidationChanged,
+  minWidthInput,
 }) => {
   return (
     <>
@@ -73,7 +75,7 @@ const EntityFormGroup: React.FC<{
                     )}
                     dataSourceManager={dataSourceManager}
                     changeLookUpValues={changeLookUpValues}
-                    partitions={p.children}
+                    partitions={p.children || []}
                     labelPosition={labelPosition}
                     fieldLayouts={fieldLayouts}
                     readOnly={readOnly}
@@ -86,6 +88,7 @@ const EntityFormGroup: React.FC<{
                     styleType={styleType}
                     isCreation={isCreation}
                     onValidationChanged={onValidationChanged}
+                    minWidthInput={minWidthInput}
                   ></EntityFormGroup>
                 </div>
               ))}
@@ -113,6 +116,7 @@ const EntityFormGroup: React.FC<{
             styleType={styleType}
             isCreation={isCreation}
             onValidationChanged={onValidationChanged}
+            minWidthInput={minWidthInput}
           ></UForm>
         </Group>
       )}

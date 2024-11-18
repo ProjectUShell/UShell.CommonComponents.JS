@@ -28,6 +28,7 @@ const UForm1: React.FC<{
   readOnly?: boolean
   isCreation?: boolean
   onValidationChanged?: (errors: { [fieldName: string]: string | null }) => void
+  minWidth?: number
 }> = ({
   fieldsToDisplay,
   labelPosition,
@@ -43,6 +44,7 @@ const UForm1: React.FC<{
   readOnly = false,
   isCreation = false,
   onValidationChanged,
+  minWidth,
 }) => {
   const [errors, setErrors] = useState<{ [fieldName: string]: string | null }>({})
 
@@ -135,6 +137,7 @@ const UForm1: React.FC<{
           return (
             <div key={f.name} className='border-0 border-red-400'>
               <InputField
+                minWidth={minWidth}
                 key={f.name}
                 inputType={f.type}
                 label={labelPosition == 'top' ? getLabel(f) : null}

@@ -25,6 +25,7 @@ const UForm: React.FC<{
   readOnly?: boolean
   isCreation?: boolean
   onValidationChanged?: (errors: { [fieldName: string]: string | null }) => void
+  minWidthInput?: number
 }> = ({
   fieldsToDisplay,
   currentEntity,
@@ -44,6 +45,7 @@ const UForm: React.FC<{
   readOnly = false,
   isCreation = false,
   onValidationChanged,
+  minWidthInput,
 }) => {
   function getAllowCrud(fk: RelationSchema): boolean {
     const fieldLayout: FieldLayout | undefined = fieldLayouts.find(
@@ -65,6 +67,7 @@ const UForm: React.FC<{
   }
   return (
     <UForm1
+      minWidth={minWidthInput}
       onValidationChanged={onValidationChanged}
       styleType={styleType}
       fieldLayouts={fieldLayouts}

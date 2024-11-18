@@ -27,6 +27,7 @@ const EntityFormModal: React.FC<{
   persistUow?: (uow: any) => void
   isCreation: boolean
   title?: string
+  minWidthInput?: number
 }> = ({
   dataSourceManager,
   dataSources,
@@ -47,6 +48,7 @@ const EntityFormModal: React.FC<{
   persistUow,
   isCreation,
   title,
+  minWidthInput,
 }) => {
   return (
     <Modal3
@@ -83,6 +85,7 @@ const EntityFormModal: React.FC<{
           uow={uow}
           persistUow={persistUow}
           isCreation={isCreation}
+          minWidthInput={minWidthInput}
         ></EntityForm1>
       </div>
     </Modal3>

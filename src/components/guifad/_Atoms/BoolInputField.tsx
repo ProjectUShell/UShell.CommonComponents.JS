@@ -14,6 +14,7 @@ const BoolInputField: React.FC<{
   classNameDropdownBg?: string
   classNameDropdownHoverBg?: string
   required: boolean
+  minWidth?: number
 }> = ({
   initialValue,
   setCurrentValue,
@@ -26,6 +27,7 @@ const BoolInputField: React.FC<{
   classNameDropdownBg,
   classNameDropdownHoverBg,
   required = false,
+  minWidth,
 }) => {
   const options: { label: string; value: any }[] = [
     { label: 'Yes', value: 1 },
@@ -36,6 +38,7 @@ const BoolInputField: React.FC<{
   }
   return (
     <DropdownSelect
+      minWidth={minWidth}
       options={options}
       onOptionSet={(o) => {
         setCurrentValue(o?.value == undefined ? undefined : o?.value == 1 ? true : false)

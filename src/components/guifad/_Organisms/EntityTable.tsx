@@ -153,6 +153,7 @@ export const EntityTable1: React.FC<{
   isParent?: (c: any, p: any) => boolean
   onRecordsChanged?: () => void
   tableColors?: TableColors
+  minWidthInput?: number
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -179,6 +180,7 @@ export const EntityTable1: React.FC<{
   isParent,
   onRecordsChanged,
   tableColors,
+  minWidthInput,
 }) => {
   const qcc: any = QueryClientContext
   if (!qcc._currentValue)
@@ -209,6 +211,7 @@ export const EntityTable1: React.FC<{
           isParent={isParent}
           onRecordsChanged={onRecordsChanged}
           tableColors={tableColors}
+          minWidthInput={minWidthInput}
         ></EntityTableInternal>
       </QueryClientProvider>
     )
@@ -236,6 +239,7 @@ export const EntityTable1: React.FC<{
       isParent={isParent}
       onRecordsChanged={onRecordsChanged}
       tableColors={tableColors}
+      minWidthInput={minWidthInput}
     ></EntityTableInternal>
   )
 }
@@ -264,6 +268,7 @@ const EntityTableInternal: React.FC<{
   isParent?: (c: any, p: any) => boolean
   onRecordsChanged?: () => void
   tableColors?: TableColors
+  minWidthInput?: number
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -289,6 +294,7 @@ const EntityTableInternal: React.FC<{
   isParent,
   onRecordsChanged,
   tableColors,
+  minWidthInput,
 }) => {
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
@@ -565,6 +571,14 @@ const EntityTableInternal: React.FC<{
       onRecordsChanged && onRecordsChanged()
       setReloadTrigger((r) => r + 1)
     })
+  }
+
+  function createEntity(): any {
+    if (dataSourcesForm && dataSourcesForm.length > 0) {
+      return dataSourcesForm[0].entityFactoryMethod()
+    } else {
+      return dataSource.entityFactoryMethod()
+    }
   }
 
   console.log('render Entity Table sr', selectedRecord)
@@ -902,10 +916,10 @@ const EntityTableInternal: React.FC<{
           dirty={true}
           entity={
             isCreation
-              ? dataSource.entityFactoryMethod()
+              ? createEntity()
               : selectedRecords.length == 1
               ? selectedRecords[0]
-              : dataSource.entityFactoryMethod()
+              : createEntity()
           }
           onChange={() => {
             setDetailsVisible(false)
@@ -921,6 +935,7 @@ const EntityTableInternal: React.FC<{
           isCreation={isCreation}
           classNameDropdownBg=''
           classNameDropdownHoverBg=''
+          minWidthInput={minWidthInput}
         ></EntityFormModal>
       )}
     </>

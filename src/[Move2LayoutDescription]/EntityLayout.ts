@@ -2,9 +2,9 @@ import { ControlPreference } from './ControlPreference'
 import { FieldLayout } from './FieldLayout'
 
 export class LayoutPartition {
-  public name: string = ''
-  public type: 'group' | 'column' = 'group'
-  public children: LayoutPartition[] = []
+  public name?: string = ''
+  public type?: 'group' | 'column' = 'group'
+  public children?: LayoutPartition[] = []
   public fields: string[] = []
 }
 

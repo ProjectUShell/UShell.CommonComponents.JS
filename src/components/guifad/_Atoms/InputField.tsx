@@ -28,6 +28,7 @@ const InputField: React.FC<{
   required?: boolean
   numberDecimals?: number
   unit?: string
+  minWidth?: number
 }> = ({
   label,
   inputType,
@@ -48,6 +49,7 @@ const InputField: React.FC<{
   required = false,
   numberDecimals = 0,
   unit,
+  minWidth,
 }) => {
   const [currentValue, setCurrentValue] = useState<any>(initialValue)
   useEffect(() => {
@@ -123,6 +125,7 @@ const InputField: React.FC<{
           classNameDropdownHoverBg={classNameDropdownHoverBg}
           styleType={styleType}
           required={required}
+          minWidth={minWidth}
         ></BoolInputField>
       )
     }
@@ -136,6 +139,7 @@ const InputField: React.FC<{
         }
         return (
           <DropdownSelect
+            minWidth={minWidth}
             disabled={disabled}
             classNameBg={classNameBg}
             classNameHoverBg={classNameHoverBg}
@@ -154,6 +158,7 @@ const InputField: React.FC<{
       } else {
         return (
           <DropdownMultiSelect
+            minWidth={minWidth}
             classNameBg={classNameBg}
             classNameHoverBg={classNameHoverBg}
             classNameHoverBgDark={classNameHoverBgDark}
@@ -203,7 +208,10 @@ const InputField: React.FC<{
         // <div className={`before:content-['${unit}']`}>
         <div data-content={unit} className={`Unit overflow-hidden w-full ` + classNameInput}>
           <input
-            style={{ width: currentValue ? 'calc(100% - 25px)' : 'calc(100% - 20px)' }}
+            style={{
+              width: currentValue ? 'calc(100% - 25px)' : 'calc(100% - 20px)',
+              minWidth: minWidth ? `${minWidth}rem` : undefined,
+            }}
             step={numberDecimals}
             value={currentValue ? currentValue.toLocaleString('en') : ''}
             onChange={(e) => {
@@ -218,6 +226,7 @@ const InputField: React.FC<{
     }
     return (
       <input
+        style={{ minWidth: minWidth ? `${minWidth}rem` : undefined }}
         step={numberDecimals}
         disabled={disabled}
         className={classNameInput}
