@@ -272,6 +272,8 @@ export class EntitySchemaService {
             default:
               result[fn.name] = ''
           }
+        } else {
+          result[fn.name] = null
         }
       }
     }
