@@ -81,6 +81,8 @@ export class ObjectGraphDataSource implements IDataSource {
             default:
               result[fn.name] = ''
           }
+        } else {
+          result[fn.name] = null
         }
       }
     }
