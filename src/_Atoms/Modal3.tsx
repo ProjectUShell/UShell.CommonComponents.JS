@@ -50,8 +50,9 @@ const Modal3: React.FC<{
 
   return (
     <div
+      style={{ backgroundColor: 'rgb(0 0 0 / 0.5)' }}
       className='UShell_Modal fixed top-0 left-0 right-0 bottom-0
-        z-40 w-full h-full bg-black bg-transparent1 bg-opacity-50 border-0 border-red-400 justify-center items-center'
+        z-40 w-full h-full bg-black bg-opacity-50 border-0 border-red-400 justify-center items-center'
     >
       <div
         style={{
@@ -70,10 +71,10 @@ const Modal3: React.FC<{
         }  border-0 border-green-400 rounded-md`}
       >
         <div className='h-full flex flex-col overflow-hidden flex-grow border-0  border-blue-400 p-1 px-0'>
-          <div className='w-full flex whitespace-nowrap border-b dark:border-toolbarBorderDark'>
-            <div className='align-middle font-medium p-3 text-lg'>{title}</div>
+          <div className='w-full flex whitespace-nowrap border-b dark:border-toolbarBorderDark p-3'>
+            <div className='align-middle font-medium p-0 text-lg'>{title}</div>
             {terminate && (
-              <div className='bg-opacity-0 w-full bg-red-400 py-2 flex justify-end'>
+              <div className='bg-opacity-0 w-full bg-red-400 py-0 flex justify-end'>
                 <button
                   className='bg-opacity-100 text-opacity-100
                    bg-bg1 text-black dark:bg-bg1dark

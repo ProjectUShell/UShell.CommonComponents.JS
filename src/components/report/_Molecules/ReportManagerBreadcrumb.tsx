@@ -18,11 +18,11 @@ const ReportManagerBreadcrumb: React.FC<{
       {report && (
         <>
           <button>
-            <ChevrodnDownIcon size={3} rotate={270}></ChevrodnDownIcon>
+            <ChevrodnDownIcon size={1.5} rotate={270}></ChevrodnDownIcon>
           </button>
           <button>{report.folder}</button>
           <button>
-            <ChevrodnDownIcon size={3} rotate={270}></ChevrodnDownIcon>
+            <ChevrodnDownIcon size={1.5} rotate={270}></ChevrodnDownIcon>
           </button>
           <button className='hover:bg-contentHover dark:hover:bg-contentHoverDark rounded-sm p-2'>
             {report.name}
