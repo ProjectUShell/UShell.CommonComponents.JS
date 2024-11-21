@@ -5,6 +5,7 @@ import { LogicalExpression, PagingParams, SortingField } from 'fusefx-repository
 import Table, { TableColumn } from '../../guifad/_Organisms/Table'
 import { ReportDefinition } from '../ReportDefinition'
 import { EntitySchema } from 'fusefx-modeldescription'
+import { getTimeSpanString } from '../ReportUtils'
 
 const ReportTable: React.FC<{
   reportService: IReportService
@@ -42,8 +43,19 @@ const ReportTable: React.FC<{
       })
     } else {
       const dataRef: any = data.page[0]
-      Object.keys(dataRef).forEach((k) => {
-        c.push({ fieldName: k, fieldType: 'string', key: k, label: k, sortable: true })
+      Object.keys(dataRef).forEach((k: string) => {
+        c.push({
+          fieldName: k,
+          fieldType: 'string',
+          key: k,
+          label: k,
+          sortable: true,
+          onRenderCell: k.toLocaleLowerCase().includes('duration')
+            ? (cellValue, record) => {
+                return <div>{getTimeSpanString(cellValue as number)}</div>
+              }
+            : undefined,
+        })
       })
     }
     return c

@@ -134,6 +134,7 @@ export const ReportChart1Inner: React.FC<{
           reportValues={report.reportValues || []}
           stackBy={report.stackBy || []}
           dark={dark}
+          legend={legend}
         ></ReportLineChart2>
       )}
       {/* {report.type == 'Area' && (
@@ -152,6 +153,7 @@ export const ReportChart1Inner: React.FC<{
           reportValues={report.reportValues || []}
           stackBy={report.stackBy || []}
           dark={dark}
+          legend={legend}
         ></ReportAreaChart2>
       )}
       {/* {report.type == 'Pie' && (

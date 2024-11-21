@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { ResponsiveContainer, Tooltip, Legend, Pie, PieChart, Cell } from 'recharts'
 import { getReportColor } from '../ReportColors'
-import { mergeGroupBysToSingleField } from '../ReportUtils'
+import { getTimeSpanString, mergeGroupBysToSingleField } from '../ReportUtils'
 
 const ReportPieChart2: React.FC<{
   data: { [key: string]: any }[]
@@ -24,7 +24,36 @@ const ReportPieChart2: React.FC<{
   }, [groupBy])
 
   const data3 = mergeGroupBysToSingleField(data, groupBy, singleFieldName)
-  console.log('dark?', dark)
+
+  const RADIAN = Math.PI / 180
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    index,
+  }: any) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5
+    const x = cx + radius * Math.cos(-midAngle * RADIAN)
+    const y = cy + radius * Math.sin(-midAngle * RADIAN)
+
+    return (
+      <text
+        style={{ color: 'black' }}
+        className={dark ? 'text-black' : 'text-black'}
+        x={x}
+        y={y}
+        fill={dark ? 'black' : 'white'}
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline='central'
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    )
+  }
+  const isDuration: boolean = reportValues[0].toLocaleLowerCase().includes('duration')
   return (
     <ResponsiveContainer width='100%' height='100%'>
       <PieChart width={400} height={400}>
@@ -37,13 +66,21 @@ const ReportPieChart2: React.FC<{
           innerRadius={donut ? '40%' : undefined}
           outerRadius='80%'
           fill='#8884d8'
-          label
+          labelLine={isDuration ? false : true}
+          label={isDuration ? renderCustomizedLabel : true}
         >
           {data3.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={getReportColor(index, dark)} />
           ))}
         </Pie>
-        <Tooltip />
+        <Tooltip
+          formatter={(value, name, item, index, payload) => {
+            if (!reportValues[0].toLocaleLowerCase().includes('duration')) {
+              return value
+            }
+            return getTimeSpanString(value as number)
+          }}
+        />
         {legend && <Legend />}
       </PieChart>
     </ResponsiveContainer>

@@ -10,7 +10,7 @@ import {
   Bar,
 } from 'recharts'
 import { getReportColor } from '../ReportColors'
-import { getStackGroups, mergeGroupBysToSingleField } from '../ReportUtils'
+import { getStackGroups, getTimeSpanString, mergeGroupBysToSingleField } from '../ReportUtils'
 
 const ReportBarChart2: React.FC<{
   data: { [key: string]: any }[]
@@ -52,6 +52,7 @@ const ReportBarChart2: React.FC<{
   return (
     <ResponsiveContainer width='100%' height='100%'>
       <BarChart
+        barCategoryGap={4}
         layout={horizontal ? 'horizontal' : 'vertical'}
         // layout='vertical'
         style={{}}
@@ -68,32 +69,62 @@ const ReportBarChart2: React.FC<{
         <CartesianGrid strokeDasharray='3 3' />
         {horizontal && (
           <>
-            {xAxis && (
-              <XAxis
-                dataKey={singleFieldName}
-                stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
-              />
-            )}
-            {yAxis && <YAxis stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />}
+            <XAxis
+              dataKey={singleFieldName}
+              stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
+              hide={!xAxis}
+            />
+
+            <YAxis
+              tickFormatter={(v, i) => {
+                const correspondingValue: string = reportValues[0]
+                if (correspondingValue.toLocaleLowerCase().includes('duration')) {
+                  return getTimeSpanString(v)
+                }
+                return v
+              }}
+              stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
+              hide={!yAxis}
+            />
           </>
         )}
         {!horizontal && (
           <>
-            {xAxis && <XAxis type='number' stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />}
-            {yAxis && (
-              <YAxis
-                type='category'
-                dataKey={singleFieldName}
-                stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
-              />
-            )}
+            <XAxis
+              tickFormatter={(v, i) => {
+                const correspondingValue: string = reportValues[0]
+                if (correspondingValue.toLocaleLowerCase().includes('duration')) {
+                  return getTimeSpanString(v)
+                }
+                return v
+              }}
+              type='number'
+              stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
+              hide={!xAxis}
+            />
+
+            <YAxis
+              type='category'
+              dataKey={singleFieldName}
+              stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
+              hide={!yAxis}
+            />
           </>
         )}
-        <Tooltip contentStyle={{ background: dark ? 'rgb(20,20,20)' : 'white' }} />
+        <Tooltip
+          formatter={(value, name, item, index, payload) => {
+            if (!reportValues[0].toLocaleLowerCase().includes('duration')) {
+              return value
+            }
+            return getTimeSpanString(value as number)
+          }}
+          contentStyle={{ background: dark ? 'rgb(20,20,20)' : 'white' }}
+        />
         <Legend />
         {Object.keys(stackGroups).map((stackId) =>
           stackGroups[stackId].map((sg, i) => (
             <Bar
+              legendType='circle'
               layout={horizontal ? 'horizontal' : 'vertical'}
               dataKey={sg}
               stackId={stackId}

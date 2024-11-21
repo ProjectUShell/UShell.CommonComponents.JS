@@ -44,3 +44,23 @@ export function getStackGroups(
 
   return result
 }
+
+export function getTimeSpanString(durationInMs: number) {
+  const h = Math.floor(durationInMs / (60 * 60 * 1000))
+  const remainingM = durationInMs - h * 60 * 60 * 1000
+  const m = Math.floor(remainingM / (60 * 1000))
+  const remainingS = durationInMs - h * 60 * 60 * 1000 - m * 60 * 1000
+  const s = Math.floor(remainingS / 1000)
+  const remainingMs = durationInMs - h * 60 * 60 * 1000 - m * 60 * 1000 - s * 1000
+  const ms = Math.floor(remainingMs)
+  if (h > 0) {
+    return `${h}h ${m}m ${s}s ${ms}ms`
+  }
+  if (m > 0) {
+    return `${m}m ${s}s ${ms}ms`
+  }
+  if (s > 0) {
+    return `${s}s ${ms}ms`
+  }
+  return `${ms}ms`
+}

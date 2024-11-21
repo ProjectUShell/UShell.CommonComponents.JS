@@ -12,7 +12,7 @@ import {
   AreaChart,
 } from 'recharts'
 import { getReportColor } from '../ReportColors'
-import { getStackGroups, mergeGroupBysToSingleField } from '../ReportUtils'
+import { getStackGroups, getTimeSpanString, mergeGroupBysToSingleField } from '../ReportUtils'
 
 const ReportAreaChart2: React.FC<{
   data: { [key: string]: any }[]
@@ -20,7 +20,8 @@ const ReportAreaChart2: React.FC<{
   stackBy: string[]
   reportValues: string[]
   dark: boolean
-}> = ({ data, groupBy, stackBy, reportValues, dark }) => {
+  legend: boolean
+}> = ({ data, groupBy, stackBy, reportValues, dark, legend }) => {
   console.log('barchart2', {
     groupBy: groupBy,
     stackBy: stackBy,
@@ -57,14 +58,33 @@ const ReportAreaChart2: React.FC<{
         margin={{
           top: 10,
           right: 30,
-          left: 0,
-          bottom: 0,
+          left: 10,
+          bottom: 5,
         }}
       >
         <CartesianGrid strokeDasharray='3 3' />
         <XAxis dataKey={singleFieldName} stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
-        <YAxis stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
-        <Tooltip contentStyle={{ background: dark ? 'rgb(20,20,20)' : 'white' }} />
+        <YAxis
+          padding={{ top: 10 }}
+          width={100}
+          tickFormatter={(v, i) => {
+            const correspondingValue: string = reportValues[0]
+            if (correspondingValue.toLocaleLowerCase().includes('duration')) {
+              return getTimeSpanString(v)
+            }
+            return v
+          }}
+          stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
+        />
+        <Tooltip
+          formatter={(value, name, item, index, payload) => {
+            if (!reportValues[0].toLocaleLowerCase().includes('duration')) {
+              return value
+            }
+            return getTimeSpanString(value as number)
+          }}
+          contentStyle={{ background: dark ? 'rgb(20,20,20)' : 'white' }}
+        />
         {Object.keys(stackGroups).map((stackId) =>
           stackGroups[stackId].map((sg, i) => (
             <Area
@@ -76,6 +96,7 @@ const ReportAreaChart2: React.FC<{
             />
           )),
         )}
+        {legend && <Legend />}
       </AreaChart>
     </ResponsiveContainer>
   )
