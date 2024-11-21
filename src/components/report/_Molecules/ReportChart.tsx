@@ -28,6 +28,8 @@ const ReportChart: React.FC<{ reportServiceUrl: string; dark: boolean }> = ({
       report={new ReportDefinition()}
       dark={dark}
       legend={true}
+      xAxis={true}
+      yAxis={true}
     ></ReportChart1>
   )
 }
@@ -37,7 +39,9 @@ export const ReportChart1: React.FC<{
   report: ReportDefinition
   dark: boolean
   legend: boolean
-}> = ({ reportService, report, dark, legend }) => {
+  xAxis: boolean
+  yAxis: boolean
+}> = ({ reportService, report, dark, legend, xAxis, yAxis }) => {
   const qcc: any = QueryClientContext
   if (!qcc._currentValue) {
     return (
@@ -47,6 +51,8 @@ export const ReportChart1: React.FC<{
           report={report}
           dark={dark}
           legend={legend}
+          xAxis={xAxis}
+          yAxis={yAxis}
         ></ReportChart1Inner>
       </QueryClientProvider>
     )
@@ -57,6 +63,8 @@ export const ReportChart1: React.FC<{
       report={report}
       dark={dark}
       legend={legend}
+      xAxis={xAxis}
+      yAxis={yAxis}
     ></ReportChart1Inner>
   )
 }
@@ -66,7 +74,9 @@ export const ReportChart1Inner: React.FC<{
   report: ReportDefinition
   dark: boolean
   legend: boolean
-}> = ({ reportService, report, dark, legend }) => {
+  xAxis: boolean
+  yAxis: boolean
+}> = ({ reportService, report, dark, legend, xAxis, yAxis }) => {
   // const yFields = ['count(1)', 'sum(duration)']
   const { isLoading, error, data } = useQuery({
     queryKey: [`report_${report.name}`, report],
@@ -104,6 +114,8 @@ export const ReportChart1Inner: React.FC<{
           reportValues={report.reportValues || []}
           horizontal={report.horizontal}
           dark={dark}
+          xAxis={xAxis}
+          yAxis={yAxis}
         ></ReportBarChart2>
       )}
       {/* {report.type == 'Line' && (

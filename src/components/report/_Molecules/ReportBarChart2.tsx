@@ -19,7 +19,9 @@ const ReportBarChart2: React.FC<{
   reportValues: string[]
   horizontal: boolean
   dark: boolean
-}> = ({ data, groupBy, stackBy, reportValues, horizontal, dark }) => {
+  xAxis?: boolean
+  yAxis?: boolean
+}> = ({ data, groupBy, stackBy, reportValues, horizontal, dark, xAxis = true, yAxis = true }) => {
   console.log('barchart2', {
     groupBy: groupBy,
     stackBy: stackBy,
@@ -50,6 +52,8 @@ const ReportBarChart2: React.FC<{
   return (
     <ResponsiveContainer width='100%' height='100%'>
       <BarChart
+        layout={horizontal ? 'horizontal' : 'vertical'}
+        // layout='vertical'
         style={{}}
         width={500}
         height={300}
@@ -62,13 +66,39 @@ const ReportBarChart2: React.FC<{
         }}
       >
         <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey={singleFieldName} stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
-        <YAxis stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
+        {horizontal && (
+          <>
+            {xAxis && (
+              <XAxis
+                dataKey={singleFieldName}
+                stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
+              />
+            )}
+            {yAxis && <YAxis stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />}
+          </>
+        )}
+        {!horizontal && (
+          <>
+            {xAxis && <XAxis type='number' stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />}
+            {yAxis && (
+              <YAxis
+                type='category'
+                dataKey={singleFieldName}
+                stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
+              />
+            )}
+          </>
+        )}
         <Tooltip contentStyle={{ background: dark ? 'rgb(20,20,20)' : 'white' }} />
         <Legend />
         {Object.keys(stackGroups).map((stackId) =>
           stackGroups[stackId].map((sg, i) => (
-            <Bar dataKey={sg} stackId={stackId} fill={getReportColor(i, dark)} />
+            <Bar
+              layout={horizontal ? 'horizontal' : 'vertical'}
+              dataKey={sg}
+              stackId={stackId}
+              fill={getReportColor(i, dark)}
+            />
           )),
         )}
       </BarChart>

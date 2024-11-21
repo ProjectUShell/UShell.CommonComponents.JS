@@ -110,7 +110,11 @@ const TreeViewInner: React.FC<{
             <div className='flex gap-1 p-3' style={{ marginLeft: depth * 30 }}>
               {n.children && n.children.length > 0 && (
                 <button>
-                  <ChevrodnDownIcon size={3} rotate={close[n.id] ? 270 : 360}></ChevrodnDownIcon>
+                  <ChevrodnDownIcon
+                    size={1.3}
+                    strokeWidth={3}
+                    rotate={close[n.id] ? 270 : 360}
+                  ></ChevrodnDownIcon>
                 </button>
               )}
               <div className={`select-none ${n.children.length > 0 ? 'font-bold' : ''} `}>

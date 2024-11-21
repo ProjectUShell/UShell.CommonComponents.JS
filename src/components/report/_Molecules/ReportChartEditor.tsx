@@ -266,6 +266,36 @@ const ReportChartEditor: React.FC<{
             classNameHoverBgDark='bg-bg2dark'
           ></InputField>
         </div>
+        <div className='flex w-full gap-2'>
+          {reportChartDefinition.type == 'Bar' && (
+            <InputField
+              initialValue={reportChartDefinition.horizontal}
+              inputType='bool'
+              label='Horizontal'
+              onValueChange={(n: boolean) => {
+                reportChartDefinition.horizontal = n
+                onUpdateDefinition(reportChartDefinition)
+              }}
+              classNameBg='bg-content dark:bg-contentDark'
+              classNameHoverBg='bg-bg2'
+              classNameHoverBgDark='bg-bg2dark'
+            ></InputField>
+          )}
+          {reportChartDefinition.type == 'Bar' && (
+            <InputField
+              initialValue={reportChartDefinition.stacked}
+              inputType='bool'
+              label='Stacked'
+              onValueChange={(n: boolean) => {
+                reportChartDefinition.stacked = n
+                onUpdateDefinition(reportChartDefinition)
+              }}
+              classNameBg='bg-content dark:bg-contentDark'
+              classNameHoverBg='bg-bg2'
+              classNameHoverBgDark='bg-bg2dark'
+            ></InputField>
+          )}
+        </div>
         <MultiInputField
           label='Group by'
           initialOptions={

@@ -44,6 +44,8 @@ const ReportResultViewer: React.FC<{
             report={report}
             dark={dark}
             legend={true}
+            xAxis={true}
+            yAxis={true}
           ></ReportChart1>
         )}
       </div>
