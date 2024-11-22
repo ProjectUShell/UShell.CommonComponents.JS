@@ -66,8 +66,8 @@ const Dropdown: React.FC<{
     const t =
       el.getBoundingClientRect().top + (direction == 'y' ? el.getBoundingClientRect().height : 0)
 
-    const hHalf = window.innerHeight / 2
-    if (tCheck <= hHalf) {
+    const hThreshold = window.innerHeight * 0.8
+    if (tCheck <= hThreshold) {
       const fixedParent: HTMLElement | null = tryFindFixedParent(el)
       if (fixedParent) {
         return t - fixedParent.getBoundingClientRect().top
@@ -83,8 +83,8 @@ const Dropdown: React.FC<{
 
     const tCheck = el.getBoundingClientRect().top + el.getBoundingClientRect().height
     const t = el.getBoundingClientRect().top + el.getBoundingClientRect().height
-    const hHalf = window.innerHeight / 2
-    if (tCheck > hHalf) {
+    const hThreshold = window.innerHeight * 0.8
+    if (tCheck > hThreshold) {
       const fixedParent: HTMLElement | null = tryFindFixedParent(el)
       if (fixedParent) {
         return (

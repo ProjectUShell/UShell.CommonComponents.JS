@@ -36,7 +36,7 @@ const MultiSelect: React.FC<MultiSelectCheckboxProps> = ({
   // }, [selectedValues, onSelectionChange])
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col h-full overflow-auto'>
       {options.map((option) => (
         <label
           key={option.value}

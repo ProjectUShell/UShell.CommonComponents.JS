@@ -21,7 +21,8 @@ const ReportAreaChart2: React.FC<{
   reportValues: string[]
   dark: boolean
   legend: boolean
-}> = ({ data, groupBy, stackBy, reportValues, dark, legend }) => {
+  prefixToRemove?: string
+}> = ({ data, groupBy, stackBy, reportValues, dark, legend, prefixToRemove }) => {
   console.log('barchart2', {
     groupBy: groupBy,
     stackBy: stackBy,
@@ -63,7 +64,14 @@ const ReportAreaChart2: React.FC<{
         }}
       >
         <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey={singleFieldName} stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'} />
+        <XAxis
+          dataKey={singleFieldName}
+          stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
+          tickFormatter={(v, i) => {
+            if (!prefixToRemove) return v
+            return (v as string).replace(prefixToRemove, '')
+          }}
+        />
         <YAxis
           padding={{ top: 10 }}
           width={100}
@@ -77,6 +85,10 @@ const ReportAreaChart2: React.FC<{
           stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
         />
         <Tooltip
+          labelFormatter={(v, i) => {
+            if (!prefixToRemove) return v
+            return (v as string).replace(prefixToRemove, '')
+          }}
           formatter={(value, name, item, index, payload) => {
             if (!reportValues[0].toLocaleLowerCase().includes('duration')) {
               return value

@@ -253,12 +253,26 @@ const ReportChartEditor: React.FC<{
             classNameHoverBg='bg-bg2'
             classNameHoverBgDark='bg-bg2dark'
           ></InputField>
+        </div>
+        <div className='flex w-full gap-2'>
           <InputField
             initialValue={reportChartDefinition.limit}
             inputType='number'
             label='Limit'
             onValueChange={(n) => {
               reportChartDefinition.limit = n
+              onUpdateDefinition(reportChartDefinition)
+            }}
+            classNameBg='bg-content dark:bg-contentDark'
+            classNameHoverBg='bg-bg2'
+            classNameHoverBgDark='bg-bg2dark'
+          ></InputField>
+          <InputField
+            initialValue={reportChartDefinition.prefixToRemove || ''}
+            inputType='string'
+            label='Prefix to Remove'
+            onValueChange={(n) => {
+              reportChartDefinition.prefixToRemove = n
               onUpdateDefinition(reportChartDefinition)
             }}
             classNameBg='bg-content dark:bg-contentDark'

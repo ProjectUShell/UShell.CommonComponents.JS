@@ -14,6 +14,7 @@ export class ReportChartDefinition {
   horizontal: boolean = false
   multiAxis: boolean = false
   stacked: boolean = false
+  prefixToRemove?: string = ''
 }
 
 export class ReportDefinition extends ReportChartDefinition {

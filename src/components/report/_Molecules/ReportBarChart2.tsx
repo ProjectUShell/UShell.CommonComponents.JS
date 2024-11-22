@@ -21,7 +21,18 @@ const ReportBarChart2: React.FC<{
   dark: boolean
   xAxis?: boolean
   yAxis?: boolean
-}> = ({ data, groupBy, stackBy, reportValues, horizontal, dark, xAxis = true, yAxis = true }) => {
+  prefixToRemove?: string
+}> = ({
+  data,
+  groupBy,
+  stackBy,
+  reportValues,
+  horizontal,
+  dark,
+  xAxis = true,
+  yAxis = true,
+  prefixToRemove,
+}) => {
   console.log('barchart2', {
     groupBy: groupBy,
     stackBy: stackBy,
@@ -73,6 +84,10 @@ const ReportBarChart2: React.FC<{
               dataKey={singleFieldName}
               stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
               hide={!xAxis}
+              tickFormatter={(v, i) => {
+                if (!prefixToRemove) return v
+                return (v as string).replace(prefixToRemove, '')
+              }}
             />
 
             <YAxis
@@ -96,7 +111,7 @@ const ReportBarChart2: React.FC<{
                 if (correspondingValue.toLocaleLowerCase().includes('duration')) {
                   return getTimeSpanString(v)
                 }
-                return v
+                return 'test'
               }}
               type='number'
               stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
@@ -108,12 +123,21 @@ const ReportBarChart2: React.FC<{
               dataKey={singleFieldName}
               stroke={dark ? 'rgb(220,220,220)' : 'rgb(20,20,20'}
               hide={!yAxis}
+              tickFormatter={(v, i) => {
+                if (!prefixToRemove) return v
+                return (v as string).replace(prefixToRemove, '')
+              }}
             />
           </>
         )}
         <Tooltip
+          labelFormatter={(v, i) => {
+            if (!prefixToRemove) return v
+            return (v as string).replace(prefixToRemove, '')
+          }}
           formatter={(value, name, item, index, payload) => {
-            if (!reportValues[0].toLocaleLowerCase().includes('duration')) {
+            // return name
+            if (!(name as string).toLocaleLowerCase().includes('duration')) {
               return value
             }
             return getTimeSpanString(value as number)
@@ -121,14 +145,14 @@ const ReportBarChart2: React.FC<{
           contentStyle={{ background: dark ? 'rgb(20,20,20)' : 'white' }}
         />
         <Legend />
-        {Object.keys(stackGroups).map((stackId) =>
+        {Object.keys(stackGroups).map((stackId, j) =>
           stackGroups[stackId].map((sg, i) => (
             <Bar
               legendType='circle'
               layout={horizontal ? 'horizontal' : 'vertical'}
               dataKey={sg}
               stackId={stackId}
-              fill={getReportColor(i, dark)}
+              fill={getReportColor(j + i, dark)}
             />
           )),
         )}

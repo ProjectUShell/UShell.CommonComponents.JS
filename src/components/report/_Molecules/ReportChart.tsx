@@ -116,6 +116,7 @@ export const ReportChart1Inner: React.FC<{
           dark={dark}
           xAxis={xAxis}
           yAxis={yAxis}
+          prefixToRemove={report.prefixToRemove}
         ></ReportBarChart2>
       )}
       {/* {report.type == 'Line' && (
@@ -135,6 +136,7 @@ export const ReportChart1Inner: React.FC<{
           stackBy={report.stackBy || []}
           dark={dark}
           legend={legend}
+          prefixToRemove={report.prefixToRemove}
         ></ReportLineChart2>
       )}
       {/* {report.type == 'Area' && (
@@ -154,6 +156,7 @@ export const ReportChart1Inner: React.FC<{
           stackBy={report.stackBy || []}
           dark={dark}
           legend={legend}
+          prefixToRemove={report.prefixToRemove}
         ></ReportAreaChart2>
       )}
       {/* {report.type == 'Pie' && (
@@ -174,6 +177,7 @@ export const ReportChart1Inner: React.FC<{
           dark={dark}
           donut={false}
           legend={legend}
+          prefixToRemove={report.prefixToRemove}
         ></ReportPieChart2>
       )}
       {report.type == 'Donut' && (
@@ -185,6 +189,7 @@ export const ReportChart1Inner: React.FC<{
           dark={dark}
           donut={true}
           legend={legend}
+          prefixToRemove={report.prefixToRemove}
         ></ReportPieChart2>
       )}
     </div>

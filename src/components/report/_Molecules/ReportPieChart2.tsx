@@ -11,7 +11,8 @@ const ReportPieChart2: React.FC<{
   dark: boolean
   donut: boolean
   legend: boolean
-}> = ({ data, groupBy, stackBy, reportValues, dark, donut, legend }) => {
+  prefixToRemove?: string
+}> = ({ data, groupBy, stackBy, reportValues, dark, donut, legend, prefixToRemove }) => {
   console.log('barchart2', {
     groupBy: groupBy,
     stackBy: stackBy,
@@ -74,6 +75,10 @@ const ReportPieChart2: React.FC<{
           ))}
         </Pie>
         <Tooltip
+          labelFormatter={(v, i) => {
+            if (!prefixToRemove) return v
+            return (v as string).replace(prefixToRemove, '')
+          }}
           formatter={(value, name, item, index, payload) => {
             if (!reportValues[0].toLocaleLowerCase().includes('duration')) {
               return value
@@ -81,7 +86,14 @@ const ReportPieChart2: React.FC<{
             return getTimeSpanString(value as number)
           }}
         />
-        {legend && <Legend />}
+        {legend && (
+          <Legend
+            formatter={(v, i) => {
+              if (!prefixToRemove) return v
+              return (v as string).replace(prefixToRemove, '')
+            }}
+          />
+        )}
       </PieChart>
     </ResponsiveContainer>
   )

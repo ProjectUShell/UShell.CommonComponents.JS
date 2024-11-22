@@ -21,7 +21,8 @@ const ReportPieChart2: React.FC<{
   stackBy: string[]
   reportValues: string[]
   dark: boolean
-}> = ({ data, groupBy, stackBy, reportValues, dark }) => {
+  prefixToRemove?: string
+}> = ({ data, groupBy, stackBy, reportValues, dark, prefixToRemove }) => {
   console.log('barchart2', {
     groupBy: groupBy,
     stackBy: stackBy,

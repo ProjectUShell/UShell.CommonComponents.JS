@@ -115,7 +115,7 @@ const DropdownMultiSelect: React.FC<{
             minWidth={true}
           >
             <div
-              className={`w-full p-0 border-2 dark:border-bg6dark ${
+              className={`w-full h-full flex flex-col overflow-auto p-0 border-2 dark:border-bg6dark ${
                 classNameBg || 'bg-content dark:bg-contentDark'
               }`}
             >
