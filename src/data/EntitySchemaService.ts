@@ -261,9 +261,11 @@ export class EntitySchemaService {
             case 'int64':
             case 'float':
             case 'decimal':
+              result[fn.name] = 0
+              break
             case 'bool':
             case 'boolean':
-              result[fn.name] = 0
+              result[fn.name] = false
               break
             case 'datetime':
               result[fn.name] = new Date(1900, 1, 1)

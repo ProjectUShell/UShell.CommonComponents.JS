@@ -16,12 +16,12 @@ const Notification: React.FC<{ content: string; level: NotificationLevel }> = ({
   level,
 }) => {
   const [ready, setReady] = useState(false)
-
   useEffect(() => {
     setTimeout(() => {
       setReady(true)
     }, 1)
   }, [])
+  console.debug('render Notification', level)
 
   return (
     <div
@@ -47,12 +47,17 @@ const Notification: React.FC<{ content: string; level: NotificationLevel }> = ({
   )
 }
 
-export function showNotification(
-  content: string,
-  level: 'Success' | 'Warn' | 'Error' | 'Info' = 'Info',
-) {
+export function showNotification(content: string, level: NotificationLevel = 'Info') {
   const id = crypto.randomUUID()
   addGlobalElement2(id, <Notification content={content} level={level}></Notification>)
+  setTimeout(() => {
+    removeGlobalElement(id)
+  }, 3000)
+}
+
+export function showNotification1(content: React.JSX.Element) {
+  const id = crypto.randomUUID()
+  addGlobalElement2(id, content)
   setTimeout(() => {
     removeGlobalElement(id)
   }, 3000)
