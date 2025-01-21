@@ -6,7 +6,9 @@ class TreeNode {
   id: any
   children: TreeNode[] = []
   name: string = ''
+  type: 'folder' | 'file' = 'file'
   render: (column: string) => JSX.Element = () => <div>{this.name}</div>
+  onSelected?: () => void = () => {}
 }
 
 function pushIntoNodes(
@@ -25,6 +27,8 @@ function pushIntoNodes(
       render: renderColumn
         ? (c: string) => renderColumn(d, c)
         : (c: string) => <div>{d[keyField]}</div>,
+      type: 'file',
+      onSelected: () => {},
     })
     return
   }
@@ -38,6 +42,8 @@ function pushIntoNodes(
       children: [],
       id: currentPath,
       render: (c: string) => <div>{currentPathEntry}</div>,
+      type: remainingPath.length > 0 ? 'folder' : 'file',
+      onSelected: () => {},
     }
     nodes.push(existingNode)
   }
@@ -58,10 +64,13 @@ export const TreeView1: React.FC<{
     })
     return result
   }, [data])
-  return <TreeView nodes={nodes} keyField={keyField}></TreeView>
+  return <TreeView nodes={nodes}></TreeView>
 }
 
-const TreeView: React.FC<{ nodes: TreeNode[]; keyField: string }> = ({ nodes, keyField }) => {
+const TreeView: React.FC<{
+  nodes: TreeNode[]
+  onNodeSelected?: (n: TreeNode) => void
+}> = ({ nodes, onNodeSelected }) => {
   const [selectedNode, setSelectedNode] = useState<string | null>(null)
   return (
     <TreeViewInner
@@ -69,6 +78,7 @@ const TreeView: React.FC<{ nodes: TreeNode[]; keyField: string }> = ({ nodes, ke
       nodes={nodes}
       selectedNode={selectedNode}
       setSelectedNode={setSelectedNode}
+      onTreeNodeSelected={onNodeSelected}
     ></TreeViewInner>
   )
 }
@@ -78,14 +88,24 @@ const TreeViewInner: React.FC<{
   depth: number
   selectedNode: any | null
   setSelectedNode: (n: any | null) => void
-}> = ({ nodes, depth, selectedNode, setSelectedNode }) => {
+  onTreeNodeSelected?: (n: TreeNode) => void
+}> = ({ nodes, depth, selectedNode, setSelectedNode, onTreeNodeSelected }) => {
   const [close, setClose] = useState<{ [n: string]: Boolean }>({})
 
-  function toggleClose(n: any) {
+  function onNodeSelected(n: TreeNode, shouldToggle: boolean) {
+    setSelectedNode(n.id)
+    if (n.onSelected) {
+      n.onSelected()
+    } else {
+      if (onTreeNodeSelected) {
+        onTreeNodeSelected(n)
+      }
+    }
+
+    if (!shouldToggle) return
     const newClose = { ...close }
-    newClose[n] = !newClose[n]
+    newClose[n.id] = !newClose[n.id]
     setClose(newClose)
-    setSelectedNode(n)
   }
   return (
     <div
@@ -97,27 +117,35 @@ const TreeViewInner: React.FC<{
       {nodes.map((n: TreeNode, i) => (
         <div key={i} className='flex flex-col '>
           <div
-            className={`border-b border-navigationBorder dark:border-navigationBorderDark   ${
-              selectedNode == n.id
-                ? 'bg-prim2 dark:bg-prim2Dark'
-                : 'hover:bg-navigationHover dark:hover:bg-navigationHoverDark'
-            }`}
+            className={`border-b-0 border-navigationBorder dark:border-navigationBorderDark   `}
             onClick={(e) => {
               e.stopPropagation()
-              toggleClose(n.id)
+              onNodeSelected(n, n.type == 'folder')
             }}
           >
-            <div className='flex gap-1 p-3' style={{ marginLeft: depth * 30 }}>
+            <div
+              className={`flex gap-2 p-2.5 ${
+                selectedNode == n.id
+                  ? 'bg-prim2 dark:bg-prim2Dark'
+                  : 'hover:bg-navigationHover dark:hover:bg-navigationHoverDark'
+              }`}
+              style={{ marginLeft: depth * 30 }}
+            >
               {n.children && n.children.length > 0 && (
-                <button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onNodeSelected(n, true)
+                  }}
+                >
                   <ChevrodnDownIcon
-                    size={1.3}
-                    strokeWidth={3}
+                    size={0.8}
+                    strokeWidth={5}
                     rotate={close[n.id] ? 270 : 360}
                   ></ChevrodnDownIcon>
                 </button>
               )}
-              <div className={`select-none ${n.children.length > 0 ? 'font-bold' : ''} `}>
+              <div className={`select-none ${n.children.length > 0 ? 'font-bold' : 'pl-6'} `}>
                 {n.render('')}
               </div>
             </div>
@@ -129,6 +157,7 @@ const TreeViewInner: React.FC<{
                 depth={depth + 1}
                 selectedNode={selectedNode}
                 setSelectedNode={setSelectedNode}
+                onTreeNodeSelected={onTreeNodeSelected}
               ></TreeViewInner>
             </div>
           )}

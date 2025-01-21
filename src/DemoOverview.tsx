@@ -50,6 +50,8 @@ import EntitySelectionDoc from './demo/EntitySelectionDoc'
 import NotificationDoc from './demo/NotificationDoc'
 import IconsDemo from './demo/IconsDemo'
 import MultiButtonDoc from './demo/MultiButtonDoc'
+import TreeView from './_Molecules/TreeView'
+import TreeViewDoc from './demo/TreeViewDoc'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -78,6 +80,7 @@ const Demo = () => {
       'Menu',
       'EntitySelection',
       'MultiButton',
+      'TreeView',
     ],
     'FuseFx Components': [
       'Guifad',
@@ -283,6 +286,7 @@ const Demo = () => {
       {currentComponent == 'AccordionMenu' && <AccordionMenuDoc></AccordionMenuDoc>}
       {currentComponent == 'Modal' && <ModalDoc></ModalDoc>}
       {currentComponent == 'Dialog' && <DialogDoc></DialogDoc>}
+      {currentComponent == 'TreeView' && <TreeViewDoc></TreeViewDoc>}
       {currentComponent == 'Menu' && <MenuDoc></MenuDoc>}
       {currentComponent == 'EntitySelection' && <EntitySelectionDoc></EntitySelectionDoc>}
       {currentComponent == 'Notification' && <NotificationDoc></NotificationDoc>}
