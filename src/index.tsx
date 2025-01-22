@@ -63,11 +63,9 @@ export * from './components/shell-layout/_Templates/ShellLayout'
 // const root2 = ReactDOM.createRoot(document.getElementById('root2') as HTMLElement)
 // root2.render(<GlobalElementsContainer></GlobalElementsContainer>)
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(<Demo></Demo>)
-
 /***ONLY-NEEDED-FOR-DEMO***
 
-
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+root.render(<Demo></Demo>)
 
 ***ONLY-NEEDED-FOR-DEMO***/
