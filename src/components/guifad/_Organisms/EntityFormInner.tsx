@@ -154,7 +154,7 @@ const EntityFormInner: React.FC<{
     return fieldsToDisplay.map((f) => f.name).filter((fn) => !coveredFields.includes(fn))
   }
   function getRemainingFkRelations(): string[] {
-    if (!entityLayout) return fkRelations.map((f) => f.primaryEntityName)
+    if (!entityLayout) return fkRelations.map((f) => f.foreignKeyIndexName)
     const coveredFields: string[] = getCoveredFields(entityLayout.partitions)
     return fkRelations.map((f) => f.foreignKeyIndexName).filter((fn) => !coveredFields.includes(fn))
   }

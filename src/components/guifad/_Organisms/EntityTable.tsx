@@ -71,6 +71,7 @@ const EntityTable: React.FC<{
   isParent?: (c: any, p: any) => boolean
   onRecordsChanged?: () => void
   tableColors?: TableColors
+  minWidthInput?: number
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -96,6 +97,7 @@ const EntityTable: React.FC<{
   isParent,
   onRecordsChanged,
   tableColors,
+  minWidthInput,
 }) => {
   return (
     <EntityTable1
@@ -124,6 +126,7 @@ const EntityTable: React.FC<{
       isParent={isParent}
       onRecordsChanged={onRecordsChanged}
       tableColors={tableColors}
+      minWidthInput={minWidthInput}
     ></EntityTable1>
   )
 }

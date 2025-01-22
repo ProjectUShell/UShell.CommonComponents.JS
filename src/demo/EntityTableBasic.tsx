@@ -63,6 +63,7 @@ const EntityTableBasic = () => {
         dataSource={dataSource}
         entitySchema={carEntitySchema}
         layoutDescription={layoutDescription}
+        minWidthInput={40}
       ></EntityTable>
     </div>
   )
