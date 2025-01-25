@@ -7,6 +7,7 @@ import { EntityLayout } from '../[Move2LayoutDescription]/EntityLayout'
 
 const nameField: FieldSchema = new FieldSchema('Name', 'string')
 nameField.identityLabel = true
+nameField.filterable = 1
 const brandField: FieldSchema = new FieldSchema('Brand', 'string')
 brandField.filterable = 1
 const idField: FieldSchema = new FieldSchema('Id', 'int32')

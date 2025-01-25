@@ -30,6 +30,7 @@ import EntityForm from './components/guifad/_Organisms/EntityForm'
 import EntityTable from './components/guifad/_Organisms/EntityTable'
 import GlobalElementsContainer from './GlobalElementsContainer'
 import { getIcon } from './utils/IconLib'
+import { applyFilter, applyPaging, applySorting } from './utils/LogicUtils'
 import MultiButton from './_Atoms/MultiButton'
 
 // export { MyComponent }
@@ -57,6 +58,7 @@ export { EntityForm }
 export { EntityTable }
 export { getIcon }
 export { MultiButton }
+export { applyFilter, applyPaging, applySorting }
 
 export * from './components/shell-layout/_Templates/ShellLayout'
 
