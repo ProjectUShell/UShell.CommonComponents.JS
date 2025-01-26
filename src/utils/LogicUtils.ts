@@ -1,6 +1,7 @@
 import { LogicalExpression, PagingParams, SortingField } from 'fusefx-repositorycontract'
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 import { TableColumn } from '../components/guifad/_Organisms/Table'
+import { EntitySchema, FieldSchema } from 'fusefx-modeldescription'
 
 export function getSelectedValues(filter: LogicalExpression, fieldName: string): any[] {
   if (!filter || !filter.predicates || filter.predicates.length == 0) {
@@ -56,10 +57,10 @@ export function buildIsInFilter(fieldName: string, values: any[]): LogicalExpres
   }
 }
 
-export function applyFilter(records: any[], filter: LogicalExpression) {
+export function applyFilter(records: any[], filter: LogicalExpression, entitySchema: EntitySchema) {
   const result: any[] = []
   for (let r of records) {
-    if (satisfiesFilter(r, filter)) {
+    if (satisfiesFilter(r, filter, entitySchema)) {
       result.push(r)
     }
   }
@@ -118,18 +119,22 @@ export function applyPaging(records: any[], pagingParams: PagingParams) {
   )
 }
 
-export function satisfiesFilter(record: any, filter: LogicalExpression): boolean {
+export function satisfiesFilter(
+  record: any,
+  filter: LogicalExpression,
+  entitySchema: EntitySchema,
+): boolean {
   let matchesOne: boolean = false
   let machesAll: boolean = true
   for (let p of filter?.predicates) {
-    if (satisfiesPredicate(record, p)) {
+    if (satisfiesPredicate(record, p, entitySchema)) {
       matchesOne = true
     } else {
       machesAll = false
     }
   }
   for (let f of filter?.subTree) {
-    if (satisfiesFilter(record, f)) {
+    if (satisfiesFilter(record, f, entitySchema)) {
       matchesOne = true
     } else {
       machesAll = false
@@ -138,13 +143,58 @@ export function satisfiesFilter(record: any, filter: LogicalExpression): boolean
   return (filter.matchAll && machesAll) || (!filter.matchAll && matchesOne)
 }
 
-export function satisfiesPredicate(record: any, filter: FieldPredicate): boolean {
+export function satisfiesPredicate(
+  record: any,
+  filter: FieldPredicate,
+  entitySchema: EntitySchema,
+): boolean {
   if (!(filter.fieldName in record)) return true
   switch (filter.operator) {
     case '=':
       return record[filter.fieldName] == filter.value
     case 'in':
       return filter.value.includes(record[filter.fieldName])
+    case 'contains':
+    case '>=': {
+      const fieldSchema: FieldSchema | undefined = entitySchema.fields.find(
+        (f) => f.name == filter.fieldName,
+      )
+      if (!fieldSchema) return false
+      if (
+        ['int32', 'int16', 'int64', 'int', 'integer', 'long', 'double', 'float'].includes(
+          fieldSchema.type,
+        )
+      ) {
+        return record[filter.fieldName] >= filter.value
+      } else {
+        return record[filter.fieldName].includes(filter.value)
+      }
+    }
+    case '<=': {
+      const fieldSchema: FieldSchema | undefined = entitySchema.fields.find(
+        (f) => f.name == filter.fieldName,
+      )
+      if (!fieldSchema) return false
+      if (
+        ['int32', 'int16', 'int64', 'int', 'integer', 'long', 'double', 'float'].includes(
+          fieldSchema.type,
+        )
+      ) {
+        return record[filter.fieldName] <= filter.value
+      } else {
+        return filter.value.includes(record[filter.fieldName])
+      }
+    }
+    case 'startsWith':
+    case 'starts with':
+    case '|*': {
+      return record[filter.fieldName].startsWith(filter.value)
+    }
+    case 'endsWith':
+    case 'ends with':
+    case '*|': {
+      return record[filter.fieldName].endsWith(filter.value)
+    }
   }
   return true
 }

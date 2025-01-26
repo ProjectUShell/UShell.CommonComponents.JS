@@ -158,7 +158,7 @@ export class ObjectGraphDataSource implements IDataSource {
   ): PaginatedList {
     let result: any[] = this.objectGraph[this.propertyPath]
     if (filter) {
-      result = applyFilter(result, filter)
+      result = applyFilter(result, filter, this.entitySchema)
     }
     if (sortingParams) {
       result = applySorting(

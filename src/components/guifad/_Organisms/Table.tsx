@@ -15,6 +15,18 @@ import DropdownSelectBasic from '../../../demo/DropdownSelectBasic'
 import ArrowUpIcon from '../../../_Icons/ArrowUpIcon'
 import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
 import ChevronRightIcon from '../../../_Icons/ChevronRightIcon'
+import { EntitySchema, FieldSchema } from 'fusefx-modeldescription'
+
+function getEntitySchemaFromColumns(columns: TableColumn[]): EntitySchema {
+  const fields: FieldSchema[] = columns.map((c) => {
+    const fieldSchema: FieldSchema = new FieldSchema(c.fieldName, c.fieldType)
+    return fieldSchema
+  })
+  const result: EntitySchema = new EntitySchema()
+  result.fields = fields
+  result.name = 'TableEntity'
+  return result
+}
 
 export interface TableColumn {
   label: string
@@ -511,7 +523,7 @@ const Table: React.FC<{
   let finalSelectedRows: { [index: number]: boolean } = finalSelectedRows0
   if (useClientFilter) {
     for (let f in filterByColumn) {
-      filteredRecords = applyFilter(records, filterByColumn[f])
+      filteredRecords = applyFilter(records, filterByColumn[f], getEntitySchemaFromColumns(columns))
     }
   }
 
