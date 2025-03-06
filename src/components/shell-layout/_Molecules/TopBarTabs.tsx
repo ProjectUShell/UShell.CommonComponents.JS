@@ -2,10 +2,13 @@ import React from 'react'
 import { TopBarTab } from '../_Organisms/TopBar'
 import TabControl from '../../../_Organisms/TabControl'
 
-const TopBarTabs: React.FC<{ tabItems: TopBarTab[] }> = ({ tabItems }) => {
+const TopBarTabs: React.FC<{ tabItems: TopBarTab[]; initialActiveTabIndex: number }> = ({
+  tabItems,
+  initialActiveTabIndex,
+}) => {
   return (
     <TabControl
-      initialActiveTabIndex={0}
+      initialActiveTabIndex={initialActiveTabIndex}
       onTabChange={(t, i) => {
         console.log('tab change', t, i)
         t.tag.action()

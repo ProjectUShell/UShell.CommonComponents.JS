@@ -40,7 +40,7 @@ const ShellLayout: React.FC<{
     const shellMenuState: ShellMenuState = getActiveShellMenuState()
     const menuItems: MenuItem[] = getActiveShellMenuItems()
     const activeItem: MenuItem | undefined = findMenuItem(menuItems, shellMenuState.activeItemId)
-    console.log('activating item', shellMenuState)
+
     if (activeItem) {
       activateItem(activeItem, shellMenuState)
     }
@@ -80,7 +80,6 @@ const ShellLayout: React.FC<{
     newResult.id = activeMenuItemsKey
     return newResult
   }
-
   const topBarTabs: TopBarTab[] = useMemo(() => {
     const result: TopBarTab[] = []
     if (shellMenu.subItems) {
@@ -97,7 +96,7 @@ const ShellLayout: React.FC<{
       })
     }
     return result
-  }, [shellMenu])
+  }, [shellMenu, activeMenuItemsKey])
 
   return (
     <div className={`${shellSettings.colorMode == ColorMode.Dark && 'dark'}`}>
@@ -116,6 +115,7 @@ const ShellLayout: React.FC<{
           topBarElements={shellMenu.topBarItems}
           tabItems={topBarTabs}
           title={title}
+          initialActiveTabIndex={topBarTabs.findIndex((t) => t.label == activeMenuItemsKey)}
         ></TopBar>
         {shellSettings.layoutMode == LayoutMode.Vertical ? (
           <VerticalShellLayout

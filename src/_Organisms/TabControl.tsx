@@ -1,6 +1,7 @@
 import React, { Children, useEffect, useState } from 'react'
 import { ColorMode, loadShellSettings } from '../components/shell-layout/ShellSettings'
 import XMark from '../components/shell-layout/_Icons/XMark'
+import { Logger } from '../[Move2Logging]/Logger'
 
 export class TabItem {
   id: string = ''
@@ -115,6 +116,8 @@ const TabControl: React.FC<{
   classNameHoverBg,
   styleType = 0,
 }) => {
+
+  Logger.debug('TabControl initialActiveTabIndex', initialActiveTabIndex)
   const [activeTabIndex, setActiveTabIndex] = useState(initialActiveTabIndex)
   // function onTabChange(tabId: string) {
   //   onTabChange(tab)

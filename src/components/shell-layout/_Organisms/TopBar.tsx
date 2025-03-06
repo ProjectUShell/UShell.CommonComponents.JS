@@ -4,6 +4,7 @@ import { LayoutMode, ColorMode, ShellSettings } from '../ShellSettings'
 import { TopBarItem } from '../ShellMenu'
 import TabControl from '../../../_Organisms/TabControl'
 import TopBarTabs from '../_Molecules/TopBarTabs'
+import { Logger } from '../../../[Move2Logging]/Logger'
 
 export class TopBarTab {
   label: string = ''
@@ -19,6 +20,7 @@ const TopBar: React.FC<{
   title: JSX.Element | string
   topBarElements?: TopBarItem[]
   tabItems?: TopBarTab[]
+  initialActiveTabIndex: number
 }> = ({
   layoutMode,
   setLayoutMode,
@@ -28,7 +30,13 @@ const TopBar: React.FC<{
   title,
   shellSettings,
   tabItems,
+  initialActiveTabIndex,
 }) => {
+  Logger.debug(
+    'TopBar initialActiveTabIndex',
+    initialActiveTabIndex,
+  )
+
   return (
     <header
       style={{ borderBottomWidth: shellSettings.colorMode == ColorMode.Dark ? '1px' : '0px' }}
@@ -58,7 +66,10 @@ const TopBar: React.FC<{
           <h1>{title}</h1>
           {tabItems && (
             <div className='-my-3 px-4 pl-8'>
-              <TopBarTabs tabItems={tabItems}></TopBarTabs>
+              <TopBarTabs
+                tabItems={tabItems}
+                initialActiveTabIndex={initialActiveTabIndex}
+              ></TopBarTabs>
             </div>
           )}
         </div>
