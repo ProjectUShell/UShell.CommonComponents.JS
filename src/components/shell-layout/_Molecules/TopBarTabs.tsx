@@ -21,7 +21,7 @@ const TopBarTabs: React.FC<{ tabItems: TopBarTab[]; initialActiveTabIndex: numbe
       classNameActiveBg='px-4'
       classNameInactiveBg='px-4'
       classNameContainerBg='bg-topbar dark:bg-topbarDark'
-      classNameHoverBg='hover:bg-menuHover dark:hover:bg-menuHoverDark'
+      classNameHoverBg='hover:bg-topbarHover dark:hover:bg-topbarHoverDark'
     ></TabControl>
   )
 }
