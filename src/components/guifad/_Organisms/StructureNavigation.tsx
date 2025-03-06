@@ -22,6 +22,7 @@ const StructureNavigation: React.FC<{
   className?: string
   dirty: boolean
   entityLayout?: EntityLayout
+  classNameBorder?: string
 }> = ({
   currentRecord,
   hideList,
@@ -35,9 +36,9 @@ const StructureNavigation: React.FC<{
   className,
   dirty,
   entityLayout,
+  classNameBorder = 'border-navigationBorder dark:border-navigationBorderDark',
 }) => {
   function getNavigationDiplayLabel(er: RelationSchema) {
-    console.log('getNav Display', entityLayout)
     if (!entityLayout)
       return er.primaryNavigationName && er.primaryNavigationName != ''
         ? er.primaryNavigationName
@@ -60,7 +61,7 @@ const StructureNavigation: React.FC<{
 
   return (
     <div className={`pl-2 text-md ${className}`}>
-      <h1 className='pb-2 font-bold border-r border-navigationBorder dark:border-navigationBorderDark whitespace-normal'>
+      <h1 className={`pb-2 font-bold border-r ${classNameBorder} whitespace-normal`}>
         {currentRecord
           ? entitySchema.name +
             ' ' +
@@ -70,12 +71,12 @@ const StructureNavigation: React.FC<{
       {!hideList && (
         <button
           disabled={dirty}
-          className={`w-full flex gap-1 items-center   ${
+          className={`w-full flex gap-1 items-center ${classNameBorder}  ${
             dirty ? 'hover:cursor-pointer text-gray-400' : ''
           } rounded-l-md p-1 ${
             mode == 'list'
-              ? 'bg-content dark:bg-contentDark'
-              : 'hover:bg-navigationHover dark:hover:bg-navigationHoverDark border-r border-navigationBorder dark:border-navigationBorderDark'
+              ? 'bg-content dark:bg-contentDark border-r-0 border-l border-t border-b'
+              : 'hover:bg-navigationHover dark:hover:bg-navigationHoverDark border-r'
           }`}
           onClick={(e) => setMode('list')}
         >
@@ -84,19 +85,19 @@ const StructureNavigation: React.FC<{
       )}
       <button
         disabled={!currentRecord}
-        className={`w-full flex gap-1 items-center mb-1  ${
+        className={`w-full flex gap-1 items-center mb-1 ${classNameBorder}  ${
           !currentRecord ? 'text-gray-400 hover:cursor-default' : 'hover:cursor-pointer'
         } ${
           mode == 'details'
-            ? 'bg-content dark:bg-contentDark'
-            : 'hover:bg-navigationHover dark:hover:bg-navigationHoverDark border-r border-navigationBorder dark:border-navigationBorderDark'
-        } rounded-l-md p-1`}
+            ? 'bg-content dark:bg-contentDark border-r-0 border-l border-t border-b '
+            : 'hover:bg-navigationHover dark:hover:bg-navigationHoverDark border-r '
+        } rounded-l-md  p-1`}
         onClick={(e) => setMode('details')}
       >
         <PencilIcon></PencilIcon>Details
       </button>
-      <div className='w-full border-b-2 border-r border-navigationBorder dark:border-navigationBorderDark'></div>
-      <div className='border-r border-navigationBorder dark:border-navigationBorderDark'>
+      <div className={`w-full border-b-2 border-r ${classNameBorder}`}></div>
+      <div className={`border-r ${classNameBorder}`}>
         {EntitySchemaService.getRelations(schemaRoot, entitySchema, false).map((er) => (
           <button
             key={er.primaryNavigationName}

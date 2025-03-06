@@ -2,6 +2,13 @@ import React from 'react'
 import SettingsDropdown from '../_Molecules/SettingsDropdown'
 import { LayoutMode, ColorMode, ShellSettings } from '../ShellSettings'
 import { TopBarItem } from '../ShellMenu'
+import TabControl from '../../../_Organisms/TabControl'
+import TopBarTabs from '../_Molecules/TopBarTabs'
+
+export class TopBarTab {
+  label: string = ''
+  action: () => void = () => {}
+}
 
 const TopBar: React.FC<{
   layoutMode: LayoutMode
@@ -11,6 +18,7 @@ const TopBar: React.FC<{
   toggleSidebarOpen: () => void
   title: JSX.Element | string
   topBarElements?: TopBarItem[]
+  tabItems?: TopBarTab[]
 }> = ({
   layoutMode,
   setLayoutMode,
@@ -19,6 +27,7 @@ const TopBar: React.FC<{
   topBarElements,
   title,
   shellSettings,
+  tabItems,
 }) => {
   return (
     <header
@@ -47,6 +56,11 @@ const TopBar: React.FC<{
             </button>
           )}
           <h1>{title}</h1>
+          {tabItems && (
+            <div className='-my-3 px-4 pl-8'>
+              <TopBarTabs tabItems={tabItems}></TopBarTabs>
+            </div>
+          )}
         </div>
 
         <div className='Search'></div>

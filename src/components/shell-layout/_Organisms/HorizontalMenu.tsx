@@ -3,7 +3,7 @@ import { MenuItem } from '../ShellMenu'
 import ChevronDown from '../_Icons/ChevronDown'
 import Dropdown from '../../../_Atoms/Dropdown'
 import VerticalMenu from './VerticalMenu'
-import { ShellMenuState, activateItem, loadShellMenuState } from '../ShellMenuState'
+import { ShellMenuState, activateItem, loadShellMenuStates } from '../ShellMenuState'
 
 const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMenuState }> = ({
   menuItems,

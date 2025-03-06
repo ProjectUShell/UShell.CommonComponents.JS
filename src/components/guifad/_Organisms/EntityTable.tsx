@@ -584,8 +584,6 @@ const EntityTableInternal: React.FC<{
     }
   }
 
-  console.log('render Entity Table sr', selectedRecord)
-  console.log('render Entity Table srs', selectedRecords)
   return (
     <>
       <div className='UShell_EntityTable flex flex-col h-full w-full overflow-hidden border-0 border-red-400'>

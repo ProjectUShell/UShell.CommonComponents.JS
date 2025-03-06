@@ -56,7 +56,7 @@ const TabHeader: React.FC<{
       return (
         <a
           className={`inline-block min-w-20 py-3 px-2 rounded-t-lg cursor-pointer select-none whitespace-nowrap
-            font-bold border-b-2 border-blue-400`}
+            font-bold border-b-4 border-blue-400`}
         >
           {children}
         </a>
@@ -64,7 +64,7 @@ const TabHeader: React.FC<{
     } else {
       return (
         <a
-          className={`inline-block min-w-20 py-2 px-1 rounded-t-lg cursor-pointer select-none whitespace-nowrap
+          className={`inline-block min-w-20 py-2 px-1 rounded-t-lg cursor-pointer select-none whitespace-nowrap 
           ${classNameActive}`}
         >
           <div className='p-1'>{children}</div>
@@ -84,7 +84,7 @@ const TabHeader: React.FC<{
     } else {
       return (
         <a
-          className={`inline-block min-w-20 py-2 px-1 rounded-t-lg cursor-pointer select-none whitespace-nowrap
+          className={`inline-block min-w-20 py-2 px-1 rounded-t-lg cursor-pointer select-none whitespace-nowrap 
             ${classNameInactive}  `}
         >
           <div className={`${classNameHoverBg} rounded-md p-1`}>{children}</div>
@@ -134,16 +134,17 @@ const TabControl: React.FC<{
     >
       <ul
         className={`UShell_TabBar flex flex-wrap text-sm font-medium text-center
-           border-menuBorder dark:border-menuBorderDark  -mb-px ${classNameInactiveBg || ''}
-          ${styleType == 0 ? 'border-b-2' : ''}`}
+           border-transparent  -mb-px ${classNameInactiveBg || ''}
+          ${styleType == 0 ? 'border-b-0' : ''}`}
       >
         {tabItems.map((ti, index) => (
-          <li
-            key={ti.id}
-            // className={`px-2 py-1 -rounded-b-sm flex justify-between border1-x cursor-default font-medium
-            className={`me-1 `}
-          >
-            <div onClick={() => setActiveTabIndex(index)}>
+          <li key={ti.id} className={`me-1 px-2 ${styleType == 0 ? classNameHoverBg : ''}`}>
+            <div
+              onClick={() => {
+                setActiveTabIndex(index)
+                onTabChange(ti, index)
+              }}
+            >
               <TabHeader
                 isActive={index == activeTabIndex}
                 styleType={styleType}

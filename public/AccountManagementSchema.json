@@ -1,0 +1,683 @@
+{
+  "descriptionFormat": "",
+  "timestampUtc": "",
+  "semanticVersion": "",
+  "entities": [
+    {
+      "name": "Person",
+      "namePlural": "Person Plural",
+      "inheritedEntityName": null,
+      "summary": "",
+      "isBlEntrypoint": false,
+      "primaryKeyIndexName": "Id",
+      "indices": [
+        {
+          "name": "Name",
+          "unique": false,
+          "memberFieldNames": ["FirstName", "LastName"]
+        },
+        {
+          "name": "Id",
+          "unique": true,
+          "memberFieldNames": ["Id"]
+        }
+      ],
+      "fields": [
+        {
+          "name": "Id",
+          "type": "Int32",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "FirstName",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": true,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "LastName",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "DateOfBirth",
+          "type": "DateTime",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "NationalityId",
+          "type": "Guid",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "PhoneNumber",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "Email",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        }
+      ]
+    },
+    {
+      "name": "Address",
+      "namePlural": "Address Plural",
+      "inheritedEntityName": null,
+      "summary": "",
+      "isBlEntrypoint": false,
+      "primaryKeyIndexName": "Id",
+      "indices": [
+        {
+          "name": "Id",
+          "unique": true,
+          "memberFieldNames": ["Id"]
+        }
+      ],
+      "fields": [
+        {
+          "name": "Id",
+          "type": "Int32",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "City",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "Street",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "ZipCode",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "IsMainAddress",
+          "type": "Boolean",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "PersonId",
+          "type": "Int32",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        }
+      ]
+    },
+    {
+      "name": "Nation",
+      "namePlural": "Nation Plural",
+      "inheritedEntityName": null,
+      "summary": "",
+      "isBlEntrypoint": false,
+      "primaryKeyIndexName": "Uid",
+      "indices": [
+        {
+          "name": "Uid",
+          "unique": true,
+          "memberFieldNames": ["Uid"]
+        }
+      ],
+      "fields": [
+        {
+          "name": "Uid",
+          "type": "Guid",
+          "maxLength": 0,
+          "summary": "",
+          "required": true,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 1,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "Name",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": true,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": true,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        }
+      ]
+    },
+    {
+      "name": "Account",
+      "namePlural": "Account Plural",
+      "inheritedEntityName": null,
+      "summary": "",
+      "isBlEntrypoint": false,
+      "primaryKeyIndexName": "Id",
+      "indices": [
+        {
+          "name": "Id",
+          "unique": true,
+          "memberFieldNames": ["Id"]
+        }
+      ],
+      "fields": [
+        {
+          "name": "Id",
+          "type": "Int32",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "AccountNumber",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "PersonId",
+          "type": "Int32",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        }
+      ]
+    },
+    {
+      "name": "CashTransaction",
+      "namePlural": "CashTransaction Plural",
+      "inheritedEntityName": null,
+      "summary": "",
+      "isBlEntrypoint": false,
+      "primaryKeyIndexName": "Id",
+      "indices": [
+        {
+          "name": "Id",
+          "unique": true,
+          "memberFieldNames": ["Id"]
+        }
+      ],
+      "fields": [
+        {
+          "name": "Id",
+          "type": "Int32",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "AccountId",
+          "type": "Int32",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "Amount",
+          "type": "Decimal",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "Kind",
+          "type": "TransactionKind",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "ReferrerIban",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "ReferrerBic",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "ReferrerName",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        }
+      ]
+    },
+    {
+      "name": "InsuranceContract",
+      "namePlural": "InsuranceContract Plural",
+      "inheritedEntityName": null,
+      "summary": "",
+      "isBlEntrypoint": false,
+      "primaryKeyIndexName": "Id",
+      "indices": [
+        {
+          "name": "Id",
+          "unique": true,
+          "memberFieldNames": ["Id"]
+        }
+      ],
+      "fields": [
+        {
+          "name": "Id",
+          "type": "Guid",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "ContractName",
+          "type": "String",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "PersonId",
+          "type": "Int32",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        }
+      ]
+    },
+    {
+      "name": "InsurancePolicy",
+      "namePlural": "InsurancePolicy Plural",
+      "inheritedEntityName": null,
+      "summary": "",
+      "isBlEntrypoint": false,
+      "primaryKeyIndexName": "Id",
+      "indices": [
+        {
+          "name": "Id",
+          "unique": true,
+          "memberFieldNames": ["Id"]
+        }
+      ],
+      "fields": [
+        {
+          "name": "Id",
+          "type": "Int32",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "Premium",
+          "type": "Decimal",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        },
+        {
+          "name": "InsuranceContractId",
+          "type": "Guid",
+          "maxLength": 0,
+          "summary": "",
+          "required": false,
+          "defaultValue": null,
+          "dbGeneratedIdentity": false,
+          "setabilityFlags": 7,
+          "contentConcern": null,
+          "identityLabel": false,
+          "filterable": 0,
+          "systemInternal": false,
+          "fixedAfterCreation": false
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "",
+      "primaryEntityName": "Person",
+      "foreignEntityName": "Address",
+      "foreignKeyIndexName": "PersonId",
+      "isLookupRelation": false,
+      "primaryEntityIsOptional": false,
+      "foreignEntityIsMultiple": true,
+      "primaryNavigationName": "Addresses",
+      "foreignNavigationName": "Person",
+      "primaryNavigationSummary": "",
+      "foreignNavigationSummary": "",
+      "cascadeDelete": false
+    },
+    {
+      "name": "",
+      "primaryEntityName": "Nation",
+      "foreignEntityName": "Person",
+      "foreignKeyIndexName": "NationalityId",
+      "isLookupRelation": true,
+      "primaryEntityIsOptional": false,
+      "foreignEntityIsMultiple": true,
+      "primaryNavigationName": "",
+      "foreignNavigationName": "Nationality",
+      "primaryNavigationSummary": "",
+      "foreignNavigationSummary": "",
+      "cascadeDelete": false
+    },
+    {
+      "name": "",
+      "primaryEntityName": "Person",
+      "foreignEntityName": "Account",
+      "foreignKeyIndexName": "PersonId",
+      "isLookupRelation": false,
+      "primaryEntityIsOptional": false,
+      "foreignEntityIsMultiple": true,
+      "primaryNavigationName": "Accounts",
+      "foreignNavigationName": "Person",
+      "primaryNavigationSummary": "",
+      "foreignNavigationSummary": "",
+      "cascadeDelete": false
+    },
+    {
+      "name": "",
+      "primaryEntityName": "Account",
+      "foreignEntityName": "CashTransaction",
+      "foreignKeyIndexName": "AccountId",
+      "isLookupRelation": false,
+      "primaryEntityIsOptional": false,
+      "foreignEntityIsMultiple": true,
+      "primaryNavigationName": "CashTransactions",
+      "foreignNavigationName": "Account",
+      "primaryNavigationSummary": "",
+      "foreignNavigationSummary": "",
+      "cascadeDelete": false
+    },
+    {
+      "name": "",
+      "primaryEntityName": "Person",
+      "foreignEntityName": "InsuranceContract",
+      "foreignKeyIndexName": "PersonId",
+      "isLookupRelation": false,
+      "primaryEntityIsOptional": false,
+      "foreignEntityIsMultiple": true,
+      "primaryNavigationName": "InsuranceContracts",
+      "foreignNavigationName": "Person",
+      "primaryNavigationSummary": "",
+      "foreignNavigationSummary": "",
+      "cascadeDelete": false
+    },
+    {
+      "name": "",
+      "primaryEntityName": "InsuranceContract",
+      "foreignEntityName": "InsurancePolicy",
+      "foreignKeyIndexName": "InsuranceContractId",
+      "isLookupRelation": false,
+      "primaryEntityIsOptional": false,
+      "foreignEntityIsMultiple": true,
+      "primaryNavigationName": "InsurancePolicies",
+      "foreignNavigationName": "InsuranceContract",
+      "primaryNavigationSummary": "",
+      "foreignNavigationSummary": "",
+      "cascadeDelete": false
+    }
+  ],
+  "designerData": ""
+}

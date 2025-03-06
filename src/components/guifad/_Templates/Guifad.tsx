@@ -12,7 +12,7 @@ import { IDataSourceManagerWidget } from './IDataSourceManagerWidget'
 // IDataSourceManager: getDataSource, getNavigations
 // TODO wenn kein rootEntityName => Auswahl der EntityTypes darstellen
 const Guifad: React.FC<{
-  dataSourceManager: IWidgetHost
+  dataSourceManager: IDataSourceManagerWidget
   rootEntityName: string
   layoutDescription?: LayoutDescriptionRoot
   record?: any
@@ -21,6 +21,9 @@ const Guifad: React.FC<{
   persistUow?: (uow: any) => void
   formStyleType?: number
   labelPosition?: 'top' | 'left'
+  classNameContent?: string
+  classNameAside?: string
+  classNameAsideBorder?: string
 }> = ({
   dataSourceManager,
   rootEntityName,
@@ -31,6 +34,9 @@ const Guifad: React.FC<{
   persistUow,
   formStyleType = 0,
   labelPosition = 'top',
+  classNameContent = 'bg-content dark:bg-contentDark',
+  classNameAside = 'bg-navigation dark:bg-navigationDark',
+  classNameAsideBorder = 'border-navigationBorder dark:border-navigationBorderDark',
 }) => {
   const [rootDataSource, setRootDataSource] = useState<IDataSource | null>(null)
 
@@ -60,6 +66,9 @@ const Guifad: React.FC<{
       persistUow={persistUow}
       formStyleType={formStyleType}
       labelPosition={labelPosition}
+      classNameContent={classNameContent}
+      classNameAside={classNameAside}
+      classNameAsideBorder={classNameAsideBorder}
     ></Guifad1>
   )
 }

@@ -19,5 +19,37 @@ export interface TopBarItem {
 
 export class ShellMenu {
   items: MenuItem[] = []
+  subItems?: Map<string, MenuItem[]> = new Map()
   topBarItems?: TopBarItem[] = []
+}
+
+export function findMenuItem(items: MenuItem[], id: string): MenuItem | undefined {
+  for (const item of items) {
+    if (item.id.toLocaleLowerCase() === id.toLocaleLowerCase()) {
+      return item
+    }
+    if (item.children) {
+      const foundItem = findMenuItem(item.children, id)
+      if (foundItem) {
+        return foundItem
+      }
+    }
+  }
+  return undefined
+}
+
+export function findParentItem(items: MenuItem[], id: string): MenuItem | undefined {
+  for (const item of items) {
+    if (
+      item.children &&
+      item.children.find((i) => i.id.toLocaleLowerCase() === id.toLocaleLowerCase())
+    ) {
+      return item
+    }
+    const foundItem = findParentItem(item.children || [], id)
+    if (foundItem) {
+      return foundItem
+    }
+  }
+  return undefined
 }

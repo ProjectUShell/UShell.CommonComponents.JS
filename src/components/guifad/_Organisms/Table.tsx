@@ -629,7 +629,6 @@ const Table: React.FC<{
         )
         finalSelectedRows[newIndex] = finalSelectedRows0[selectedRowIndex]
       }
-      console.log('finalSelectedRows', finalSelectedRows)
     }
     filteredRecords.forEach((fr) => {
       delete fr.initialIndex
@@ -644,9 +643,6 @@ const Table: React.FC<{
     sortAgainstNesting()
     calculateNesting2()
   }
-
-  console.log('Table selected rows', finalSelectedRows0)
-  console.log('Table selected records', selectedRecords)
 
   return (
     <div

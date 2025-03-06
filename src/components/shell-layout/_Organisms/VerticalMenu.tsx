@@ -5,7 +5,7 @@ import {
   ShellMenuState,
   activateItem,
   getItemState,
-  loadShellMenuState,
+  loadShellMenuStates,
   toggleFolderCollapse,
 } from '../ShellMenuState'
 import ChevronRightIcon from '../../../_Icons/ChevronRightIcon'
@@ -15,7 +15,8 @@ const VerticalMenu: React.FC<{
   shellMenuState: ShellMenuState
   className?: string
   menuItemHoverClassName?: string
-}> = ({ menuItems, shellMenuState, className, menuItemHoverClassName }) => {
+  filter?: string
+}> = ({ menuItems, shellMenuState, className, menuItemHoverClassName, filter }) => {
   const [, setRerenderTrigger] = useState(0)
   // const [shellMenuState] = useState<ShellMenuState>(loadShellMenuState())
 
@@ -23,9 +24,28 @@ const VerticalMenu: React.FC<{
     setRerenderTrigger((t) => t + 1)
   }
 
+  function getFilteredItems(items: MenuItem[]): MenuItem[] {
+    const result: MenuItem[] = []
+    if (!filter || filter === '') {
+      return items
+    }
+    items.forEach((mi) => {
+      const filteredSubItems: MenuItem[] = mi.children ? getFilteredItems(mi.children) : []
+      if (filteredSubItems.length > 0) {
+        const newMi: MenuItem = { ...mi, children: filteredSubItems }
+        result.push(newMi)
+      } else {
+        if (mi.label.toLowerCase().indexOf(filter.toLowerCase()) >= 0) {
+          result.push(mi)
+        }
+      }
+    })
+    return result
+  }
+
   return (
     <VerticalMenuInternal
-      menuItems={menuItems}
+      menuItems={getFilteredItems(menuItems)}
       depth={0}
       triggerRerender={triggerRerender}
       shellMenuState={shellMenuState}

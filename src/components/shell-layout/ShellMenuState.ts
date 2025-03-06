@@ -5,20 +5,45 @@ export interface MenuItemState {
 }
 
 export class ShellMenuState {
+  id: string = ''
   menuItemStateById: { [id: string]: MenuItemState } = {}
   activeItemId = ''
 }
 
-export function loadShellMenuState(): ShellMenuState {
-  const shellMenuStateJson: string | null = localStorage.getItem('ShellMenuState')
-  if (!shellMenuStateJson) {
-    return new ShellMenuState()
+export function loadShellMenuStates(): ShellMenuState[] {
+  const shellMenuStatesJson: string | null = localStorage.getItem('ShellMenuStates')
+  if (!shellMenuStatesJson) {
+    return []
   }
-  return JSON.parse(shellMenuStateJson)
+  return JSON.parse(shellMenuStatesJson)
 }
 
-export function saveShellMenuState(shellMenuState: ShellMenuState) {
-  localStorage.setItem('ShellMenuState', JSON.stringify(shellMenuState))
+export function loadActiveShellMenuState(): string {
+  const resJson: string | null = localStorage.getItem('ActiveShellMenuState')
+  if (!resJson) {
+    return ''
+  }
+  return resJson
+}
+
+export function setActiveShellMenuState(id: string) {
+  localStorage.setItem('ActiveShellMenuState', id)
+}
+
+export function saveShellMenuState(shellMenuState: ShellMenuState, active: boolean) {
+  const shellMenuStates: ShellMenuState[] = loadShellMenuStates()
+  const existingIndex = shellMenuStates.findIndex(
+    (ms) => ms.id.toLocaleLowerCase() === shellMenuState.id.toLocaleLowerCase(),
+  )
+  if (existingIndex >= 0) {
+    shellMenuStates[existingIndex] = shellMenuState
+  } else {
+    shellMenuStates.push(shellMenuState)
+  }
+  localStorage.setItem('ShellMenuStates', JSON.stringify(shellMenuStates))
+  if (active) {
+    localStorage.setItem('ActiveShellMenuState', shellMenuState.id)
+  }
 }
 
 export function getItemState(shellMenuState: ShellMenuState, itemId: string): MenuItemState {
@@ -37,15 +62,23 @@ export async function toggleFolderCollapse(
 ): Promise<ShellMenuState> {
   const itemState: MenuItemState = getItemState(shellMenuState, itemId)
   itemState.collapsed = !itemState.collapsed
-  saveShellMenuState(shellMenuState)
+  saveShellMenuState(shellMenuState, false)
   return shellMenuState
 }
 
 export function activateItem(item: MenuItem, shellMenuState?: ShellMenuState) {
-  if (!shellMenuState) shellMenuState = loadShellMenuState()
+  if (!shellMenuState) {
+    shellMenuState = loadShellMenuStates().find(
+      (ms) => ms.id.toLocaleLowerCase() === item.id.toLocaleLowerCase(),
+    )
+  }
+  if (!shellMenuState) {
+    shellMenuState = new ShellMenuState()
+    shellMenuState.id = item.id
+  }
   shellMenuState.activeItemId = item.id
   if (item.command) {
     item.command(null)
   }
-  saveShellMenuState(shellMenuState)
+  saveShellMenuState(shellMenuState, true)
 }

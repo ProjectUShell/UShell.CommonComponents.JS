@@ -80,7 +80,7 @@ const LookUpSelect: React.FC<{
   }
 
   if (error) {
-    return <ErrorPage messages={[error]}></ErrorPage>
+    return <ErrorPage messages={[error.toString()]}></ErrorPage>
   }
   return (
     <>

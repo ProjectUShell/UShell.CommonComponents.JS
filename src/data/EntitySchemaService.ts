@@ -279,7 +279,7 @@ export class EntitySchemaService {
         }
       }
     }
-    console.debug('creating', result)
+    console.debug('creating new Entity', result)
     return result
   }
 

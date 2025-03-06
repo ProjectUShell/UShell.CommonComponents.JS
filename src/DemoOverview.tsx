@@ -19,7 +19,8 @@ import SchemaManager from './components/schema-editor/components/SchemaManager'
 import { LocalStorageSchemaProvider } from './components/schema-editor/LocalStorageSchemaProvider'
 import {
   activateItem,
-  loadShellMenuState,
+  loadActiveShellMenuState,
+  loadShellMenuStates,
   ShellMenuState,
 } from './components/shell-layout/ShellMenuState'
 import { MenuItem } from './components/shell-layout/ShellMenu'
@@ -52,6 +53,7 @@ import IconsDemo from './demo/IconsDemo'
 import MultiButtonDoc from './demo/MultiButtonDoc'
 import TreeView from './_Molecules/TreeView'
 import TreeViewDoc from './demo/TreeViewDoc'
+import GuifadLocalDoc from './demo/GuifadLocalDoc'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -63,9 +65,9 @@ const Demo = () => {
     'Base Components',
     'FuseFx Components',
     'Dynamic Reports',
-    'Schema Editor',
     'Technical',
   ]
+  const schemaEditorComponents: string[] = ['Schema Editor']
   const subComponents: { [key: string]: string[] } = {
     'Base Components': [
       'DropdownMultiSelectDemo',
@@ -84,6 +86,7 @@ const Demo = () => {
     ],
     'FuseFx Components': [
       'Guifad',
+      'GuifadLocal',
       'EntityTable',
       'EntityForm',
       'GuifadDemo',
@@ -128,9 +131,34 @@ const Demo = () => {
     }
   })
 
-  const shellMenuState = useMemo(() => {
-    const res: ShellMenuState = loadShellMenuState()
-    setCurrentComponent(res.activeItemId)
+  const schemaEditorItems: MenuItem[] = schemaEditorComponents.map((dc) => {
+    return {
+      label: dc,
+      id: dc,
+      type: subComponents[dc] ? 'Folder' : 'Command',
+      command: (e) => {
+        setCurrentComponent(dc)
+      },
+      children: subComponents[dc]?.map((sc) => {
+        return {
+          label: sc,
+          id: sc,
+          type: 'Command',
+          command: (e) => {
+            setCurrentComponent(sc)
+          },
+        }
+      }),
+    }
+  })
+
+  const shellMenuStates = useMemo(() => {
+    const res: ShellMenuState[] = loadShellMenuStates()
+    const activeShellMenuStateId: string = loadActiveShellMenuState()
+    const activeShellMenuState = res.find((ms) => ms.id == activeShellMenuStateId)
+    if (activeShellMenuState) {
+      setCurrentComponent(activeShellMenuState.activeItemId)
+    }
     return res
   }, [])
 
@@ -142,6 +170,10 @@ const Demo = () => {
       title='Demo'
       shellMenu={{
         items: menuItems,
+        subItems: new Map([
+          ['Components', menuItems],
+          ['Schema Editor', schemaEditorItems],
+        ]),
         topBarItems: [
           {
             icon: (
@@ -161,9 +193,9 @@ const Demo = () => {
           },
         ],
       }}
-      shellMenuState={shellMenuState}
     >
       {currentComponent == 'Guifad' && <GuifadDoc></GuifadDoc>}
+      {currentComponent == 'GuifadLocal' && <GuifadLocalDoc></GuifadLocalDoc>}
       {(currentComponent == 'GuifadDemo' || currentComponent == 'GuifadDemo2') && (
         <TabControl
           tabItems={[

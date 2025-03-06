@@ -10,10 +10,17 @@ const Menu: React.FC<{
   menuItems: MenuItem[]
   shellMenuState: ShellMenuState
   direction: MenuDirection
-}> = ({ menuItems, shellMenuState, direction }) => {
+  filter?: string
+}> = ({ menuItems, shellMenuState, direction, filter }) => {
   switch (direction) {
     case 'Vertical':
-      return <VerticalMenu menuItems={menuItems} shellMenuState={shellMenuState}></VerticalMenu>
+      return (
+        <VerticalMenu
+          menuItems={menuItems}
+          shellMenuState={shellMenuState}
+          filter={filter}
+        ></VerticalMenu>
+      )
     case 'Horizontal':
       return <HorizontalMenu menuItems={menuItems} shellMenuState={shellMenuState}></HorizontalMenu>
   }

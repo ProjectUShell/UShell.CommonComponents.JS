@@ -1,31 +1,61 @@
 modern = false
-hue = 255
+hue = 200
 sat = 5
-satDark = 5
+satDark = 10
 
 primaryColorHue = 225
+lightDirection = 1
+darkBordersDark = false
+lightCurve = [
+  0, 1, 2, 3, 4, 5, 7, 9, 11, 13, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60,
+  63, 66, 69, 72, 75, 78, 81, 84, 87, 90, 93, 96, 99, 100,
+]
+lightCurveDark = [0, 3, 6, 9, 11, 13, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27]
+lightCurveDark2 = [0, 3, 6, 9, 11, 13, 15, 17, 19, 20, 21, 22, 23, 24].reverse()
 
-lightCurve = [0, 1, 2, 3, 4, 5, 7, 9, 11, 13, 15, 18, 21, 24]
-lightCurveDark = [0, 1, 2, 3, 4, 5, 7, 9, 11, 13, 15, 18, 21, 24]
 ligthCurveWeight = 1.2
-ligthCurveWeightDark = 1.0
+ligthCurveWeightDark = 0.25
+ligthCurveWeightDark2 = 0.6
 satCurve = [0, 1, 2, 3, 4, 5, 7, 9, 11, 13, 15, 18, 21, 24]
 satCurveDark = [0, 1, 2, 3, 4, 5, 7, 9, 11, 13, 15, 18, 21, 24]
 
+function getBorder(i, d) {
+  light = getLight(i + 2, d)
+  light = light + 10
+  sat = getSat(i, d)
+  return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
+}
+
 function getBg(i, d) {
+  light = getLight(i, d)
+  s = getSat(i, d)
+  return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
+}
+
+function getLight(i, d) {
   if (d) {
-    light =
-      lightCurveDark[lightCurveDark.length - 1] * ligthCurveWeightDark -
-      lightCurveDark[i] * ligthCurveWeightDark
-    maxSatStep = satCurveDark[satCurveDark.length - 1]
-    s = satDark - (satCurveDark[i] / maxSatStep) * satDark
-    return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
+    if (lightDirection === 1) {
+      light = 3 + lightCurveDark2[i] * ligthCurveWeightDark2
+    } else {
+      light = 12 + lightCurveDark[i] * ligthCurveWeightDark
+    }
+    return light
   } else {
     light = 100 - lightCurve[i] * ligthCurveWeight
+    return light
+  }
+}
+
+function getSat(i, d) {
+  if (d) {
+    maxSatStep = satCurveDark[satCurveDark.length - 1]
+    s = satDark - (satCurveDark[i] / maxSatStep) * satDark
+    return s
+  } else {
     maxSatStep = satCurve[satCurve.length - 1]
     s = sat - (satCurve[i] / maxSatStep) * sat
 
-    return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
+    return s
   }
 }
 
@@ -157,35 +187,35 @@ module.exports = {
         tableBorder: modern ? getBg(6) : getBg(6),
         hoverItem: modern ? getBg(0) : getBg(0),
         contentDark: modern ? getBg(0, 1) : getBg(0, 1),
-        contentBorderDark: modern ? getBg(0, 1) : getBg(0, 1),
+        contentBorderDark: getBorder(0, 1),
         contentHoverDark: modern ? getBg(4, 1) : getBg(4, 1),
         topbarDark: modern ? getBg(6, 1) : getBg(8, 1),
         topbarshadowDark: modern ? getBg(0, 1) : getBg(0, 1),
-        topbarBorderDark: modern ? getBg(12, 1) : getBg(12, 1),
+        topbarBorderDark: modern ? getBorder(6, 1) : getBorder(8, 1),
         menuDark: modern ? getBg(6, 1) : getBg(6, 1),
         menuHoverDark: modern ? getBg(1, 1) : getBg(1, 1),
-        menuBorderDark: modern ? getBg(9, 1) : getBg(9, 1),
+        menuBorderDark: getBorder(6, 1),
         menu1Dark: modern ? getBg(4, 1) : getBg(1, 1),
         menuHover1Dark: modern ? getBg(0, 1) : getBg(4, 1),
         tabBgDark: modern ? getBg(0, 1) : getBg(0, 1),
         tabDark: modern ? getBg(2, 1) : getBg(2, 1),
         tabHoverDark: modern ? getBg(7, 1) : getBg(7, 1),
-        tabBorderDark: modern ? getBg(8, 1) : getBg(8, 1),
+        tabBorderDark: modern ? getBorder(2, 1) : getBorder(2, 1),
         tabSelectedDark: modern ? getBg(6, 1) : getBg(4, 1),
         navigationDark: modern ? getBg(6, 1) : getBg(4, 1),
         navigationHoverDark: modern ? getBg(8, 1) : getBg(6, 1),
-        navigationBorderDark: modern ? getBg(8, 1) : getBg(8, 1),
+        navigationBorderDark: modern ? getBorder(6, 1) : getBorder(4, 1),
         breadcrumbDark: modern ? getBg(6, 1) : getBg(4, 1),
         breadcrumbHoverDark: modern ? getBg(3, 1) : getBg(8, 1),
-        breadcrumbBorderDark: modern ? getBg(8, 1) : getBg(8, 1),
+        breadcrumbBorderDark: modern ? getBorder(6, 1) : getBorder(4, 1),
         toolbarDark: modern ? getBg(0, 1) : getBg(4, 1),
-        toolbarBorderDark: modern ? getBg(6, 1) : getBg(8, 1),
+        toolbarBorderDark: modern ? getBorder(0, 1) : getBorder(4, 1),
         toolbarHoverDark: modern ? getBg(4, 1) : getBg(8, 1),
         tableDark: modern ? getBg(0, 1) : getBg(0, 1),
         tableSelectedDark: modern ? getBg(0, 1) : getBg(0, 1),
         tableHoverDark: modern ? getBg(4, 1) : getBg(4, 1),
         tableHeadDark: modern ? getBg(2, 1) : getBg(2, 1),
-        tableBorderDark: modern ? getBg(6, 1) : getBg(6, 1),
+        tableBorderDark: modern ? getBorder(0, 1) : getBorder(0, 1),
         hoverItemDark: modern ? getBg(0, 1) : getBg(0, 1),
         selectedItemDark: modern ? getBg(0, 1) : getBg(0, 1),
         hairlineMenuDark: modern ? getBg(0, 1) : getBg(0, 1),

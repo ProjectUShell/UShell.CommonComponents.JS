@@ -21,6 +21,9 @@ const Guifad1: React.FC<{
   persistUow: ((uow: any) => void) | undefined
   formStyleType?: number
   labelPosition?: 'top' | 'left'
+  classNameContent?: string
+  classNameAside?: string
+  classNameAsideBorder?: string
 }> = ({
   rootNode,
   dataSourceManager,
@@ -30,6 +33,9 @@ const Guifad1: React.FC<{
   persistUow,
   formStyleType = 0,
   labelPosition = 'top',
+  classNameContent = 'bg-content dark:bg-contentDark',
+  classNameAside = 'bg-navigation dark:bg-navigationDark',
+  classNameAsideBorder = 'border-navigationBorder dark:border-navigationBorderDark',
 }) => {
   // states
   const [nodes, setCurrentNodes] = useState<ObjectGraphNode[]>([rootNode])
@@ -124,15 +130,21 @@ const Guifad1: React.FC<{
   }
 
   return (
-    <div className='w-full h-full flex flex-col overflow-hidden text-sm bg-bg1 dark:bg-bg1dark border-0 border-red-400'>
-      <div className='w-full h-full flex overflow-hidden text-sm bg-content dark:bg-contentDark'>
+    <div
+      className='UShell_Guifad w-full h-full flex flex-col overflow-hidden text-sm 
+        border-0 border-gray-400'
+    >
+      <div
+        className={`UShell_Guifad_Inner w-full h-full flex overflow-hidden text-sm
+       ${classNameContent} border-0 border-blue-400`}
+      >
         <aside
           style={{ minWidth: '72px' }}
-          className='flex flex-col justify-start bg-navigation 
-          dark:bg-navigationDark border-r-0 border-hairlineNavigation dark:border-hairlineNavigationDark w-72 py-0'
+          className={`UShell_Guifad_Aside flex flex-col justify-start
+             ${classNameAside} w-72 py-0`}
         >
           <div className=''>
-            <div className='p-2 m-0 pl-3 pb-3 border-b-0 border-r border-navigationBorder dark:border-navigationBorderDark'>
+            <div className={`p-2 m-0 pl-3 pb-3 border-b-0 border-r ${classNameAsideBorder}`}>
               Structure
             </div>
             <StructureNavigation
@@ -150,6 +162,7 @@ const Guifad1: React.FC<{
               entityLayout={layoutDescription.entityLayouts.find(
                 (el) => el.entityName == node.dataSource.entitySchema?.name,
               )}
+              classNameBorder={classNameAsideBorder}
             ></StructureNavigation>
           </div>
           <div className='w-full h-full max-w-full border-t-2 border-navigationBorder dark:border-navigationBorderDark border-r mt-0'>

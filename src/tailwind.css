@@ -44,15 +44,18 @@
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  width: 5px;
+  /* background: #f1f1f1; */
+  /* background: #f1f1f111; */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  width: 5px;
+  /* background: #888; */
+  background: #88888894;
 }
 
 .Unit::before {

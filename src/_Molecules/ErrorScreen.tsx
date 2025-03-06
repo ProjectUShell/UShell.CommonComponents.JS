@@ -10,7 +10,7 @@ const ErrorPage: React.FC<{ messages?: string[] }> = ({ messages }) => {
         <h1 className='text-4xl font-bold '>Error</h1>
         <div className='mt-4'>
           {messages?.map((m, i) => (
-            <div key={i}>{m}</div>
+            <div key={i}>{m || ''}</div>
           ))}
         </div>
       </div>
