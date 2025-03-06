@@ -8,7 +8,13 @@ This files contains a version history including all changes relevant for semanti
 
 ## Upcoming Changes
 
-- new Features: Application Areas, Filter in Application Navigation, Application Breadcrumb
+*(none)*
+
+
+
+## v 1.3.0
+released **2025-03-06**, including:
+ - **new Feature**s: Application Areas, Filter in Application Navigation, Application Breadcrumb
 
 
 
