@@ -82,28 +82,37 @@ const Guifad1: React.FC<{
 
   const node: ObjectGraphNode = nodes[nodes.length - 1]
 
-  function enterRelation(rel: RelationSchema, r: any) {
-    setCurrentRecord(r)
-    if (r) {
+  function enterRelation(rel: RelationSchema, relatedEntityRef: any) {
+    const ds: IDataSource | null = dataSourceManager.tryGetDataSource(rel.foreignEntityName)
+    if (!ds) {
+      console.error(`No dataSource ${rel.foreignEntityName}`)
+      return
+    }
+
+    if (relatedEntityRef) {
       setCurrentMode('details')
       setCurrentRelation(null)
     } else {
       setCurrentMode('list')
     }
     setCurrentRelation(null)
-    const ds: IDataSource | null = dataSourceManager.tryGetDataSource(rel.foreignEntityName)
-    if (!ds) {
-      console.error(`No dataSource ${rel.foreignEntityName}`)
-      return
-    }
+
     setCurrentNodes((n) => {
       n.push({
         dataSource: ds,
         parent: { ...node, record: currentRecord },
-        record: r,
+        record: relatedEntityRef,
       })
       return [...n]
     })
+    if (relatedEntityRef) {
+      ds.getRecord(relatedEntityRef.key).then((r) => {
+        console.log('relatedEntityRef', r)
+        setCurrentRecord(r)
+      })
+    } else {
+      setCurrentRecord(null)
+    }
   }
 
   function onSelectedRecordsChange(selectedRecords: any[]) {
@@ -142,14 +151,14 @@ const Guifad1: React.FC<{
           schemaRoot={dataSourceManager.getSchemaRoot()}
           nodes={nodes}
           onNodeClick={(n: ObjectGraphNode[], r: any) => {
-            Logger.debug('Breadcrumb', 'onNodeClick', n, r)
+            console.log('onNodeClick', n, r)
             setCurrentRecord(r)
             setCurrentNodes(n)
             const newMode = r ? 'details' : 'list'
             const currentNode: ObjectGraphNode = n[n.length - 1]
             if (currentNode.record && !currentNode.parent) {
-              setCurrentRecord(currentNode.record)
-              setCurrentMode('details')
+              // setCurrentRecord(currentNode.record)
+              // setCurrentMode('details')
             }
             // setCurrentMode(newMode)
           }}

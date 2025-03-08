@@ -47,7 +47,6 @@ const DropdownSelect: React.FC<{
   const [currentText, setCurrentText] = useState<string>(initialOption ? initialOption.label : '')
   const [currentMatchingOptions, setcurrentMatchingOptions] = useState<Option[]>([])
   const [currentMatchingOptionIndex, setCurrentMatchingOptionIndex] = useState<number | null>(null)
-  console.log('classNameDropdownBg', classNameDropdownBg)
 
   useEffect(() => {
     if (!initialOption) {

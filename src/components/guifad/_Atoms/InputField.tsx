@@ -73,7 +73,6 @@ const InputField: React.FC<{
   }, [initialValue, inputType])
 
   const id: string = useMemo(() => crypto.randomUUID(), [])
-  console.log('setabilityFlags', setabilityFlags & 1)
   const disabled =
     readOnly || (isCreation ? (setabilityFlags & 1) == 0 : (setabilityFlags & 2) == 0)
   const classNameInput: string = getInputStyleClassName(

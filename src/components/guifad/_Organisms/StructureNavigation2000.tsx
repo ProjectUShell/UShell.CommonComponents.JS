@@ -104,7 +104,7 @@ const StructureNavigation2000: React.FC<{
             key={er.primaryNavigationName}
             disabled={!currentRecord || dirty}
             style={{ borderRadius: '0.25rem' }}
-            className={`w-full flex gap-1 items-center pl-6  ${
+            className={`w-full flex gap-1 items-center pl-7  ${
               !currentRecord || dirty
                 ? 'text-gray-400 hover:cursor-default'
                 : 'hover:cursor-pointer'

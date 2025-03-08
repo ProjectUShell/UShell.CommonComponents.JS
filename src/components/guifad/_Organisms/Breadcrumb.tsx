@@ -28,7 +28,7 @@ const Breadcrumb: React.FC<{
           ' ' +
           EntitySchemaService.getLabel(
             schemaRoot,
-            succNode.dataSource.entitySchema!.name,
+            succNode.parent.dataSource.entitySchema!.name,
             succNode.parent.record,
           )
       : n.dataSource.entitySchema!.name

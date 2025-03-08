@@ -8,6 +8,7 @@ import {
 import { IDataSource } from 'ushell-modulebase'
 import { FuseDataStore } from './FuseDataStore'
 import { EntitySchemaService } from './EntitySchemaService'
+import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 
 export class FuseDataSourceBody implements IDataSource {
   private url: string
@@ -94,7 +95,16 @@ export class FuseDataSourceBody implements IDataSource {
       })
   }
   getRecord(identityFields: object): Promise<object> {
-    throw new Error('Method not implemented.')
+    const filter: LogicalExpression = EntitySchemaService.getPrimaryKeyExpression(
+      this.entitySchema!,
+      identityFields,
+    )
+    return this.getRecords(filter).then((r) => {
+      if (r.total == 0) {
+        return null
+      }
+      return r.page[0]
+    })
   }
   getEntityRefs(
     filter?: LogicalExpression | undefined,

@@ -115,6 +115,34 @@ export class EntitySchemaService {
     return result
   }
 
+  static getPrimaryKeyExpression(entitySchema: EntitySchema, primaryKey: any): LogicalExpression {
+    const primaryKeyProps: string[] = this.getPrimaryKeyProps(entitySchema)
+    const result: LogicalExpression = new LogicalExpression()
+    result.matchAll = true
+    result.negate = false
+    result.subTree = []
+    result.predicates = []
+
+    if (primaryKeyProps.length == 1) {
+      const value: any = primaryKey
+      result.predicates.push({
+        fieldName: primaryKeyProps[0],
+        operator: '=',
+        value: value,
+      })
+      return result
+    }
+    primaryKeyProps.forEach((pk, i) => {
+      const value: any = primaryKey[`key_${i + 1}`]
+      result.predicates.push({
+        fieldName: pk,
+        operator: '=',
+        value: value,
+      })
+    })
+    return result
+  }
+
   static getRelations(schemaRoot: SchemaRoot, entitySchema: EntitySchema, includeLookups: boolean) {
     return schemaRoot.relations.filter(
       (r) => r.primaryEntityName == entitySchema.name && (includeLookups || !r.isLookupRelation),

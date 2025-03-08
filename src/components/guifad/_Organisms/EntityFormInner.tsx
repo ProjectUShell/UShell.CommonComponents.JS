@@ -53,6 +53,8 @@ const EntityFormInner: React.FC<{
   onValidationChanged,
   minWidthInput,
 }) => {
+  console.log('EntityFormInner', dataSource)
+
   // states
   // const [currentEntity, setCurrentEntity] = useState({ ...entity })
   const [fkRelations, setFkRelations] = useState<RelationSchema[]>([])

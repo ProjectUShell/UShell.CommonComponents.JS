@@ -134,6 +134,9 @@ export const EntityForm1: React.FC<{
   isCreation = false,
   minWidthInput,
 }) => {
+  console.log('EntityForm e', entity)
+  console.log('EntityForm e ds', dataSources)
+
   // states
   const [currentEntity, setCurrentEntity] = useState<any>({ ...entity })
   const [currentDataSource, setCurrentDataSource] = useState(guessDataSource())
@@ -145,6 +148,7 @@ export const EntityForm1: React.FC<{
   const [errors, setErrors] = useState<{ [fieldName: string]: string | null }>({})
 
   // useEffects
+  console.log('EntityForm ce', currentEntity)
 
   useEffect(() => setCurrentEntity({ ...entity }), [entity])
 
@@ -155,6 +159,11 @@ export const EntityForm1: React.FC<{
     if (!uow.editingEntity) return
     setCurrentEntity(uow.editingEntity)
   }, [])
+
+  useEffect(() => {
+    setCurrentEntity({ ...entity })
+    setCurrentDataSource(guessDataSource())
+  }, [entity])
 
   useEffect(() => {
     if (!persistUow) return
@@ -228,7 +237,6 @@ export const EntityForm1: React.FC<{
     }
     return true
   }
-  console.log('classNameDropdownBg', classNameDropdownBg)
 
   return (
     <div className='UShell_EntityForm flex flex-col h-full w-full overflow-hidden border-0 border-green-400'>
