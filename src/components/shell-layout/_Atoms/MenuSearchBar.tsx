@@ -10,7 +10,7 @@ const MenuSearchBar: React.FC<MenuSearchBarProps> = ({ filter, setFilter }) => {
   return (
     <div
       className='bg-content dark:bg-contentDark p-0 px-4 text-sm w-full 
-    flex justify-between items-center content-center border-b-2 border-menuBorder dark:border-menuBorderDark'
+    flex justify-between items-center content-center border-b border-menuBorder dark:border-menuBorderDark'
     >
       <input
         className='bg-content dark:bg-contentDark outline-none w-full border-0 p-2'

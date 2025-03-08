@@ -24,7 +24,9 @@ const ShellLayout: React.FC<{
   shellMenu: ShellMenu
   children: any
   title: JSX.Element | string
-}> = ({ shellMenu, children, title }) => {
+  showBreadcrumb?: boolean
+  showSearchBar?: boolean
+}> = ({ shellMenu, children, title, showBreadcrumb, showSearchBar }) => {
   const [shellSettings, setShellSettings] = useState<ShellSettings>({
     colorMode: ColorMode.Light,
     layoutMode: LayoutMode.Vertical,
@@ -122,6 +124,8 @@ const ShellLayout: React.FC<{
             sidebarOpen={sidebarOpen}
             menuItems={getActiveShellMenuItems()}
             shellMenuState={getActiveShellMenuState()}
+            showBreadcrumb={showBreadcrumb}
+            showSearchBar={showSearchBar}
           >
             {children}
           </VerticalShellLayout>

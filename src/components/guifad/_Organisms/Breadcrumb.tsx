@@ -43,21 +43,26 @@ const Breadcrumb: React.FC<{
   }
 
   return (
-    <div className='font-bold flex p-1'>
-      <div className='h-full w-full bg-breadcrumb dark:bg-breadcrumbDark flex items-center content-center align-middle'>
-        {nodes.map((n, i) => (
-          <div key={i} className='flex justify-start'>
-            {i > 0 && <span className='py-1 m-0'>/</span>}
-            <button
-              disabled={dirty}
-              className={`rounded-sm p-1 m-0
+    <div className='font-bold flex p-2'>
+      <div
+        style={{ borderRadius: '0.25rem' }}
+        className='flex w-full border-0 justify-start bg-navigation dark:bg-navigationDark border-menuBorder dark:border-menuBorderDark'
+      >
+        <div className='h-full w-full1 flex justify-start items-center content-center align-middle'>
+          {nodes.map((n, i) => (
+            <div key={i} className='flex justify-start py-1 pl-1  w-full gap-1'>
+              {i > 0 && <span className='py-1 m-0'>\</span>}
+              <button
+                disabled={dirty}
+                className={`rounded-sm p-1 m-0
               ${dirty ? '' : 'hover:bg-breadcrumbHover dark:hover:bg-breadcrumbHoverDark'}`}
-              onClick={() => onNodeClick(nodes.slice(0, i + 1), getCallingRecord(i))}
-            >
-              {getLabel(n, i)}
-            </button>
-          </div>
-        ))}
+                onClick={() => onNodeClick(nodes.slice(0, i + 1), getCallingRecord(i))}
+              >
+                {getLabel(n, i)}
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

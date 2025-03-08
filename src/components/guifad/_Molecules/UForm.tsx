@@ -104,6 +104,11 @@ const UForm: React.FC<{
                     showLabel={labelPosition == 'top'}
                     styleType={styleType}
                     allowCrud={getAllowCrud(fk)}
+                    classNameBg={classNameBg}
+                    classNameHoverBg={classNameInputHoverBg}
+                    classNameHoverBgDark={classNameInputHoverBgDark}
+                    classNameDropdownBg={classNameDropdownBg}
+                    classNameDropdownHoverBg={classNameDropdownHoverBg}
                   ></LookUpSelect>
                 ),
               }

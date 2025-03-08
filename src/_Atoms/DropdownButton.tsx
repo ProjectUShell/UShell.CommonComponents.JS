@@ -24,7 +24,7 @@ const DropdownButton: React.FC<{
     <>
       <button
         id={refId}
-        className={`rounded-md p-1 relative ${open && 'z-50'} border-0 border-blue-400`}
+        className={`rounded-md p-0 relative ${open && 'z-50'} border-0 border-blue-400`}
         onClick={(e) => setOpen((o) => !o)}
       >
         {buttonContent}

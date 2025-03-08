@@ -116,8 +116,6 @@ const TabControl: React.FC<{
   classNameHoverBg,
   styleType = 0,
 }) => {
-
-  Logger.debug('TabControl initialActiveTabIndex', initialActiveTabIndex)
   const [activeTabIndex, setActiveTabIndex] = useState(initialActiveTabIndex)
   // function onTabChange(tabId: string) {
   //   onTabChange(tab)

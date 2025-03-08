@@ -47,6 +47,7 @@ const DropdownSelect: React.FC<{
   const [currentText, setCurrentText] = useState<string>(initialOption ? initialOption.label : '')
   const [currentMatchingOptions, setcurrentMatchingOptions] = useState<Option[]>([])
   const [currentMatchingOptionIndex, setCurrentMatchingOptionIndex] = useState<number | null>(null)
+  console.log('classNameDropdownBg', classNameDropdownBg)
 
   useEffect(() => {
     if (!initialOption) {
@@ -184,6 +185,7 @@ const DropdownSelect: React.FC<{
   const refId: string = useMemo(() => {
     return 'UShell_DropdownSelect_' + crypto.randomUUID()
   }, [])
+
   return (
     <div className='UShell_DropdownSelect w-full' onBlur={(e) => setOpen(false)}>
       {/* <button onClick={(e) => setOpen(true)}> */}

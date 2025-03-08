@@ -73,9 +73,9 @@ const InputField: React.FC<{
   }, [initialValue, inputType])
 
   const id: string = useMemo(() => crypto.randomUUID(), [])
-
-  const fixAfterCreation: boolean = setabilityFlags < 6 //TODO adjust setability check after Fix in EntityAnnotations
-  const disabled: boolean = readOnly || (fixAfterCreation && !isCreation)
+  console.log('setabilityFlags', setabilityFlags & 1)
+  const disabled =
+    readOnly || (isCreation ? (setabilityFlags & 1) == 0 : (setabilityFlags & 2) == 0)
   const classNameInput: string = getInputStyleClassName(
     styleType,
     classNameBg,
@@ -280,7 +280,7 @@ export function getInputStyleClassName(
          : 'focus:border-prim4 dark:focus:border-prim6'
      }
         ${styleType == 0 ? 'border-b-2   ' : 'border-2 '}          
-        ${classNameBg || 'bg-bg3 dark:bg-bg3dark'}
+        ${classNameBg || 'bg-editor dark:bg-editorDark'}
         ${
           disabled
             ? ''

@@ -168,6 +168,7 @@ const Demo = () => {
     // <QueryClientProvider client={queryClient}>
     <ShellLayout
       title='Demo'
+      showBreadcrumb={true}
       shellMenu={{
         items: menuItems,
         subItems: new Map([

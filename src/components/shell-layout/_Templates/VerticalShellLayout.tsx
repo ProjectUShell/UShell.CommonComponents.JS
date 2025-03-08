@@ -10,7 +10,9 @@ const VerticalShellLayout: React.FC<{
   menuItems: MenuItem[]
   shellMenuState: ShellMenuState
   children: any
-}> = ({ sidebarOpen, menuItems, shellMenuState, children }) => {
+  showBreadcrumb?: boolean
+  showSearchBar?: boolean
+}> = ({ sidebarOpen, menuItems, shellMenuState, children, showBreadcrumb, showSearchBar }) => {
   const [searchFilter, setSearchFilter] = useState('')
 
   return (
@@ -39,9 +41,11 @@ const VerticalShellLayout: React.FC<{
       )}
       {/* Content */}
       <div className='flex flex-col w-screen h-full overflow-y-hidden border-0 border-blue-400'>
-        <div className=''>
-          <AppBreadcrumb shellMenuState={shellMenuState} menuItems={menuItems}></AppBreadcrumb>
-        </div>
+        {showBreadcrumb && (
+          <div className=''>
+            <AppBreadcrumb shellMenuState={shellMenuState} menuItems={menuItems}></AppBreadcrumb>
+          </div>
+        )}
         <div
           className='w-full flex h-full min-w-0 
           bg-bg2 dark:bg-bg2dark overflow-hidden border-0 border-red-400'

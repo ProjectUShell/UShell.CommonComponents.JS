@@ -11,6 +11,8 @@ import PreviewTable from '../_Organisms/PreviewTable'
 import ErrorPage from '../../../_Molecules/ErrorScreen'
 import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutDescriptionRoot'
 import { IDataSourceManagerWidget } from './IDataSourceManagerWidget'
+import StructureNavigation2000 from '../_Organisms/StructureNavigation2000'
+import { Logger } from '../../../[Move2Logging]/Logger'
 
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
@@ -127,6 +129,7 @@ const Guifad1: React.FC<{
     setCurrentRecord(newRecord)
     setCurrentMode('details')
     setIsCreation(true)
+    setDirty(true)
   }
 
   return (
@@ -134,20 +137,39 @@ const Guifad1: React.FC<{
       className='UShell_Guifad w-full h-full flex flex-col overflow-hidden text-sm 
         border-0 border-gray-400'
     >
+      <header className='flex flex-col bg-breadcrumb dark:bg-breadcrumbDark border-b border-breadcrumbBorder dark:border-breadcrumbBorderDark border-l-0'>
+        <Breadcrumb
+          schemaRoot={dataSourceManager.getSchemaRoot()}
+          nodes={nodes}
+          onNodeClick={(n: ObjectGraphNode[], r: any) => {
+            Logger.debug('Breadcrumb', 'onNodeClick', n, r)
+            setCurrentRecord(r)
+            setCurrentNodes(n)
+            const newMode = r ? 'details' : 'list'
+            const currentNode: ObjectGraphNode = n[n.length - 1]
+            if (currentNode.record && !currentNode.parent) {
+              setCurrentRecord(currentNode.record)
+              setCurrentMode('details')
+            }
+            // setCurrentMode(newMode)
+          }}
+          dirty={dirty}
+        ></Breadcrumb>
+      </header>
       <div
         className={`UShell_Guifad_Inner w-full h-full flex overflow-hidden text-sm
        ${classNameContent} border-0 border-blue-400`}
       >
         <aside
           style={{ minWidth: '72px' }}
-          className={`UShell_Guifad_Aside flex flex-col justify-start
+          className={`UShell_Guifad_Aside flex flex-col justify-between
              ${classNameAside} w-72 py-0`}
         >
-          <div className=''>
-            <div className={`p-2 m-0 pl-3 pb-3 border-b-0 border-r ${classNameAsideBorder}`}>
+          <div className='border-b border-r h-full border-navigationBorder dark:border-navigationBorderDark'>
+            {/* <div className={`p-2 m-0 pl-3 pb-3 border-b-0 border-r ${classNameAsideBorder}`}>
               Structure
-            </div>
-            <StructureNavigation
+            </div> */}
+            <StructureNavigation2000
               schemaRoot={dataSourceManager.getSchemaRoot()}
               currentRecord={currentRecord}
               hideList={node.record && !node.parent}
@@ -157,18 +179,21 @@ const Guifad1: React.FC<{
               setMode={(mode: 'list' | 'details') => setCurrentMode(mode)}
               mode={currentMode}
               currentRelation={currentRelation}
-              className='w-full h-1/2 '
+              className='w-full h-1/2123 '
               dirty={dirty}
               entityLayout={layoutDescription.entityLayouts.find(
                 (el) => el.entityName == node.dataSource.entitySchema?.name,
               )}
               classNameBorder={classNameAsideBorder}
-            ></StructureNavigation>
+            ></StructureNavigation2000>
           </div>
-          <div className='w-full h-full max-w-full border-t-2 border-navigationBorder dark:border-navigationBorderDark border-r mt-0'>
+          <div className='w-full h-full max-w-full border-t-0 border-navigationBorder dark:border-navigationBorderDark border-r mt-0'>
             {currentRelation && currentRecord && (
               <>
-                <div className='p-2 m-0 pl-3 pb-3 border-b-0 border-b-bg7 border-r-0 border-hairlineNavigation dark:border-hairlineNavigationDark'>
+                <div
+                  className='p-2 m-0 pl-3 pb-3 border-b-0 font-bold
+                 border-b-bg7 border-r-0 border-hairlineNavigation dark:border-hairlineNavigationDark'
+                >
                   Preview Table
                 </div>
                 <PreviewTable
@@ -189,7 +214,7 @@ const Guifad1: React.FC<{
           {/* {!currentRelation && <div className='h-full w-64 pr-1 mt-1'></div>} */}
         </aside>
         <div className='h-full w-full flex flex-col min-w-0'>
-          <header className='flex flex-col bg-breadcrumb dark:bg-breadcrumbDark border-b border-breadcrumbBorder dark:border-breadcrumbBorderDark border-l-0'>
+          {/* <header className='flex flex-col bg-breadcrumb dark:bg-breadcrumbDark border-b border-breadcrumbBorder dark:border-breadcrumbBorderDark border-l-0'>
             <Breadcrumb
               schemaRoot={dataSourceManager.getSchemaRoot()}
               nodes={nodes}
@@ -206,8 +231,8 @@ const Guifad1: React.FC<{
               }}
               dirty={dirty}
             ></Breadcrumb>
-          </header>
-          <div className='p-2 h-full overflow-auto'>
+          </header> */}
+          <div className='p-0 h-full overflow-auto'>
             {currentMode == 'list' && (
               <EntityTable
                 dataSourceManagerForNavigations={dataSourceManager}
@@ -229,6 +254,7 @@ const Guifad1: React.FC<{
                 layoutDescription={layoutDescription}
                 formStyleType={formStyleType}
                 formLabelPosition={labelPosition}
+                className='px-2 pb-1'
               ></EntityTable>
             )}
             {currentMode == 'details' && (
@@ -237,7 +263,14 @@ const Guifad1: React.FC<{
                 dataSource={node.dataSource}
                 entity={currentRecord}
                 dirty={dirty}
-                setDirty={setDirty}
+                setDirty={(d) => {
+                  if (!d && isCreation) {
+                    setCurrentRecord(null)
+                    setCurrentMode('list')
+                    setIsCreation(false)
+                  }
+                  setDirty(d)
+                }}
                 onSaved={(updatedEntity: any) => {
                   setCurrentRecord(updatedEntity)
                   setDirty(false)
@@ -251,6 +284,7 @@ const Guifad1: React.FC<{
                 persistUow={persistUow}
                 isCreation={isCreation}
                 labelPosition={labelPosition}
+                classNameDropdownBg='bg-editor dark:bg-editorDark'
               ></EntityForm>
             )}
           </div>

@@ -228,17 +228,19 @@ export const EntityForm1: React.FC<{
     }
     return true
   }
+  console.log('classNameDropdownBg', classNameDropdownBg)
+
   return (
     <div className='UShell_EntityForm flex flex-col h-full w-full overflow-hidden border-0 border-green-400'>
       {toolbar == 'top' && (
         <div
           className={`UShell_EntityForm_Toolbar bg-toolbar dark:bg-toolbarDark flex justify-start p-1 rounded-sm 
-            border border-toolbarBorder dark:border-toolbarBorderDark my-1`}
+            border-b border-toolbarBorder dark:border-toolbarBorderDark my-0`}
         >
           {setDirty && dirty && (
             <button
               disabled={!dirty}
-              className={`rounded-md p-1
+              className={`rounded-md p-2
               ${
                 dirty
                   ? 'text-red-400 dark:text-red-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
@@ -246,13 +248,13 @@ export const EntityForm1: React.FC<{
               }`}
               onClick={(e) => cancel()}
             >
-              <XMarkIcon size={6}></XMarkIcon>
+              <XMarkIcon size={1.5}></XMarkIcon>
             </button>
           )}
           {setDirty && !dirty && (
             <button
               disabled={dirty}
-              className={`rounded-md p-1
+              className={`rounded-md p-2
               ${
                 !dirty
                   ? 'text-blue-400 dark:text-blue-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
@@ -260,12 +262,12 @@ export const EntityForm1: React.FC<{
               }`}
               onClick={(e) => setDirty(true)}
             >
-              <BoltIcon size={6}></BoltIcon>
+              <BoltIcon size={1.5}></BoltIcon>
             </button>
           )}
           <button
             disabled={!isValid() || !(dirty || dirtyLocal)}
-            className={`rounded-md p-1 
+            className={`rounded-md p-2 
             ${
               !(!isValid() || !(dirty || dirtyLocal))
                 ? 'text-blue-400 dark:text-blue-400 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
@@ -273,7 +275,7 @@ export const EntityForm1: React.FC<{
             }`}
             onClick={(e) => save()}
           >
-            <FloppyDiskIcon size={6}></FloppyDiskIcon>
+            <FloppyDiskIcon size={1.5}></FloppyDiskIcon>
           </button>
         </div>
       )}

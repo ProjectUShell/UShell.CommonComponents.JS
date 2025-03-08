@@ -64,7 +64,11 @@ const FilterTag: React.FC<{
       leftOffset={1}
       topOffset={-1}
       buttonContent={
-        <div className='group rounded-sm p-1 bg-bg3 hover:bg-bg4 dark:bg-bg3dark dark:hover:bg-bg1dark flex gap-1'>
+        <div
+          className='group rounded-sm p-1
+         bg-toolbar hover:bg-toolbarHover dark:bg-toolbarDark dark:hover:bg-toolbarHoverDark
+          flex gap-1 items-center border border-toolbarBorder dark:border-toolbarBorderDark'
+        >
           <div className=''>{getLabel(filter)}</div>
           <div
             className='hover:bg-bg6 hover:dark:bg-backgroundtwodark w-auto group-hover:visible group-hover:w-auto '
@@ -74,7 +78,7 @@ const FilterTag: React.FC<{
               onDelete()
             }}
           >
-            <XMarkIcon size={4}></XMarkIcon>
+            <XMarkIcon size={1.5}></XMarkIcon>
           </div>
         </div>
       }

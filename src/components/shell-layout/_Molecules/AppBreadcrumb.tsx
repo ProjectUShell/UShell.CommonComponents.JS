@@ -49,7 +49,7 @@ const AppBreadcrumb: React.FC<{ shellMenuState: ShellMenuState; menuItems: MenuI
     <div
       className='bg-content dark:bg-contentDark p-0 
         px-4 text-sm w-full flex justify-start items-center content-center 
-        border-b-2 border-menuBorder dark:border-menuBorderDark'
+        border-b border-menuBorder dark:border-menuBorderDark'
     >
       {breadcrumbItems.map((bi, i) => (
         <div key={bi.id + '0'} className='pr-1 py-1 flex items-center text-sm'>

@@ -185,7 +185,7 @@ const Dropdown: React.FC<{
             left: getLeft(),
             right: getRight(),
           }}
-          className={`fixed z-50  shadow-lg overflow-hidden 
+          className={`fixed z-50  shadow-lg dark:shadow-bg10dark  overflow-hidden 
              flex flex-col justify-center items-center w-max ${className} border-0 bg-transparent border-pink-400`}
         >
           {children}

@@ -28,7 +28,14 @@ function getBorder(i, d) {
 
 function getHover(i, d) {
   light = getLight(i + 2, d)
-  light = light + (d ? 10 : -10)
+  light = light + (d ? 12 : -10)
+  sat = getSat(i, d)
+  return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
+}
+
+function getSelected(i, d) {
+  light = getLight(i + 2, d)
+  light = light + (d ? 7 : -5)
   sat = getSat(i, d)
   return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
 }
@@ -166,6 +173,9 @@ module.exports = {
         content: modern ? getBg(0) : getBg(0),
         contentBorder: modern ? getBorder(0) : getBorder(0),
         contentHover: modern ? getHover(0) : getHover(0),
+        editor: getBg(3),
+        editorBorder: getBorder(3),
+        editorHover: getHover(3),
         topbar: modern ? getBg(5) : getBg(8),
         topbarHover: modern ? getHover(5) : getHover(8),
         topbarshadow: modern ? getBg(0) : getBg(0),
@@ -181,6 +191,7 @@ module.exports = {
         tabSelected: modern ? getBg(4) : getBg(4),
         navigation: modern ? getBg(5) : getBg(4),
         navigationHover: modern ? getHover(5) : getHover(4),
+        navigationSelected: modern ? getSelected(5) : getSelected(4),
         navigationBorder: modern ? getBorder(5) : getBorder(4),
         breadcrumb: modern ? getBg(5) : getBg(4),
         breadcrumbHover: modern ? getHover(5) : getHover(4),
@@ -197,6 +208,9 @@ module.exports = {
         contentDark: modern ? getBg(0, 1) : getBg(0, 1),
         contentBorderDark: getBorder(0, 1),
         contentHoverDark: modern ? getHover(0, 1) : getHover(0, 1),
+        editorDark: getBg(3, 1),
+        editorBorderDark: getBorder(3, 1),
+        editorHoverDark: getHover(3, 1),
         topbarDark: modern ? getBg(6, 1) : getBg(8, 1),
         topbarHoverDark: modern ? getHover(6, 1) : getHover(8, 1),
         topbarshadowDark: modern ? getBg(0, 1) : getBg(0, 1),
@@ -212,14 +226,15 @@ module.exports = {
         tabBorderDark: modern ? getBorder(2, 1) : getBorder(2, 1),
         tabSelectedDark: modern ? getBg(6, 1) : getBg(4, 1),
         navigationDark: modern ? getBg(6, 1) : getBg(4, 1),
-        navigationHoverDark: modern ? getHover(2, 1) : getHover(0, 1),
+        navigationHoverDark: modern ? getHover(6, 1) : getHover(4, 1),
+        navigationSelectedDark: modern ? getSelected(6, 1) : getSelected(4, 1),
         navigationBorderDark: modern ? getBorder(6, 1) : getBorder(4, 1),
         breadcrumbDark: modern ? getBg(6, 1) : getBg(4, 1),
         breadcrumbHoverDark: modern ? getHover(6, 1) : getHover(4, 1),
         breadcrumbBorderDark: modern ? getBorder(6, 1) : getBorder(4, 1),
         toolbarDark: modern ? getBg(0, 1) : getBg(4, 1),
         toolbarBorderDark: modern ? getBorder(0, 1) : getBorder(4, 1),
-        toolbarHoverDark: modern ? getHover(0, 1) : getHover(4, 1),
+        toolbarHoverDark: modern ? getHover(1, 1) : getHover(5, 1),
         tableDark: modern ? getBg(0, 1) : getBg(0, 1),
         tableSelectedDark: modern ? getBg(0, 1) : getBg(0, 1),
         tableHoverDark: modern ? getHover(0, 1) : getHover(0, 1),

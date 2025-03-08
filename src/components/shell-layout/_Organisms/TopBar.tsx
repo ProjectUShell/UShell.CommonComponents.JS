@@ -32,11 +32,6 @@ const TopBar: React.FC<{
   tabItems,
   initialActiveTabIndex,
 }) => {
-  Logger.debug(
-    'TopBar initialActiveTabIndex',
-    initialActiveTabIndex,
-  )
-
   return (
     <header
       style={{ borderBottomWidth: shellSettings.colorMode == ColorMode.Dark ? '1px' : '0px' }}

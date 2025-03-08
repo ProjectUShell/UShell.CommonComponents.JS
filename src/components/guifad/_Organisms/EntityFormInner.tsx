@@ -173,7 +173,7 @@ const EntityFormInner: React.FC<{
   }
 
   return (
-    <div className='UShell_EntityFormInner flex flex-col h-full overflow-auto pr-1'>
+    <div className='UShell_EntityFormInner flex flex-col h-full overflow-auto px-1'>
       {entityLayout?.partitions
         .filter((p) => p.type == 'group')
         .map((p, i) => (

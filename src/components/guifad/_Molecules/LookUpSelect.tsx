@@ -17,6 +17,8 @@ const LookUpSelect: React.FC<{
   classNameBg?: string
   classNameHoverBg?: string
   classNameHoverBgDark?: string
+  classNameDropdownBg?: string
+  classNameDropdownHoverBg?: string
   showLabel?: boolean
   allowCrud?: boolean
 }> = ({
@@ -28,6 +30,8 @@ const LookUpSelect: React.FC<{
   classNameBg,
   classNameHoverBg,
   classNameHoverBgDark,
+  classNameDropdownBg,
+  classNameDropdownHoverBg,
   showLabel = true,
   allowCrud = false,
   label = lookUpRelation.foreignNavigationName && lookUpRelation.foreignNavigationName != ''
@@ -95,6 +99,8 @@ const LookUpSelect: React.FC<{
         classNameBg={classNameBg}
         classNameHoverBg={classNameHoverBg}
         classNameHoverBgDark={classNameHoverBgDark}
+        classNameDropdownBg={classNameDropdownBg}
+        classNameDropdownHoverBg={classNameDropdownHoverBg}
         styleType={styleType}
         additionalElements={
           allowCrud
