@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { MenuItem } from '../ShellMenu'
+import { MenuItem, ShellMenu } from '../ShellMenu'
 import ChevronDown from '../_Icons/ChevronDown'
 import {
   ShellMenuState,
@@ -11,12 +11,13 @@ import {
 import ChevronRightIcon from '../../../_Icons/ChevronRightIcon'
 
 const VerticalMenu: React.FC<{
+  shellMenu: ShellMenu
   menuItems: MenuItem[]
   shellMenuState: ShellMenuState
   className?: string
   menuItemHoverClassName?: string
   filter?: string
-}> = ({ menuItems, shellMenuState, className, menuItemHoverClassName, filter }) => {
+}> = ({ shellMenu, menuItems, shellMenuState, className, menuItemHoverClassName, filter }) => {
   const [, setRerenderTrigger] = useState(0)
   // const [shellMenuState] = useState<ShellMenuState>(loadShellMenuState())
 
@@ -45,7 +46,8 @@ const VerticalMenu: React.FC<{
 
   return (
     <VerticalMenuInternal
-      menuItems={getFilteredItems(menuItems)}
+      menuItems={menuItems}
+      shellMenu={shellMenu}
       depth={0}
       triggerRerender={triggerRerender}
       shellMenuState={shellMenuState}
@@ -57,12 +59,21 @@ const VerticalMenu: React.FC<{
 
 const VerticalMenuInternal: React.FC<{
   menuItems: MenuItem[]
+  shellMenu: ShellMenu
   depth: number
   triggerRerender: () => void
   shellMenuState: ShellMenuState
   className?: string
   menuItemHoverClassName?: string
-}> = ({ menuItems, depth, triggerRerender, shellMenuState, className, menuItemHoverClassName }) => {
+}> = ({
+  menuItems,
+  shellMenu,
+  depth,
+  triggerRerender,
+  shellMenuState,
+  className,
+  menuItemHoverClassName,
+}) => {
   function onToggleFolderCollapse(itemId: string) {
     toggleFolderCollapse(shellMenuState!, itemId).then((newState: ShellMenuState) => {
       // setShellMenuState(newState);
@@ -98,7 +109,7 @@ const VerticalMenuInternal: React.FC<{
                 onToggleFolderCollapse(mi.id)
               }
               if (mi.type == 'Command') {
-                activateItem(mi, shellMenuState)
+                activateItem(mi, shellMenu, shellMenuState)
               }
               triggerRerender()
             }}
@@ -125,6 +136,7 @@ const VerticalMenuInternal: React.FC<{
           {mi.type == 'Group' && (
             <VerticalMenuInternal
               menuItems={mi.children!}
+              shellMenu={shellMenu}
               depth={depth + 1}
               triggerRerender={triggerRerender}
               shellMenuState={shellMenuState}
@@ -134,6 +146,7 @@ const VerticalMenuInternal: React.FC<{
           {mi.type == 'Folder' && !getItemState(shellMenuState!, mi.id).collapsed && (
             <VerticalMenuInternal
               menuItems={mi.children!}
+              shellMenu={shellMenu}
               depth={depth + 1}
               triggerRerender={triggerRerender}
               shellMenuState={shellMenuState}

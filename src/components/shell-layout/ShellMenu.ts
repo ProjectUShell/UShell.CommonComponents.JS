@@ -38,6 +38,19 @@ export function findMenuItem(items: MenuItem[], id: string): MenuItem | undefine
   return undefined
 }
 
+export function getCommandItems(items: MenuItem[]): MenuItem[] {
+  const result: MenuItem[] = []
+  for (const item of items) {
+    if (item.type === 'Command') {
+      result.push(item)
+    }
+    if (item.children) {
+      result.push(...getCommandItems(item.children))
+    }
+  }
+  return result
+}
+
 export function findParentItem(items: MenuItem[], id: string): MenuItem | undefined {
   for (const item of items) {
     if (

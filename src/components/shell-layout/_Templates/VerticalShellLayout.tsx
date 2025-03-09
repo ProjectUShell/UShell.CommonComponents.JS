@@ -8,11 +8,20 @@ import AppBreadcrumb from '../_Molecules/AppBreadcrumb'
 const VerticalShellLayout: React.FC<{
   sidebarOpen: boolean
   menuItems: MenuItem[]
+  shellMenu: ShellMenu
   shellMenuState: ShellMenuState
   children: any
   showBreadcrumb?: boolean
   showSearchBar?: boolean
-}> = ({ sidebarOpen, menuItems, shellMenuState, children, showBreadcrumb, showSearchBar }) => {
+}> = ({
+  sidebarOpen,
+  menuItems,
+  shellMenu,
+  shellMenuState,
+  children,
+  showBreadcrumb,
+  showSearchBar,
+}) => {
   const [searchFilter, setSearchFilter] = useState('')
 
   return (
@@ -32,6 +41,7 @@ const VerticalShellLayout: React.FC<{
           <div className='flex flex-col overflow-auto pb-1'>
             <Menu
               menuItems={menuItems}
+              shellMenu={shellMenu}
               shellMenuState={shellMenuState}
               direction='Vertical'
               filter={searchFilter}

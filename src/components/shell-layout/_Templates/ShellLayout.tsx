@@ -9,7 +9,7 @@ import {
   saveShellSettings,
   ShellSettings,
 } from '../ShellSettings'
-import { findMenuItem, MenuItem, ShellMenu } from '../ShellMenu'
+import { findMenuItem, getCommandItems, MenuItem, ShellMenu } from '../ShellMenu'
 import {
   activateItem,
   loadActiveShellMenuState,
@@ -27,6 +27,8 @@ const ShellLayout: React.FC<{
   showBreadcrumb?: boolean
   showSearchBar?: boolean
 }> = ({ shellMenu, children, title, showBreadcrumb, showSearchBar }) => {
+  console.log('shellMenu', shellMenu)
+
   const [shellSettings, setShellSettings] = useState<ShellSettings>({
     colorMode: ColorMode.Light,
     layoutMode: LayoutMode.Vertical,
@@ -44,7 +46,15 @@ const ShellLayout: React.FC<{
     const activeItem: MenuItem | undefined = findMenuItem(menuItems, shellMenuState.activeItemId)
 
     if (activeItem) {
-      activateItem(activeItem, shellMenuState)
+      activateItem(activeItem, shellMenu, shellMenuState)
+    } else {
+      if (menuItems.length > 0) {
+        const commandItems = getCommandItems(menuItems)
+        if (commandItems.length > 0) {
+          setActiveShellMenuState(commandItems[0].id)
+          activateItem(commandItems[0], shellMenu, shellMenuState)
+        }
+      }
     }
   }, [activeMenuItemsKey])
 
@@ -85,6 +95,7 @@ const ShellLayout: React.FC<{
   const topBarTabs: TopBarTab[] = useMemo(() => {
     const result: TopBarTab[] = []
     if (shellMenu.subItems) {
+      console.log('shellMenu.subItems', shellMenu.subItems)
       Array.from(shellMenu.subItems.keys()).forEach((k) => {
         result.push({
           label: k,
@@ -122,6 +133,7 @@ const ShellLayout: React.FC<{
         {shellSettings.layoutMode == LayoutMode.Vertical ? (
           <VerticalShellLayout
             sidebarOpen={sidebarOpen}
+            shellMenu={shellMenu}
             menuItems={getActiveShellMenuItems()}
             shellMenuState={getActiveShellMenuState()}
             showBreadcrumb={showBreadcrumb}
@@ -131,6 +143,7 @@ const ShellLayout: React.FC<{
           </VerticalShellLayout>
         ) : (
           <HorizontalShellLayout
+            shellMenu={shellMenu}
             menuItems={getActiveShellMenuItems()}
             shellMenuState={getActiveShellMenuState()}
           >

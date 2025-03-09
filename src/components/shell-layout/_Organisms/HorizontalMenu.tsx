@@ -1,14 +1,15 @@
 import React, { createRef, useState } from 'react'
-import { MenuItem } from '../ShellMenu'
+import { MenuItem, ShellMenu } from '../ShellMenu'
 import ChevronDown from '../_Icons/ChevronDown'
 import Dropdown from '../../../_Atoms/Dropdown'
 import VerticalMenu from './VerticalMenu'
 import { ShellMenuState, activateItem, loadShellMenuStates } from '../ShellMenuState'
 
-const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMenuState }> = ({
-  menuItems,
-  shellMenuState,
-}) => {
+const HorizontalMenu: React.FC<{
+  menuItems: MenuItem[]
+  shellMenu: ShellMenu
+  shellMenuState: ShellMenuState
+}> = ({ menuItems, shellMenu, shellMenuState }) => {
   const [openStateById, setOpenStateById] = useState<{ [id: string]: boolean }>({})
   // const [shellMenuState] = useState<ShellMenuState>(loadShellMenuState())
 
@@ -26,7 +27,7 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
           <div key={mi.id}>
             <div
               className='flex items-center justify-between px-2 py-3 hover:bg-red-400 dark:hover:bg-red-400 cursor-pointer'
-              onClick={(e) => activateItem(mi, shellMenuState)}
+              onClick={(e) => activateItem(mi, shellMenu, shellMenuState)}
             >
               <div className='px-1'>{mi.label}</div>
             </div>
@@ -86,7 +87,8 @@ const HorizontalMenu: React.FC<{ menuItems: MenuItem[]; shellMenuState: ShellMen
                       }}
                     >
                       <VerticalMenu
-                        menuItems={mi.children}
+                        shellMenu={shellMenu}
+                        menuItems={menuItems}
                         shellMenuState={shellMenuState}
                         className='bg-menu1 dark:bg-menu1Dark'
                         menuItemHoverClassName='hover:bg-menuHover1 dark:hover:bg-menuHover1Dark'

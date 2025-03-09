@@ -23,7 +23,7 @@ import {
   loadShellMenuStates,
   ShellMenuState,
 } from './components/shell-layout/ShellMenuState'
-import { MenuItem } from './components/shell-layout/ShellMenu'
+import { MenuItem, ShellMenu } from './components/shell-layout/ShellMenu'
 import { SchemaRoot } from 'fusefx-modeldescription'
 import { ISchemaProvider } from './components/schema-editor/ISchemaProvider'
 import TabControl, { TabItem } from './_Organisms/TabControl'
@@ -164,37 +164,35 @@ const Demo = () => {
 
   const shellSettings = loadShellSettings()
 
+  const shellMenu: ShellMenu = {
+    items: menuItems,
+    subItems: new Map([
+      ['Components', menuItems],
+      ['Schema Editor', schemaEditorItems],
+    ]),
+    topBarItems: [
+      {
+        icon: (
+          <button className='align-middle'>
+            <TrashIcon></TrashIcon>
+          </button>
+        ),
+        id: 'hi',
+      },
+      {
+        icon: (
+          <button className='align-middle'>
+            <XMarkIcon size={0}></XMarkIcon>
+          </button>
+        ),
+        id: 'you',
+      },
+    ],
+  }
+  console.log('schemaName', schemaName)
   return (
     // <QueryClientProvider client={queryClient}>
-    <ShellLayout
-      title='Demo'
-      showBreadcrumb={true}
-      shellMenu={{
-        items: menuItems,
-        subItems: new Map([
-          ['Components', menuItems],
-          ['Schema Editor', schemaEditorItems],
-        ]),
-        topBarItems: [
-          {
-            icon: (
-              <button className='align-middle'>
-                <TrashIcon></TrashIcon>
-              </button>
-            ),
-            id: 'hi',
-          },
-          {
-            icon: (
-              <button className='align-middle'>
-                <XMarkIcon size={0}></XMarkIcon>
-              </button>
-            ),
-            id: 'you',
-          },
-        ],
-      }}
-    >
+    <ShellLayout title='Demo' showBreadcrumb={true} shellMenu={shellMenu}>
       {currentComponent == 'Guifad' && <GuifadDoc></GuifadDoc>}
       {currentComponent == 'GuifadLocal' && <GuifadLocalDoc></GuifadLocalDoc>}
       {(currentComponent == 'GuifadDemo' || currentComponent == 'GuifadDemo2') && (
@@ -332,9 +330,10 @@ const Demo = () => {
           enterSchema={(sn: string) => {
             setSchemaName(sn)
             activateItem(
-              menuItems
-                .find((mi) => mi.id == 'SchemaEditor')!
+              schemaEditorItems
+                .find((mi) => mi.id == 'Schema Editor')!
                 .children?.find((c) => c.id == 'Editor')!,
+              shellMenu,
             )
           }}
         ></SchemaManager>

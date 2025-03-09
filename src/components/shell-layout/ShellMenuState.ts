@@ -1,4 +1,4 @@
-import { MenuItem } from './ShellMenu'
+import { findMenuItem, MenuItem, ShellMenu } from './ShellMenu'
 
 export interface MenuItemState {
   collapsed: boolean
@@ -66,15 +66,35 @@ export async function toggleFolderCollapse(
   return shellMenuState
 }
 
-export function activateItem(item: MenuItem, shellMenuState?: ShellMenuState) {
+export function findShellMenuStateId(menu: ShellMenu, item: MenuItem): string {
+  if (menu.items.includes(item)) {
+    return ''
+  }
+  if (!menu.subItems) {
+    return ''
+  }
+  const subMenuItemsKeys: string[] = Array.from(menu.subItems.keys())
+  for (let key of subMenuItemsKeys) {
+    if (findMenuItem(menu.subItems.get(key) || [], item.id)) {
+      return key
+    }
+  }
+  return 'asd'
+}
+
+export function activateItem(item: MenuItem, menu: ShellMenu, shellMenuState?: ShellMenuState) {
+  const shellMenuStateId: string = shellMenuState
+    ? shellMenuState.id
+    : findShellMenuStateId(menu, item)
+  console.log('shellMenuStateId', shellMenuStateId)
   if (!shellMenuState) {
     shellMenuState = loadShellMenuStates().find(
-      (ms) => ms.id.toLocaleLowerCase() === item.id.toLocaleLowerCase(),
+      (ms) => ms.id.toLocaleLowerCase() === shellMenuStateId.toLocaleLowerCase(),
     )
   }
   if (!shellMenuState) {
     shellMenuState = new ShellMenuState()
-    shellMenuState.id = item.id
+    shellMenuState.id = shellMenuStateId
   }
   shellMenuState.activeItemId = item.id
   if (item.command) {
