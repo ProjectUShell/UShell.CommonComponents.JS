@@ -5,7 +5,8 @@ const Paging: React.FC<{
   pagingParams: PagingParams
   total: number
   onPagingParamsChange: (p: PagingParams) => void
-}> = ({ pagingParams, total, onPagingParamsChange }) => {
+  pageSizes?: number[]
+}> = ({ pagingParams, total, onPagingParamsChange, pageSizes = [10, 20, 50] }) => {
   const [pages, setPages] = useState<number[]>([])
 
   useEffect(() => {
@@ -41,9 +42,11 @@ const Paging: React.FC<{
           }
           className='bg-backgroundone dark:bg-backgroundonedark mr-2 rounded-md text-sm'
         >
-          <option value={10}>10</option>
-          <option value={20}>20</option>
-          <option value={50}>50</option>
+          {pageSizes.map((ps) => (
+            <option key={ps} value={ps}>
+              {ps}
+            </option>
+          ))}
         </select>
         <span className='text-sm font-normal text-gray-500 dark:text-gray-400'>
           Showing{' '}

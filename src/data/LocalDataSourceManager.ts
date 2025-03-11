@@ -5,14 +5,16 @@ export class LocalStoreDataSourceManager implements IDataSourceManagerWidget {
   private schemaRoot: SchemaRoot
   private dataSources: Map<string, LocalStoreDataSource> = new Map()
 
-  constructor(schemaRoot: SchemaRoot) {
+  private id: string
+  constructor(schemaRoot: SchemaRoot, id?: string) {
     this.schemaRoot = schemaRoot
+    this.id = id ? id : crypto.randomUUID()
   }
   tryGetDataSource(entityName: string, storeName?: string): IDataSource {
     const key = storeName ? `${storeName}:${entityName}` : entityName
     if (!this.dataSources.has(key)) {
       const newDataSource = new LocalStoreDataSource(
-        crypto.randomUUID(),
+        this.id,
         this.schemaRoot.entities.find(
           (e) => e.name.toLocaleLowerCase() == entityName.toLocaleLowerCase(),
         ),

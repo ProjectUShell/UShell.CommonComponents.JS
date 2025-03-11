@@ -79,6 +79,7 @@ const Table: React.FC<{
   useClientFilter?: boolean
   isParent?: (c: any, p: any) => boolean
   showTree?: boolean
+  pageSizes?: number[]
 }> = ({
   columns,
   records,
@@ -101,6 +102,7 @@ const Table: React.FC<{
   useClientFilter = false,
   isParent,
   showTree = true,
+  pageSizes = [10, 20, 50],
 }) => {
   const [selectedRows, setSelectedRows] = useState<{ [index: number]: boolean } | null>(null)
   const [filterVisible, setFilterVisible] = useState<{ [c: string]: boolean }>({})
@@ -933,6 +935,7 @@ const Table: React.FC<{
           pagingParams={pagingParams}
           total={totalCount ? totalCount : 0}
           onPagingParamsChange={onPagingParamsChange}
+          pageSizes={pageSizes}
         ></Paging>
       )}
     </div>

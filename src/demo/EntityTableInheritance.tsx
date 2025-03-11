@@ -152,6 +152,7 @@ const EntityTableInheritance = () => {
         dataSourcesForm={[dataSourceCat, dataSourceDog]}
         layoutDescription={layoutDescription}
         minWidthInput={20}
+        pageSizes={[1000, 2000]}
       ></EntityTable1>
     </div>
   )

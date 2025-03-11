@@ -72,6 +72,7 @@ const EntityTable: React.FC<{
   onRecordsChanged?: () => void
   tableColors?: TableColors
   minWidthInput?: number
+  pageSizes?: number[]
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -98,6 +99,7 @@ const EntityTable: React.FC<{
   onRecordsChanged,
   tableColors,
   minWidthInput,
+  pageSizes = [10, 20, 50],
 }) => {
   return (
     <EntityTable1
@@ -127,6 +129,7 @@ const EntityTable: React.FC<{
       onRecordsChanged={onRecordsChanged}
       tableColors={tableColors}
       minWidthInput={minWidthInput}
+      pageSizes={pageSizes}
     ></EntityTable1>
   )
 }
@@ -157,6 +160,7 @@ export const EntityTable1: React.FC<{
   onRecordsChanged?: () => void
   tableColors?: TableColors
   minWidthInput?: number
+  pageSizes?: number[]
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -184,6 +188,7 @@ export const EntityTable1: React.FC<{
   onRecordsChanged,
   tableColors,
   minWidthInput,
+  pageSizes = [10, 20, 50],
 }) => {
   const qcc: any = QueryClientContext
   if (!qcc._currentValue)
@@ -215,6 +220,7 @@ export const EntityTable1: React.FC<{
           onRecordsChanged={onRecordsChanged}
           tableColors={tableColors}
           minWidthInput={minWidthInput}
+          pageSizes={pageSizes}
         ></EntityTableInternal>
       </QueryClientProvider>
     )
@@ -243,6 +249,7 @@ export const EntityTable1: React.FC<{
       onRecordsChanged={onRecordsChanged}
       tableColors={tableColors}
       minWidthInput={minWidthInput}
+      pageSizes={pageSizes}
     ></EntityTableInternal>
   )
 }
@@ -272,6 +279,7 @@ const EntityTableInternal: React.FC<{
   onRecordsChanged?: () => void
   tableColors?: TableColors
   minWidthInput?: number
+  pageSizes?: number[]
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -298,6 +306,7 @@ const EntityTableInternal: React.FC<{
   onRecordsChanged,
   tableColors,
   minWidthInput,
+  pageSizes = [10, 20, 50],
 }) => {
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
@@ -907,6 +916,7 @@ const EntityTableInternal: React.FC<{
             isParent={isParent}
             showTree={showTree}
             tableColors={tableColors}
+            pageSizes={pageSizes}
           ></Table>
         )}
       </div>

@@ -1,19 +1,37 @@
 import React from 'react'
 import ArrowLeftStartOnRectangle from '../../../_Icons/ArrowLeftStartOnRectangle'
 import ArrowRightStartOnRectangle from '../../../_Icons/ArrowRightStartOnRectangle'
+import FloppyDiskIcon from '../../../_Icons/FloppyDiskIcon'
 
 const EditorToolbar: React.FC<{
   schemaName: string
+  setSchemaName: (v: string) => void
   showProperties: boolean
   setShowProperties: (v: boolean) => void
-}> = ({ showProperties, setShowProperties }) => {
+  save: () => void
+}> = ({ schemaName, setSchemaName, showProperties, setShowProperties, save }) => {
   return (
     <div
-      className='bg-bg3 dark:bg-bg3dark w-full relative py-1 flex justify-between
-      items-center border-b border-bg4 dark:border-bg4dark'
+      className='bg-toolbar dark:bg-toolbarDark w-full relative flex justify-between
+      items-center border-b border-bg4 dark:border-bg4dark p-2'
     >
-      <div className='px-2'>
-        <input className='bg-bg2 dark:bg-bg2dark'></input>
+      <div className='px-2 flex items-center align-middle gap-1'>
+        <input
+          style={{ borderRadius: '0.25rem' }}
+          className='bg-content dark:bg-contentDark outline-none p-1'
+          value={schemaName}
+          onChange={(e) => {
+            setSchemaName(e.target.value)
+          }}
+        ></input>
+        <button
+          className='text-blue-400 p-1 hover:text-blue-500'
+          onClick={() => {
+            save()
+          }}
+        >
+          <FloppyDiskIcon size={1.5}></FloppyDiskIcon>
+        </button>
       </div>
       <button
         className='p-1 rounded-sm mx-2 hover:bg-bg4 dark:hover:bg-bg4dark'

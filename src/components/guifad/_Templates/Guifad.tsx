@@ -24,6 +24,7 @@ const Guifad: React.FC<{
   classNameContent?: string
   classNameAside?: string
   classNameAsideBorder?: string
+  pageSizes?: number[]
 }> = ({
   dataSourceManager,
   rootEntityName,
@@ -37,6 +38,7 @@ const Guifad: React.FC<{
   classNameContent = 'bg-content dark:bg-contentDark',
   classNameAside = 'bg-navigation dark:bg-navigationDark',
   classNameAsideBorder = 'border-navigationBorder dark:border-navigationBorderDark',
+  pageSizes = [10, 20, 50],
 }) => {
   const [rootDataSource, setRootDataSource] = useState<IDataSource | null>(null)
 
@@ -69,6 +71,7 @@ const Guifad: React.FC<{
       classNameContent={classNameContent}
       classNameAside={classNameAside}
       classNameAsideBorder={classNameAsideBorder}
+      pageSizes={pageSizes}
     ></Guifad1>
   )
 }

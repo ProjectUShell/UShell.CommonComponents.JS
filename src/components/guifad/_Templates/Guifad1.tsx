@@ -26,6 +26,7 @@ const Guifad1: React.FC<{
   classNameContent?: string
   classNameAside?: string
   classNameAsideBorder?: string
+  pageSizes?: number[]
 }> = ({
   rootNode,
   dataSourceManager,
@@ -38,6 +39,7 @@ const Guifad1: React.FC<{
   classNameContent = 'bg-content dark:bg-contentDark',
   classNameAside = 'bg-navigation dark:bg-navigationDark',
   classNameAsideBorder = 'border-navigationBorder dark:border-navigationBorderDark',
+  pageSizes = [10, 20, 50],
 }) => {
   // states
   const [nodes, setCurrentNodes] = useState<ObjectGraphNode[]>([rootNode])
@@ -264,6 +266,7 @@ const Guifad1: React.FC<{
                 formStyleType={formStyleType}
                 formLabelPosition={labelPosition}
                 className='px-2 pb-1'
+                pageSizes={pageSizes}
               ></EntityTable>
             )}
             {currentMode == 'details' && (

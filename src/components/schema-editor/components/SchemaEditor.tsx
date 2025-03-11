@@ -9,6 +9,7 @@ import BoardContextMenu from './BoardContextMenu'
 import {
   getBoardPosFromWindowPos,
   getBoardStateFromSchema,
+  getSchemaFromBoardState,
   getViewPosFromWorldPos,
   getWorldPosFromViewPos,
 } from '../BoardUtils'
@@ -52,6 +53,7 @@ const SchemaEditor: React.FC<{
     document.addEventListener('contextmenu', pd)
 
     const boardState: BoardState = getBoardStateFromSchema(schema)
+
     setNodes(boardState.nodes)
     setEdges(boardState.edges)
     let maxId: number = 0
@@ -78,10 +80,14 @@ const SchemaEditor: React.FC<{
     localStorage.setItem('boardState', JSON.stringify(boardState))
   }
 
+  function saveSchema() {
+    const newEntitySchema: SchemaRoot = getSchemaFromBoardState({ nodes: nodes, edges: edges })
+    onChangeSchema(newEntitySchema)
+  }
+
   function createNewEntity(pos: Position): void {
     setContextMenuPos(null)
     const worldPos = getWorldPosFromViewPos(pos, camera)
-    console.log('new Entity')
     const entitySchema = new EntitySchema()
     entitySchema.name = 'Entity ' + currentId
     const result: NodeData = {
@@ -99,7 +105,6 @@ const SchemaEditor: React.FC<{
   }
 
   function handleCommitField(nodeData: NodeData, fieldSchema: FieldSchema, value: any) {
-    console.log('commit field', value)
     const existingF: FieldSchema | undefined = nodeData.entitySchema.fields.find(
       (f: FieldSchema) => f.name == fieldSchema.name,
     )
@@ -121,7 +126,6 @@ const SchemaEditor: React.FC<{
   function handleCommitEntityName(nodeData: NodeData, entityName: string) {
     nodeData.entitySchema.name = entityName
     save()
-    console.log('commit entity name', nodes)
   }
 
   function applyScale(e: any) {
@@ -153,7 +157,6 @@ const SchemaEditor: React.FC<{
       setGrabbingBoard(true)
     }
     if (e.button == 2) {
-      console.log('event', e)
       setContextMenuPos(getBoardPosFromWindowPos({ x: e.clientX, y: e.clientY }))
     }
   }
@@ -179,7 +182,6 @@ const SchemaEditor: React.FC<{
         const edgeId: string = `edge_${nodeStart.id}_${newEdge.outputFieldName}_${nodeEnd.id}_${inInput.fieldName}`
         nodeStart.outputEdgeIds = [...nodeStart.outputEdgeIds, edgeId]
         nodeEnd.inputEdgeIds = [...nodeEnd.inputEdgeIds, edgeId]
-        console.log('nodeEnd.inputEdgeIds', nodeEnd.inputEdgeIds)
 
         newEdge.previousStartPosition = {
           x: newEdge.currentStartPosition.x,
@@ -281,9 +283,7 @@ const SchemaEditor: React.FC<{
         for (let i = 0; i < node.inputEdgeIds.length; i++) {
           const edgeId = node.inputEdgeIds[i]
           const edge = edges.find((edge) => edge.id === edgeId)
-          console.log('update input edges', edges)
-          console.log('update input nodes', nodes)
-          console.log('update input', node)
+
           if (edge) {
             edge.previousEndPosition = {
               x: edge.currentEndPosition.x,
@@ -311,7 +311,6 @@ const SchemaEditor: React.FC<{
   const handleMouseEnterInput = useCallback(
     (posX: number, posY: number, nodeId: number, fieldName: string) => {
       setInInput({ nodeId, fieldName, posX: posX, posY: posY })
-      console.log('in input')
     },
     [],
   )
@@ -322,9 +321,7 @@ const SchemaEditor: React.FC<{
       const prevEndPos = { x: posX, y: posY }
       const curStartPos = { x: posX, y: posY }
       const curEndPos = { x: posX, y: posY }
-      console.log('new edge', curStartPos)
       const node: NodeData | undefined = nodes.find((n) => n.id == nodeId)
-      console.log('nodes', nodes)
       if (!node) throw `No Node with id ${nodeId}`
       const relation: RelationSchema = new RelationSchema()
       relation.foreignEntityName = node.entitySchema.name
@@ -352,7 +349,6 @@ const SchemaEditor: React.FC<{
   }, [])
 
   const handleKeyDown = (e: any) => {
-    console.log('key down', e)
     if (e.key == 'Delete') {
       if (selectedNode) {
         setNodes(nodes.filter((n) => n.id != selectedNode))
@@ -369,12 +365,15 @@ const SchemaEditor: React.FC<{
   const backgroundWorldWidth: number = camera.scale * 30
   const backgroundWorldHeight: number = camera.scale * 30
 
+  console.log('edges', edges)
   return (
     <div className='flex flex-col w-full h-full overflow-hidden border-0 border-green-400'>
       <EditorToolbar
         showProperties={showProperties}
         setShowProperties={setShowProperties}
-        schemaName={'Test'}
+        schemaName={schemaName}
+        setSchemaName={onChangeSchemaName}
+        save={() => saveSchema()}
       ></EditorToolbar>
       <div className='flex w-full h-full overflow-hidden border-0 border-red-400'>
         <div className='relative w-full h-full overflow-hidden border-0 border-red-400'>
@@ -390,7 +389,6 @@ const SchemaEditor: React.FC<{
               onMouseDown={handleMouseDown}
               onMouseUp={handleMouseUp}
               onMouseLeave={(e) => {
-                console.log('mouse leave')
                 e.preventDefault()
                 setGrabbingBoard(false)
               }}
@@ -466,7 +464,6 @@ const SchemaEditor: React.FC<{
                 >
                   <BoardContextMenu
                     onNewEntity={() => {
-                      console.log('new Entity')
                       createNewEntity(contextMenuPos)
                     }}
                   ></BoardContextMenu>

@@ -33,8 +33,24 @@ export function getBoardStateFromSchema(schema: SchemaRoot): BoardState {
   const boardStateString: string | null = schema.designerData
   if (boardStateString && boardStateString != '') {
     const boardState: any = JSON.parse(boardStateString)
-    result.nodes.push(boardState.nodes)
-    result.edges.push(boardState.edges)
+    result.nodes = boardState.nodes
+    result.edges = boardState.edges
   }
+  console.log('boardState', result.edges)
   return result
+}
+
+export function getSchemaFromBoardState(boardState: BoardState): SchemaRoot {
+  const schema: SchemaRoot = new SchemaRoot()
+  schema.entities = []
+  schema.relations = []
+  boardState.nodes.forEach((node) => {
+    schema.entities.push(node.entitySchema)
+  })
+  boardState.edges.forEach((edge) => {
+    schema.relations.push(edge.relation)
+  })
+
+  schema.designerData = JSON.stringify(boardState)
+  return schema
 }

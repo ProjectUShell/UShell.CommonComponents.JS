@@ -54,6 +54,7 @@ import MultiButtonDoc from './demo/MultiButtonDoc'
 import TreeView from './_Molecules/TreeView'
 import TreeViewDoc from './demo/TreeViewDoc'
 import GuifadLocalDoc from './demo/GuifadLocalDoc'
+import { LocalStoreDataSourceManager } from './data/LocalDataSourceManager'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -94,7 +95,7 @@ const Demo = () => {
       'GuifadDemo3',
     ],
     'Dynamic Reports': ['ReportService', 'ReportManager', 'ReportDashboard'],
-    'Schema Editor': ['Schema Manager', 'Editor', 'Schema Guifad'],
+    'Schema Editor': ['Schema Manager', 'Editor', 'Schema Guifad', 'SchemaEditorGuifad'],
     Technical: [
       'ColorDemo',
       'TableDemo',
@@ -343,6 +344,7 @@ const Demo = () => {
           schemaName={schemaName}
           schema={schemaProvider.loadSchema(schemaName)}
           onChangeSchema={(s: SchemaRoot) => {
+            console.log('saving schema', s)
             schemaProvider.saveSchema(schemaName, s)
           }}
           onChangeSchemaName={(sn: string) => {
@@ -350,6 +352,17 @@ const Demo = () => {
             setSchemaName(sn)
           }}
         ></SchemaEditor>
+      )}
+      {currentComponent == 'SchemaEditorGuifad' && (
+        <Guifad
+          rootEntityName='Person'
+          dataSourceManager={
+            new LocalStoreDataSourceManager(
+              schemaProvider.loadSchema(schemaName),
+              '05903df4-204d-41e3-8599-363136668a81',
+            )
+          }
+        ></Guifad>
       )}
       {currentComponent == 'ReportManager' && (
         <ReportManager1
