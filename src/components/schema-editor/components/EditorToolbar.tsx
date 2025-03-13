@@ -13,7 +13,7 @@ const EditorToolbar: React.FC<{
   return (
     <div
       className='bg-toolbar dark:bg-toolbarDark w-full relative flex justify-between
-      items-center border-b border-bg4 dark:border-bg4dark p-2'
+      items-center border-b border-toolbarBorder dark:border-toolbarBorderDark p-2'
     >
       <div className='px-2 flex items-center align-middle gap-1'>
         <input

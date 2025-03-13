@@ -365,7 +365,6 @@ const SchemaEditor: React.FC<{
   const backgroundWorldWidth: number = camera.scale * 30
   const backgroundWorldHeight: number = camera.scale * 30
 
-  console.log('edges', edges)
   return (
     <div className='flex flex-col w-full h-full overflow-hidden border-0 border-green-400'>
       <EditorToolbar
@@ -420,6 +419,8 @@ const SchemaEditor: React.FC<{
                   onCommitField={(f: FieldSchema, v: any) => handleCommitField(n, f, v)}
                   onCommitEntityName={(entityName: string) => handleCommitEntityName(n, entityName)}
                   onDeleteField={(f) => handleDeleteField(n, f)}
+                  activeField={selectedField}
+                  setActiveField={(f) => setSelectedField(f)}
                 ></EditorNode>
               ))}
               {newEdge && (
@@ -460,7 +461,7 @@ const SchemaEditor: React.FC<{
               {contextMenuPos && (
                 <div
                   style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
-                  className='absolute border-0 rounded-md z-40'
+                  className='absolute border rounded-md z-40 border-bg10 dark:border-bg8dark'
                 >
                   <BoardContextMenu
                     onNewEntity={() => {
@@ -473,9 +474,8 @@ const SchemaEditor: React.FC<{
           </div>
         </div>
         <div
-          className={` ight-0 top-0 border-t text-sm py-2 border-bg5 dark:border-bg5dark bg-bg3 dark:bg-bg3dark z-0 transition-all ${
-            showProperties ? 'w-64 h-full border-l px-2 ' : 'w-0 h-full'
-          }`}
+          className={` ight-0 top-0 text-sm py-2 border-navigationBorder dark:border-navigationBorderDark bg-navigation dark:bg-navigationDark
+             z-0 transition-all ${showProperties ? 'w-64 h-full border-l px-2 ' : 'w-0 h-full'}`}
         >
           <EditorProperties
             entity={nodes.find((n) => n.id == selectedNode)?.entitySchema}

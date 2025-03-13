@@ -9,6 +9,7 @@ import {
   getWorldPosFromViewPos,
 } from '../BoardUtils'
 import EditorNodeField from './EditorNodeField'
+import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
 
 const EditorNode: React.FC<{
   id: number
@@ -27,6 +28,8 @@ const EditorNode: React.FC<{
   onDeleteField: (f: FieldSchema) => void
   numInputs: number
   numOutputs: number
+  activeField: FieldSchema | null
+  setActiveField: (f: FieldSchema | null) => void
 }> = React.memo(
   ({
     id,
@@ -45,9 +48,11 @@ const EditorNode: React.FC<{
     onDeleteField,
     numInputs,
     numOutputs,
+    activeField,
+    setActiveField,
   }) => {
     const [entityName, setEntityName] = useState(nodeData.entitySchema.name)
-    const [activeField, setActiveField] = useState('')
+    // const [activeField, setActiveField] = useState('')
     const [inputMode, setInputMode] = useState(false)
 
     function handleCommitField(f: FieldSchema | null, value: any) {
@@ -63,6 +68,24 @@ const EditorNode: React.FC<{
     function handleCommitEntityName(value: any) {
       nodeData.entitySchema.name = value
       onCommitEntityName(value)
+    }
+
+    function moveFieldUp(f: FieldSchema) {
+      const index = nodeData.entitySchema.fields.indexOf(f)
+      if (index > 0) {
+        const temp = nodeData.entitySchema.fields[index - 1]
+        nodeData.entitySchema.fields[index - 1] = f
+        nodeData.entitySchema.fields[index] = temp
+      }
+    }
+
+    function moveFieldDown(f: FieldSchema) {
+      const index = nodeData.entitySchema.fields.indexOf(f)
+      if (index < nodeData.entitySchema.fields.length - 1) {
+        const temp = nodeData.entitySchema.fields[index + 1]
+        nodeData.entitySchema.fields[index + 1] = f
+        nodeData.entitySchema.fields[index] = temp
+      }
     }
 
     function handleMouseDownOutput(ref: any, e: any, fieldName: string) {
@@ -156,10 +179,10 @@ const EditorNode: React.FC<{
     }
 
     const viewPos: Position = getViewPosFromWorldPos({ x: x, y: y }, camera)
-    const worldWidth: number = camera.scale * 120
+    const worldWidth: number = camera.scale * 220
     const worldHeightField: number = camera.scale * 30
 
-    // console.log('active field', activeField)
+    console.log('active field', activeField)
 
     return (
       <div
@@ -175,11 +198,11 @@ const EditorNode: React.FC<{
         }}
         onBlur={() => {
           setInputMode(false)
-          setActiveField('')
+          // setActiveField('')
         }}
-        className={`flex flex-col absolute rounded-md cursor-grab bg-bg2 dark:bg-bg3dark border-2 z-10 
+        className={`flex flex-col absolute rounded-md cursor-grab bg-bg6 dark:bg-bg6dark border-2 z-10 
         shadow-md hover:shadow-2xl ${
-          selected ? 'border-orange-400' : 'border-bg5 dark:border-bg5dark'
+          selected ? 'border-orange-400' : 'border-bg9 dark:border-bg9dark'
         }`}
       >
         <input
@@ -192,7 +215,7 @@ const EditorNode: React.FC<{
             onMouseDown(id, e)
           }}
           onKeyDown={(e: any) => handleKeyDownEntityName(e)}
-          readOnly={!(activeField == '' && inputMode)}
+          readOnly={!(!activeField && inputMode)}
           onBlur={(e) => onCommitEntityName(e.target.value)}
           placeholder='EntityName'
           style={{
@@ -200,7 +223,7 @@ const EditorNode: React.FC<{
             height: `${worldHeightField}px`,
             fontSize: worldHeightField / 2.5,
           }}
-          className={`bg-bg2 dark:bg-bg3dark text-center p-1 border-0 cursor-grab border-b-2 border-bg5 dark:border-bg5dark outline-none rounded-t-md`}
+          className={`bg-contentSelected dark:bg-contentSelectedDark text-center p-1 border-0 cursor-grab border-b-2 border-bg9 dark:border-bg9dark outline-none rounded-t-md`}
         ></input>
         {nodeData.entitySchema.fields.map((f) => {
           const inputRef: any = React.createRef()
@@ -211,15 +234,15 @@ const EditorNode: React.FC<{
                 onMouseDown={(e: any) => {
                   e.stopPropagation()
                   console.log('mouse down field')
-                  if (f.name != activeField) {
+                  if (f.name != activeField?.name) {
                     setInputMode(false)
                   }
                   onFieldSelected(f)
-                  setActiveField(f.name)
+                  setActiveField(f)
                   onMouseDown(id, e)
                 }}
-                onFocus={() => setActiveField(f.name)}
-                readOnly={f.name != activeField || !inputMode}
+                onFocus={() => setActiveField(f)}
+                readOnly={f.name != activeField?.name || !inputMode}
                 defaultValue={f.name}
                 onKeyDown={(e: any) => handleKeyDownInput(f, e)}
                 onBlur={(e) => {
@@ -235,9 +258,9 @@ const EditorNode: React.FC<{
                   fontSize: worldHeightField / 2.5,
                 }}
                 className={` text-center p-1 rounded-none outline-none cursor-default ${
-                  activeField == f.name
-                    ? 'bg-bg3 dark:bg-bg4dark'
-                    : 'bg-bg2 dark:bg-bg3dark select-none'
+                  selected && activeField?.name == f.name
+                    ? 'bg-bg9 dark:bg-bg9dark'
+                    : 'bbg-bg6 dark:bg-bg6dark select-none'
                 }`}
               ></input>
               <div
@@ -263,6 +286,32 @@ const EditorNode: React.FC<{
                   cursor-crosshair hover:bg-red-400 pointer-events-auto'
                 onMouseDown={(e) => handleMouseDownOutput(outputRef, e, f.name)}
               ></div>
+              {selected && activeField?.name == f.name && (
+                <>
+                  <div
+                    style={{
+                      top: worldHeightField / 2 - worldHeightField / 6,
+                    }}
+                    ref={outputRef}
+                    className='absolute -right-7 rounded-l-full 
+                  cursor-pointer pointer-events-auto'
+                    onMouseDown={(e) => moveFieldDown(f)}
+                  >
+                    <ChevrodnDownIcon size={1.0} strokeWidth={6}></ChevrodnDownIcon>
+                  </div>
+                  <div
+                    style={{
+                      top: worldHeightField / 2 - worldHeightField / 6,
+                    }}
+                    ref={outputRef}
+                    className='absolute -right-14 rounded-l-full 
+                      cursor-pointer pointer-events-auto'
+                    onMouseDown={(e) => moveFieldUp(f)}
+                  >
+                    <ChevrodnDownIcon size={1.0} strokeWidth={6} rotate={180}></ChevrodnDownIcon>
+                  </div>
+                </>
+              )}
             </div>
           )
         })}
@@ -286,7 +335,7 @@ const EditorNode: React.FC<{
             height: `${worldHeightField}px`,
             fontSize: worldHeightField / 2.5,
           }}
-          className='bg-bg2 dark:bg-bg3dark text-center p-1 rounded-none outline-none'
+          className='bbg-bg6 dark:bg-bg6dark text-center p-1 rounded-none outline-none'
         ></input>
         {/* <div
           className='absolute top-0 -left-8 flex flex-col items-center justify-center gap-3 w-3 h-full

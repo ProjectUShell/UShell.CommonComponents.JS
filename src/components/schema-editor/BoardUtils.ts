@@ -36,7 +36,6 @@ export function getBoardStateFromSchema(schema: SchemaRoot): BoardState {
     result.nodes = boardState.nodes
     result.edges = boardState.edges
   }
-  console.log('boardState', result.edges)
   return result
 }
 

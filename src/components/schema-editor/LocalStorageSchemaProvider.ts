@@ -24,11 +24,9 @@ export class LocalStorageSchemaProvider implements ISchemaProvider {
     // return new SchemaRoot()
     const schemasJson: string | null = localStorage.getItem('schema_lib')
     if (!schemasJson) return new SchemaRoot()
-    console.log('schemasJson', JSON.parse(schemasJson))
-    console.log('schemaName', schemaName)
+
     const schemas: { [schemaName: string]: SchemaRoot } = JSON.parse(schemasJson)
     const schema: SchemaRoot = schemas[schemaName]
-    console.log('schema', schema)
     return schemaName in schemas ? schemas[schemaName] : new SchemaRoot()
   }
 

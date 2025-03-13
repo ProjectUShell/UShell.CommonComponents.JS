@@ -2,6 +2,8 @@ import React from 'react'
 import { ObjectGraphNode } from '../ObjectGraphNode'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import { SchemaRoot } from 'fusefx-modeldescription'
+import ChevronDown from '../../shell-layout/_Icons/ChevronDown'
+import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
 
 const Breadcrumb: React.FC<{
   schemaRoot: SchemaRoot
@@ -46,15 +48,19 @@ const Breadcrumb: React.FC<{
     <div className='font-bold flex p-2'>
       <div
         style={{ borderRadius: '0.25rem' }}
-        className='flex w-full border-0 justify-start bg-navigation dark:bg-navigationDark border-menuBorder dark:border-menuBorderDark'
+        className='flex w-full border-0 justify-start bg-navigationSelected dark:bg-navigationSelectedDark border-menuBorder dark:border-menuBorderDark'
       >
-        <div className='h-full w-full1 flex justify-start items-center content-center align-middle'>
+        <div className='h-full w-full1 flex justify-start items-center content-center align-middle '>
           {nodes.map((n, i) => (
-            <div key={i} className='flex justify-start py-1 pl-1  w-full gap-1'>
-              {i > 0 && <span className='py-1 m-0'>\</span>}
+            <div key={i} className='flex justify-start py-1 pl-1  w-full gap-1 items-center'>
+              {i > 0 && (
+                <span className='py-1 m-0'>
+                  <ChevrodnDownIcon size={0.8} strokeWidth={4} rotate={270}></ChevrodnDownIcon>
+                </span>
+              )}
               <button
                 disabled={dirty}
-                className={`rounded-sm p-1 m-0
+                className={`rounded-md p-1 m-0
               ${dirty ? '' : 'hover:bg-breadcrumbHover dark:hover:bg-breadcrumbHoverDark'}`}
                 onClick={() => onNodeClick(nodes.slice(0, i + 1), getCallingRecord(i))}
               >

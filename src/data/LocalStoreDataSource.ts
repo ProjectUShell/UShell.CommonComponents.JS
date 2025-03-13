@@ -22,7 +22,11 @@ export class LocalStoreDataSource implements IDataSource {
     throw new Error('Method not implemented.')
   }
   getRecord(identityFields: object): Promise<object> {
-    throw new Error('Method not implemented.')
+    return this.getRecords().then((records) =>
+      records.page.find(
+        (r) => EntitySchemaService.getPrimaryKey(this.entitySchema!, r) == identityFields,
+      ),
+    )
   }
 
   private addOrUpdate(entity: object): Promise<boolean> {
@@ -71,7 +75,14 @@ export class LocalStoreDataSource implements IDataSource {
     pagingParams?: PagingParams,
     sortingParams?: SortingField[],
   ): Promise<PaginatedList> {
-    throw new Error('Method not implemented.')
+    return new Promise((res) =>
+      res({
+        page: this.records.map((r) => {
+          return { key: EntitySchemaService.getPrimaryKey(this.entitySchema!, r), label: 'hi' }
+        }),
+        total: this.records.length,
+      }),
+    )
   }
 
   private records: object[] = []
