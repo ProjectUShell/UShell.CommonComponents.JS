@@ -20,6 +20,7 @@ import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import Tooltip from '../../../_Atoms/Tooltip'
 import PencilIcon from '../../../_Icons/PencilIcon'
 import SidePanelSecondary from '../_Organisms/SidePanelSecondary'
+import MultiPanelLayout from '../../../_Organisms/MultiPanelLayout'
 
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
@@ -177,17 +178,158 @@ const Guifad1: React.FC<{
       </header>
       <div
         className={`UShell_Guifad_Inner w-full h-full flex overflow-hidden text-sm
-       ${classNameContent} border-0 border-blue-400`}
+       ${classNameContent} border-0 border-green-400`}
       >
-        <aside
+        <MultiPanelLayout
+          leftCollapsable={sidepanelMode == 'split'}
+          rightCollapsable={true}
+          leftCollapsedMode='smallBar'
+          rightCollapsedMode='smallBar'
+          mainContent={
+            <div className='h-full w-full flex flex-col min-w-0 border-0 border-blue-400'>
+              <div className='p-0 h-full overflow-auto'>
+                {currentMode == 'list' && (
+                  <EntityTable
+                    dataSourceManagerForNavigations={dataSourceManager}
+                    dataSource={node.dataSource}
+                    onRecordEnter={(r: any) => {
+                      if (enterRecord) {
+                        enterRecord(r, node.dataSource.entitySchema!)
+                      } else {
+                        setCurrentRecord(r)
+                        setCurrentMode('details')
+                      }
+                    }}
+                    onSelectedRecordsChange={(selectedRecords) =>
+                      onSelectedRecordsChange(selectedRecords)
+                    }
+                    selectedRecord={currentRecord}
+                    onCreateRecord={createRecord}
+                    parentSchema={node.parent?.dataSource?.entitySchema}
+                    // schemaRoot={dataSourceManager.getSchemaRoot()}
+                    entitySchema={node.dataSource.entitySchema!}
+                    parent={node.parent?.record}
+                    layoutDescription={layoutDescription}
+                    formStyleType={formStyleType}
+                    formLabelPosition={labelPosition}
+                    className='px-2 pb-1'
+                    pageSizes={pageSizes}
+                    toolbarItems={
+                      currentRecord && (
+                        <button
+                          className='rounded-md p-2 text-blue-600 dark:text-blue-600 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                          onClick={() => setCurrentMode('details')}
+                        >
+                          <PencilIcon></PencilIcon>
+                        </button>
+                      )
+                    }
+                  ></EntityTable>
+                )}
+                {currentMode == 'details' && (
+                  <EntityForm
+                    dataSourceManager={dataSourceManager}
+                    dataSource={node.dataSource}
+                    entity={currentRecord}
+                    dirty={dirty}
+                    setDirty={(d) => {
+                      if (!d && isCreation) {
+                        setCurrentRecord(null)
+                        setCurrentMode('list')
+                        setIsCreation(false)
+                      }
+                      setDirty(d)
+                    }}
+                    onSaved={(updatedEntity: any) => {
+                      setCurrentRecord(updatedEntity)
+                      setDirty(false)
+                      setIsCreation(false)
+                    }}
+                    entityLayout={layoutDescription.entityLayouts.find(
+                      (el) => el.entityName == node.dataSource.entitySchema?.name,
+                    )}
+                    styleType={formStyleType}
+                    uow={uow}
+                    persistUow={persistUow}
+                    isCreation={isCreation}
+                    labelPosition={labelPosition}
+                    classNameDropdownBg='bg-editor dark:bg-editorDark'
+                    toolbarItems={
+                      <>
+                        <div className='flex gap-2 mr-6 items-center'>
+                          <button
+                            id='UShell_Guifad1_Toolbar_Back'
+                            className='hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark p-2 px-2 rounded-md'
+                            onClick={() => setCurrentMode('list')}
+                          >
+                            <ArrowUturnLeftIcon></ArrowUturnLeftIcon>
+                          </button>
+                          <div>
+                            {EntitySchemaService.getLabel(
+                              dataSourceManager.getSchemaRoot(),
+                              node.dataSource.entitySchema!.name,
+                              currentRecord,
+                            )}
+                          </div>
+                        </div>
+                        <Tooltip targetId='UShell_Guifad1_Toolbar_Back'>
+                          <div className='m-4'>back to list...</div>
+                        </Tooltip>
+                      </>
+                    }
+                  ></EntityForm>
+                )}
+              </div>
+            </div>
+          }
+          leftPanelContent={
+            <aside
+              // style={{ minWidth: '300px', maxWidth: '500px', width: '20%' }}
+              className={`UShell_Guifad_Aside overflow-hidden h-full w-full flex flex-col justify-between border-0
+                 border-navigationBorder dark:border-navigationBorderDark
+               ${classNameAside}  py-0`}
+            >
+              <SidePanelTabControl
+                classNameAsideBorder={classNameAsideBorder}
+                dataSourceManager={dataSourceManager}
+                currentRecord={currentRecord}
+                dataSource={node.dataSource}
+                enterRelation={enterRelation}
+                dirty={dirty}
+                layoutDescription={layoutDescription}
+                mode={sidepanelMode}
+                setMode={setSidepanelMode}
+              ></SidePanelTabControl>
+            </aside>
+          }
+          rightPanelContent={
+            sidepanelMode == 'split' && (
+              <aside
+                // style={{ minWidth: '300px', maxWidth: '500px', width: '20%' }}
+                className={`UShell_Guifad_Aside overflow-hidden h-full w-full flex flex-col justify-between border-l
+                   border-navigationBorder dark:border-navigationBorderDark
+               ${classNameAside}  py-0`}
+              >
+                <SidePanelSecondary
+                  classNameAsideBorder={classNameAsideBorder}
+                  dataSourceManager={dataSourceManager}
+                  currentRecord={currentRecord}
+                  dataSource={node.dataSource}
+                  enterRelation={enterRelation}
+                  dirty={dirty}
+                  layoutDescription={layoutDescription}
+                  mode={sidepanelMode}
+                  setMode={setSidepanelMode}
+                ></SidePanelSecondary>
+              </aside>
+            )
+          }
+        ></MultiPanelLayout>
+        {/* <aside
           style={{ minWidth: '300px', maxWidth: '500px', width: '20%' }}
           className={`UShell_Guifad_Aside overflow-hidden flex flex-col justify-between border-r border-navigationBorder dark:border-navigationBorderDark
              ${classNameAside}  py-0`}
         >
-          {/* <div className='UShell_Guifad_Aside_Toolbar w-full border-4'>
-            <button>Tab</button>
-            <button>Split</button>
-          </div> */}
           <SidePanelTabControl
             classNameAsideBorder={classNameAsideBorder}
             dataSourceManager={dataSourceManager}
@@ -200,7 +342,7 @@ const Guifad1: React.FC<{
             setMode={setSidepanelMode}
           ></SidePanelTabControl>
         </aside>
-        <div className='h-full w-full flex flex-col min-w-0'>
+        <div className='h-full w-full flex flex-col min-w-0 border-4 border-blue-400'>
           <div className='p-0 h-full overflow-auto'>
             {currentMode == 'list' && (
               <EntityTable
@@ -301,10 +443,6 @@ const Guifad1: React.FC<{
             className={`UShell_Guifad_Aside overflow-hidden flex flex-col justify-between border-l border-navigationBorder dark:border-navigationBorderDark
              ${classNameAside}  py-0`}
           >
-            {/* <div className='UShell_Guifad_Aside_Toolbar w-full border-4'>
-            <button>Tab</button>
-            <button>Split</button>
-          </div> */}
             <SidePanelSecondary
               classNameAsideBorder={classNameAsideBorder}
               dataSourceManager={dataSourceManager}
@@ -317,7 +455,7 @@ const Guifad1: React.FC<{
               setMode={setSidepanelMode}
             ></SidePanelSecondary>
           </aside>
-        )}
+        )} */}
       </div>
     </div>
   )

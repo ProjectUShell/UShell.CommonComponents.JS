@@ -6,6 +6,10 @@ const MultiPanelLayout: React.FC<{
   leftPanelContent?: React.ReactNode
   bottomPanelContent?: React.ReactNode
   rightPanelContent?: React.ReactNode
+  leftCollapsable?: boolean
+  rightCollapsable?: boolean
+  leftCollapsedMode?: 'arrow' | 'smallBar' | 'none'
+  rightCollapsedMode?: 'arrow' | 'smallBar' | 'none'
   mainContent: React.ReactNode
   classNameButtons?: string
   classNameSplitter?: string
@@ -19,6 +23,10 @@ const MultiPanelLayout: React.FC<{
   classNameButtons,
   classNameBorder = 'border-navigationBorder dark:border-navigationBorderDark',
   classNameSplitter,
+  leftCollapsable = true,
+  rightCollapsable = true,
+  leftCollapsedMode = 'arrow',
+  rightCollapsedMode = 'arrow',
 }) => {
   const [isTopPanelVisible, setTopPanelVisible] = useState(true)
   const [isLeftPanelVisible, setLeftPanelVisible] = useState(true)
@@ -97,19 +105,21 @@ const MultiPanelLayout: React.FC<{
           <ArrowUpIcon2 rotate={180}></ArrowUpIcon2>
         </button>
       )}
-      <div className='flex flex-1'>
+      <div className='flex flex-1 h-full'>
         {leftPanelContent && isLeftPanelVisible && (
           <div
             ref={leftPanelRef}
-            className={`border-r p-2 overflow-auto relative ${classNameBorder}`}
+            className={`border-r p-0 overflow-auto relative ${classNameBorder}`}
             style={{ width: leftPanelWidth }}
           >
-            <button
-              className={`absolute top-5 right-1 transform -translate-y-1/2 z-40 ${classNameButtons}`}
-              onClick={() => setLeftPanelVisible(false)}
-            >
-              <ArrowUpIcon2 rotate={270}></ArrowUpIcon2>
-            </button>
+            {leftCollapsable && (
+              <button
+                className={`absolute top-5 right-1 transform -translate-y-1/2 z-40 ${classNameButtons}`}
+                onClick={() => setLeftPanelVisible(false)}
+              >
+                <ArrowUpIcon2 rotate={270}></ArrowUpIcon2>
+              </button>
+            )}
             {leftPanelContent}
             <div
               className={`absolute top-0 right-0 w-2 h-full cursor-col-resize border-0 border-orange-400 ${classNameSplitter}`}
@@ -117,7 +127,7 @@ const MultiPanelLayout: React.FC<{
             ></div>
           </div>
         )}
-        {leftPanelContent && !isLeftPanelVisible && (
+        {leftPanelContent && !isLeftPanelVisible && leftCollapsedMode == 'arrow' && (
           <button
             className={`absolute top-1/2 left-0 transform -translate-y-1/2  p-1 z-40 ${classNameButtons}`}
             onClick={() => setLeftPanelVisible(true)}
@@ -125,7 +135,16 @@ const MultiPanelLayout: React.FC<{
             <ArrowUpIcon2 rotate={90}></ArrowUpIcon2>
           </button>
         )}
-        <div className={`flex-1 border-0 p-2 overflow-auto relative ${classNameBorder}`}>
+        {leftPanelContent && !isLeftPanelVisible && leftCollapsedMode == 'smallBar' && (
+          <button
+            className={`static top-0 left-0 h-full w-6 transform  p-0 z-40 border-r ${classNameBorder}
+             bg-navigation dark:bg-navigationDark hover:bg-navigationHover dark:hover:bg-navigationHoverDark`}
+            onClick={() => setLeftPanelVisible(true)}
+          >
+            <ArrowUpIcon2 size={0.9} rotate={90}></ArrowUpIcon2>
+          </button>
+        )}
+        <div className={`flex-1 border-0 p-0 overflow-auto relative ${classNameBorder}`}>
           {mainContent}
           {isRightPanelVisible && (
             <div
@@ -138,15 +157,17 @@ const MultiPanelLayout: React.FC<{
         {rightPanelContent && isRightPanelVisible && (
           <div
             ref={rightPanelRef}
-            className={`border-l p-2 overflow-auto ${classNameBorder} relative`}
+            className={`border-l p-0 overflow-auto ${classNameBorder} relative`}
             style={{ width: rightPanelWidth }}
           >
-            <button
-              className={`absolute top-5 right-1 transform -translate-y-1/2 z-40 ${classNameButtons}`}
-              onClick={() => setRightPanelVisible(false)}
-            >
-              <ArrowUpIcon2 rotate={90}></ArrowUpIcon2>
-            </button>
+            {rightCollapsable && (
+              <button
+                className={`absolute top-5 right-1 transform -translate-y-1/2 z-40 ${classNameButtons}`}
+                onClick={() => setRightPanelVisible(false)}
+              >
+                <ArrowUpIcon2 rotate={90}></ArrowUpIcon2>
+              </button>
+            )}
             {rightPanelContent}
           </div>
         )}
@@ -156,6 +177,23 @@ const MultiPanelLayout: React.FC<{
             onClick={() => setRightPanelVisible(true)}
           >
             <ArrowUpIcon2 rotate={270}></ArrowUpIcon2>
+          </button>
+        )}
+        {rightPanelContent && !isRightPanelVisible && rightCollapsedMode == 'arrow' && (
+          <button
+            className={`absolute top-1/2 right-0 transform -translate-y-1/2  p-1 z-40 ${classNameButtons}`}
+            onClick={() => setRightPanelVisible(true)}
+          >
+            <ArrowUpIcon2 rotate={270}></ArrowUpIcon2>
+          </button>
+        )}
+        {rightPanelContent && !isRightPanelVisible && rightCollapsedMode == 'smallBar' && (
+          <button
+            className={`static top-0 h-full w-6 right-0 transform z-40 border-l ${classNameBorder}
+            bg-navigation dark:bg-navigationDark hover:bg-navigationHover dark:hover:bg-navigationHoverDark`}
+            onClick={() => setRightPanelVisible(true)}
+          >
+            <ArrowUpIcon2 size={0.9} rotate={270}></ArrowUpIcon2>
           </button>
         )}
       </div>
