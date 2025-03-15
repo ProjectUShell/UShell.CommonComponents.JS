@@ -36,7 +36,7 @@ const TopBar: React.FC<{
     <header
       style={{ borderBottomWidth: shellSettings.colorMode == ColorMode.Dark ? '1px' : '0px' }}
       className='bg-topbar dark:bg-topbarDark static top-0 flex flex-col z-30 px-6 
-        text-textone dark:text-textonedark shadow-md shadow-topbarshadow1 dark:shadow-none dark:border-topbarBorderDark '
+        text-textone dark:text-textonedark shadow-topbarshadow1 border-topbarBorder dark:border-topbarBorderDark '
     >
       <div className='flex justify-between items-center py-1'>
         <div className='flex gap-1 items-center content-center py-2'>

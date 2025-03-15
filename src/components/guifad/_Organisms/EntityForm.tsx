@@ -35,6 +35,7 @@ const EntityForm: React.FC<{
   persistUow?: (uow: any) => void
   isCreation: boolean
   minWidthInput?: number
+  toolbarItems?: any
 }> = ({
   dataSourceManager,
   dataSource,
@@ -58,6 +59,7 @@ const EntityForm: React.FC<{
   persistUow,
   isCreation = false,
   minWidthInput,
+  toolbarItems = <></>,
 }) => {
   return (
     <EntityForm1
@@ -83,6 +85,7 @@ const EntityForm: React.FC<{
       persistUow={persistUow}
       isCreation={isCreation}
       minWidthInput={minWidthInput}
+      toolbarItems={toolbarItems}
     ></EntityForm1>
   )
 }
@@ -110,6 +113,7 @@ export const EntityForm1: React.FC<{
   persistUow?: (uow: any) => void
   isCreation: boolean
   minWidthInput?: number
+  toolbarItems?: any
 }> = ({
   dataSourceManager,
   dataSources,
@@ -133,6 +137,7 @@ export const EntityForm1: React.FC<{
   persistUow,
   isCreation = false,
   minWidthInput,
+  toolbarItems = <></>,
 }) => {
   console.log('EntityForm e', entity)
   console.log('EntityForm e ds', dataSources)
@@ -242,9 +247,10 @@ export const EntityForm1: React.FC<{
     <div className='UShell_EntityForm flex flex-col h-full w-full overflow-hidden border-0 border-green-400'>
       {toolbar == 'top' && (
         <div
-          className={`UShell_EntityForm_Toolbar bg-toolbar dark:bg-toolbarDark flex justify-start p-1 rounded-sm 
+          className={`UShell_EntityForm_Toolbar bg-toolbar dark:bg-toolbarDark flex justify-start p-1 py-1 rounded-sm 
             border-b border-toolbarBorder dark:border-toolbarBorderDark my-0`}
         >
+          {toolbarItems}
           {setDirty && dirty && (
             <button
               disabled={!dirty}

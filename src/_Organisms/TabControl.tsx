@@ -6,7 +6,7 @@ import { Logger } from '../[Move2Logging]/Logger'
 export class TabItem {
   id: string = ''
   tag: any | undefined
-  title: string = ''
+  title: string | React.JSX.Element = ''
   canClose: boolean = true
   renderMethod?: () => JSX.Element
 }

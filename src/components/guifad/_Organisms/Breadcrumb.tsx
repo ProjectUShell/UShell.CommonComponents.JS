@@ -48,7 +48,7 @@ const Breadcrumb: React.FC<{
     <div className='font-bold flex p-2'>
       <div
         style={{ borderRadius: '0.25rem' }}
-        className='flex w-full border-0 justify-start bg-navigationSelected dark:bg-navigationSelectedDark border-menuBorder dark:border-menuBorderDark'
+        className='flex w-full border justify-start bg-navigationSelected1 dark:bg-navigationSelectedDark1 border-menuBorder dark:border-menuBorderDark'
       >
         <div className='h-full w-full1 flex justify-start items-center content-center align-middle '>
           {nodes.map((n, i) => (

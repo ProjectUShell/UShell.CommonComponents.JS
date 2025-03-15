@@ -13,6 +13,11 @@ import { LayoutDescriptionRoot } from '../../../[Move2LayoutDescription]/LayoutD
 import { IDataSourceManagerWidget } from './IDataSourceManagerWidget'
 import StructureNavigation2000 from '../_Organisms/StructureNavigation2000'
 import { Logger } from '../../../[Move2Logging]/Logger'
+import TabControl from '../../../_Organisms/TabControl'
+import SidePanelTabControl from '../_Organisms/SidePanelTabControl'
+import ArrowUturnLeftIcon from '../../../_Icons/ArrowUturnLeftIcon'
+import { EntitySchemaService } from '../../../data/EntitySchemaService'
+import Tooltip from '../../../_Atoms/Tooltip'
 
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
@@ -172,86 +177,37 @@ const Guifad1: React.FC<{
        ${classNameContent} border-0 border-blue-400`}
       >
         <aside
-          style={{ minWidth: '72px' }}
-          className={`UShell_Guifad_Aside flex flex-col justify-between
-             ${classNameAside} w-72 py-0`}
+          style={{ minWidth: '300px', maxWidth: '500px', width: '20%' }}
+          className={`UShell_Guifad_Aside overflow-hidden flex flex-col justify-between border-r border-navigationBorder dark:border-navigationBorderDark
+             ${classNameAside}  py-0`}
         >
-          <div className='border-b border-r h-full border-navigationBorder dark:border-navigationBorderDark'>
-            {/* <div className={`p-2 m-0 pl-3 pb-3 border-b-0 border-r ${classNameAsideBorder}`}>
-              Structure
-            </div> */}
-            <StructureNavigation2000
-              schemaRoot={dataSourceManager.getSchemaRoot()}
-              currentRecord={currentRecord}
-              hideList={node.record && !node.parent}
-              entitySchema={node.dataSource.entitySchema!}
-              onRelationSelected={(rel: RelationSchema) => setCurrentRelation(rel)}
-              onRelationEnter={(rel: RelationSchema) => enterRelation(rel, null)}
-              setMode={(mode: 'list' | 'details') => setCurrentMode(mode)}
-              mode={currentMode}
-              currentRelation={currentRelation}
-              className='w-full h-1/2123 '
-              dirty={dirty}
-              entityLayout={layoutDescription.entityLayouts.find(
-                (el) => el.entityName == node.dataSource.entitySchema?.name,
-              )}
-              classNameBorder={classNameAsideBorder}
-            ></StructureNavigation2000>
-          </div>
-          <div className='w-full h-full max-w-full border-t-0 border-navigationBorder dark:border-navigationBorderDark border-r mt-0'>
-            {currentRelation && currentRecord && (
-              <>
-                <div
-                  className='p-2 m-0 pl-3 pb-3 border-b-0 font-bold
-                 border-b-bg7 border-r-0 border-hairlineNavigation dark:border-hairlineNavigationDark'
-                >
-                  Preview Table
-                </div>
-                <PreviewTable
-                  dataSource={
-                    dataSourceManager.tryGetDataSource(currentRelation.foreignEntityName)!
-                  }
-                  onRecordEnter={(r: any) => {
-                    enterRelation(currentRelation, r)
-                  }}
-                  onSelectedRecordsChange={(sr: any[]) => {}}
-                  parentSchema={node.dataSource.entitySchema!}
-                  schemaRoot={dataSourceManager.getSchemaRoot()}
-                  parent={currentRecord}
-                ></PreviewTable>
-              </>
-            )}
-          </div>
-          {/* {!currentRelation && <div className='h-full w-64 pr-1 mt-1'></div>} */}
+          {/* <div className='UShell_Guifad_Aside_Toolbar w-full border-4'>
+            <button>Tab</button>
+            <button>Split</button>
+          </div> */}
+          <SidePanelTabControl
+            classNameAsideBorder={classNameAsideBorder}
+            dataSourceManager={dataSourceManager}
+            currentRecord={currentRecord}
+            dataSource={node.dataSource}
+            enterRelation={enterRelation}
+            dirty={dirty}
+            layoutDescription={layoutDescription}
+          ></SidePanelTabControl>
         </aside>
         <div className='h-full w-full flex flex-col min-w-0'>
-          {/* <header className='flex flex-col bg-breadcrumb dark:bg-breadcrumbDark border-b border-breadcrumbBorder dark:border-breadcrumbBorderDark border-l-0'>
-            <Breadcrumb
-              schemaRoot={dataSourceManager.getSchemaRoot()}
-              nodes={nodes}
-              onNodeClick={(n: ObjectGraphNode[], r: any) => {
-                setCurrentRecord(r)
-                setCurrentNodes(n)
-                const newMode = r ? 'details' : 'list'
-                const currentNode: ObjectGraphNode = n[n.length - 1]
-                if (currentNode.record && !currentNode.parent) {
-                  setCurrentRecord(currentNode.record)
-                  setCurrentMode('details')
-                }
-                // setCurrentMode(newMode)
-              }}
-              dirty={dirty}
-            ></Breadcrumb>
-          </header> */}
           <div className='p-0 h-full overflow-auto'>
             {currentMode == 'list' && (
               <EntityTable
                 dataSourceManagerForNavigations={dataSourceManager}
                 dataSource={node.dataSource}
                 onRecordEnter={(r: any) => {
-                  enterRecord
-                    ? enterRecord(r, node.dataSource.entitySchema!)
-                    : console.log('record enter', r)
+                  if (enterRecord) {
+                    enterRecord(r, node.dataSource.entitySchema!)
+                  } else {
+                    setCurrentRecord(r)
+                    setCurrentMode('details')
+                  }
                 }}
                 onSelectedRecordsChange={(selectedRecords) =>
                   onSelectedRecordsChange(selectedRecords)
@@ -297,6 +253,29 @@ const Guifad1: React.FC<{
                 isCreation={isCreation}
                 labelPosition={labelPosition}
                 classNameDropdownBg='bg-editor dark:bg-editorDark'
+                toolbarItems={
+                  <>
+                    <div className='flex gap-2 mr-6 items-center'>
+                      <button
+                        id='UShell_Guifad1_Toolbar_Back'
+                        className='hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark p-2 px-2 rounded-md'
+                        onClick={() => setCurrentMode('list')}
+                      >
+                        <ArrowUturnLeftIcon></ArrowUturnLeftIcon>
+                      </button>
+                      <div>
+                        {EntitySchemaService.getLabel(
+                          dataSourceManager.getSchemaRoot(),
+                          node.dataSource.entitySchema!.name,
+                          currentRecord,
+                        )}
+                      </div>
+                    </div>
+                    <Tooltip targetId='UShell_Guifad1_Toolbar_Back'>
+                      <div className='m-4'>back to list...</div>
+                    </Tooltip>
+                  </>
+                }
               ></EntityForm>
             )}
           </div>
