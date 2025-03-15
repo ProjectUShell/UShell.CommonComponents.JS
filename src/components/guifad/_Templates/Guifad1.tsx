@@ -18,6 +18,7 @@ import SidePanelTabControl from '../_Organisms/SidePanelTabControl'
 import ArrowUturnLeftIcon from '../../../_Icons/ArrowUturnLeftIcon'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import Tooltip from '../../../_Atoms/Tooltip'
+import PencilIcon from '../../../_Icons/PencilIcon'
 
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
@@ -223,6 +224,16 @@ const Guifad1: React.FC<{
                 formLabelPosition={labelPosition}
                 className='px-2 pb-1'
                 pageSizes={pageSizes}
+                toolbarItems={
+                  currentRecord && (
+                    <button
+                      className='rounded-md p-2 text-blue-600 dark:text-blue-600 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
+                      onClick={() => setCurrentMode('details')}
+                    >
+                      <PencilIcon></PencilIcon>
+                    </button>
+                  )
+                }
               ></EntityTable>
             )}
             {currentMode == 'details' && (

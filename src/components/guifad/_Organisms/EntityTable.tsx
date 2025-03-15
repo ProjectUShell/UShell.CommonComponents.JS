@@ -73,6 +73,7 @@ const EntityTable: React.FC<{
   tableColors?: TableColors
   minWidthInput?: number
   pageSizes?: number[]
+  toolbarItems?: any
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -100,6 +101,7 @@ const EntityTable: React.FC<{
   tableColors,
   minWidthInput,
   pageSizes = [10, 20, 50],
+  toolbarItems,
 }) => {
   return (
     <EntityTable1
@@ -130,6 +132,7 @@ const EntityTable: React.FC<{
       tableColors={tableColors}
       minWidthInput={minWidthInput}
       pageSizes={pageSizes}
+      toolbarItems={toolbarItems}
     ></EntityTable1>
   )
 }
@@ -161,6 +164,7 @@ export const EntityTable1: React.FC<{
   tableColors?: TableColors
   minWidthInput?: number
   pageSizes?: number[]
+  toolbarItems?: any
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -189,6 +193,7 @@ export const EntityTable1: React.FC<{
   tableColors,
   minWidthInput,
   pageSizes = [10, 20, 50],
+  toolbarItems,
 }) => {
   const qcc: any = QueryClientContext
   if (!qcc._currentValue)
@@ -221,6 +226,7 @@ export const EntityTable1: React.FC<{
           tableColors={tableColors}
           minWidthInput={minWidthInput}
           pageSizes={pageSizes}
+          toolbarItems={toolbarItems}
         ></EntityTableInternal>
       </QueryClientProvider>
     )
@@ -250,6 +256,7 @@ export const EntityTable1: React.FC<{
       tableColors={tableColors}
       minWidthInput={minWidthInput}
       pageSizes={pageSizes}
+      toolbarItems={toolbarItems}
     ></EntityTableInternal>
   )
 }
@@ -280,6 +287,7 @@ const EntityTableInternal: React.FC<{
   tableColors?: TableColors
   minWidthInput?: number
   pageSizes?: number[]
+  toolbarItems?: any
 }> = ({
   dataSourceManagerForNavigations,
   dataSource,
@@ -307,6 +315,7 @@ const EntityTableInternal: React.FC<{
   tableColors,
   minWidthInput,
   pageSizes = [10, 20, 50],
+  toolbarItems,
 }) => {
   // const [records, setRecords] = useState<any[]>([])
   const [selectedRecords, setSelectedRecords] = useState<any[]>([])
@@ -603,9 +612,9 @@ const EntityTableInternal: React.FC<{
             border-toolbarBorder dark:border-toolbarBorderDark 
             rounded-sm border-b flex justify-between items-center my-0 p-0`}
           >
-            <div className='flex'>
+            <div className='flex p-1'>
               {enableCrud && (
-                <div className={`flex justify-end p-1 rounded-md`}>
+                <div className={`flex justify-end p-0 rounded-md`}>
                   <button
                     className='rounded-md p-2 text-green-600 dark:text-green-600 hover:bg-toolbarHover dark:hover:bg-toolbarHoverDark'
                     onClick={(e) => addRecord()}
@@ -734,6 +743,7 @@ const EntityTableInternal: React.FC<{
                   </DropdownButton>
                 </div>
               )}
+              {toolbarItems && toolbarItems}
             </div>
 
             {isParent && (
