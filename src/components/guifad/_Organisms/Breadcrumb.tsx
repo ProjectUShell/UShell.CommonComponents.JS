@@ -3,7 +3,10 @@ import { ObjectGraphNode } from '../ObjectGraphNode'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import { SchemaRoot } from 'fusefx-modeldescription'
 import ChevronDown from '../../shell-layout/_Icons/ChevronDown'
+import ArrowUpIcon from '../../../_Icons/ArrowUpIcon' // Import the ArrowUpIcon
 import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
+import ArrowLeftStartOnRectangle from '../../../_Icons/ArrowLeftStartOnRectangle'
+import ArrowUpIcon2 from '../../../_Icons/ArrowUpIcon2'
 
 const Breadcrumb: React.FC<{
   schemaRoot: SchemaRoot
@@ -51,6 +54,22 @@ const Breadcrumb: React.FC<{
         className='flex w-full border justify-start bg-navigationSelected1 dark:bg-navigationSelectedDark1 border-menuBorder dark:border-menuBorderDark'
       >
         <div className='h-full w-full1 flex justify-start items-center content-center align-middle '>
+          <div className='flex justify-start py-1 pl-1 w-full gap-1 items-center'>
+            <button
+              disabled={dirty || nodes.length <= 1} // Disable button if dirty or no parent node
+              className={`rounded-md p-1 m-0 flex justify-center items-center disabled:opacity-50
+              ${
+                dirty || nodes.length <= 1
+                  ? ''
+                  : 'hover:bg-breadcrumbHover dark:hover:bg-breadcrumbHoverDark'
+              }`}
+              onClick={() =>
+                onNodeClick(nodes.slice(0, nodes.length - 1), getCallingRecord(nodes.length - 2))
+              }
+            >
+              <ArrowUpIcon2 size={1.2} strokeWidth={3} rotate={0}></ArrowUpIcon2>
+            </button>
+          </div>
           {nodes.map((n, i) => (
             <div key={i} className='flex justify-start py-1 pl-1  w-full gap-1 items-center'>
               {i > 0 && (
