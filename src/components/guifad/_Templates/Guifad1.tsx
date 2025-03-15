@@ -19,6 +19,7 @@ import ArrowUturnLeftIcon from '../../../_Icons/ArrowUturnLeftIcon'
 import { EntitySchemaService } from '../../../data/EntitySchemaService'
 import Tooltip from '../../../_Atoms/Tooltip'
 import PencilIcon from '../../../_Icons/PencilIcon'
+import SidePanelSecondary from '../_Organisms/SidePanelSecondary'
 
 const Guifad1: React.FC<{
   rootNode: ObjectGraphNode
@@ -54,6 +55,7 @@ const Guifad1: React.FC<{
   const [currentMode, setCurrentMode] = useState<'list' | 'details'>('list')
   const [isCreation, setIsCreation] = useState(false)
   const [dirty, setDirty] = useState(false)
+  const [sidepanelMode, setSidepanelMode] = useState<'tab' | 'split'>('tab')
 
   // useEffects
   useEffect(() => {
@@ -194,6 +196,8 @@ const Guifad1: React.FC<{
             enterRelation={enterRelation}
             dirty={dirty}
             layoutDescription={layoutDescription}
+            mode={sidepanelMode}
+            setMode={setSidepanelMode}
           ></SidePanelTabControl>
         </aside>
         <div className='h-full w-full flex flex-col min-w-0'>
@@ -291,6 +295,29 @@ const Guifad1: React.FC<{
             )}
           </div>
         </div>
+        {sidepanelMode == 'split' && (
+          <aside
+            style={{ minWidth: '300px', maxWidth: '500px', width: '20%' }}
+            className={`UShell_Guifad_Aside overflow-hidden flex flex-col justify-between border-l border-navigationBorder dark:border-navigationBorderDark
+             ${classNameAside}  py-0`}
+          >
+            {/* <div className='UShell_Guifad_Aside_Toolbar w-full border-4'>
+            <button>Tab</button>
+            <button>Split</button>
+          </div> */}
+            <SidePanelSecondary
+              classNameAsideBorder={classNameAsideBorder}
+              dataSourceManager={dataSourceManager}
+              currentRecord={currentRecord}
+              dataSource={node.dataSource}
+              enterRelation={enterRelation}
+              dirty={dirty}
+              layoutDescription={layoutDescription}
+              mode={sidepanelMode}
+              setMode={setSidepanelMode}
+            ></SidePanelSecondary>
+          </aside>
+        )}
       </div>
     </div>
   )
