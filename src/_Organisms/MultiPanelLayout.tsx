@@ -1,19 +1,34 @@
 import React, { useState, useRef } from 'react'
 import ArrowUpIcon2 from '../_Icons/ArrowUpIcon2'
+import Tooltip from '../_Atoms/Tooltip'
+
+export class PanelItem {
+  icon: React.ReactNode
+  content: React.ReactNode
+  title: string = ''
+}
 
 const MultiPanelLayout: React.FC<{
   topPanelContent?: React.ReactNode
-  leftPanelContent?: React.ReactNode
+  leftPanelContent?: React.ReactNode | PanelItem[]
   bottomPanelContent?: React.ReactNode
   rightPanelContent?: React.ReactNode
   leftCollapsable?: boolean
   rightCollapsable?: boolean
-  leftCollapsedMode?: 'arrow' | 'smallBar' | 'none'
+  leftCollapsedMode?: 'arrow' | 'smallBar' | 'smallTabs' | 'none'
   rightCollapsedMode?: 'arrow' | 'smallBar' | 'none'
   mainContent: React.ReactNode
   classNameButtons?: string
   classNameSplitter?: string
   classNameBorder?: string
+  leftVisible?: boolean
+  rightVisible?: boolean
+  topVisible?: boolean
+  bottomVisible?: boolean
+  setLeftVisible?: (value: boolean) => void
+  setRightVisible?: (value: boolean) => void
+  setTopVisible?: (value: boolean) => void
+  setBottomVisible?: (value: boolean) => void
 }> = ({
   topPanelContent,
   leftPanelContent,
@@ -27,11 +42,22 @@ const MultiPanelLayout: React.FC<{
   rightCollapsable = true,
   leftCollapsedMode = 'arrow',
   rightCollapsedMode = 'arrow',
+  leftVisible = true,
+  rightVisible = true,
+  topVisible = true,
+  bottomVisible = true,
+  setLeftVisible,
+  setRightVisible,
+  setTopVisible,
+  setBottomVisible,
 }) => {
   const [isTopPanelVisible, setTopPanelVisible] = useState(true)
-  const [isLeftPanelVisible, setLeftPanelVisible] = useState(true)
+  const [isLeftPanelVisible1, setLeftPanelVisible1] = useState(true)
   const [isBottomPanelVisible, setBottomPanelVisible] = useState(true)
-  const [isRightPanelVisible, setRightPanelVisible] = useState(true)
+  const [isRightPanelVisible1, setRightPanelVisible1] = useState(true)
+
+  const [leftPanelIndex, setLeftPanelIndex] = useState(0)
+  const [rightPanelIndex, setRightPanelIndex] = useState(0)
 
   const [topPanelHeight, setTopPanelHeight] = useState('20%')
   const [leftPanelWidth, setLeftPanelWidth] = useState('20%')
@@ -76,6 +102,71 @@ const MultiPanelLayout: React.FC<{
     document.addEventListener('mouseup', handleMouseUp)
   }
 
+  const isLeftPanelVisible: boolean =
+    leftCollapsedMode == 'none' ? leftVisible : isLeftPanelVisible1
+  const isRightPanelVisible: boolean =
+    rightCollapsedMode == 'none' ? rightVisible : isRightPanelVisible1
+
+  const setLeftPanelVisible = (value: boolean) => {
+    if (leftCollapsedMode == 'none') {
+      setLeftVisible && setLeftVisible(value)
+    } else {
+      setLeftPanelVisible1(value)
+    }
+  }
+
+  function getLeftPanelContent(): React.ReactNode {
+    if (Array.isArray(leftPanelContent)) {
+      return (
+        <div>
+          {leftPanelContent.map((item, index) => {
+            return (
+              <div key={index}>
+                {index == leftPanelIndex && <div className='flex items-center'>{item.content}</div>}
+              </div>
+            )
+          })}
+        </div>
+      )
+    } else {
+      return leftPanelContent
+    }
+  }
+
+  function getLeftTabs(): React.ReactNode[] {
+    return (leftPanelContent as PanelItem[]).map((item, index) => {
+      return (
+        <div
+          key={index}
+          id={'leftPanelTab' + index}
+          className={`flex items-center cursor-pointer p-1 bg-navigation dark:bg-navigationDark
+            ${index == leftPanelIndex ? '' : 'text-slate-500 dark:text-slate-400'} 
+             hover:text-textone hover:dark:text-textonedark
+             `}
+          onClick={() => {
+            if (leftPanelIndex == index) {
+              setLeftPanelVisible(!isLeftPanelVisible)
+            }
+            setLeftPanelIndex(index)
+          }}
+        >
+          {item.icon}
+          <Tooltip targetId={'leftPanelTab' + index}>
+            <div className='p-2'>{item.title}</div>
+          </Tooltip>
+        </div>
+      )
+    })
+  }
+
+  const setRightPanelVisible = (value: boolean) => {
+    if (rightCollapsedMode == 'none') {
+      setRightVisible && setRightVisible(value)
+    } else {
+      setRightPanelVisible1(value)
+    }
+  }
+
   return (
     <div className='relative flex flex-col h-full w-full border-0 border-red-400'>
       {topPanelContent && isTopPanelVisible && (
@@ -106,21 +197,30 @@ const MultiPanelLayout: React.FC<{
         </button>
       )}
       <div className='flex flex-1 h-full'>
+        {leftPanelContent && leftCollapsedMode == 'smallTabs' && (
+          <div
+            className={`border-r h-full flex flex-col px-1
+            ${classNameBorder}`}
+          >
+            {getLeftTabs()}
+          </div>
+        )}
         {leftPanelContent && isLeftPanelVisible && (
           <div
             ref={leftPanelRef}
             className={`border-r p-0 overflow-auto relative ${classNameBorder}`}
             style={{ width: leftPanelWidth }}
           >
-            {leftCollapsable && (
-              <button
-                className={`absolute top-5 right-1 transform -translate-y-1/2 z-40 ${classNameButtons}`}
-                onClick={() => setLeftPanelVisible(false)}
-              >
-                <ArrowUpIcon2 rotate={270}></ArrowUpIcon2>
-              </button>
-            )}
-            {leftPanelContent}
+            {leftCollapsable &&
+              (leftCollapsedMode == 'arrow' || leftCollapsedMode == 'smallBar') && (
+                <button
+                  className={`absolute top-5 right-1 transform -translate-y-1/2 z-40 ${classNameButtons}`}
+                  onClick={() => setLeftPanelVisible(false)}
+                >
+                  <ArrowUpIcon2 rotate={270}></ArrowUpIcon2>
+                </button>
+              )}
+            {getLeftPanelContent()}
             <div
               className={`absolute top-0 right-0 w-2 h-full cursor-col-resize border-0 border-orange-400 ${classNameSplitter}`}
               onMouseDown={(e) => handleMouseDown(e, 'left')}
@@ -160,7 +260,7 @@ const MultiPanelLayout: React.FC<{
             className={`border-l p-0 overflow-auto ${classNameBorder} relative`}
             style={{ width: rightPanelWidth }}
           >
-            {rightCollapsable && (
+            {rightCollapsable && rightCollapsedMode != 'none' && (
               <button
                 className={`absolute top-5 right-1 transform -translate-y-1/2 z-40 ${classNameButtons}`}
                 onClick={() => setRightPanelVisible(false)}
