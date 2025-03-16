@@ -13,9 +13,11 @@ const MutliPanelLayoutSmallTabs = () => {
     <div className='h-96'>
       <MultiPanelLayout
         leftCollapsedMode='smallTabs'
+        rightCollapsedMode='smallTabs'
         mainContent={<div>Test</div>}
-        leftPanelContent={leftPanelTabs}
-        rightPanelContent={<div>Right Panel Content</div>}
+        // leftPanelContent={leftPanelTabs}
+        leftPanelContent={[]}
+        rightPanelContent={leftPanelTabs}
       ></MultiPanelLayout>
     </div>
   )

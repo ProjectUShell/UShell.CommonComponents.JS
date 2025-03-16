@@ -50,7 +50,7 @@ const Tooltip: React.FC<{ targetId: string; children: any }> = ({ targetId, chil
         <>
           <Dropdown refId={targetId} topOffset={10} leftOffset={10}>
             <div
-              className='flex z-40 rounded-md p-1
+              className='flex z-40 rounded-md p-1 select-none
               bg-bg1 dark:bg-bg1dark shadow-md border dark:border-bg3dark'
             >
               {children}

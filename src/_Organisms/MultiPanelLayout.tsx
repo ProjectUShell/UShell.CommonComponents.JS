@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import ArrowUpIcon2 from '../_Icons/ArrowUpIcon2'
 import Tooltip from '../_Atoms/Tooltip'
+import Bars3Icon from '../_Icons/Bars3Icon'
 
 export class PanelItem {
   icon: React.ReactNode
@@ -12,11 +13,11 @@ const MultiPanelLayout: React.FC<{
   topPanelContent?: React.ReactNode
   leftPanelContent?: React.ReactNode | PanelItem[]
   bottomPanelContent?: React.ReactNode
-  rightPanelContent?: React.ReactNode
+  rightPanelContent?: React.ReactNode | PanelItem[]
   leftCollapsable?: boolean
   rightCollapsable?: boolean
   leftCollapsedMode?: 'arrow' | 'smallBar' | 'smallTabs' | 'none'
-  rightCollapsedMode?: 'arrow' | 'smallBar' | 'none'
+  rightCollapsedMode?: 'arrow' | 'smallBar' | 'smallTabs' | 'none'
   mainContent: React.ReactNode
   classNameButtons?: string
   classNameSplitter?: string
@@ -134,6 +135,22 @@ const MultiPanelLayout: React.FC<{
   }
 
   function getLeftTabs(): React.ReactNode[] {
+    if (Array.isArray(leftPanelContent) && leftPanelContent.length == 0) {
+      return [
+        <div
+          id={'leftPanelTabDummy'}
+          className={`flex items-center cursor-pointer p-1 bg-navigation dark:bg-navigationDark
+            ${'text-slate-500 dark:text-slate-400'} 
+             hover:text-textone hover:dark:text-textonedark
+             `}
+          onClick={() => {
+            setLeftPanelVisible(!isLeftPanelVisible)
+          }}
+        >
+          <Bars3Icon></Bars3Icon>
+        </div>,
+      ]
+    }
     return (leftPanelContent as PanelItem[]).map((item, index) => {
       return (
         <div
@@ -165,6 +182,68 @@ const MultiPanelLayout: React.FC<{
     } else {
       setRightPanelVisible1(value)
     }
+  }
+
+  function getRightPanelContent(): React.ReactNode {
+    if (Array.isArray(rightPanelContent)) {
+      return (
+        <div>
+          {rightPanelContent.map((item, index) => {
+            return (
+              <div key={index}>
+                {index == rightPanelIndex && (
+                  <div className='flex items-center'>{item.content}</div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )
+    } else {
+      return rightPanelContent
+    }
+  }
+
+  function getRightTabs(): React.ReactNode[] {
+    if (Array.isArray(rightPanelContent) && rightPanelContent.length == 0) {
+      return [
+        <div
+          id={'rightPanelTabDummy'}
+          className={`flex items-center cursor-pointer p-1 bg-navigation dark:bg-navigationDark
+            ${'text-slate-500 dark:text-slate-400'} 
+             hover:text-textone hover:dark:text-textonedark
+             `}
+          onClick={() => {
+            setRightPanelVisible(!isRightPanelVisible)
+          }}
+        >
+          <Bars3Icon></Bars3Icon>
+        </div>,
+      ]
+    }
+    return (rightPanelContent as PanelItem[]).map((item, index) => {
+      return (
+        <div
+          key={index}
+          id={'rightPanelTab' + index}
+          className={`flex items-center cursor-pointer p-1 bg-navigation dark:bg-navigationDark
+            ${index == rightPanelIndex ? '' : 'text-slate-500 dark:text-slate-400'} 
+             hover:text-textone hover:dark:text-textonedark
+             `}
+          onClick={() => {
+            if (rightPanelIndex == index) {
+              setRightPanelVisible(!isRightPanelVisible)
+            }
+            setRightPanelIndex(index)
+          }}
+        >
+          {item.icon}
+          <Tooltip targetId={'rightPanelTab' + index}>
+            <div className='p-2'>{item.title}</div>
+          </Tooltip>
+        </div>
+      )
+    })
   }
 
   return (
@@ -254,13 +333,14 @@ const MultiPanelLayout: React.FC<{
             ></div>
           )}
         </div>
+
         {rightPanelContent && isRightPanelVisible && (
           <div
             ref={rightPanelRef}
             className={`border-l p-0 overflow-auto ${classNameBorder} relative`}
             style={{ width: rightPanelWidth }}
           >
-            {rightCollapsable && rightCollapsedMode != 'none' && (
+            {rightCollapsable && rightCollapsedMode == 'arrow' && (
               <button
                 className={`absolute top-5 right-1 transform -translate-y-1/2 z-40 ${classNameButtons}`}
                 onClick={() => setRightPanelVisible(false)}
@@ -268,16 +348,16 @@ const MultiPanelLayout: React.FC<{
                 <ArrowUpIcon2 rotate={90}></ArrowUpIcon2>
               </button>
             )}
-            {rightPanelContent}
+            {getRightPanelContent()}
           </div>
         )}
-        {rightPanelContent && !isRightPanelVisible && (
-          <button
-            className={`absolute top-1/2 right-0 transform -translate-y-1/2  p-1 z-40 ${classNameButtons}`}
-            onClick={() => setRightPanelVisible(true)}
+        {rightPanelContent && rightCollapsedMode == 'smallTabs' && (
+          <div
+            className={`border-l h-full flex flex-col px-1
+            ${classNameBorder}`}
           >
-            <ArrowUpIcon2 rotate={270}></ArrowUpIcon2>
-          </button>
+            {getRightTabs()}
+          </div>
         )}
         {rightPanelContent && !isRightPanelVisible && rightCollapsedMode == 'arrow' && (
           <button
