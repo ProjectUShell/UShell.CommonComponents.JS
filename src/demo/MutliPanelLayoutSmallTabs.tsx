@@ -2,11 +2,25 @@ import React from 'react'
 import MultiPanelLayout, { PanelItem } from '../_Organisms/MultiPanelLayout'
 import StructureIcon from '../_Icons/StructureIcon'
 import FolderIcon from '../components/shell-layout/_Icons/FolderIcon'
+import PencilIcon from '../_Icons/PencilIcon'
+import MagnifyingGlassIcon from '../_Icons/MagnifyingGlassIcon'
 
 const MutliPanelLayoutSmallTabs = () => {
+  const rightPanelTabs: PanelItem[] = [
+    {
+      icon: <StructureIcon></StructureIcon>,
+      content: <div>Structure</div>,
+      title: 'Structure',
+    },
+    { icon: <FolderIcon></FolderIcon>, content: <div>Folder</div>, title: 'Folder' },
+  ]
   const leftPanelTabs: PanelItem[] = [
-    { icon: <StructureIcon></StructureIcon>, content: <div>Left Panel 1</div>, title: 'Structure' },
-    { icon: <FolderIcon></FolderIcon>, content: <div>Left Panel 2</div>, title: 'Folder' },
+    { icon: <PencilIcon></PencilIcon>, content: <div>Details</div>, title: 'Details' },
+    {
+      icon: <MagnifyingGlassIcon></MagnifyingGlassIcon>,
+      content: <div>Search</div>,
+      title: 'Search',
+    },
   ]
 
   return (
@@ -16,8 +30,8 @@ const MutliPanelLayoutSmallTabs = () => {
         rightCollapsedMode='smallTabs'
         mainContent={<div>Test</div>}
         // leftPanelContent={leftPanelTabs}
-        leftPanelContent={[]}
-        rightPanelContent={leftPanelTabs}
+        leftPanelContent={leftPanelTabs}
+        rightPanelContent={rightPanelTabs}
       ></MultiPanelLayout>
     </div>
   )

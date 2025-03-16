@@ -13,9 +13,9 @@ const ArrowUpIcon2: React.FC<{ rotate?: number; size?: number; strokeWidth?: num
       viewBox='0 0 24 24'
       fill='currentColor'
       stroke='currentColor'
-      strokeWidth={strokeWidth}
       strokeLinecap='round'
       strokeLinejoin='round'
+      strokeWidth={strokeWidth}
       style={{ rotate: `${rotate}deg`, width: `${size}rem`, height: `${size}rem` }}
     >
       <path d='M12 19V6M5 12l7-7 7 7' />

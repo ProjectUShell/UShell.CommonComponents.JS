@@ -160,6 +160,10 @@ const MultiPanelLayout: React.FC<{
             ${index == leftPanelIndex ? '' : 'text-slate-500 dark:text-slate-400'} 
              hover:text-textone hover:dark:text-textonedark
              `}
+          draggable
+          onDragStart={(e) => handleDragStart(e, 'left', index)}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => handleDrop(e, 'left')}
           onClick={() => {
             if (leftPanelIndex == index) {
               setLeftPanelVisible(!isLeftPanelVisible)
@@ -168,9 +172,6 @@ const MultiPanelLayout: React.FC<{
           }}
         >
           {item.icon}
-          <Tooltip targetId={'leftPanelTab' + index}>
-            <div className='p-2'>{item.title}</div>
-          </Tooltip>
         </div>
       )
     })
@@ -230,6 +231,10 @@ const MultiPanelLayout: React.FC<{
             ${index == rightPanelIndex ? '' : 'text-slate-500 dark:text-slate-400'} 
              hover:text-textone hover:dark:text-textonedark
              `}
+          draggable
+          onDragStart={(e) => handleDragStart(e, 'right', index)}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => handleDrop(e, 'right')}
           onClick={() => {
             if (rightPanelIndex == index) {
               setRightPanelVisible(!isRightPanelVisible)
@@ -238,12 +243,38 @@ const MultiPanelLayout: React.FC<{
           }}
         >
           {item.icon}
-          <Tooltip targetId={'rightPanelTab' + index}>
-            <div className='p-2'>{item.title}</div>
-          </Tooltip>
         </div>
       )
     })
+  }
+
+  const handleDragStart = (e: React.DragEvent, panel: string, index: number) => {
+    e.dataTransfer.setData('panel', panel)
+    e.dataTransfer.setData('index', index.toString())
+  }
+
+  const handleDrop = (e: React.DragEvent, targetPanel: string) => {
+    const sourcePanel = e.dataTransfer.getData('panel')
+    const index = parseInt(e.dataTransfer.getData('index'))
+
+    if (sourcePanel === targetPanel) return
+
+    if (sourcePanel === 'left' && Array.isArray(leftPanelContent)) {
+      const item = (leftPanelContent as PanelItem[]).splice(index, 1)[0]
+      if (Array.isArray(rightPanelContent)) {
+        ;(rightPanelContent as PanelItem[]).push(item)
+      }
+    } else if (sourcePanel === 'right' && Array.isArray(rightPanelContent)) {
+      const item = (rightPanelContent as PanelItem[]).splice(index, 1)[0]
+      if (Array.isArray(leftPanelContent)) {
+        ;(leftPanelContent as PanelItem[]).push(item)
+      }
+    }
+
+    setLeftPanelIndex(0)
+    setRightPanelIndex(0)
+    setLeftPanelVisible(true)
+    setRightPanelVisible(true)
   }
 
   return (
@@ -278,8 +309,10 @@ const MultiPanelLayout: React.FC<{
       <div className='flex flex-1 h-full'>
         {leftPanelContent && leftCollapsedMode == 'smallTabs' && (
           <div
-            className={`border-r h-full flex flex-col px-1
+            className={`UShell_MultiPanelLayout_LeftTabBar border-r h-full flex flex-col px-1
             ${classNameBorder}`}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => handleDrop(e, 'left')}
           >
             {getLeftTabs()}
           </div>
@@ -353,8 +386,10 @@ const MultiPanelLayout: React.FC<{
         )}
         {rightPanelContent && rightCollapsedMode == 'smallTabs' && (
           <div
-            className={`border-l h-full flex flex-col px-1
+            className={`UShell_MultiPanelLayout_RightTabBar border-l h-full flex flex-col px-1
             ${classNameBorder}`}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => handleDrop(e, 'right')}
           >
             {getRightTabs()}
           </div>
