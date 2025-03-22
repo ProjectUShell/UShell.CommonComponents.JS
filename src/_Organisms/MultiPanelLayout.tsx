@@ -12,8 +12,10 @@ export class PanelItem {
 const MultiPanelLayout: React.FC<{
   topPanelContent?: React.ReactNode
   leftPanelContent?: React.ReactNode | PanelItem[]
+  setLeftPanelContent?: (value: React.ReactNode | PanelItem[]) => void
   bottomPanelContent?: React.ReactNode
   rightPanelContent?: React.ReactNode | PanelItem[]
+  setRightPanelContent?: (value: React.ReactNode | PanelItem[]) => void
   leftCollapsable?: boolean
   rightCollapsable?: boolean
   leftCollapsedMode?: 'arrow' | 'smallBar' | 'smallTabs' | 'none'
@@ -33,8 +35,10 @@ const MultiPanelLayout: React.FC<{
 }> = ({
   topPanelContent,
   leftPanelContent,
+  setLeftPanelContent,
   bottomPanelContent,
   rightPanelContent,
+  setRightPanelContent,
   mainContent,
   classNameButtons,
   classNameBorder = 'border-navigationBorder dark:border-navigationBorderDark',
@@ -263,11 +267,13 @@ const MultiPanelLayout: React.FC<{
       const item = (leftPanelContent as PanelItem[]).splice(index, 1)[0]
       if (Array.isArray(rightPanelContent)) {
         ;(rightPanelContent as PanelItem[]).push(item)
+        setRightPanelContent && setRightPanelContent(rightPanelContent)
       }
     } else if (sourcePanel === 'right' && Array.isArray(rightPanelContent)) {
       const item = (rightPanelContent as PanelItem[]).splice(index, 1)[0]
       if (Array.isArray(leftPanelContent)) {
         ;(leftPanelContent as PanelItem[]).push(item)
+        setLeftPanelContent && setLeftPanelContent(leftPanelContent)
       }
     }
 

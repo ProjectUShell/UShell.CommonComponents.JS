@@ -56,6 +56,7 @@ import TreeViewDoc from './demo/TreeViewDoc'
 import GuifadLocalDoc from './demo/GuifadLocalDoc'
 import { LocalStoreDataSourceManager } from './data/LocalDataSourceManager'
 import MutliPanelLayoutDoc from './demo/MutliPanelLayoutDoc'
+import KanbanBoardDoc from './demo/KanbanBoardDoc'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -86,6 +87,7 @@ const Demo = () => {
       'MultiButton',
       'TreeView',
       'MultiPanelLayout',
+      'KanbanBoard',
     ],
     'FuseFx Components': [
       'Guifad',
@@ -322,6 +324,7 @@ const Demo = () => {
       {currentComponent == 'Dialog' && <DialogDoc></DialogDoc>}
       {currentComponent == 'TreeView' && <TreeViewDoc></TreeViewDoc>}
       {currentComponent == 'MultiPanelLayout' && <MutliPanelLayoutDoc></MutliPanelLayoutDoc>}
+      {currentComponent == 'KanbanBoard' && <KanbanBoardDoc></KanbanBoardDoc>}
       {currentComponent == 'Menu' && <MenuDoc></MenuDoc>}
       {currentComponent == 'EntitySelection' && <EntitySelectionDoc></EntitySelectionDoc>}
       {currentComponent == 'Notification' && <NotificationDoc></NotificationDoc>}
