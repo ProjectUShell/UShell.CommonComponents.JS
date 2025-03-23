@@ -123,11 +123,18 @@ const MultiPanelLayout: React.FC<{
   function getLeftPanelContent(): React.ReactNode {
     if (Array.isArray(leftPanelContent)) {
       return (
-        <div>
+        <div className='flex flex-col h-full border-0'>
           {leftPanelContent.map((item, index) => {
             return (
-              <div key={index}>
-                {index == leftPanelIndex && <div className='flex items-center'>{item.content}</div>}
+              <div key={index} className='h-full border-0'>
+                {index == leftPanelIndex && (
+                  <div className='flex flex-col items-center h-full  border-0'>
+                    <div className='self-start flex justify-start border-0 pt-2 pb-1 pl-4 uppercase text-xs'>
+                      {item.title}
+                    </div>
+                    {item.content}
+                  </div>
+                )}
               </div>
             )
           })}
@@ -161,7 +168,13 @@ const MultiPanelLayout: React.FC<{
           key={index}
           id={'leftPanelTab' + index}
           className={`flex items-center cursor-pointer p-1 bg-navigation dark:bg-navigationDark
-            ${index == leftPanelIndex ? '' : 'text-slate-500 dark:text-slate-400'} 
+            ${
+              index == leftPanelIndex
+                ? isLeftPanelVisible
+                  ? 'border-l-2 border-prim4 dark:border-prim8'
+                  : 'pl-1.5'
+                : 'text-slate-500 dark:text-slate-400 pl-1.5'
+            } 
              hover:text-textone hover:dark:text-textonedark
              `}
           draggable
@@ -197,7 +210,12 @@ const MultiPanelLayout: React.FC<{
             return (
               <div key={index}>
                 {index == rightPanelIndex && (
-                  <div className='flex items-center'>{item.content}</div>
+                  <div className='flex flex-col items-center'>
+                    <div className='self-start flex justify-start border-0 pt-2 pb-1 pl-4 uppercase text-xs'>
+                      {item.title}
+                    </div>
+                    {item.content}
+                  </div>
                 )}
               </div>
             )
@@ -232,7 +250,13 @@ const MultiPanelLayout: React.FC<{
           key={index}
           id={'rightPanelTab' + index}
           className={`flex items-center cursor-pointer p-1 bg-navigation dark:bg-navigationDark
-            ${index == rightPanelIndex ? '' : 'text-slate-500 dark:text-slate-400'} 
+            ${
+              index == rightPanelIndex
+                ? isRightPanelVisible
+                  ? 'border-r-2 border-prim5 dark:border-prim8'
+                  : 'pr-1.5'
+                : 'text-slate-500 dark:text-slate-400 pr-1.5'
+            } 
              hover:text-textone hover:dark:text-textonedark
              `}
           draggable
@@ -315,7 +339,7 @@ const MultiPanelLayout: React.FC<{
       <div className='flex flex-1 h-full'>
         {leftPanelContent && leftCollapsedMode == 'smallTabs' && (
           <div
-            className={`UShell_MultiPanelLayout_LeftTabBar border-r h-full flex flex-col px-1
+            className={`UShell_MultiPanelLayout_LeftTabBar border-r h-full flex flex-col p-1 py-2
             ${classNameBorder}`}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => handleDrop(e, 'left')}
@@ -392,7 +416,7 @@ const MultiPanelLayout: React.FC<{
         )}
         {rightPanelContent && rightCollapsedMode == 'smallTabs' && (
           <div
-            className={`UShell_MultiPanelLayout_RightTabBar border-l h-full flex flex-col px-1
+            className={`UShell_MultiPanelLayout_RightTabBar border-l h-full flex flex-col p-1 py-2
             ${classNameBorder}`}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => handleDrop(e, 'right')}
