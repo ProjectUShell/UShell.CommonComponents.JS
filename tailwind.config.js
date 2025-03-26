@@ -23,27 +23,27 @@ function getBorder(i, d) {
   light = getLight(i + 2, d)
   light = light + (d ? 10 : -5)
   sat = getSat(i, d)
-  return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
+  return 'hsl(' + hue + ', ' + s + '%, ' + light + '%)'
 }
 
 function getHover(i, d) {
   light = getLight(i + 2, d)
   light = light + (d ? 12 : -10)
   sat = getSat(i, d)
-  return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
+  return 'hsl(' + hue + ', ' + s + '%, ' + light + '%)'
 }
 
 function getSelected(i, d) {
   light = getLight(i + 2, d)
   light = light + (d ? 7 : -5)
   sat = getSat(i, d)
-  return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
+  return 'hsl(' + hue + ', ' + s + '%, ' + light + '%)'
 }
 
 function getBg(i, d) {
   light = getLight(i, d)
   s = getSat(i, d)
-  return 'hsl(' + hue + ' ' + s + ' ' + light + ')'
+  return 'hsl(' + hue + ', ' + s + '%, ' + light + '%)'
 }
 
 function getLight(i, d) {

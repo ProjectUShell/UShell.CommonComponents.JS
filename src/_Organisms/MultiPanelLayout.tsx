@@ -126,7 +126,7 @@ const MultiPanelLayout: React.FC<{
         <div className='flex flex-col h-full border-0'>
           {leftPanelContent.map((item, index) => {
             return (
-              <div key={index} className='h-full border-0'>
+              <div key={index} className='h-full1 border-0'>
                 {index == leftPanelIndex && (
                   <div className='flex flex-col items-center h-full  border-0'>
                     <div className='self-start flex justify-start border-0 pt-2 pb-1 pl-4 uppercase text-xs'>
@@ -292,17 +292,19 @@ const MultiPanelLayout: React.FC<{
       if (Array.isArray(rightPanelContent)) {
         ;(rightPanelContent as PanelItem[]).push(item)
         setRightPanelContent && setRightPanelContent(rightPanelContent)
+        setRightPanelIndex(index + 1)
       }
     } else if (sourcePanel === 'right' && Array.isArray(rightPanelContent)) {
       const item = (rightPanelContent as PanelItem[]).splice(index, 1)[0]
       if (Array.isArray(leftPanelContent)) {
         ;(leftPanelContent as PanelItem[]).push(item)
         setLeftPanelContent && setLeftPanelContent(leftPanelContent)
+        setLeftPanelIndex(index + 1)
       }
     }
 
-    setLeftPanelIndex(0)
-    setRightPanelIndex(0)
+    // setLeftPanelIndex(0)
+    // setRightPanelIndex(0)
     setLeftPanelVisible(true)
     setRightPanelVisible(true)
   }
@@ -347,11 +349,18 @@ const MultiPanelLayout: React.FC<{
             {getLeftTabs()}
           </div>
         )}
-        {leftPanelContent && isLeftPanelVisible && (
+        {leftPanelContent && (
           <div
             ref={leftPanelRef}
-            className={`border-r p-0 overflow-auto relative ${classNameBorder}`}
-            style={{ width: leftPanelWidth }}
+            className={`p-0 overflow-auto relative transition-all ${
+              isLeftPanelVisible && classNameBorder
+            } ${isLeftPanelVisible ? 'border-r' : 'border-0 border-red-400 overflow-hidden'} `}
+            style={{
+              width: isLeftPanelVisible ? leftPanelWidth : 0,
+              transitionProperty: 'width',
+              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+              transitionDuration: '150ms',
+            }}
           >
             {leftCollapsable &&
               (leftCollapsedMode == 'arrow' || leftCollapsedMode == 'smallBar') && (
@@ -397,11 +406,18 @@ const MultiPanelLayout: React.FC<{
           )}
         </div>
 
-        {rightPanelContent && isRightPanelVisible && (
+        {rightPanelContent && (
           <div
             ref={rightPanelRef}
-            className={`border-l p-0 overflow-auto ${classNameBorder} relative`}
-            style={{ width: rightPanelWidth }}
+            className={`p-0 overflow-auto relative transition-all ${
+              isRightPanelVisible && classNameBorder
+            } ${isRightPanelVisible ? 'border-l' : 'border-0 border-red-400 overflow-hidden'} `}
+            style={{
+              width: isRightPanelVisible ? rightPanelWidth : 0,
+              transitionProperty: 'width',
+              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+              transitionDuration: '150ms',
+            }}
           >
             {rightCollapsable && rightCollapsedMode == 'arrow' && (
               <button
