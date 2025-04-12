@@ -4,6 +4,7 @@ import Paging from '../components/guifad/_Molecules/Paging'
 import DocComponent from './DocComponent'
 import DropdownSelect from '../_Atoms/DropdownSelect'
 import DropdownSelectBasic from './DropdownSelectBasic'
+import DropdownSelectLarge from './DropdownSelectLarge'
 
 const DropdownMultiSelectDemo = () => {
   return (
@@ -18,6 +19,12 @@ const DropdownMultiSelectDemo = () => {
           demoExplanation: 'Basic Demo',
           sourceCode: require('!!raw-loader!./DropdownSelectBasic.tsx').default.toString(),
           demoComponent: <DropdownSelectBasic></DropdownSelectBasic>,
+        },
+        {
+          demoTitle: 'Large',
+          demoExplanation: 'Large Demo',
+          sourceCode: require('!!raw-loader!./DropdownSelectLarge.tsx').default.toString(),
+          demoComponent: <DropdownSelectLarge></DropdownSelectLarge>,
         },
       ]}
     ></DocComponent>

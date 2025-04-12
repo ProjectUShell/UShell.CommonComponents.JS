@@ -8,10 +8,11 @@ const BoardCard: React.FC<{ card: any; titleField: string }> = ({ card, titleFie
         margin: '0 0 0px 0',
         borderRadius: '4px',
       }}
-      className='bg-menu dark:bg-menuDark 
+      className='flex flex-col gap-1 bg-menu dark:bg-menuDark 
         border border-menuBorder dark:border-menuBorderDark'
     >
-      {card[titleField]}
+      <div>{card[titleField]}</div>
+      <div>{card['priority']}</div>
     </div>
   )
 }

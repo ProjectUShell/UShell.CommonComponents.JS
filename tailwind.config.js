@@ -178,6 +178,7 @@ module.exports = {
         editorBorder: getBorder(3),
         editorHover: getHover(3),
         topbar: modern ? getBg(5) : getBg(8),
+        topbarBorder: modern ? getBorder(5) : getBorder(8),
         topbarHover: modern ? getHover(5) : getHover(8),
         topbarshadow: modern ? getBg(0) : getBg(0),
         menu: modern ? getBg(5) : getBg(6),

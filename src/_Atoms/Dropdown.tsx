@@ -179,13 +179,13 @@ const Dropdown: React.FC<{
           style={{
             height: undefined,
             maxHeight: getHeight(),
-            width: minWidth ? getWidth() : undefined,
+            minWidth: minWidth ? getWidth() : undefined,
             bottom: getBottom(),
             top: getTop(),
             left: getLeft(),
             right: getRight(),
           }}
-          className={`fixed z-50  shadow-lg dark:shadow-bg10dark  overflow-hidden 
+          className={`fixed z-50  shadow-lg shadow-bg14 dark:shadow-bg10dark  overflow-hidden 
              flex flex-col justify-center items-center w-max ${className} border-0 bg-transparent border-pink-400`}
         >
           {children}

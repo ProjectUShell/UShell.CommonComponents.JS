@@ -34,7 +34,7 @@ const TopBar: React.FC<{
 }) => {
   return (
     <header
-      style={{ borderBottomWidth: shellSettings.colorMode == ColorMode.Dark ? '1px' : '0px' }}
+      style={{ borderBottomWidth: shellSettings.colorMode == ColorMode.Dark ? '1px' : '1px' }}
       className='bg-topbar dark:bg-topbarDark static top-0 flex flex-col z-30 px-6 
         text-textone dark:text-textonedark shadow-topbarshadow1 border-topbarBorder dark:border-topbarBorderDark '
     >

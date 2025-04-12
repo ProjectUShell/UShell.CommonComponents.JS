@@ -232,7 +232,8 @@ const DropdownSelect: React.FC<{
             leftOffset={0}
             bottomOffset={bottomOffset ? bottomOffset : undefined}
             topOffset={topOffset ? topOffset : undefined}
-            minWidth={minWidth != undefined}
+            // minWidth={minWidth != undefined}
+            minWidth={true}
           >
             <div
               className={`w-full h-full overflow-auto flex flex-col p-0 border-2 dark:border-bg4dark  ${
