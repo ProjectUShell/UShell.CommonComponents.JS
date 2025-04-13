@@ -287,7 +287,7 @@ const Guifad1: React.FC<{
               </div>
             </div>
           }
-          leftPanelContent={[
+          initialLeftPanelContent={[
             {
               title: 'Structure',
               content: (
@@ -313,7 +313,7 @@ const Guifad1: React.FC<{
               icon: <StructureIcon size={1.3} strokeWidth={2}></StructureIcon>,
             },
           ]}
-          rightPanelContent={[
+          initialRightPanelContent={[
             {
               title: 'Stack',
               content: <div>Stack</div>,

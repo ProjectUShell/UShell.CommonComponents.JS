@@ -6,8 +6,8 @@ const MutliPanelLayoutBasic = () => {
     <div className='h-96'>
       <MultiPanelLayout
         mainContent={<div>Test</div>}
-        leftPanelContent={<div>Left Panel Content</div>}
-        rightPanelContent={<div>Right Panel Content</div>}
+        initialLeftPanelContent={<div>Left Panel Content</div>}
+        initialRightPanelContent={<div>Right Panel Content</div>}
       ></MultiPanelLayout>
     </div>
   )

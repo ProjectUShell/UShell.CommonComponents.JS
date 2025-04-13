@@ -17,7 +17,7 @@ const MutliPanelLayoutExternalControl = () => {
       </div>
       <MultiPanelLayout
         mainContent={<div>Test</div>}
-        leftPanelContent={<div>Left Panel Content</div>}
+        initialLeftPanelContent={<div>Left Panel Content</div>}
         leftCollapsedMode='none'
         leftVisible={!leftPanelCollapsed}
         setLeftVisible={(v) => setLeftPanelCollapsed(!v)}

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import ArrowUpIcon2 from '../_Icons/ArrowUpIcon2'
 import Tooltip from '../_Atoms/Tooltip'
 import Bars3Icon from '../_Icons/Bars3Icon'
@@ -11,10 +11,10 @@ export class PanelItem {
 
 const MultiPanelLayout: React.FC<{
   topPanelContent?: React.ReactNode
-  leftPanelContent?: React.ReactNode | PanelItem[]
+  initialLeftPanelContent?: React.ReactNode | PanelItem[]
   setLeftPanelContent?: (value: React.ReactNode | PanelItem[]) => void
   bottomPanelContent?: React.ReactNode
-  rightPanelContent?: React.ReactNode | PanelItem[]
+  initialRightPanelContent?: React.ReactNode | PanelItem[]
   setRightPanelContent?: (value: React.ReactNode | PanelItem[]) => void
   leftCollapsable?: boolean
   rightCollapsable?: boolean
@@ -34,11 +34,9 @@ const MultiPanelLayout: React.FC<{
   setBottomVisible?: (value: boolean) => void
 }> = ({
   topPanelContent,
-  leftPanelContent,
-  setLeftPanelContent,
+  initialLeftPanelContent,
   bottomPanelContent,
-  rightPanelContent,
-  setRightPanelContent,
+  initialRightPanelContent,
   mainContent,
   classNameButtons,
   classNameBorder = 'border-navigationBorder dark:border-navigationBorderDark',
@@ -74,6 +72,33 @@ const MultiPanelLayout: React.FC<{
   const bottomPanelRef = useRef<HTMLDivElement>(null)
   const rightPanelRef = useRef<HTMLDivElement>(null)
 
+  const [leftPanelContent, setLeftPanelContent] = useState<React.ReactNode | PanelItem[]>(
+    getInitialLeftPanelContent(),
+  )
+  const [rightPanelContent, setRightPanelContent] = useState<React.ReactNode | PanelItem[]>(
+    getInitialRightPanelContent(),
+  )
+
+  const [contextMenu, setContextMenu] = useState<{
+    visible: boolean
+    x: number
+    y: number
+    panel: 'left' | 'right'
+    index: number
+  }>({ visible: false, x: 0, y: 0, panel: 'left', index: -1 })
+
+  useEffect(() => {
+    console.log('change')
+    if (!Array.isArray(leftPanelContent)) return
+    if (!Array.isArray(rightPanelContent)) return
+    localStorage.setItem(
+      'multiPanelLayout',
+      JSON.stringify({
+        left: leftPanelContent.map((x) => x.title),
+        right: rightPanelContent.map((x) => x.title),
+      }),
+    )
+  }, [leftPanelContent, rightPanelContent])
   const handleMouseDown = (e: React.MouseEvent, direction: string) => {
     const startX = e.clientX
     const startY = e.clientY
@@ -105,6 +130,90 @@ const MultiPanelLayout: React.FC<{
 
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
+  }
+
+  function getInitialLeftPanelContent(): React.ReactNode | PanelItem[] {
+    if (!initialLeftPanelContent) return <></>
+    if (!Array.isArray(initialLeftPanelContent)) return initialLeftPanelContent
+    const multiPanelLayoutJson = localStorage.getItem('multiPanelLayout')
+    if (!multiPanelLayoutJson) return initialLeftPanelContent
+    const multiPanelLayout: { left: string[]; right: string[] } = JSON.parse(multiPanelLayoutJson)
+    const result: PanelItem[] = []
+    initialLeftPanelContent.forEach((item, index) => {
+      if (!multiPanelLayout.right.includes(item.title)) {
+        result.push(item)
+      }
+    })
+    multiPanelLayout.left.forEach((item) => {
+      if (result.map((x) => x.title).includes(item)) return
+      const foundItem = initialLeftPanelContent.find((x) => x.title === item)
+      if (foundItem) {
+        result.push(foundItem as PanelItem)
+      }
+      if (!initialRightPanelContent) return
+      if (!Array.isArray(initialRightPanelContent)) return
+      const foundItemR = initialRightPanelContent.find((x) => x.title === item)
+      if (foundItemR) {
+        result.push(foundItemR as PanelItem)
+      }
+    })
+
+    return result
+  }
+
+  function getInitialRightPanelContent(): React.ReactNode | PanelItem[] {
+    if (!initialRightPanelContent) return <></>
+    if (!Array.isArray(initialRightPanelContent)) return initialRightPanelContent
+    const multiPanelLayoutJson = localStorage.getItem('multiPanelLayout')
+    if (!multiPanelLayoutJson) return initialRightPanelContent
+    const multiPanelLayout: { left: string[]; right: string[] } = JSON.parse(multiPanelLayoutJson)
+    const result: PanelItem[] = []
+    initialRightPanelContent.forEach((item, index) => {
+      if (!multiPanelLayout.left.includes(item.title)) {
+        result.push(item)
+      }
+    })
+    multiPanelLayout.right.forEach((item) => {
+      if (result.map((x) => x.title).includes(item)) return
+      const foundItem = initialRightPanelContent.find((x) => x.title === item)
+      if (foundItem) {
+        result.push(foundItem as PanelItem)
+      }
+      if (!initialLeftPanelContent) return
+      if (!Array.isArray(initialLeftPanelContent)) return
+      const foundItemR = initialLeftPanelContent.find((x) => x.title === item)
+      if (foundItemR) {
+        result.push(foundItemR as PanelItem)
+      }
+    })
+    return result
+  }
+
+  const handleContextMenu = (e: React.MouseEvent, panel: 'left' | 'right', index: number) => {
+    e.preventDefault()
+    setContextMenu({ visible: true, x: e.clientX, y: e.clientY, panel, index })
+  }
+
+  const handleMoveToOtherPanel = () => {
+    const { panel, index } = contextMenu
+    if (panel === 'left' && Array.isArray(leftPanelContent)) {
+      const item = (leftPanelContent as PanelItem[]).splice(index, 1)[0]
+      if (Array.isArray(rightPanelContent)) {
+        ;(rightPanelContent as PanelItem[]).push(item)
+        setRightPanelContent && setRightPanelContent([...rightPanelContent])
+      }
+    } else if (panel === 'right' && Array.isArray(rightPanelContent)) {
+      const item = (rightPanelContent as PanelItem[]).splice(index, 1)[0]
+      if (Array.isArray(leftPanelContent)) {
+        ;(leftPanelContent as PanelItem[]).push(item)
+        setLeftPanelContent && setLeftPanelContent([...leftPanelContent])
+      }
+    }
+    setContextMenu({ visible: false, x: 0, y: 0, panel: 'left', index: -1 })
+  }
+
+  const handleCloseContextMenu = () => {
+    setContextMenu({ visible: false, x: 0, y: 0, panel: 'left', index: -1 })
   }
 
   const isLeftPanelVisible: boolean =
@@ -181,10 +290,12 @@ const MultiPanelLayout: React.FC<{
           onDragStart={(e) => handleDragStart(e, 'left', index)}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => handleDrop(e, 'left')}
+          onContextMenu={(e) => handleContextMenu(e, 'left', index)}
           onClick={() => {
             if (leftPanelIndex == index) {
               setLeftPanelVisible(!isLeftPanelVisible)
             }
+            if (!isLeftPanelVisible) setLeftPanelVisible(true)
             setLeftPanelIndex(index)
           }}
         >
@@ -263,10 +374,12 @@ const MultiPanelLayout: React.FC<{
           onDragStart={(e) => handleDragStart(e, 'right', index)}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => handleDrop(e, 'right')}
+          onContextMenu={(e) => handleContextMenu(e, 'right', index)}
           onClick={() => {
             if (rightPanelIndex == index) {
               setRightPanelVisible(!isRightPanelVisible)
             }
+            if (!isRightPanelVisible) setRightPanelVisible(true)
             setRightPanelIndex(index)
           }}
         >
@@ -291,14 +404,14 @@ const MultiPanelLayout: React.FC<{
       const item = (leftPanelContent as PanelItem[]).splice(index, 1)[0]
       if (Array.isArray(rightPanelContent)) {
         ;(rightPanelContent as PanelItem[]).push(item)
-        setRightPanelContent && setRightPanelContent(rightPanelContent)
+        setRightPanelContent && setRightPanelContent([...rightPanelContent])
         setRightPanelIndex(index + 1)
       }
     } else if (sourcePanel === 'right' && Array.isArray(rightPanelContent)) {
       const item = (rightPanelContent as PanelItem[]).splice(index, 1)[0]
       if (Array.isArray(leftPanelContent)) {
         ;(leftPanelContent as PanelItem[]).push(item)
-        setLeftPanelContent && setLeftPanelContent(leftPanelContent)
+        setLeftPanelContent && setLeftPanelContent([...leftPanelContent])
         setLeftPanelIndex(index + 1)
       }
     }
@@ -406,40 +519,43 @@ const MultiPanelLayout: React.FC<{
           )}
         </div>
 
-        {rightPanelContent && (
-          <div
-            ref={rightPanelRef}
-            className={`p-0 overflow-auto relative transition-all ${
-              isRightPanelVisible && classNameBorder
-            } ${isRightPanelVisible ? 'border-l' : 'border-0 border-red-400 overflow-hidden'} `}
-            style={{
-              width: isRightPanelVisible ? rightPanelWidth : 0,
-              transitionProperty: 'width',
-              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-              transitionDuration: '150ms',
-            }}
-          >
-            {rightCollapsable && rightCollapsedMode == 'arrow' && (
-              <button
-                className={`absolute top-5 right-1 transform -translate-y-1/2 z-40 ${classNameButtons}`}
-                onClick={() => setRightPanelVisible(false)}
-              >
-                <ArrowUpIcon2 rotate={90}></ArrowUpIcon2>
-              </button>
-            )}
-            {getRightPanelContent()}
-          </div>
-        )}
-        {rightPanelContent && rightCollapsedMode == 'smallTabs' && (
-          <div
-            className={`UShell_MultiPanelLayout_RightTabBar border-l h-full flex flex-col p-1 py-2
+        {rightPanelContent &&
+          (!Array.isArray(rightPanelContent) || rightPanelContent.length > 0) && (
+            <div
+              ref={rightPanelRef}
+              className={`p-0 overflow-auto relative transition-all ${
+                isRightPanelVisible && classNameBorder
+              } ${isRightPanelVisible ? 'border-l' : 'border-0 border-red-400 overflow-hidden'} `}
+              style={{
+                width: isRightPanelVisible ? rightPanelWidth : 0,
+                transitionProperty: 'width',
+                transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                transitionDuration: '150ms',
+              }}
+            >
+              {rightCollapsable && rightCollapsedMode == 'arrow' && (
+                <button
+                  className={`absolute top-5 right-1 transform -translate-y-1/2 z-40 ${classNameButtons}`}
+                  onClick={() => setRightPanelVisible(false)}
+                >
+                  <ArrowUpIcon2 rotate={90}></ArrowUpIcon2>
+                </button>
+              )}
+              {getRightPanelContent()}
+            </div>
+          )}
+        {rightPanelContent &&
+          rightCollapsedMode == 'smallTabs' &&
+          (!Array.isArray(rightPanelContent) || rightPanelContent.length > 0) && (
+            <div
+              className={`UShell_MultiPanelLayout_RightTabBar border-l h-full flex flex-col p-1 py-2
             ${classNameBorder}`}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => handleDrop(e, 'right')}
-          >
-            {getRightTabs()}
-          </div>
-        )}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => handleDrop(e, 'right')}
+            >
+              {getRightTabs()}
+            </div>
+          )}
         {rightPanelContent && !isRightPanelVisible && rightCollapsedMode == 'arrow' && (
           <button
             className={`absolute top-1/2 right-0 transform -translate-y-1/2  p-1 z-40 ${classNameButtons}`}
@@ -484,6 +600,24 @@ const MultiPanelLayout: React.FC<{
         >
           <ArrowUpIcon2 rotate={0}></ArrowUpIcon2>
         </button>
+      )}
+      {contextMenu.visible && (
+        <div
+          className='fixed text-sm bg-content dark:bg-conetnDark border-contentBorder dark:border-contentBorderDark shadow-md p-1 rounded-md'
+          style={{
+            top: contextMenu.y,
+            left: contextMenu.panel === 'left' ? contextMenu.x : undefined,
+            right: contextMenu.panel === 'right' ? window.innerWidth - contextMenu.x : undefined,
+          }}
+          onMouseLeave={handleCloseContextMenu}
+        >
+          <button
+            className='block w-full text-left px-2 py-1 hover:bg-contentHover dark:hover:bg-contentHoverDark rounded-sm'
+            onClick={handleMoveToOtherPanel}
+          >
+            Move to {contextMenu.panel === 'left' ? 'Right' : 'Left'} Panel
+          </button>
+        </div>
       )}
     </div>
   )

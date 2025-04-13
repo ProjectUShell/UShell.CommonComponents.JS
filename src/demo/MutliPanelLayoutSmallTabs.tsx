@@ -30,8 +30,8 @@ const MutliPanelLayoutSmallTabs = () => {
         rightCollapsedMode='smallTabs'
         mainContent={<div>Test</div>}
         // leftPanelContent={leftPanelTabs}
-        leftPanelContent={leftPanelTabs}
-        rightPanelContent={rightPanelTabs}
+        initialLeftPanelContent={leftPanelTabs}
+        initialRightPanelContent={rightPanelTabs}
       ></MultiPanelLayout>
     </div>
   )
