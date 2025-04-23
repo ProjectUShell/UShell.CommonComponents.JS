@@ -22,7 +22,7 @@ function getCopy(e: LogicalExpression | null): LogicalExpression {
     const atomArgument = new FieldPredicate()
     atomArgument.fieldName = e.predicates[i].fieldName
     atomArgument.operator = e.predicates[i].operator
-    atomArgument.value = e.predicates[i].value
+    atomArgument.valueSerialized = e.predicates[i].valueSerialized
     result.predicates.push(atomArgument)
   }
   for (let i = 0; i < e.subTree.length; i++) {

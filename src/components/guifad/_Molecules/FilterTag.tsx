@@ -31,9 +31,9 @@ const FilterTag: React.FC<{
     for (let i = 0; i < f.predicates.length; ++i) {
       const r: FieldPredicate = f.predicates[i]
       if (numArgs == 1) {
-        result += `${r.fieldName} ${r.operator} ${r.value}`
+        result += `${r.fieldName} ${r.operator} ${r.valueSerialized}`
       } else {
-        result += `(${r.fieldName} ${r.operator} ${r.value})`
+        result += `(${r.fieldName} ${r.operator} ${r.valueSerialized})`
       }
       if (i < f.predicates.length - 1) {
         result += ` ${f.matchAll ? 'And' : 'Or'} `

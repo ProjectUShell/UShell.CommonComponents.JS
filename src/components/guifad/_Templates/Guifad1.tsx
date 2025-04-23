@@ -154,7 +154,7 @@ const Guifad1: React.FC<{
     setIsCreation(true)
     setDirty(true)
   }
-
+  console.log('currentRecord', currentRecord)
   return (
     <div
       className='UShell_Guifad w-full h-full flex flex-col overflow-hidden text-sm 

@@ -39,7 +39,7 @@ export class EntitySchemaService {
       result.predicates.push({
         fieldName: fn,
         operator: '>=',
-        value: universalSearchText,
+        valueSerialized: universalSearchText,
       })
     })
     return result
@@ -128,7 +128,7 @@ export class EntitySchemaService {
       result.predicates.push({
         fieldName: primaryKeyProps[0],
         operator: '=',
-        value: value,
+        valueSerialized: JSON.stringify(value),
       })
       return result
     }
@@ -137,7 +137,7 @@ export class EntitySchemaService {
       result.predicates.push({
         fieldName: pk,
         operator: '=',
-        value: value,
+        valueSerialized: JSON.stringify(value),
       })
     })
     return result

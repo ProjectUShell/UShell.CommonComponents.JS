@@ -1,4 +1,10 @@
-import { EntitySchema, FieldSchema, IndexSchema, RelationSchema, SchemaRoot } from 'fusefx-modeldescription'
+import {
+  EntitySchema,
+  FieldSchema,
+  IndexSchema,
+  RelationSchema,
+  SchemaRoot,
+} from 'fusefx-modeldescription'
 import { LogicalExpression } from 'fusefx-repositorycontract'
 import { lowerFirstLetter } from '../utils/StringUtils'
 
@@ -8,7 +14,9 @@ export function getParentFilter(
   childSchema: EntitySchema,
   parent: any,
 ): LogicalExpression | null {
-  const pks: IndexSchema[] = parentSchema.indices.filter((i) => i.name === parentSchema.primaryKeyIndexName)
+  const pks: IndexSchema[] = parentSchema.indices.filter(
+    (i) => i.name === parentSchema.primaryKeyIndexName,
+  )
   const childToParentRelations: RelationSchema[] = schemaRoot.relations.filter(
     (r) => r.primaryEntityName === parentSchema.name && r.foreignEntityName === childSchema.name,
   )
@@ -20,7 +28,8 @@ export function getParentFilter(
 
   const pk: IndexSchema | null = pks.length > 0 ? pks[0] : null
 
-  const parentIdFieldName: string | null = !pk || pk.memberFieldNames.length !== 1 ? null : pk.memberFieldNames[0]
+  const parentIdFieldName: string | null =
+    !pk || pk.memberFieldNames.length !== 1 ? null : pk.memberFieldNames[0]
 
   const parentField: FieldSchema | undefined = parentIdFieldName
     ? parentSchema.fields.find((f) => f.name === parentIdFieldName)
@@ -28,12 +37,13 @@ export function getParentFilter(
 
   const parentIdFieldType: string = parentField ? parentField.type : 'int'
   const parentIdName: string = parentIdFieldName || 'Id'
-  const parentKeyValue = parentIdName in parent ? parent[parentIdName] : parent[lowerFirstLetter(parentIdName)]
+  const parentKeyValue =
+    parentIdName in parent ? parent[parentIdName] : parent[lowerFirstLetter(parentIdName)]
   if (!parentKeyValue) return result
   result.predicates.push({
     operator: '=',
     fieldName: childToParentRelation.foreignKeyIndexName,
-    value: parentKeyValue,
+    valueSerialized: JSON.stringify(parentKeyValue),
   })
   return result
 }
@@ -45,7 +55,9 @@ export function setParentId(
   childSchema: EntitySchema,
   parent: any,
 ): void {
-  const pks: IndexSchema[] = parentSchema.indices.filter((i) => i.name === parentSchema.primaryKeyIndexName)
+  const pks: IndexSchema[] = parentSchema.indices.filter(
+    (i) => i.name === parentSchema.primaryKeyIndexName,
+  )
   const childToParentRelations: RelationSchema[] = schemaRoot.relations.filter(
     (r) => r.primaryEntityName === parentSchema.name && r.foreignEntityName === childSchema.name,
   )
@@ -57,7 +69,8 @@ export function setParentId(
   const pk: IndexSchema | null = pks.length > 0 ? pks[0] : null
 
   //TODO_RWE support multiple key fields
-  const parentIdFieldName: string | null = !pk || pk.memberFieldNames.length !== 1 ? null : pk.memberFieldNames[0]
+  const parentIdFieldName: string | null =
+    !pk || pk.memberFieldNames.length !== 1 ? null : pk.memberFieldNames[0]
 
   const parentIdName: string = parentIdFieldName || 'id'
 

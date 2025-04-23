@@ -20,7 +20,7 @@ const MultiSelectFilter: React.FC<{
     const relation: FieldPredicate = {
       fieldName: column.fieldName,
       operator: 'in',
-      value: sv.toLocaleString(),
+      valueSerialized: JSON.stringify(sv),
     }
     const columnFilter: LogicalExpression = {
       subTree: [],
@@ -39,10 +39,16 @@ const MultiSelectFilter: React.FC<{
         onSelectionChange={(sv: any[]) => setSelectedValues(sv)}
       ></MultiSelect>
       <div className='flex justify-end gap-1 text-sm'>
-        <button className='rounded-md hover:bg-backgroundtwo p-1' onClick={(e) => onSelectionChanged(null)}>
+        <button
+          className='rounded-md hover:bg-backgroundtwo p-1'
+          onClick={(e) => onSelectionChanged(null)}
+        >
           Clear
         </button>
-        <button className='rounded-md hover:bg-backgroundtwo p-1' onClick={(e) => onSelectionChanged(selectedValues)}>
+        <button
+          className='rounded-md hover:bg-backgroundtwo p-1'
+          onClick={(e) => onSelectionChanged(selectedValues)}
+        >
           Ok
         </button>
       </div>

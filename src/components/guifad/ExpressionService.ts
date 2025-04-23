@@ -24,7 +24,7 @@ export function isRelationValid(r: FieldPredicate) {
 
 export function getEmptyRelationElement(): FieldPredicate {
   const result = new FieldPredicate()
-  result.value = ''
+  result.valueSerialized = ''
   return result
 }
 export function getEmptyExpression(): LogicalExpression {

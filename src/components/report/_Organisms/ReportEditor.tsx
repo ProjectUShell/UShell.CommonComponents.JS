@@ -74,7 +74,7 @@ const ReportEditor: React.FC<{
                   matchAll: true,
                   negate: false,
                   subTree: [],
-                  predicates: [{ fieldName: '', operator: '', value: '' }],
+                  predicates: [{ fieldName: '', operator: '', valueSerialized: '' }],
                 }
               }
               fields={entitySchema.fields}

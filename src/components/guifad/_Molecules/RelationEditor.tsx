@@ -58,7 +58,7 @@ const RelationEditor: React.FC<{
     })
 
     setCurrentOperator(initialRelation.operator)
-    setCurrentValue(initialRelation.value)
+    setCurrentValue(initialRelation.valueSerialized)
   }, [initialRelation, fields, fkRelations])
 
   function getFieldOptions(): { label: string; value: any }[] {
@@ -123,7 +123,7 @@ const RelationEditor: React.FC<{
       onUpdateRelation({
         fieldName: field.name,
         operator: operator,
-        value: value,
+        valueSerialized: value,
       })
     }
   }

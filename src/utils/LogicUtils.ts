@@ -9,7 +9,7 @@ export function getSelectedValues(filter: LogicalExpression, fieldName: string):
   }
   for (let p of filter.predicates) {
     if (p.fieldName == fieldName && p.operator == 'in') {
-      return p.value
+      return JSON.parse(p.valueSerialized)
     }
   }
   return []
@@ -21,7 +21,7 @@ export function getFirstEqualsFilterValue(filter: LogicalExpression, fieldName: 
   }
   for (let p of filter.predicates) {
     if (p.fieldName == fieldName && p.operator == '=') {
-      return p.value
+      return JSON.parse(p.valueSerialized)
     }
   }
   return ''
@@ -36,7 +36,7 @@ export function buildEqualsFilter(fieldName: string, value: any): LogicalExpress
       {
         fieldName: fieldName,
         operator: '=',
-        value: value,
+        valueSerialized: JSON.stringify(value),
       },
     ],
   }
@@ -51,7 +51,7 @@ export function buildIsInFilter(fieldName: string, values: any[]): LogicalExpres
       {
         fieldName: fieldName,
         operator: 'in',
-        value: values,
+        valueSerialized: JSON.stringify(values),
       },
     ],
   }
@@ -149,11 +149,12 @@ export function satisfiesPredicate(
   entitySchema: EntitySchema,
 ): boolean {
   if (!(filter.fieldName in record)) return true
+  const filterValue = JSON.parse(filter.valueSerialized)
   switch (filter.operator) {
     case '=':
-      return record[filter.fieldName] == filter.value
+      return record[filter.fieldName] == filterValue
     case 'in':
-      return filter.value.includes(record[filter.fieldName])
+      return filterValue.includes(record[filter.fieldName])
     case 'contains':
     case '>=': {
       const fieldSchema: FieldSchema | undefined = entitySchema.fields.find(
@@ -165,9 +166,9 @@ export function satisfiesPredicate(
           fieldSchema.type,
         )
       ) {
-        return record[filter.fieldName] >= filter.value
+        return record[filter.fieldName] >= filterValue
       } else {
-        return record[filter.fieldName].includes(filter.value)
+        return record[filter.fieldName].includes(filterValue)
       }
     }
     case '<=': {
@@ -180,20 +181,20 @@ export function satisfiesPredicate(
           fieldSchema.type,
         )
       ) {
-        return record[filter.fieldName] <= filter.value
+        return record[filter.fieldName] <= filterValue
       } else {
-        return filter.value.includes(record[filter.fieldName])
+        return filterValue.includes(record[filter.fieldName])
       }
     }
     case 'startsWith':
     case 'starts with':
     case '|*': {
-      return record[filter.fieldName].startsWith(filter.value)
+      return record[filter.fieldName].startsWith(filterValue)
     }
     case 'endsWith':
     case 'ends with':
     case '*|': {
-      return record[filter.fieldName].endsWith(filter.value)
+      return record[filter.fieldName].endsWith(filterValue)
     }
   }
   return true
