@@ -10,7 +10,6 @@ const TopBarTabs: React.FC<{ tabItems: TopBarTab[]; initialActiveTabIndex: numbe
     <TabControl
       initialActiveTabIndex={initialActiveTabIndex}
       onTabChange={(t, i) => {
-        console.log('tab change', t, i)
         t.tag.action()
       }}
       onTabClose={() => {}}

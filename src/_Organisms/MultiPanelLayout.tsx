@@ -88,7 +88,6 @@ const MultiPanelLayout: React.FC<{
   }>({ visible: false, x: 0, y: 0, panel: 'left', index: -1 })
 
   useEffect(() => {
-    console.log('change')
     if (!Array.isArray(leftPanelContent)) return
     if (!Array.isArray(rightPanelContent)) return
     localStorage.setItem(

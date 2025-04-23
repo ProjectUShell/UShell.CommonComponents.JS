@@ -1,6 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { NodeData } from '../NodeData'
-import { EntitySchema, FieldSchema, RelationSchema, SchemaRoot } from 'fusefx-modeldescription'
+import {
+  EntitySchema,
+  FieldSchema,
+  IndexSchema,
+  RelationSchema,
+  SchemaRoot,
+} from 'fusefx-modeldescription'
 import EditorNode from './EditorNode'
 import { EdgeData } from '../EdgeData'
 import EditorEdge from './EditorEdge'
@@ -36,6 +42,7 @@ const SchemaEditor: React.FC<{
   const [edges, setEdges] = useState<EdgeData[]>([])
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
   const [selectedField, setSelectedField] = useState<FieldSchema | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState<IndexSchema | null>(null)
   const [selectedEdge, setSelectedEdge] = useState<EdgeData | null>(null)
 
   const [newEdge, setNewEdge] = useState<EdgeData | null>(null)
@@ -116,13 +123,30 @@ const SchemaEditor: React.FC<{
     save()
   }
 
+  function handleCommitIndex(nodeData: NodeData, indexSchema: IndexSchema, value: any) {
+    const existingI: IndexSchema | undefined = nodeData.entitySchema.indices.find(
+      (i: IndexSchema) => i.name == indexSchema.name,
+    )
+    if (existingI) {
+      existingI.name = value
+    } else {
+      nodeData.entitySchema.indices.push(indexSchema)
+    }
+    save()
+  }
+
   function handleDeleteField(nodeData: NodeData, fieldSchema: FieldSchema) {
     nodeData.entitySchema.fields = nodeData.entitySchema.fields.filter(
       (f) => f.name != fieldSchema.name,
     )
     save()
   }
-
+  function handleDeleteIndex(nodeData: NodeData, indexSchema: IndexSchema) {
+    nodeData.entitySchema.indices = nodeData.entitySchema.indices.filter(
+      (f) => f.name != indexSchema.name,
+    )
+    save()
+  }
   function handleCommitEntityName(nodeData: NodeData, entityName: string) {
     nodeData.entitySchema.name = entityName
     save()
@@ -148,6 +172,7 @@ const SchemaEditor: React.FC<{
     setSelectedNode(null)
     setSelectedEdge(null)
     setSelectedField(null)
+    setSelectedIndex(null)
     // e.preventDefault()
     e.stopPropagation()
 
@@ -411,16 +436,25 @@ const SchemaEditor: React.FC<{
                   numOutputs={n.numOutputs}
                   selected={selectedNode ? selectedNode == n.id : false}
                   camera={camera}
-                  onFieldSelected={(f: FieldSchema) => setSelectedField(f)}
                   onMouseDown={handleMouseDownNode}
                   onMouseEnterInput={handleMouseEnterInput}
                   onMouseDownOutput={handleMouseDownOutput}
                   onMouseLeaveInput={handleMouseLeaveInput}
                   onCommitField={(f: FieldSchema, v: any) => handleCommitField(n, f, v)}
+                  onCommitIndex={(index: IndexSchema, v: any) => handleCommitIndex(n, index, v)}
                   onCommitEntityName={(entityName: string) => handleCommitEntityName(n, entityName)}
                   onDeleteField={(f) => handleDeleteField(n, f)}
+                  onDeleteIndex={(i) => handleDeleteIndex(n, i)}
                   activeField={selectedField}
-                  setActiveField={(f) => setSelectedField(f)}
+                  activeIndex={selectedIndex}
+                  setActiveField={(f) => {
+                    setSelectedField(f)
+                    setSelectedIndex(null)
+                  }}
+                  setActiveIndex={(i) => {
+                    setSelectedIndex(i)
+                    setSelectedField(null)
+                  }}
                 ></EditorNode>
               ))}
               {newEdge && (
@@ -452,6 +486,7 @@ const SchemaEditor: React.FC<{
                   camera={camera}
                   onMouseDownEdge={() => {
                     setSelectedField(null)
+                    setSelectedIndex(null)
                     setSelectedNode(null)
                     setSelectedEdge(edge)
                   }}
@@ -481,6 +516,7 @@ const SchemaEditor: React.FC<{
             entity={nodes.find((n) => n.id == selectedNode)?.entitySchema}
             field={selectedField}
             relation={selectedEdge?.relation}
+            index={selectedIndex}
             onChange={() => save()}
           ></EditorProperties>
         </div>

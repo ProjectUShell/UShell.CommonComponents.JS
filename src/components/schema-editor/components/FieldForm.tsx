@@ -36,6 +36,7 @@ const FieldForm: React.FC<{ field: FieldSchema; onChange: () => void }> = ({ fie
               { value: 'Int64', label: 'Int64' },
               { value: 'Boolean', label: 'Boolean' },
               { value: 'Decimal', label: 'Decimal' },
+              { value: 'Guid', label: 'Guid' },
             ]}
             initialOption={{ value: field.type, label: field.type }}
             onOptionSet={(o: Option | null) => {

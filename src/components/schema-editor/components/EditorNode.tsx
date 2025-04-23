@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useState } from 'react'
-import { FieldSchema } from 'fusefx-modeldescription'
+import { FieldSchema, IndexSchema } from 'fusefx-modeldescription'
 import { Camera } from '../Camera'
 import { NodeData } from '../NodeData'
 import { Position } from '../Position'
@@ -18,18 +18,21 @@ const EditorNode: React.FC<{
   y: number
   selected: boolean
   camera: Camera
-  onFieldSelected: (field: FieldSchema) => void
   onMouseDown: (id: number, e: any) => void
   onMouseDownOutput: (posX: number, posY: number, nodeId: number, fieldName: string) => void
   onMouseEnterInput: (posX: number, posY: number, nodeId: number, fieldName: string) => void
   onMouseLeaveInput: (nodeId: number, fieldName: string) => void
   onCommitField: (f: FieldSchema, value: any) => void
+  onCommitIndex: (index: IndexSchema, value: any) => void
   onCommitEntityName: (entityName: string) => void
   onDeleteField: (f: FieldSchema) => void
+  onDeleteIndex: (index: IndexSchema) => void
   numInputs: number
   numOutputs: number
   activeField: FieldSchema | null
+  activeIndex: IndexSchema | null
   setActiveField: (f: FieldSchema | null) => void
+  setActiveIndex: (i: IndexSchema | null) => void
 }> = React.memo(
   ({
     id,
@@ -38,18 +41,21 @@ const EditorNode: React.FC<{
     y,
     selected,
     camera,
-    onFieldSelected,
     onMouseDown,
     onMouseDownOutput,
     onMouseEnterInput,
     onMouseLeaveInput,
     onCommitField,
+    onCommitIndex,
     onCommitEntityName,
     onDeleteField,
+    onDeleteIndex,
     numInputs,
     numOutputs,
     activeField,
+    activeIndex,
     setActiveField,
+    setActiveIndex,
   }) => {
     const [entityName, setEntityName] = useState(nodeData.entitySchema.name)
     // const [activeField, setActiveField] = useState('')
@@ -63,6 +69,16 @@ const EditorNode: React.FC<{
         f.type = 'String'
       }
       onCommitField(f, value)
+    }
+
+    function handleCommitIndex(index: IndexSchema | null, value: any) {
+      if (!value || value == '') return
+      if (!index) {
+        index = new IndexSchema()
+        index.name = value
+        index.memberFieldNames = []
+      }
+      onCommitIndex(index, value)
     }
 
     function handleCommitEntityName(value: any) {
@@ -85,6 +101,24 @@ const EditorNode: React.FC<{
         const temp = nodeData.entitySchema.fields[index + 1]
         nodeData.entitySchema.fields[index + 1] = f
         nodeData.entitySchema.fields[index] = temp
+      }
+    }
+
+    function moveIndexUp(i: IndexSchema) {
+      const index = nodeData.entitySchema.indices.indexOf(i)
+      if (index > 0) {
+        const temp = nodeData.entitySchema.indices[index - 1]
+        nodeData.entitySchema.indices[index - 1] = i
+        nodeData.entitySchema.indices[index] = temp
+      }
+    }
+
+    function moveIndexDown(i: IndexSchema) {
+      const index = nodeData.entitySchema.indices.indexOf(i)
+      if (index < nodeData.entitySchema.indices.length - 1) {
+        const temp = nodeData.entitySchema.indices[index + 1]
+        nodeData.entitySchema.indices[index + 1] = i
+        nodeData.entitySchema.indices[index] = temp
       }
     }
 
@@ -138,7 +172,7 @@ const EditorNode: React.FC<{
       onMouseEnterInput(worldPos.x, worldPos.y, id, fieldName)
     }
 
-    function handleKeyDownInput(field: FieldSchema | null, e: any) {
+    function handleKeyDownInputField(field: FieldSchema | null, e: any) {
       e.stopPropagation()
       if (e.key == 'Enter') {
         handleCommitField(field, e.target.value)
@@ -158,6 +192,30 @@ const EditorNode: React.FC<{
         // )
       }
       if (!inputMode && field) {
+        setInputMode(true)
+      }
+    }
+
+    function handleKeyDownInputIndex(index: IndexSchema | null, e: any) {
+      e.stopPropagation()
+      if (e.key == 'Enter') {
+        handleCommitIndex(index, e.target.value)
+        const el: any = document.getElementById(nodeData.entitySchema.name + '_newIndex')
+        if (el) {
+          el.value = ''
+          el.focus()
+        }
+        if (!index) {
+          setInputMode((i) => !i)
+        }
+      }
+      if (e.key == 'Delete' && index) {
+        onDeleteIndex(index)
+        // nodeData.entitySchema.fields = nodeData.entitySchema.fields.filter(
+        //   (f) => f.name != field.name,
+        // )
+      }
+      if (!inputMode && index) {
         setInputMode(true)
       }
     }
@@ -182,13 +240,14 @@ const EditorNode: React.FC<{
     const worldWidth: number = camera.scale * 220
     const worldHeightField: number = camera.scale * 30
 
-    console.log('active field', activeField)
-
     return (
       <div
         style={{
           width: `${worldWidth}px`,
-          height: `${worldHeightField * (3 + nodeData.entitySchema.fields.length)}px`,
+          height: `${
+            worldHeightField *
+            (3 + (nodeData.entitySchema.fields.length + nodeData.entitySchema.indices.length))
+          }px`,
           transform: `translate(${viewPos.x}px, ${viewPos.y}px`,
         }}
         onMouseDown={(e: any) => {
@@ -237,14 +296,13 @@ const EditorNode: React.FC<{
                   if (f.name != activeField?.name) {
                     setInputMode(false)
                   }
-                  onFieldSelected(f)
                   setActiveField(f)
                   onMouseDown(id, e)
                 }}
                 onFocus={() => setActiveField(f)}
                 readOnly={f.name != activeField?.name || !inputMode}
                 defaultValue={f.name}
-                onKeyDown={(e: any) => handleKeyDownInput(f, e)}
+                onKeyDown={(e: any) => handleKeyDownInputField(f, e)}
                 onBlur={(e) => {
                   console.log('blur field')
                   e.preventDefault()
@@ -323,7 +381,7 @@ const EditorNode: React.FC<{
             onMouseDown(id, e)
           }}
           onKeyDown={(e: any) => {
-            handleKeyDownInput(null, e)
+            handleKeyDownInputField(null, e)
           }}
           onBlur={(e) => {
             handleCommitField(null, e.target.value)
@@ -337,40 +395,119 @@ const EditorNode: React.FC<{
           }}
           className='bbg-bg6 dark:bg-bg6dark text-center p-1 rounded-none outline-none'
         ></input>
-        {/* <div
-          className='absolute top-0 -left-8 flex flex-col items-center justify-center gap-3 w-3 h-full
-         pointer-events-none'
-        >
-          {[Array(Number(numInputs)).keys()].map((n, i) => {
-            const inputRef: any = React.createRef()
-            return (
+        <div className='h-0.5  border-b border-contentBorder dark:border-contentBorderDark'></div>
+        {nodeData.entitySchema.indices.map((index) => {
+          const inputRef: any = React.createRef()
+          const outputRef: any = createRef()
+          return (
+            <div key={index.name} className='relative'>
+              <input
+                onMouseDown={(e: any) => {
+                  e.stopPropagation()
+                  console.log('mouse down field')
+                  if (index.name != activeIndex?.name) {
+                    setInputMode(false)
+                  }
+                  // onFieldSelected(f)
+                  setActiveIndex(index)
+                  onMouseDown(id, e)
+                }}
+                onFocus={() => setActiveIndex(index)}
+                readOnly={index.name != activeIndex?.name || !inputMode}
+                defaultValue={index.name}
+                onKeyDown={(e: any) => handleKeyDownInputIndex(index, e)}
+                onBlur={(e) => {
+                  console.log('blur field')
+                  e.preventDefault()
+                  e.stopPropagation()
+                  handleCommitIndex(index, e.target.value)
+                }}
+                placeholder='New Field'
+                style={{
+                  width: `${worldWidth - 4}px`,
+                  height: `${worldHeightField}px`,
+                  fontSize: worldHeightField / 2.5,
+                }}
+                className={` text-center p-1 rounded-none outline-none cursor-default ${
+                  selected && activeIndex?.name == index.name
+                    ? 'bg-bg9 dark:bg-bg9dark'
+                    : 'bbg-bg6 dark:bg-bg6dark select-none'
+                }`}
+              ></input>
               <div
-                key={i}
+                style={{
+                  top: worldHeightField / 2 - worldHeightField / 6,
+                  width: worldHeightField / 3,
+                  height: worldHeightField / 3,
+                }}
                 ref={inputRef}
-                className='w-3 h-3 rounded-full bg-yellow-300 cursor-crosshair pointer-events-auto'
-                onMouseEnter={(e) => handleMouseEnterInput(inputRef, e, i)}
-                onMouseLeave={() => onMouseLeaveInput(id, i)}
+                className='absolute left-0 rounded-r-full bg-green-300 
+                  cursor-crosshair hover:bg-red-400 pointer-events-auto'
+                onMouseEnter={(e) => handleMouseEnterInput(inputRef, e, index.name)}
+                onMouseLeave={() => onMouseLeaveInput(id, index.name)}
               ></div>
-            )
-          })}
-        </div> */}
-        {/* <div
-          className='absolute top-0 -right-8 flex flex-col items-center justify-center
-         gap-3 w-3 h-full pointer-events-none'
-        >
-          {[Array(Number(numOutputs)).keys()].map((n, i) => {
-            const outputRef: any = createRef()
-            return (
               <div
-                key={i}
+                style={{
+                  top: worldHeightField / 2 - worldHeightField / 6,
+                  width: worldHeightField / 3,
+                  height: worldHeightField / 3,
+                }}
                 ref={outputRef}
-                className='w-3 h-3 rounded-full bg-yellow-300 
-                  cursor-crosshair hover:bg-red-400 pointer-events-auto border-4 border-red-600'
-                onMouseDown={(e) => handleMouseDownOutput(outputRef, e, i)}
+                className='absolute right-0 rounded-l-full bg-yellow-300 
+                  cursor-crosshair hover:bg-red-400 pointer-events-auto'
+                onMouseDown={(e) => handleMouseDownOutput(outputRef, e, index.name)}
               ></div>
-            )
-          })}
-        </div> */}
+              {selected && activeIndex?.name == index.name && (
+                <>
+                  <div
+                    style={{
+                      top: worldHeightField / 2 - worldHeightField / 6,
+                    }}
+                    ref={outputRef}
+                    className='absolute -right-7 rounded-l-full 
+                      cursor-pointer pointer-events-auto'
+                    onMouseDown={(e) => moveIndexDown(index)}
+                  >
+                    <ChevrodnDownIcon size={1.0} strokeWidth={6}></ChevrodnDownIcon>
+                  </div>
+                  <div
+                    style={{
+                      top: worldHeightField / 2 - worldHeightField / 6,
+                    }}
+                    ref={outputRef}
+                    className='absolute -right-14 rounded-l-full 
+                      cursor-pointer pointer-events-auto'
+                    onMouseDown={(e) => moveIndexUp(index)}
+                  >
+                    <ChevrodnDownIcon size={1.0} strokeWidth={6} rotate={180}></ChevrodnDownIcon>
+                  </div>
+                </>
+              )}
+            </div>
+          )
+        })}
+        <input
+          id={nodeData.entitySchema.name + '_newIndex'}
+          onMouseDown={(e: any) => {
+            e.stopPropagation()
+
+            onMouseDown(id, e)
+          }}
+          onKeyDown={(e: any) => {
+            handleKeyDownInputIndex(null, e)
+          }}
+          onBlur={(e) => {
+            handleCommitIndex(null, e.target.value)
+            e.target.value = ''
+          }}
+          placeholder='New Index'
+          style={{
+            width: `${worldWidth - 4}px`,
+            height: `${worldHeightField}px`,
+            fontSize: worldHeightField / 2.5,
+          }}
+          className='bbg-bg6 dark:bg-bg6dark text-center p-1 rounded-none outline-none'
+        ></input>
       </div>
     )
   },

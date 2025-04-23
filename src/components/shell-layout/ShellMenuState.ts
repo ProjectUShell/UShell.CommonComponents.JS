@@ -86,7 +86,6 @@ export function activateItem(item: MenuItem, menu: ShellMenu, shellMenuState?: S
   const shellMenuStateId: string = shellMenuState
     ? shellMenuState.id
     : findShellMenuStateId(menu, item)
-  console.log('shellMenuStateId', shellMenuStateId)
   if (!shellMenuState) {
     shellMenuState = loadShellMenuStates().find(
       (ms) => ms.id.toLocaleLowerCase() === shellMenuStateId.toLocaleLowerCase(),

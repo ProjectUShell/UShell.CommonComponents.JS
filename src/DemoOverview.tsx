@@ -194,7 +194,6 @@ const Demo = () => {
       },
     ],
   }
-  console.log('schemaName', schemaName)
   return (
     // <QueryClientProvider client={queryClient}>
     <ShellLayout title='Demo' showBreadcrumb={true} shellMenu={shellMenu}>
@@ -350,7 +349,6 @@ const Demo = () => {
           schemaName={schemaName}
           schema={schemaProvider.loadSchema(schemaName)}
           onChangeSchema={(s: SchemaRoot) => {
-            console.log('saving schema', s)
             schemaProvider.saveSchema(schemaName, s)
           }}
           onChangeSchemaName={(sn: string) => {
