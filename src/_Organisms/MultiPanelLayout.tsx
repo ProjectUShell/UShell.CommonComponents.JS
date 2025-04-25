@@ -9,6 +9,12 @@ export class PanelItem {
   title: string = ''
 }
 
+class PanelItemInfo {
+  title: string = ''
+  container: 'left' | 'right' = 'left'
+  icon: React.ReactNode
+}
+
 const MultiPanelLayout: React.FC<{
   topPanelContent?: React.ReactNode
   initialLeftPanelContent?: React.ReactNode | PanelItem[]
@@ -72,10 +78,10 @@ const MultiPanelLayout: React.FC<{
   const bottomPanelRef = useRef<HTMLDivElement>(null)
   const rightPanelRef = useRef<HTMLDivElement>(null)
 
-  const [leftPanelContent, setLeftPanelContent] = useState<React.ReactNode | PanelItem[]>(
+  const [leftPanelContent, setLeftPanelContent] = useState<React.ReactNode | PanelItemInfo[]>(
     getInitialLeftPanelContent(),
   )
-  const [rightPanelContent, setRightPanelContent] = useState<React.ReactNode | PanelItem[]>(
+  const [rightPanelContent, setRightPanelContent] = useState<React.ReactNode | PanelItemInfo[]>(
     getInitialRightPanelContent(),
   )
 
@@ -86,6 +92,8 @@ const MultiPanelLayout: React.FC<{
     panel: 'left' | 'right'
     index: number
   }>({ visible: false, x: 0, y: 0, panel: 'left', index: -1 })
+
+  const [r, setR] = useState(0)
 
   useEffect(() => {
     if (!Array.isArray(leftPanelContent)) return
@@ -98,6 +106,11 @@ const MultiPanelLayout: React.FC<{
       }),
     )
   }, [leftPanelContent, rightPanelContent])
+
+  // useEffect(() => {
+  //   setR((x) => x + 1)
+  // }, [initialLeftPanelContent, initialRightPanelContent])
+
   const handleMouseDown = (e: React.MouseEvent, direction: string) => {
     const startX = e.clientX
     const startY = e.clientY
@@ -107,6 +120,7 @@ const MultiPanelLayout: React.FC<{
     const startWidthRight = rightPanelRef.current?.offsetWidth || 0
 
     const handleMouseMove = (e: MouseEvent) => {
+      console.log('handleMouseMove', e.clientX, e.clientY)
       if (direction === 'top') {
         const newHeight = startHeightTop + (e.clientY - startY)
         setTopPanelHeight(`${newHeight}px`)
@@ -131,58 +145,77 @@ const MultiPanelLayout: React.FC<{
     document.addEventListener('mouseup', handleMouseUp)
   }
 
-  function getInitialLeftPanelContent(): React.ReactNode | PanelItem[] {
+  function getInitialLeftPanelContent(): React.ReactNode | PanelItemInfo[] {
     if (!initialLeftPanelContent) return <></>
     if (!Array.isArray(initialLeftPanelContent)) return initialLeftPanelContent
     const multiPanelLayoutJson = localStorage.getItem('multiPanelLayout')
-    if (!multiPanelLayoutJson) return initialLeftPanelContent
-    const multiPanelLayout: { left: string[]; right: string[] } = JSON.parse(multiPanelLayoutJson)
-    const result: PanelItem[] = []
+    // if (!multiPanelLayoutJson) return initialLeftPanelContent
+    const multiPanelLayout: { left: string[]; right: string[] } = multiPanelLayoutJson
+      ? JSON.parse(multiPanelLayoutJson)
+      : { left: [], right: [] }
+    const result: PanelItemInfo[] = []
     initialLeftPanelContent.forEach((item, index) => {
       if (!multiPanelLayout.right.includes(item.title)) {
-        result.push(item)
+        result.push({
+          title: item.title,
+          container: 'left',
+          icon: item.icon,
+        })
       }
     })
     multiPanelLayout.left.forEach((item) => {
       if (result.map((x) => x.title).includes(item)) return
       const foundItem = initialLeftPanelContent.find((x) => x.title === item)
       if (foundItem) {
-        result.push(foundItem as PanelItem)
+        result.push({
+          title: foundItem.title,
+          container: 'left',
+          icon: foundItem.icon,
+        })
       }
       if (!initialRightPanelContent) return
       if (!Array.isArray(initialRightPanelContent)) return
       const foundItemR = initialRightPanelContent.find((x) => x.title === item)
       if (foundItemR) {
-        result.push(foundItemR as PanelItem)
+        result.push({
+          title: foundItemR.title,
+          container: 'right',
+          icon: foundItemR.icon,
+        })
       }
     })
 
     return result
   }
 
-  function getInitialRightPanelContent(): React.ReactNode | PanelItem[] {
+  function getInitialRightPanelContent(): React.ReactNode | PanelItemInfo[] {
     if (!initialRightPanelContent) return <></>
     if (!Array.isArray(initialRightPanelContent)) return initialRightPanelContent
     const multiPanelLayoutJson = localStorage.getItem('multiPanelLayout')
-    if (!multiPanelLayoutJson) return initialRightPanelContent
-    const multiPanelLayout: { left: string[]; right: string[] } = JSON.parse(multiPanelLayoutJson)
-    const result: PanelItem[] = []
+    const multiPanelLayout: { left: string[]; right: string[] } = multiPanelLayoutJson
+      ? JSON.parse(multiPanelLayoutJson)
+      : { left: [], right: [] }
+    const result: PanelItemInfo[] = []
     initialRightPanelContent.forEach((item, index) => {
       if (!multiPanelLayout.left.includes(item.title)) {
-        result.push(item)
+        result.push({ title: item.title, container: 'right', icon: item.icon })
       }
     })
     multiPanelLayout.right.forEach((item) => {
       if (result.map((x) => x.title).includes(item)) return
       const foundItem = initialRightPanelContent.find((x) => x.title === item)
       if (foundItem) {
-        result.push(foundItem as PanelItem)
+        result.push({
+          title: foundItem.title,
+          container: 'right',
+          icon: foundItem.icon,
+        })
       }
       if (!initialLeftPanelContent) return
       if (!Array.isArray(initialLeftPanelContent)) return
       const foundItemR = initialLeftPanelContent.find((x) => x.title === item)
       if (foundItemR) {
-        result.push(foundItemR as PanelItem)
+        result.push({ title: foundItemR.title, container: 'left', icon: foundItemR.icon })
       }
     })
     return result
@@ -196,15 +229,15 @@ const MultiPanelLayout: React.FC<{
   const handleMoveToOtherPanel = () => {
     const { panel, index } = contextMenu
     if (panel === 'left' && Array.isArray(leftPanelContent)) {
-      const item = (leftPanelContent as PanelItem[]).splice(index, 1)[0]
+      const item = (leftPanelContent as PanelItemInfo[]).splice(index, 1)[0]
       if (Array.isArray(rightPanelContent)) {
-        ;(rightPanelContent as PanelItem[]).push(item)
+        ;(rightPanelContent as PanelItemInfo[]).push(item)
         setRightPanelContent && setRightPanelContent([...rightPanelContent])
       }
     } else if (panel === 'right' && Array.isArray(rightPanelContent)) {
-      const item = (rightPanelContent as PanelItem[]).splice(index, 1)[0]
+      const item = (rightPanelContent as PanelItemInfo[]).splice(index, 1)[0]
       if (Array.isArray(leftPanelContent)) {
-        ;(leftPanelContent as PanelItem[]).push(item)
+        ;(leftPanelContent as PanelItemInfo[]).push(item)
         setLeftPanelContent && setLeftPanelContent([...leftPanelContent])
       }
     }
@@ -240,7 +273,11 @@ const MultiPanelLayout: React.FC<{
                     <div className='self-start flex justify-start border-0 pt-2 pb-1 pl-4 uppercase text-xs'>
                       {item.title}
                     </div>
-                    {item.content}
+                    {item.container == 'left'
+                      ? (initialLeftPanelContent as PanelItem[]).find((x) => x.title == item.title)
+                          ?.content
+                      : (initialRightPanelContent as PanelItem[]).find((x) => x.title == item.title)
+                          ?.content}
                   </div>
                 )}
               </div>
@@ -270,7 +307,7 @@ const MultiPanelLayout: React.FC<{
         </div>,
       ]
     }
-    return (leftPanelContent as PanelItem[]).map((item, index) => {
+    return (leftPanelContent as PanelItemInfo[]).map((item, index) => {
       return (
         <div
           key={index}
@@ -324,7 +361,11 @@ const MultiPanelLayout: React.FC<{
                     <div className='self-start flex justify-start border-0 pt-2 pb-1 pl-4 uppercase text-xs'>
                       {item.title}
                     </div>
-                    {item.content}
+                    {item.container == 'right'
+                      ? (initialRightPanelContent as PanelItem[]).find((x) => x.title == item.title)
+                          ?.content
+                      : (initialLeftPanelContent as PanelItem[]).find((x) => x.title == item.title)
+                          ?.content}
                   </div>
                 )}
               </div>
@@ -400,16 +441,16 @@ const MultiPanelLayout: React.FC<{
     if (sourcePanel === targetPanel) return
 
     if (sourcePanel === 'left' && Array.isArray(leftPanelContent)) {
-      const item = (leftPanelContent as PanelItem[]).splice(index, 1)[0]
+      const item = (leftPanelContent as PanelItemInfo[]).splice(index, 1)[0]
       if (Array.isArray(rightPanelContent)) {
-        ;(rightPanelContent as PanelItem[]).push(item)
+        ;(rightPanelContent as PanelItemInfo[]).push(item)
         setRightPanelContent && setRightPanelContent([...rightPanelContent])
         setRightPanelIndex(index + 1)
       }
     } else if (sourcePanel === 'right' && Array.isArray(rightPanelContent)) {
-      const item = (rightPanelContent as PanelItem[]).splice(index, 1)[0]
+      const item = (rightPanelContent as PanelItemInfo[]).splice(index, 1)[0]
       if (Array.isArray(leftPanelContent)) {
-        ;(leftPanelContent as PanelItem[]).push(item)
+        ;(leftPanelContent as PanelItemInfo[]).push(item)
         setLeftPanelContent && setLeftPanelContent([...leftPanelContent])
         setLeftPanelIndex(index + 1)
       }
@@ -437,7 +478,8 @@ const MultiPanelLayout: React.FC<{
           </button>
           {topPanelContent}
           <div
-            className={`absolute bottom-0 left-0 w-full h-2 cursor-row-resize border-0 border-violet-400 ${classNameSplitter}`}
+            style={{ cursor: 'row-resize' }}
+            className={`absolute bottom-0 left-0 w-full h-2 border-0 border-violet-400 ${classNameSplitter}`}
             onMouseDown={(e) => handleMouseDown(e, 'top')}
           ></div>
         </div>
@@ -485,7 +527,8 @@ const MultiPanelLayout: React.FC<{
               )}
             {getLeftPanelContent()}
             <div
-              className={`absolute top-0 right-0 w-2 h-full cursor-col-resize border-0 border-orange-400 ${classNameSplitter}`}
+              style={{ cursor: 'row-resize' }}
+              className={`absolute top-0 right-0 w-2 h-full border-0 border-orange-400 ${classNameSplitter}`}
               onMouseDown={(e) => handleMouseDown(e, 'left')}
             ></div>
           </div>
@@ -511,8 +554,9 @@ const MultiPanelLayout: React.FC<{
           {mainContent}
           {isRightPanelVisible && (
             <div
+              style={{ cursor: 'row-resize' }}
               ref={rightPanelRef}
-              className={`absolute top-0 right-0 w-2 h-full cursor-col-resize border-0 border-blue-400 ${classNameSplitter}`}
+              className={`absolute top-0 right-0 w-2 h-full border-0 border-blue-400 ${classNameSplitter}`}
               onMouseDown={(e) => handleMouseDown(e, 'right')}
             ></div>
           )}
@@ -587,7 +631,8 @@ const MultiPanelLayout: React.FC<{
           </button>
           {bottomPanelContent}
           <div
-            className={`absolute top-0 left-0 w-full h-2 cursor-row-resize border-0 border-pink-400 ${classNameSplitter}`}
+            style={{ cursor: 'row-resize' }}
+            className={`absolute top-0 left-0 w-full h-2 border-0 border-pink-400 ${classNameSplitter}`}
             onMouseDown={(e) => handleMouseDown(e, 'bottom')}
           ></div>
         </div>
