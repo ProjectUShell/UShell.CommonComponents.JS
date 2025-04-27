@@ -8,13 +8,14 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   public static getTokenMethod: ((tokenSourceUid: string) => string) | null = null
 
   safeParseJson(jsonString: string, entitySchema: EntitySchema) {
-    const int64Fields = ['SomeUid']
-
     const longFields = entitySchema.fields
       .filter((f) => ['int64', 'long'].includes(f.type.toLocaleLowerCase()))
       .map((f) => f.name)
+
+    console.log('longFields', longFields)
     // Escape special regex characters in field names
     const escapedFields = longFields.map((field) => field.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    console.log('escapedFields', escapedFields)
 
     // Create a regex pattern that matches any of the specified fields followed by a number
     const fieldPattern = escapedFields.join('|')
@@ -22,6 +23,7 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
 
     // Replace values of these fields with string versions by adding quotes around the numbers
     const safeJsonString = jsonString.replace(int64Regex, '$1"$3"')
+    console.log('safeJsonString', safeJsonString)
 
     // Parse the modified JSON string
     return JSON.parse(safeJsonString)
@@ -64,6 +66,7 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
       console.log('FuseDataStore post', contentString)
 
       const content = this.safeParseJson(contentString, entitySchema)
+      console.log('FuseDataStore content', content)
       return content
     }
 
