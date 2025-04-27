@@ -3,18 +3,29 @@ import { SchemaRoot, EntitySchema } from 'fusefx-modeldescription'
 import { FuseDataSourceBody } from './FuseDataSourceBody'
 import { FuseDataSourceRoute } from './FuseDataSourceRoute'
 import { FuseDataSourceMethod } from './FuseDataSourceMethod'
+import { lowerFirstLetter } from '../utils/StringUtils'
 
 export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   public static getTokenMethod: ((tokenSourceUid: string) => string) | null = null
 
   safeParseJson(jsonString: string, entitySchema: EntitySchema) {
-    const longFields = entitySchema.fields
+    let longFields = entitySchema.fields
       .filter((f) => ['int64', 'long'].includes(f.type.toLocaleLowerCase()))
       .map((f) => f.name)
+
+    if (longFields.length == 0) {
+      return JSON.parse(jsonString)
+    }
+    const longField1 = longFields[0]
+    if (!jsonString.includes(longField1) && jsonString.includes(lowerFirstLetter(longField1))) {
+      // If the first field is not found, try to find the lower case version of the first field
+      longFields = longFields.map((field) => lowerFirstLetter(field))
+    }
 
     console.log('longFields', longFields)
     // Escape special regex characters in field names
     const escapedFields = longFields.map((field) => field.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+
     console.log('escapedFields', escapedFields)
 
     // Create a regex pattern that matches any of the specified fields followed by a number
