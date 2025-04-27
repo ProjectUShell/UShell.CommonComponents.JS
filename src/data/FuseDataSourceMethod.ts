@@ -27,9 +27,13 @@ export class FuseDataSourceMethod implements IDataSource {
   }
   entityUpdateMethod(entity: any[]): Promise<boolean> {
     return this.dataStore
-      .post(this.url + `AddOrUpdate${this.entitySchema!.name}`, {
-        entity: entity,
-      })
+      .post(
+        this.url + `AddOrUpdate${this.entitySchema!.name}`,
+        {
+          entity: entity,
+        },
+        this.entitySchema!,
+      )
       .then((r) => {
         if (r.fault) {
           console.error('AddOrUpdate failed', { entity: entity, fault: r.fault })
@@ -40,9 +44,13 @@ export class FuseDataSourceMethod implements IDataSource {
   }
   entityInsertMethod(entity: any[]): Promise<boolean> {
     return this.dataStore
-      .post(this.url + `AddOrUpdate${this.entitySchema!.name}`, {
-        entity: entity,
-      })
+      .post(
+        this.url + `AddOrUpdate${this.entitySchema!.name}`,
+        {
+          entity: entity,
+        },
+        this.entitySchema!,
+      )
       .then((r) => {
         if (r.fault) {
           console.error('AddOrUpdate failed', { entity: entity, fault: r.fault })
@@ -74,12 +82,16 @@ export class FuseDataSourceMethod implements IDataSource {
     sortingParams?: SortingField[] | undefined,
   ): Promise<PaginatedList> {
     return this.dataStore
-      .post(this.url + `Get${this.entitySchema!.name}List`, {
-        filter: filter,
-        limit: pagingParams?.pageSize,
-        skip: pagingParams ? (pagingParams?.pageNumber - 1) * pagingParams?.pageSize : 0,
-        sortedBy: sortingParams?.map((sp) => (sp.descending ? '^' + sp.fieldName : sp.fieldName)),
-      })
+      .post(
+        this.url + `Get${this.entitySchema!.name}List`,
+        {
+          filter: filter,
+          limit: pagingParams?.pageSize,
+          skip: pagingParams ? (pagingParams?.pageNumber - 1) * pagingParams?.pageSize : 0,
+          sortedBy: sortingParams?.map((sp) => (sp.descending ? '^' + sp.fieldName : sp.fieldName)),
+        },
+        this.entitySchema!,
+      )
       .then((r) => {
         return this.dataStore
           .post(this.url + `Get${this.entitySchema!.name}Count`, { filter: filter })
@@ -97,12 +109,16 @@ export class FuseDataSourceMethod implements IDataSource {
     sortingParams?: SortingField[] | undefined,
   ): Promise<PaginatedList> {
     return this.dataStore
-      .post(this.url + `Get${this.entitySchema!.name}Refs`, {
-        filter: filter,
-        skip: pagingParams ? (pagingParams.pageNumber - 1) * pagingParams.pageSize : 0,
-        limit: pagingParams ? pagingParams.pageSize + 2 : 10,
-        sortedBy: sortingParams?.map((sp) => (sp.descending ? '^' + sp.fieldName : sp.fieldName)),
-      })
+      .post(
+        this.url + `Get${this.entitySchema!.name}Refs`,
+        {
+          filter: filter,
+          skip: pagingParams ? (pagingParams.pageNumber - 1) * pagingParams.pageSize : 0,
+          limit: pagingParams ? pagingParams.pageSize + 2 : 10,
+          sortedBy: sortingParams?.map((sp) => (sp.descending ? '^' + sp.fieldName : sp.fieldName)),
+        },
+        this.entitySchema!,
+      )
       .then((r) => {
         return {
           page: r.return,

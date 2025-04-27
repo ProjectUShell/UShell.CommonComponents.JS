@@ -7,7 +7,31 @@ import { FuseDataSourceMethod } from './FuseDataSourceMethod'
 export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
   public static getTokenMethod: ((tokenSourceUid: string) => string) | null = null
 
-  public async post(url: string, bodyParams: any = null): Promise<any> {
+  safeParseJson(jsonString: string, entitySchema: EntitySchema) {
+    const int64Fields = ['SomeUid']
+
+    const longFields = entitySchema.fields
+      .filter((f) => ['int64', 'long'].includes(f.type.toLocaleLowerCase()))
+      .map((f) => f.name)
+    // Escape special regex characters in field names
+    const escapedFields = longFields.map((field) => field.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+
+    // Create a regex pattern that matches any of the specified fields followed by a number
+    const fieldPattern = escapedFields.join('|')
+    const int64Regex = new RegExp(`("(${fieldPattern})"\\s*:\\s*)(\\d+)`, 'g')
+
+    // Replace values of these fields with string versions by adding quotes around the numbers
+    const safeJsonString = jsonString.replace(int64Regex, '$1"$3"')
+
+    // Parse the modified JSON string
+    return JSON.parse(safeJsonString)
+  }
+
+  public async post(
+    url: string,
+    bodyParams: any = null,
+    entitySchema: EntitySchema | null = null,
+  ): Promise<any> {
     const headers: any = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -35,6 +59,14 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
       headers: headers,
       body: bodyParams ? JSON.stringify(bodyParams) : null,
     })
+    if (entitySchema) {
+      const contentString = await rawResponse.text()
+      console.log('FuseDataStore post', contentString)
+
+      const content = this.safeParseJson(contentString, entitySchema)
+      return content
+    }
+
     const content = await rawResponse.json()
 
     return content

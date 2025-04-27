@@ -7,9 +7,9 @@ const GuifadModule: React.FC<{ widget: IWidget }> = ({ widget }) => {
     <Guifad
       rootEntityName={widget.state.unitOfWork.entityName}
       dataSourceManager={widget.widgetHost}
-      enterRecord={(r, es) => {
-        console.log('enter record', { r: r, es: es })
-      }}
+      // enterRecord={(r, es) => {
+      //   console.log('enter record', { r: r, es: es })
+      // }}
       record={widget.state.unitOfWork?.record || undefined}
       layoutDescription={widget.state.unitOfWork?.layoutDescription}
       uow={widget.state.unitOfWork}

@@ -65,6 +65,8 @@ const MultiPanelLayout: React.FC<{
   const [isBottomPanelVisible, setBottomPanelVisible] = useState(true)
   const [isRightPanelVisible1, setRightPanelVisible1] = useState(true)
 
+  const [resizing, setResizing] = useState(false)
+
   const [leftPanelIndex, setLeftPanelIndex] = useState(0)
   const [rightPanelIndex, setRightPanelIndex] = useState(0)
 
@@ -120,7 +122,10 @@ const MultiPanelLayout: React.FC<{
     const startWidthRight = rightPanelRef.current?.offsetWidth || 0
 
     const handleMouseMove = (e: MouseEvent) => {
-      console.log('handleMouseMove', e.clientX, e.clientY)
+      // console.log('handleMouseMove', e.clientX, e.clientY)
+      e.preventDefault()
+      e.stopPropagation()
+      setResizing(true)
       if (direction === 'top') {
         const newHeight = startHeightTop + (e.clientY - startY)
         setTopPanelHeight(`${newHeight}px`)
@@ -137,6 +142,7 @@ const MultiPanelLayout: React.FC<{
     }
 
     const handleMouseUp = () => {
+      setResizing(false)
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
     }
@@ -506,14 +512,14 @@ const MultiPanelLayout: React.FC<{
         {leftPanelContent && (
           <div
             ref={leftPanelRef}
-            className={`p-0 overflow-auto relative transition-all ${
-              isLeftPanelVisible && classNameBorder
-            } ${isLeftPanelVisible ? 'border-r' : 'border-0 border-red-400 overflow-hidden'} `}
+            className={`p-0 overflow-auto relative  ${isLeftPanelVisible && classNameBorder} ${
+              isLeftPanelVisible ? 'border-r ' : 'border-0 border-red-400 overflow-hidden '
+            } ${!resizing && 'transition-all'} `}
             style={{
               width: isLeftPanelVisible ? leftPanelWidth : 0,
-              transitionProperty: 'width',
-              transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-              transitionDuration: '150ms',
+              // transitionProperty: 'width',
+              // transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+              // transitionDuration: '150ms',
             }}
           >
             {leftCollapsable &&
@@ -527,7 +533,7 @@ const MultiPanelLayout: React.FC<{
               )}
             {getLeftPanelContent()}
             <div
-              style={{ cursor: 'row-resize' }}
+              style={{ cursor: 'col-resize' }}
               className={`absolute top-0 right-0 w-2 h-full border-0 border-orange-400 ${classNameSplitter}`}
               onMouseDown={(e) => handleMouseDown(e, 'left')}
             ></div>
@@ -554,7 +560,7 @@ const MultiPanelLayout: React.FC<{
           {mainContent}
           {isRightPanelVisible && (
             <div
-              style={{ cursor: 'row-resize' }}
+              style={{ cursor: 'col-resize' }}
               ref={rightPanelRef}
               className={`absolute top-0 right-0 w-2 h-full border-0 border-blue-400 ${classNameSplitter}`}
               onMouseDown={(e) => handleMouseDown(e, 'right')}
@@ -566,14 +572,14 @@ const MultiPanelLayout: React.FC<{
           (!Array.isArray(rightPanelContent) || rightPanelContent.length > 0) && (
             <div
               ref={rightPanelRef}
-              className={`p-0 overflow-auto relative transition-all ${
-                isRightPanelVisible && classNameBorder
-              } ${isRightPanelVisible ? 'border-l' : 'border-0 border-red-400 overflow-hidden'} `}
+              className={`p-0 overflow-auto relative ${isRightPanelVisible && classNameBorder} ${
+                isRightPanelVisible ? 'border-l' : 'border-0 border-red-400 overflow-hidden'
+              } ${!resizing && 'transition-all'} `}
               style={{
                 width: isRightPanelVisible ? rightPanelWidth : 0,
-                transitionProperty: 'width',
-                transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-                transitionDuration: '150ms',
+                // transitionProperty: 'width',
+                // transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                // transitionDuration: '150ms',
               }}
             >
               {rightCollapsable && rightCollapsedMode == 'arrow' && (
