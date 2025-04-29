@@ -16,11 +16,16 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     if (longFields.length == 0) {
       return JSON.parse(jsonString)
     }
-    const longField1 = longFields[0]
-    if (!jsonString.includes(longField1) && jsonString.includes(lowerFirstLetter(longField1))) {
-      // If the first field is not found, try to find the lower case version of the first field
-      longFields = longFields.map((field) => lowerFirstLetter(field))
-    }
+    console.log('longFields original', longFields)
+    longFields.forEach((longField) => {
+      const longFieldLower = lowerFirstLetter(longField)
+      if (longFields.indexOf(longFieldLower) == -1) {
+        longFields.push(longFieldLower)
+      }
+      if (longFields.indexOf(longFieldLower.toUpperCase()) == -1) {
+        longFields.push(longFieldLower.toUpperCase())
+      }
+    })
 
     console.log('longFields', longFields)
     // Escape special regex characters in field names
