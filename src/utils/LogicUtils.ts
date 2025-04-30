@@ -2,6 +2,7 @@ import { LogicalExpression, PagingParams, SortingField } from 'fusefx-repository
 import { FieldPredicate } from 'fusefx-repositorycontract/lib/FieldPredicate'
 import { TableColumn } from '../components/guifad/_Organisms/Table'
 import { EntitySchema, FieldSchema } from 'fusefx-modeldescription'
+import { EntitySchemaService } from '../data/EntitySchemaService'
 
 export function getSelectedValues(filter: LogicalExpression, fieldName: string): any[] {
   if (!filter || !filter.predicates || filter.predicates.length == 0) {
@@ -161,11 +162,7 @@ export function satisfiesPredicate(
         (f) => f.name == filter.fieldName,
       )
       if (!fieldSchema) return false
-      if (
-        ['int32', 'int16', 'int64', 'int', 'integer', 'long', 'double', 'float'].includes(
-          fieldSchema.type,
-        )
-      ) {
+      if (EntitySchemaService.isNumber(fieldSchema.type)) {
         return record[filter.fieldName] >= filterValue
       } else {
         return record[filter.fieldName].includes(filterValue)
@@ -176,11 +173,7 @@ export function satisfiesPredicate(
         (f) => f.name == filter.fieldName,
       )
       if (!fieldSchema) return false
-      if (
-        ['int32', 'int16', 'int64', 'int', 'integer', 'long', 'double', 'float'].includes(
-          fieldSchema.type,
-        )
-      ) {
+      if (EntitySchemaService.isNumber(fieldSchema.type)) {
         return record[filter.fieldName] <= filterValue
       } else {
         return filterValue.includes(record[filter.fieldName])

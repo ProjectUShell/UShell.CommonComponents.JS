@@ -202,8 +202,6 @@ const Table2: React.FC<{
     if (!c.maxCellLength) {
       return v
     }
-    console.log('display', widthDelta)
-    console.log('display client Width', test.clientWidth)
     const charLength = 0.875 * 4
     const vLength = charLength * v.length
     const maxCellLength: number = c.maxCellLength ? c.maxCellLength : 20
@@ -226,7 +224,6 @@ const Table2: React.FC<{
       if (widthDelta == 0) {
         desiredWidth = maxCellLength
       }
-      console.log('desiredWidth', desiredWidth)
       const ratio = desiredWidth / textWidth
       const desiredTextLength: number = ratio * textLength
       const s: string = v

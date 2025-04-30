@@ -121,7 +121,6 @@ const Guifad1: React.FC<{
     })
     if (relatedEntityRef) {
       ds.getRecord(relatedEntityRef.key).then((r) => {
-        console.log('relatedEntityRef', r)
         setCurrentRecord(r)
       })
     } else {
@@ -154,7 +153,6 @@ const Guifad1: React.FC<{
     setIsCreation(true)
     setDirty(true)
   }
-  console.log('currentRecord', currentRecord)
   return (
     <div
       className='UShell_Guifad w-full h-full flex flex-col overflow-hidden text-sm 

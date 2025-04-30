@@ -53,8 +53,6 @@ const EntityFormInner: React.FC<{
   onValidationChanged,
   minWidthInput,
 }) => {
-  console.log('EntityFormInner', dataSource)
-
   // states
   // const [currentEntity, setCurrentEntity] = useState({ ...entity })
   const [fkRelations, setFkRelations] = useState<RelationSchema[]>([])
@@ -119,7 +117,7 @@ const EntityFormInner: React.FC<{
   function changeValue(field: FieldSchema, newValue: any) {
     setDirty ? setDirty(true) : setDirtyLocal(true)
 
-    if (field.type == 'Int32') {
+    if (EntitySchemaService.getHtmlInputType(field.type) == 'number') {
       newValue = Number.parseInt(newValue)
     }
     if (field.type.toLocaleLowerCase().startsWith('bool')) {

@@ -139,9 +139,6 @@ export const EntityForm1: React.FC<{
   minWidthInput,
   toolbarItems = <></>,
 }) => {
-  console.log('EntityForm e', entity)
-  console.log('EntityForm e ds', dataSources)
-
   // states
   const [currentEntity, setCurrentEntity] = useState<any>({ ...entity })
   const [currentDataSource, setCurrentDataSource] = useState(guessDataSource())

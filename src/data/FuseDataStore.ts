@@ -16,7 +16,6 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     if (longFields.length == 0) {
       return JSON.parse(jsonString)
     }
-    console.log('longFields original', longFields)
     longFields.forEach((longField) => {
       const longFieldLower = lowerFirstLetter(longField)
       if (longFields.indexOf(longFieldLower) == -1) {
@@ -27,11 +26,8 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
       }
     })
 
-    console.log('longFields', longFields)
     // Escape special regex characters in field names
     const escapedFields = longFields.map((field) => field.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-
-    console.log('escapedFields', escapedFields)
 
     // Create a regex pattern that matches any of the specified fields followed by a number
     const fieldPattern = escapedFields.join('|')
@@ -39,7 +35,6 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
 
     // Replace values of these fields with string versions by adding quotes around the numbers
     const safeJsonString = jsonString.replace(int64Regex, '$1"$3"')
-    console.log('safeJsonString', safeJsonString)
 
     // Parse the modified JSON string
     return JSON.parse(safeJsonString)
@@ -79,10 +74,8 @@ export class FuseDataStore implements IDataStore, IDataSourceManagerBase {
     })
     if (entitySchema) {
       const contentString = await rawResponse.text()
-      console.log('FuseDataStore post', contentString)
 
       const content = this.safeParseJson(contentString, entitySchema)
-      console.log('FuseDataStore content', content)
       return content
     }
 

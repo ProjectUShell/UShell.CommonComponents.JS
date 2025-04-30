@@ -23,7 +23,6 @@ const EntityStructureControl: React.FC<{
   layoutDescription,
   classNameAsideBorder,
 }) => {
-  console.log('currentRecord2', currentRecord)
   return (
     <>
       <div className='border-b h-full bg-navigation dark:bg-navigationDark border-navigationBorder dark:border-navigationBorderDark'>

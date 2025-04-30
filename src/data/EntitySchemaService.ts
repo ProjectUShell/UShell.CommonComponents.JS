@@ -11,7 +11,7 @@ import { LogicalExpression } from 'fusefx-repositorycontract'
 
 export class EntitySchemaService {
   static isNumber(fieldType: string) {
-    return ['int32', 'int64', 'integer', 'long'].includes(fieldType.toLocaleLowerCase())
+    return this.getHtmlInputType(fieldType) == 'number'
   }
 
   static getUniversalSearchExpression(
@@ -178,10 +178,15 @@ export class EntitySchemaService {
 
   static getHtmlInputType(propertyType: string) {
     switch (propertyType.toLocaleLowerCase()) {
+      case 'int':
+      case 'int16':
       case 'int32':
       case 'int64':
       case 'float':
       case 'decimal':
+      case 'long':
+      case 'integer':
+      case 'double':
         return 'number'
       case 'datetime':
         return 'date'
@@ -235,7 +240,7 @@ export class EntitySchemaService {
           valueToSet = crypto.randomUUID()
           forceValue = true
         }
-        if (['int32', 'int', 'integer'].includes(f.type.toLocaleLowerCase())) {
+        if (this.isNumber(f.type)) {
           valueToSet = 0
           forceValue = true
         }
