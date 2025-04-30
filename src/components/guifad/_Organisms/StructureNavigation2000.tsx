@@ -110,7 +110,12 @@ const StructureNavigation2000: React.FC<{
           ))}
         </div>
       </div>
-      <div className='w-full h-full max-w-full border-0 p-2 border-navigationBorder dark:border-navigationBorderDark mt-0'>
+      <div className='w-full h-full max-w-full border-0 p-0 border-navigationBorder dark:border-navigationBorderDark'>
+        <h1 className='self-start flex justify-start border-0 pt-2 pb-3 pl-4 uppercase text-xs'>
+          {currentRelation && currentRecord
+            ? getNavigationDiplayLabel(currentRelation)
+            : 'Entity Preview'}
+        </h1>
         {currentRelation && currentRecord && (
           <PreviewTable
             dataSource={dataSourceManager.tryGetDataSource(currentRelation.foreignEntityName)!}

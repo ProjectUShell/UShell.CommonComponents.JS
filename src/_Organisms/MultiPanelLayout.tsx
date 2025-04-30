@@ -270,25 +270,21 @@ const MultiPanelLayout: React.FC<{
   function getLeftPanelContent(): React.ReactNode {
     if (Array.isArray(leftPanelContent)) {
       return (
-        <div className='flex flex-col h-full border-0'>
-          {leftPanelContent.map((item, index) => {
-            return (
-              <div key={index} className='h-full1 border-0'>
-                {index == leftPanelIndex && (
-                  <div className='flex flex-col items-center h-full  border-0'>
-                    <div className='self-start flex justify-start border-0 pt-2 pb-1 pl-4 uppercase text-xs'>
-                      {item.title}
-                    </div>
-                    {item.container == 'left'
-                      ? (initialLeftPanelContent as PanelItem[]).find((x) => x.title == item.title)
-                          ?.content
-                      : (initialRightPanelContent as PanelItem[]).find((x) => x.title == item.title)
-                          ?.content}
-                  </div>
-                )}
+        <div className='flex flex-col h-full border-0 border-blue-400'>
+          <div className='h-full border-0 border-red-400'>
+            <div className='flex flex-col items-center h-full  border-0'>
+              <div className='self-start flex justify-start border-0 pt-2 pb-1 pl-4 uppercase text-xs'>
+                {leftPanelContent[leftPanelIndex].title}
               </div>
-            )
-          })}
+              {leftPanelContent[leftPanelIndex].container == 'left'
+                ? (initialLeftPanelContent as PanelItem[]).find(
+                    (x) => x.title == leftPanelContent[leftPanelIndex].title,
+                  )?.content
+                : (initialRightPanelContent as PanelItem[]).find(
+                    (x) => x.title == leftPanelContent[leftPanelIndex].title,
+                  )?.content}
+            </div>
+          </div>
         </div>
       )
     } else {
@@ -326,7 +322,7 @@ const MultiPanelLayout: React.FC<{
                   : 'pl-1.5'
                 : 'text-slate-500 dark:text-slate-400 pl-1.5'
             } 
-             hover:text-textone hover:dark:text-textonedark
+             hover:text-textone dark:hover:text-textonedark
              `}
           draggable
           onDragStart={(e) => handleDragStart(e, 'left', index)}
