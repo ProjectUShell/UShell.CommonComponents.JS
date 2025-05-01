@@ -40,7 +40,7 @@ const StructureNavigation2000: React.FC<{
     if (!entityLayout)
       return er.primaryNavigationName && er.primaryNavigationName != ''
         ? er.primaryNavigationName
-        : er.foreignEntityName
+        : EntitySchemaService.getLabelForRelationToForeign(schemaRoot, er)
     const fieldLayout: FieldLayout | undefined = entityLayout.fieldLayouts.find((f) => {
       if (!f.fieldName.includes('.')) return false
       const idxOfDot = f.fieldName.indexOf('.')
@@ -84,7 +84,7 @@ const StructureNavigation2000: React.FC<{
           </button>
           {EntitySchemaService.getRelations(schemaRoot, entitySchema, false).map((er) => (
             <button
-              key={er.primaryNavigationName + er.foreignKeyIndexName}
+              key={EntitySchemaService.getKey(er)}
               disabled={!currentRecord || dirty}
               style={{ borderRadius: '0.25rem' }}
               className={`w-full flex gap-1 items-center pl-7  ${
@@ -92,8 +92,7 @@ const StructureNavigation2000: React.FC<{
                   ? 'text-gray-400 hover:cursor-default'
                   : 'hover:cursor-pointer'
               } rounded-md p-1 ${
-                `${currentRelation?.primaryNavigationName}${currentRelation?.foreignKeyIndexName}` ==
-                er.primaryNavigationName + er.foreignKeyIndexName
+                EntitySchemaService.areRelationsEqual(er, currentRelation)
                   ? !currentRecord || dirty
                     ? ''
                     : 'bg-navigationSelected dark:bg-navigationSelectedDark'

@@ -10,6 +10,16 @@ import { capitalizeFirstLetter, getValue, lowerFirstLetter } from '../utils/Stri
 import { LogicalExpression } from 'fusefx-repositorycontract'
 
 export class EntitySchemaService {
+  static getKey(er: RelationSchema): import('react').Key | null | undefined {
+    return er.primaryEntityName + er.foreignEntityName + er.foreignKeyIndexName
+  }
+
+  static areRelationsEqual(r1: RelationSchema | null, r2: RelationSchema | null): boolean {
+    if (!r1 && !r2) return true
+    if (!r1 || !r2) return false
+    return this.getKey(r1) == this.getKey(r2)
+  }
+
   static isNumber(fieldType: string) {
     return this.getHtmlInputType(fieldType) == 'number'
   }
@@ -44,6 +54,22 @@ export class EntitySchemaService {
     })
     return result
   }
+
+  static getLabelForRelationToForeign(schemaRoot: SchemaRoot, relation: RelationSchema): string {
+    if (relation.primaryNavigationName && relation.primaryNavigationName != '') {
+      return relation.primaryNavigationName
+    }
+    if (!relation.foreignEntityIsMultiple) {
+      return relation.foreignEntityName
+    }
+    const entitySchema: EntitySchema | undefined = schemaRoot.entities.find(
+      (e) => e.name == relation.foreignEntityName,
+    )
+    if (!entitySchema) return relation.foreignEntityName
+
+    return entitySchema.namePlural
+  }
+
   static getLabel(schemaRoot: SchemaRoot, primaryEntityName: string, entity: any): string {
     if (!entity) return 'No Entity'
 
