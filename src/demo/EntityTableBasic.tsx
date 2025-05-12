@@ -10,6 +10,8 @@ nameField.identityLabel = true
 nameField.filterable = 1
 const brandField: FieldSchema = new FieldSchema('Brand', 'string')
 brandField.filterable = 1
+const colorField: FieldSchema = new FieldSchema('Color', 'int32')
+brandField.filterable = 1
 const idField: FieldSchema = new FieldSchema('Id', 'int32')
 idField.required = true
 const isOldtimerField: FieldSchema = new FieldSchema('IsOldtimer', 'boolean')
@@ -19,6 +21,7 @@ const carEntitySchema: EntitySchema = {
     idField,
     new FieldSchema('DateOfConstruction', 'datetime'),
     brandField,
+    colorField,
     nameField,
     isOldtimerField,
     new FieldSchema('Price', 'int32'),
@@ -36,7 +39,14 @@ const dataSource: ObjectGraphDataSource = new ObjectGraphDataSource(
   carEntitySchema,
   {
     Cars: [
-      { Id: 1, DateOfConstruction: '2000-01-01', Brand: 'Bmw', IsOldtimer: false, Name: 'My Car' },
+      {
+        Id: 1,
+        DateOfConstruction: '2000-01-01',
+        Brand: 'Bmw',
+        IsOldtimer: false,
+        Name: 'My Car',
+        Color: 1,
+      },
     ],
   },
   'Cars',
@@ -49,6 +59,11 @@ const carLayout: EntityLayout = new EntityLayout('Car', [
     fieldName: 'Brand',
     displayLabel: 'Brand',
     dropdownStaticEntries: { Bmw: 'Bmw', Audi: 'Audi', Fiat: 'Fiat', Renault: 'Renault' },
+  },
+  {
+    fieldName: 'Color',
+    displayLabel: 'Color',
+    dropdownStaticEntries: { '1': 'Red', '2': 'Blue', '3': 'Green', '4': 'Yellow' },
   },
 ])
 carLayout.displayLabel = 'Car'

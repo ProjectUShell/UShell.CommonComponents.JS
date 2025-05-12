@@ -369,9 +369,11 @@ export class EntitySchemaService {
         return null
       }
     }
+
     if (required && (v == null || v == undefined || v == '')) {
       return 'Field is required'
     }
+
     return null
   }
 }

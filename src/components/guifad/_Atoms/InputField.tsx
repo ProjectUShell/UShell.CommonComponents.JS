@@ -7,6 +7,7 @@ import DropdownSelect from '../../../_Atoms/DropdownSelect'
 import ExclamationCircleIcon from '../../../_Icons/ExclamationCircleIcon'
 import Tooltip from '../../../_Atoms/Tooltip'
 import DropdownMultiSelect from '../../../_Atoms/DropdownMultiSelect'
+import XMarkIcon from '../../../_Icons/XMarkIcon'
 
 const InputField: React.FC<{
   label: string | null
@@ -55,7 +56,7 @@ const InputField: React.FC<{
   useEffect(() => {
     function getInitialValue(initialValue: any): any {
       const htmlType: string = EntitySchemaService.getHtmlInputType(inputType)
-      if (htmlType == 'date') {
+      if (htmlType == 'date' || htmlType == 'datetime') {
         if (!initialValue) {
           return undefined
           return new Date().toISOString().replace(/T.*/, '')
@@ -64,8 +65,8 @@ const InputField: React.FC<{
       }
       if (initialValue) return initialValue
 
-      if (htmlType == 'text') return ''
-      if (htmlType == 'number') return 0
+      // if (htmlType == 'text') return ''
+      // if (htmlType == 'number') return 0
 
       return initialValue
     }
@@ -230,7 +231,8 @@ const InputField: React.FC<{
         disabled={disabled}
         className={classNameInput}
         type={EntitySchemaService.getHtmlInputType(inputType)}
-        value={currentValue || (htmlType == 'number' ? 0 : '')} //|| (htmlType == 'number' ? 0 : '')
+        placeholder={currentValue || currentValue == 0 || currentValue == '' ? undefined : 'null'}
+        value={currentValue || currentValue == 0 || currentValue == '' ? currentValue : ''} //|| (htmlType == 'number' ? 0 : '')
         onChange={(e) => {
           onValueChange(e.target.value, getErrors(e.target.value))
           setCurrentValue(e.target.value)
@@ -254,6 +256,27 @@ const InputField: React.FC<{
             <Tooltip targetId={id}>
               <div className='whitespace-nowrap p-2 border-0 bg-content dark:bg-contentDark border-contentBorder dark:border-contentBorderDark'>
                 {errors}
+              </div>
+            </Tooltip>
+          </div>
+        )}
+        {!required && (currentValue || currentValue == 0 || currentValue == '') && (
+          <div
+            id={`${id}_X`}
+            style={{
+              marginLeft:
+                EntitySchemaService.getHtmlInputType(inputType) == 'text' ? '-2.5rem' : '-4.0rem',
+            }}
+            className='text-red-500 dark:text-red-400 hover:bg-contentHover dark:hover:bg-contentHoverDark rounded-md w-8'
+            onClick={() => {
+              setCurrentValue(null)
+              onValueChange(null, getErrors(null))
+            }}
+          >
+            <XMarkIcon></XMarkIcon>
+            <Tooltip targetId={`${id}_X`}>
+              <div className='whitespace-nowrap p-2 border-0 bg-content dark:bg-contentDark border-contentBorder dark:border-contentBorderDark'>
+                Set to null
               </div>
             </Tooltip>
           </div>

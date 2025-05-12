@@ -150,7 +150,6 @@ export const EntityForm1: React.FC<{
   const [errors, setErrors] = useState<{ [fieldName: string]: string | null }>({})
 
   // useEffects
-  console.log('EntityForm ce', currentEntity)
 
   useEffect(() => setCurrentEntity({ ...entity }), [entity])
 

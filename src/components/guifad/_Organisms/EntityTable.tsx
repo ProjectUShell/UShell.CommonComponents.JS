@@ -440,6 +440,15 @@ const EntityTableInternal: React.FC<{
           fieldType: f.type,
           key: f.name,
           sortable: true,
+          onRenderCell: (cellValue) => {
+            if (fieldLayout && fieldLayout.dropdownStaticEntries) {
+              const entry: string | undefined = fieldLayout.dropdownStaticEntries[cellValue]
+              if (entry) {
+                return <div>{entry}</div>
+              }
+            }
+            return <div>{cellValue}</div>
+          },
           renderFilter:
             f.filterable > 0
               ? (filter, onFilterChanged, column, availableRecords) =>
