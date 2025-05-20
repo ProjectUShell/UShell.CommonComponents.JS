@@ -45,15 +45,17 @@ const VerticalMenu: React.FC<{
   }
 
   return (
-    <VerticalMenuInternal
-      menuItems={menuItems}
-      shellMenu={shellMenu}
-      depth={0}
-      triggerRerender={triggerRerender}
-      shellMenuState={shellMenuState}
-      className={className}
-      menuItemHoverClassName={menuItemHoverClassName}
-    ></VerticalMenuInternal>
+    <div className='mx-3'>
+      <VerticalMenuInternal
+        menuItems={menuItems}
+        shellMenu={shellMenu}
+        depth={0}
+        triggerRerender={triggerRerender}
+        shellMenuState={shellMenuState}
+        className={className}
+        menuItemHoverClassName={menuItemHoverClassName}
+      ></VerticalMenuInternal>
+    </div>
   )
 }
 
@@ -81,16 +83,21 @@ const VerticalMenuInternal: React.FC<{
     })
   }
 
-  const depthCssClass = getDepthCssClass(depth)
+  // const depthCssClass = getDepthCssClass(depth)
 
   return (
     <ul className={`select-none text-sm ${className ? className : 'bg-menu dark:bg-menuDark'}`}>
       {menuItems.map((mi: MenuItem) => (
-        <div key={mi.id}>
+        <div key={mi.id} style={{}}>
           <li
             key={mi.id}
-            style={{ borderRadius: '0.25rem', paddingTop: '0.70rem', paddingBottom: '0.70rem' }}
-            className={`flex items-center gap-x-4  px-6 ${depthCssClass} ${
+            style={{
+              borderRadius: '0.25rem',
+              paddingTop: '0.70rem',
+              paddingBottom: '0.70rem',
+              paddingLeft: (depth + 1) * 20,
+            }}
+            className={`flex items-center gap-x-4  px-6  ${
               mi.type !== 'Group'
                 ? (menuItemHoverClassName && menuItemHoverClassName !== ''
                     ? menuItemHoverClassName
@@ -98,7 +105,7 @@ const VerticalMenuInternal: React.FC<{
                 : ''
             } ${mi.type == 'Command' ? 'mt-0' : 'mt-4 font-bold'} ${
               shellMenuState.activeItemId == mi.id
-                ? 'bg-prim2 dark:bg-prim2Dark border border-prim4 dark:border-menuBorderDark'
+                ? 'bg-menuSelected dark:bg-menuSelectedDark border-0 border-prim4 dark:border-menuBorderDark'
                 : 'hover:bg-menuHover dark:hover:bg-menuHoverDark'
             }`}
             onClick={() => {

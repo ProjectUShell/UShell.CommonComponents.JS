@@ -10,6 +10,7 @@ export class FieldInputInfo {
   setabilityFlags: number = 0
   required: boolean = false
   value: any
+  knownValues?: { value: any; label: string }[] = []
   setValue: (v: any) => void = () => {}
 }
 
@@ -68,10 +69,17 @@ const UForm1: React.FC<{
     if (!fieldLayout) return f.name
     return fieldLayout.displayLabel
   }
-  function getAllowedValues(f: FieldInputInfo): { [key: string]: string } | undefined {
+  function getAllowedValues(f: FieldInputInfo): { [key: string]: any } | undefined {
     const fieldLayout: FieldLayout | undefined = fieldLayouts.find((fl) => fl.fieldName == f.name)
-    if (!fieldLayout) return undefined
-    return fieldLayout.dropdownStaticEntries
+    if (fieldLayout) return fieldLayout.dropdownStaticEntries
+    if (f.knownValues) {
+      const allowedValues: { [key: string]: any } = {}
+      f.knownValues.forEach((kv) => {
+        allowedValues[kv.value] = kv.label
+      })
+      return allowedValues
+    }
+    return undefined
   }
   function getAllowedValuesSeparator(f: FieldInputInfo): string | null | undefined {
     const fieldLayout: FieldLayout | undefined = fieldLayouts.find((fl) => fl.fieldName == f.name)
@@ -94,7 +102,6 @@ const UForm1: React.FC<{
     errors[fieldName] = error
     setErrors({ ...errors })
   }
-
   return (
     <div className='flex gap-6'>
       {labelPosition == 'left' && (

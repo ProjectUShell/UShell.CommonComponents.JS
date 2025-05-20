@@ -54,8 +54,8 @@
     "apexcharts": "^3.50.0",
     "css-loader": "^6.7.3",
     "fs-extra": "^11.1.1",
-    "fusefx-modeldescription": "^2.0.16",
-    "fusefx-repositorycontract": "^0.4.16",
+    "fusefx-modeldescription": "^2.0.20",
+    "fusefx-repositorycontract": "^0.5.3",
     "postcss-loader": "^7.2.4",
     "raw-loader": "^4.0.2",
     "react-apexcharts": "^1.4.1",
@@ -66,7 +66,7 @@
     "styled-components": "^6.1.8",
     "tailwindcss-cli": "^0.1.2",
     "ushell-modulebase": "^1.0.23",
-    "ushell-portfoliodescription": "^0.3.7"
+    "ushell-portfoliodescription": "^1.0.2"
   },
   "browserslist": {
     "production": [

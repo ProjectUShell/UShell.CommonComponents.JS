@@ -14,7 +14,7 @@ const InputField: React.FC<{
   inputType: string
   initialValue: any
   onValueChange: (newValue: any, errors: string | null) => void
-  allowedValues?: { [key: string]: string }
+  allowedValues?: { [key: string]: any }
   allowedValuesSeparator?: string | null
   setabilityFlags?: number
   classNameBg?: string
@@ -131,12 +131,16 @@ const InputField: React.FC<{
     }
     if (allowedValues) {
       if (!allowedValuesSeparator) {
-        const options: any[] = Object.keys(allowedValues).map((av) => {
+        const options: { label: string; value: any }[] = Object.keys(allowedValues).map((av) => {
+          console.log('av', av)
+          const option: { label: string; value: any } = { label: allowedValues[av], value: av }
+          console.log('option', option)
           return { label: allowedValues[av], value: av }
         })
         if (!required) {
           options.push({ label: 'Unset', value: undefined })
         }
+        console.log('options', options)
         return (
           <DropdownSelect
             minWidth={minWidth}
@@ -149,8 +153,9 @@ const InputField: React.FC<{
             styleType={styleType}
             options={options}
             onOptionSet={(o) => {
-              setCurrentValue(o?.value)
+              console.log('setting value', o)
               onValueChange(o?.value, getErrors(o?.value))
+              setCurrentValue(o?.value)
             }}
             initialOption={{ label: allowedValues[initialValue], value: initialValue }}
           ></DropdownSelect>
@@ -175,8 +180,8 @@ const InputField: React.FC<{
                       '',
                     )
                   : ''
-              setCurrentValue(newValue)
               onValueChange(newValue, getErrors(newValue))
+              setCurrentValue(newValue)
             }}
             initialOptions={initialValue
               ?.toString()

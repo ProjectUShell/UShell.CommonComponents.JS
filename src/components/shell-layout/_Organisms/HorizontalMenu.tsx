@@ -78,7 +78,7 @@ const HorizontalMenu: React.FC<{
                   refId={mi.id}
                 >
                   <div
-                    className='bg-menu dark:bg-menuHoverDark w-full
+                    className='bg-menu dark:bg-menuHoverDark w-full py-2
                      border-l-2 border-l-prim3 dark:border-l-prim6 dark:border-menuBorderDark
                      border-b-0 border-r-0 shadow-lg shadow-bg6 dark:shadow-black '
                   >
@@ -91,7 +91,7 @@ const HorizontalMenu: React.FC<{
                         shellMenu={shellMenu}
                         menuItems={mi.children}
                         shellMenuState={shellMenuState}
-                        className='bg-menu dark:bg-menuDark border border-menuBorder dark:border-menuBorderDark'
+                        // className='bg-menu dark:bg-menuDark border border-menuBorder dark:border-menuBorderDark'
                         // menuItemHoverClassName='hover:bg-menuHover1 dark:hover:bg-menuHover1Dark'
                       ></VerticalMenu>
                     </div>

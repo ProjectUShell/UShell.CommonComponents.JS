@@ -8,8 +8,37 @@ import {
 import { IDataSource } from 'ushell-modulebase'
 import { capitalizeFirstLetter, getValue, lowerFirstLetter } from '../utils/StringUtils'
 import { LogicalExpression } from 'fusefx-repositorycontract'
+import { KnownValueRange } from 'fusefx-modeldescription/lib/KnownValueRange'
 
 export class EntitySchemaService {
+  static getKnownValues(
+    f: FieldSchema,
+    schemaRoot: SchemaRoot,
+  ): { value: any; label: string }[] | undefined {
+    if (!f.knownValueRangeName) return undefined
+
+    const result: { value: any; label: string }[] = []
+    const knownValueRange: KnownValueRange | undefined = schemaRoot.knownValueRanges.find(
+      (k) => k.name == f.knownValueRangeName,
+    )
+    if (!knownValueRange) return undefined
+    knownValueRange.knownValues.forEach((v) => {
+      let value: any = JSON.parse(v.valueSerialized)
+
+      if (EntitySchemaService.isNumber(f.type)) {
+        if (typeof value == 'string') {
+          const parsedValue: number = Number.parseFloat(value)
+
+          if (!Number.isNaN(parsedValue)) {
+            value = parsedValue
+          }
+        }
+      }
+      const label: string = v.label
+      result.push({ value, label })
+    })
+    return result
+  }
   static getKey(er: RelationSchema): import('react').Key | null | undefined {
     return er.primaryEntityName + er.foreignEntityName + er.foreignKeyIndexName
   }

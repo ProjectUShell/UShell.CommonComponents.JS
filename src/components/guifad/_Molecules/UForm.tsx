@@ -5,6 +5,7 @@ import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
 import UForm1 from './UForm1'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
+import { EntitySchemaService } from '../../../data/EntitySchemaService'
 
 const UForm: React.FC<{
   fieldsToDisplay: FieldSchema[]
@@ -79,6 +80,7 @@ const UForm: React.FC<{
           setValue: (newValue: any) => {
             changeValue(f, newValue)
           },
+          knownValues: EntitySchemaService.getKnownValues(f, dataSourceManager?.getSchemaRoot()!),
         }
       })}
       customInputs={

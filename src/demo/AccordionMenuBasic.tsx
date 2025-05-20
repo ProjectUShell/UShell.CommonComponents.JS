@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import AccordionMenu from '../_Molecules/AccordionMenu'
 import PencilIcon from '../_Icons/PencilIcon'
+import { createServiceProxy } from '../data/ServiceFactory'
 
 const AccordionMenuBasic = () => {
   const [selectedItem, setSelecteItem] = useState('Item1.1')
@@ -8,7 +9,13 @@ const AccordionMenuBasic = () => {
     <div className='flex flex-col gap-1'>
       <button
         className='p-1 hover:bg-menuHover dark:hover:bg-menuHoverDark'
-        onClick={() => setSelecteItem('Item2.1')}
+        onClick={() => {
+          const service = createServiceProxy<{ getData: (id: number) => Promise<string> }>(
+            'https://api.example.com/service',
+          )
+          service.getData(1).then((data) => console.log(data))
+          setSelecteItem('Item2.1')
+        }}
       >
         Force 2.1
       </button>

@@ -116,13 +116,13 @@ const EntityFormInner: React.FC<{
 
   function changeValue(field: FieldSchema, newValue: any) {
     setDirty ? setDirty(true) : setDirtyLocal(true)
-
     if (EntitySchemaService.getHtmlInputType(field.type) == 'number') {
       newValue = Number.parseInt(newValue)
     }
     if (field.type.toLocaleLowerCase().startsWith('bool')) {
     }
     setValue(entity, field.name, newValue)
+    console.log('entity', entity)
     onChange(entity)
   }
 
