@@ -23,7 +23,6 @@ const VerticalShellLayout: React.FC<{
   showSearchBar,
 }) => {
   const [searchFilter, setSearchFilter] = useState('')
-
   return (
     <div className={`flex overflow-hidden h-screen whitespace-nowrap`}>
       {/* Sidebar */}

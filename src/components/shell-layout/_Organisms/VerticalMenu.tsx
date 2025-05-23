@@ -47,7 +47,7 @@ const VerticalMenu: React.FC<{
   return (
     <div className='mx-3'>
       <VerticalMenuInternal
-        menuItems={menuItems}
+        menuItems={getFilteredItems(menuItems)}
         shellMenu={shellMenu}
         depth={0}
         triggerRerender={triggerRerender}

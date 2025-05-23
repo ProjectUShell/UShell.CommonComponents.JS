@@ -1,23 +1,44 @@
-export function createServiceProxy<TService extends object>(baseUrl: string): TService {
+import { capitalizeFirstLetter } from '../utils/StringUtils'
+
+export function createServiceProxy<TService extends object>(
+  baseUrl: string,
+  headersFactory?: () => any,
+  additionalBodyPropertiesFactory?: () => any,
+): TService {
   return new Proxy({} as TService, {
     get: (target, propertyName: string) => {
       // Return a function that makes an HTTP request when any method is called
       return async (...args: any[]) => {
-        const url = `${baseUrl}/${propertyName}`
-
+        if (baseUrl.endsWith('/')) {
+          baseUrl = baseUrl.slice(0, -1)
+        }
+        const url = `${baseUrl}/${capitalizeFirstLetter(propertyName)}`
+        const headers = headersFactory ? headersFactory() : {}
+        const additionalBodyProperties = additionalBodyPropertiesFactory
+          ? additionalBodyPropertiesFactory()
+          : {}
+        const bodyProperties: any = args[0]
         const response = await fetch(url, {
           method: 'POST',
           headers: {
+            ...headers,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(args),
+          body: JSON.stringify({ ...additionalBodyProperties, ...bodyProperties }),
+        }).catch((error) => {
+          console.error('Error:', error)
+          return null
         })
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`)
+        if (!response) {
+          return { return: null, fault: 'Network error' }
         }
 
-        return await response.json()
+        if (!response.ok) {
+          return { return: null, fault: response.statusText }
+        }
+
+        const jsonResponse = await response.json()
+        return jsonResponse
       }
     },
   })

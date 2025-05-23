@@ -57,6 +57,7 @@ import GuifadLocalDoc from './demo/GuifadLocalDoc'
 import { LocalStoreDataSourceManager } from './data/LocalDataSourceManager'
 import MutliPanelLayoutDoc from './demo/MutliPanelLayoutDoc'
 import KanbanBoardDoc from './demo/KanbanBoardDoc'
+import ServiceFactoryDoc from './demo/ServiceFactoryDoc'
 
 const queryClient = new QueryClient()
 const Demo = () => {
@@ -107,6 +108,7 @@ const Demo = () => {
       'DropdownButtonDemo',
       'ResizeTable2',
       'Icons',
+      'ServiceFactory',
     ],
   }
 
@@ -330,6 +332,7 @@ const Demo = () => {
       {currentComponent == 'MultiButton' && <MultiButtonDoc></MultiButtonDoc>}
       {currentComponent == 'ColorDemo' && <ColorDemo></ColorDemo>}
       {currentComponent == 'Icons' && <IconsDemo></IconsDemo>}
+      {currentComponent == 'ServiceFactory' && <ServiceFactoryDoc></ServiceFactoryDoc>}
       {currentComponent == 'Schema Manager' && (
         <SchemaManager
           schemaProvider={new LocalStorageSchemaProvider()}

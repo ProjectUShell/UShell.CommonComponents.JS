@@ -16,6 +16,12 @@ const MenuSearchBar: React.FC<MenuSearchBarProps> = ({ filter, setFilter }) => {
         className='bg-content dark:bg-contentDark outline-none w-full border-0 p-2'
         placeholder='Filter...'
         onChange={(e) => setFilter(e.target.value)}
+        onKeyDown={(e) => {
+          // Clear filter on Escape
+          if (e.key === 'Escape') {
+            setFilter('')
+          }
+        }}
         value={filter}
       ></input>
       {filter && filter != '' && (

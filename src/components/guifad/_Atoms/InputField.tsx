@@ -132,15 +132,12 @@ const InputField: React.FC<{
     if (allowedValues) {
       if (!allowedValuesSeparator) {
         const options: { label: string; value: any }[] = Object.keys(allowedValues).map((av) => {
-          console.log('av', av)
           const option: { label: string; value: any } = { label: allowedValues[av], value: av }
-          console.log('option', option)
           return { label: allowedValues[av], value: av }
         })
         if (!required) {
           options.push({ label: 'Unset', value: undefined })
         }
-        console.log('options', options)
         return (
           <DropdownSelect
             minWidth={minWidth}
@@ -153,7 +150,6 @@ const InputField: React.FC<{
             styleType={styleType}
             options={options}
             onOptionSet={(o) => {
-              console.log('setting value', o)
               onValueChange(o?.value, getErrors(o?.value))
               setCurrentValue(o?.value)
             }}

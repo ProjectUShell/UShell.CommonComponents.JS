@@ -32,6 +32,7 @@ import GlobalElementsContainer from './GlobalElementsContainer'
 import { getIcon } from './utils/IconLib'
 import { applyFilter, applyPaging, applySorting } from './utils/LogicUtils'
 import MultiButton from './_Atoms/MultiButton'
+import { createServiceProxy } from './data/ServiceFactory'
 
 // export { MyComponent }
 
@@ -59,6 +60,7 @@ export { EntityTable }
 export { getIcon }
 export { MultiButton }
 export { applyFilter, applyPaging, applySorting }
+export { createServiceProxy }
 
 export * from './components/shell-layout/_Templates/ShellLayout'
 
