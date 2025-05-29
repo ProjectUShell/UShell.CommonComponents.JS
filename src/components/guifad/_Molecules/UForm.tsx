@@ -91,6 +91,7 @@ const UForm: React.FC<{
                 render: () => (
                   <LookUpSelect
                     label={getFkLabel(fk)}
+                    allowNull={true}
                     key={i}
                     lookUpRelation={fk}
                     dataSourceManager={dataSourceManager}

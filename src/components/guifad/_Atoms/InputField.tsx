@@ -86,7 +86,9 @@ const InputField: React.FC<{
   )
 
   function getErrors(v: any): string | null {
-    return EntitySchemaService.getErrors(v, required, inputType)
+    const result = EntitySchemaService.getErrors(v, required, inputType)
+    console.log('getErrors', v, required, inputType, label, result)
+    return result
   }
 
   function renderInnerInput() {
@@ -261,7 +263,7 @@ const InputField: React.FC<{
             </Tooltip>
           </div>
         )}
-        {!required && (currentValue || currentValue == 0 || currentValue == '') && (
+        {!required && (currentValue || currentValue == 0 || currentValue == '') && !disabled && (
           <div
             id={`${id}_X`}
             style={{

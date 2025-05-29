@@ -12,6 +12,7 @@ const LookUpSelect: React.FC<{
   lookUpRelation: RelationSchema
   initialValue: any
   onValueSet: (keyValues: any[]) => void
+  allowNull: boolean
   inputClassName?: string
   styleType?: number
   classNameBg?: string
@@ -26,6 +27,7 @@ const LookUpSelect: React.FC<{
   lookUpRelation,
   initialValue,
   onValueSet,
+  allowNull,
   styleType,
   classNameBg,
   classNameHoverBg,
@@ -58,6 +60,9 @@ const LookUpSelect: React.FC<{
             return { value: e.key, label: e.label }
           })
           lul.sort((a, b) => a.label.localeCompare(b.label))
+          if (allowNull) {
+            lul.unshift({ value: null, label: 'None' })
+          }
           setLookUpList(lul)
         })
         .catch((err) => setError(`Failed to get Entity Refs: ${err}`))

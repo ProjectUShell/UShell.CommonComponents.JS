@@ -392,7 +392,7 @@ export class EntitySchemaService {
       inputType.toLocaleLowerCase(),
     )
     if (required && isNumber) {
-      if (v == null || v == undefined) {
+      if (v == null || v == undefined || Number.isNaN(v) || v == '') {
         return 'Field is required'
       } else {
         return null

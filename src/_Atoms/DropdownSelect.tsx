@@ -236,7 +236,7 @@ const DropdownSelect: React.FC<{
             minWidth={true}
           >
             <div
-              className={`w-full h-full overflow-auto flex flex-col p-0 border-2 dark:border-bg4dark  ${
+              className={`w-full h-full overflow-auto flex flex-col p-0 border-2 dark:border-contentBorderDark  ${
                 classNameDropdownBg || 'bg-content dark:bg-contentDark'
               }`}
             >

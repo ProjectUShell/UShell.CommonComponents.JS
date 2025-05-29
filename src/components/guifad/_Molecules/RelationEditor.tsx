@@ -200,6 +200,7 @@ const RelationEditor: React.FC<{
       {currentFkRelation && dataSourceManagerForNavigations ? (
         <LookUpSelect
           showLabel={false}
+          allowNull={false}
           dataSourceManager={dataSourceManagerForNavigations}
           initialValue={null}
           lookUpRelation={currentFkRelation}
