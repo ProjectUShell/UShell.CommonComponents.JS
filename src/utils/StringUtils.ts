@@ -8,6 +8,11 @@ export function lowerFirstLetter(s: string) {
   return s.charAt(0).toLowerCase() + s.slice(1)
 }
 
+export function beautifyPascalCase(s: string) {
+  // This function converts a PascalCase string to a more readable format
+  return s.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([A-Z])([A-Z][a-z])/g, '$1 $2')
+}
+
 export function getValue(entity: any, fieldName: string): any | undefined {
   if (fieldName in entity) {
     return entity[fieldName]

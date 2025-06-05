@@ -45,6 +45,7 @@ import { showDialog2 } from '../../../_Molecules/Dialog'
 import { showNotification } from '../../../_Molecules/Notification'
 import DocumentDuplicate from '../../../_Icons/DocumentDuplicateIcon'
 import DocumentDuplicateIcon from '../../../_Icons/DocumentDuplicateIcon'
+import { beautifyPascalCase } from '../../../utils/StringUtils'
 
 const EntityTable: React.FC<{
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
@@ -435,7 +436,7 @@ const EntityTableInternal: React.FC<{
           (fl) => fl.fieldName.toLocaleLowerCase() == f.name.toLocaleLowerCase(),
         )
         return {
-          label: fieldLayout ? fieldLayout.displayLabel : f.name,
+          label: fieldLayout ? fieldLayout.displayLabel : beautifyPascalCase(f.name),
           fieldName: f.name,
           fieldType: f.type,
           key: f.name,
@@ -443,6 +444,16 @@ const EntityTableInternal: React.FC<{
           onRenderCell: (cellValue) => {
             if (fieldLayout && fieldLayout.dropdownStaticEntries) {
               const entry: string | undefined = fieldLayout.dropdownStaticEntries[cellValue]
+              if (entry) {
+                return <div>{entry}</div>
+              }
+            }
+            const knownValues = EntitySchemaService.getKnownValues(
+              f,
+              dataSourceManagerForNavigations?.getSchemaRoot()!,
+            )
+            if (knownValues && knownValues.length > 0) {
+              const entry: string | undefined = knownValues.find((v) => v.value == cellValue)?.label
               if (entry) {
                 return <div>{entry}</div>
               }

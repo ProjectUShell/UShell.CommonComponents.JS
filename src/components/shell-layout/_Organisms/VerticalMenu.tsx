@@ -93,8 +93,8 @@ const VerticalMenuInternal: React.FC<{
             key={mi.id}
             style={{
               borderRadius: '0.25rem',
-              paddingTop: '0.70rem',
-              paddingBottom: '0.70rem',
+              paddingTop: '0.50rem',
+              paddingBottom: '0.50rem',
               paddingLeft: (depth + 1) * 20,
             }}
             className={`flex items-center gap-x-4  px-6  ${

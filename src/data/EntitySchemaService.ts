@@ -11,6 +11,30 @@ import { LogicalExpression } from 'fusefx-repositorycontract'
 import { KnownValueRange } from 'fusefx-modeldescription/lib/KnownValueRange'
 
 export class EntitySchemaService {
+  static getIndexSchema(indexName: string, entitySchema: EntitySchema): IndexSchema | null {
+    const index: IndexSchema | undefined = entitySchema.indices.find((i) => i.name == indexName)
+    if (!index) {
+      console.error(`Index with name ${indexName} not found in entity schema.`)
+      return null
+    }
+    return index
+  }
+
+  static getFields(indexName: string, entitySchema: EntitySchema): FieldSchema[] {
+    const index: IndexSchema | null = this.getIndexSchema(indexName, entitySchema)
+    if (!index) return []
+    const result: FieldSchema[] = []
+    index.memberFieldNames.forEach((fn) => {
+      const field: FieldSchema | undefined = entitySchema.fields.find((f) => f.name == fn)
+      if (field) {
+        result.push(field)
+      } else {
+        console.warn(`Field with name ${fn} not found in entity schema.`)
+      }
+    })
+    return result
+  }
+
   static getKnownValues(
     f: FieldSchema,
     schemaRoot: SchemaRoot,
@@ -392,7 +416,12 @@ export class EntitySchemaService {
       inputType.toLocaleLowerCase(),
     )
     if (required && isNumber) {
-      if (v == null || v == undefined || Number.isNaN(v) || v == '') {
+      if (v == null || v == undefined || Number.isNaN(v)) {
+        console.log('v == null', v == null)
+        console.log('v == undefined', v == undefined)
+        console.log('Number.isNaN(v)', Number.isNaN(v))
+        console.log('v == ""', v == '')
+        console.log('checking number', v)
         return 'Field is required'
       } else {
         return null

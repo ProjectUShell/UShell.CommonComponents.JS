@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { getValue, getForeignKeyValue } from '../../../utils/StringUtils'
 import LookUpSelect from './LookUpSelect'
-import { FieldSchema, RelationSchema } from 'fusefx-modeldescription'
+import { FieldSchema, IndexSchema, RelationSchema } from 'fusefx-modeldescription'
 import UForm1 from './UForm1'
 import { IDataSourceManagerWidget } from '../_Templates/IDataSourceManagerWidget'
 import { FieldLayout } from '../../../[Move2LayoutDescription]/FieldLayout'
@@ -66,6 +66,18 @@ const UForm: React.FC<{
       ? lookUpRelation.foreignNavigationName
       : lookUpRelation.foreignKeyIndexName
   }
+  function getAllowNull(fk: RelationSchema): boolean {
+    const fields: FieldSchema[] = EntitySchemaService.getFields(
+      fk.foreignKeyIndexName,
+      dataSourceManager?.getSchemaRoot()!.entities.find((e) => e.name == fk.foreignEntityName)!,
+    )
+    console.log('getAllowNull', fk, fields)
+    for (const f of fields) {
+      if (f.required) return false
+    }
+    return true
+  }
+
   return (
     <UForm1
       minWidth={minWidthInput}
@@ -91,7 +103,7 @@ const UForm: React.FC<{
                 render: () => (
                   <LookUpSelect
                     label={getFkLabel(fk)}
-                    allowNull={true}
+                    allowNull={getAllowNull(fk)}
                     key={i}
                     lookUpRelation={fk}
                     dataSourceManager={dataSourceManager}

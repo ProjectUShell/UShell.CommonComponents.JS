@@ -87,7 +87,7 @@ const InputField: React.FC<{
 
   function getErrors(v: any): string | null {
     const result = EntitySchemaService.getErrors(v, required, inputType)
-    console.log('getErrors', v, required, inputType, label, result)
+    // console.log('getErrors', v, required, inputType, label, result)
     return result
   }
 
