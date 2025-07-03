@@ -46,6 +46,7 @@ import { showNotification } from '../../../_Molecules/Notification'
 import DocumentDuplicate from '../../../_Icons/DocumentDuplicateIcon'
 import DocumentDuplicateIcon from '../../../_Icons/DocumentDuplicateIcon'
 import { beautifyPascalCase } from '../../../utils/StringUtils'
+import ColumnSelector from '../_Molecules/ColumnSelector'
 
 const EntityTable: React.FC<{
   dataSourceManagerForNavigations?: IDataSourceManagerWidget
@@ -341,6 +342,8 @@ const EntityTableInternal: React.FC<{
 
   const [showTree, setShowTree] = useState(true)
 
+  const [hiddenColumnKeys, setHiddenColumnKeys] = useState<string[]>([])
+
   function forceReload() {
     setReloadTrigger((r) => r + 1)
   }
@@ -498,6 +501,10 @@ const EntityTableInternal: React.FC<{
     // })
   }, [dataSource, dataSourceManagerForNavigations])
 
+  const visibleColumns = useMemo(
+    () => columns.filter((c) => !hiddenColumnKeys.includes(c.key)),
+    [columns, hiddenColumnKeys],
+  )
   const getId = useCallback(
     (e: any) => EntitySchemaService.getPrimaryKey(dataSource.entitySchema!, e),
     [dataSource],
@@ -761,6 +768,18 @@ const EntityTableInternal: React.FC<{
                       ></Menu1>
                     </div>
                   </DropdownButton>
+                  <ColumnSelector
+                    entityName={dataSource.entitySchema!.name}
+                    columns={columns}
+                    selectedColumnKeys={columns
+                      .filter((c) => !hiddenColumnKeys?.includes(c.key))
+                      .map((c) => c.key)}
+                    onChange={(selected) => {
+                      setHiddenColumnKeys(
+                        columns.filter((c) => !selected.includes(c.key)).map((c) => c.key),
+                      )
+                    }}
+                  />
                 </div>
               )}
               {toolbarItems && toolbarItems}
@@ -917,7 +936,7 @@ const EntityTableInternal: React.FC<{
         ) : (
           <Table
             className={`overflow-auto h-full ${className}`}
-            columns={columns}
+            columns={columns.filter((c) => !hiddenColumnKeys.includes(c.key))}
             records={data1.page}
             getId={getId}
             onRecordEnter={onRecordEnter || ((sr) => setDetailsVisible(true))}

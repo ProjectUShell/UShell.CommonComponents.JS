@@ -760,6 +760,7 @@ const Table: React.FC<{
                       style={{ cursor: 'ew-resize' }}
                       className='resize-handle p-4 bg-transparent'
                       onClick={(e) => e.stopPropagation()}
+                      onDoubleClick={(e) => {}}
                       onMouseDown={(e) => handleResizeMouseDown(e, c)}
                       // onDragStart={(e: any) => {
                       //   e.dataTransfer.dropEffect = 'move'

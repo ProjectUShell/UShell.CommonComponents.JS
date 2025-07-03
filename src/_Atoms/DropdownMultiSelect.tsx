@@ -37,14 +37,15 @@ const DropdownMultiSelect: React.FC<{
   const [open, setOpen] = useState(false)
   const [currentOptions, setCurrentOptions] = useState<Option[]>(initialOptions)
 
-  // useEffect(() => {
-  //   setCurrentOptions(initialOptions)
-  // }, [initialOptions])
-
   useEffect(() => {
     notifyOptionsSet()
   }, [currentOptions])
 
+  useEffect(() => {
+    if (initialOptions && initialOptions.length != currentOptions.length) {
+      setCurrentOptions(initialOptions)
+    }
+  }, [initialOptions])
   function notifyOptionsSet() {
     if (onOptionsSet) {
       onOptionsSet(currentOptions)
