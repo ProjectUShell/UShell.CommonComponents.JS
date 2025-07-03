@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { lowerFirstLetter } from '../../../utils/StringUtils'
 import Paging from '../_Molecules/Paging'
 import BarsArrowUpIcon from '../../../_Icons/BarsArrowUpIcon'
@@ -173,36 +173,6 @@ const Table: React.FC<{
     return getIntialSelectedRows()
   }, [selectedRows, selectedRecords])
 
-  // useEffect(() => {
-  //   function getIdInternal(e: any): any {
-  //     let res: any = null
-  //     if (getId) {
-  //       res = getId(e)
-  //     } else {
-  //       let idField = 'id'
-  //       if (!(idField in e)) {
-  //         idField = 'Id'
-  //       }
-  //       res = e[idField]
-  //     }
-  //     return res
-  //   }
-  //   function getIntialSelectedRows(): { [index: number]: boolean } {
-  //     if (!selectedRecords) {
-  //       return []
-  //     }
-  //     const newSr: { [index: number]: boolean } = {}
-  //     for (let selectedRecord of selectedRecords) {
-  //       const i: number = records.findIndex(
-  //         (r) => getIdInternal(r) == getIdInternal(selectedRecord),
-  //       )
-  //       newSr[i] = true
-  //     }
-  //     return newSr
-  //   }
-  //   setSelectedRows(getIntialSelectedRows())
-  // }, [records, selectedRecords, getId])
-
   useEffect(() => {
     approxColumnWidth()
 
@@ -217,6 +187,33 @@ const Table: React.FC<{
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  const dragStartXRef = useRef(0)
+  const dragStartWidthRef = useRef(0)
+  const dragStartWidthNextRef = useRef(0)
+
+  const handleResizeMouseDown = (e: React.MouseEvent, c: TableColumn) => {
+    e.preventDefault()
+    initColumnWidth()
+    dragStartWidthRef.current = getColumnWidth(c.key)
+    dragStartWidthNextRef.current = getColumnWidthNext(c.key)
+    dragStartXRef.current = e.clientX
+    document.body.style.cursor = 'ew-resize'
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const widthDelta = moveEvent.clientX - dragStartXRef.current
+      handleResize(c.key, widthDelta)
+    }
+
+    const onMouseUp = () => {
+      document.body.style.cursor = ''
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup', onMouseUp)
+    }
+
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+  }
 
   function onRowClick(i: number, e: any) {
     e.preventDefault()
@@ -396,7 +393,7 @@ const Table: React.FC<{
     })
   }
 
-  const handleResize = (key: string, widthDelta: number) => {
+  const handleResize1 = (key: string, widthDelta: number) => {
     const newWidths = { ...columnWidths }
     const newWidth: number = dragStartWidth + widthDelta
     if (newWidth < 150) return
@@ -410,6 +407,20 @@ const Table: React.FC<{
       // console.log('newWidth', newWidth)
       newWidths[nextKey] = newNextWidth
       // setColumnWidths({ ...columnWidths, [nextKey]: oldNextWidth - newWidth })
+    }
+    setColumnWidths(newWidths)
+  }
+
+  const handleResize = (key: string, widthDelta: number) => {
+    const newWidths = { ...columnWidths }
+    const newWidth: number = dragStartWidthRef.current + widthDelta
+    if (newWidth < 150) return
+    newWidths[key] = Math.max(dragStartWidthRef.current + widthDelta, 150)
+    const idx: number = columns.findIndex((c) => c.key == key)
+    if (idx >= 0 && idx < columns.length - 1) {
+      const nextKey: string = columns[idx + 1].key
+      const newNextWidth: number = Math.max(dragStartWidthNextRef.current - widthDelta, 150)
+      newWidths[nextKey] = newNextWidth
     }
     setColumnWidths(newWidths)
   }
@@ -746,35 +757,37 @@ const Table: React.FC<{
                     </div>
                     <div
                       draggable
-                      className='resize-handle cursor-w-resize p-4 bg-transparent'
+                      style={{ cursor: 'ew-resize' }}
+                      className='resize-handle p-4 bg-transparent'
                       onClick={(e) => e.stopPropagation()}
-                      onDragStart={(e: any) => {
-                        e.dataTransfer.dropEffect = 'move'
-                        e.dataTransfer.effectAllowed = 'all'
-                        const img = new Image()
-                        // img.src = "example.gif";
-                        e.dataTransfer.setDragImage(img, 10, 10)
-                        e.defaultPrevented = false
-                        e.dataTransfer.defaultPrevented = false
-                        initColumnWidth()
-                        setDragStartWidth(getColumnWidth(c.key))
-                        setDragStartWidthNext(getColumnWidthNext(c.key))
-                        setDragStartX(e.clientX)
-                      }}
-                      onDragEnd={(e) => {
-                        setDragStartWidth(0)
-                        setDragStartX(0)
-                      }}
-                      onDragOver={(e) => e.preventDefault()}
-                      onDragLeave={(e) => e.preventDefault()}
-                      onDrag={(e: any) => {
-                        e.preventDefault()
-                        if (e.clientX == 0) {
-                          return
-                        }
-                        const widhtDelta = e.clientX - dragStartX
-                        handleResize(c.key, widhtDelta)
-                      }}
+                      onMouseDown={(e) => handleResizeMouseDown(e, c)}
+                      // onDragStart={(e: any) => {
+                      //   e.dataTransfer.dropEffect = 'move'
+                      //   e.dataTransfer.effectAllowed = 'all'
+                      //   const img = new Image()
+                      //   // img.src = "example.gif";
+                      //   e.dataTransfer.setDragImage(img, 10, 10)
+                      //   e.defaultPrevented = false
+                      //   e.dataTransfer.defaultPrevented = false
+                      //   initColumnWidth()
+                      //   setDragStartWidth(getColumnWidth(c.key))
+                      //   setDragStartWidthNext(getColumnWidthNext(c.key))
+                      //   setDragStartX(e.clientX)
+                      // }}
+                      // onDragEnd={(e) => {
+                      //   setDragStartWidth(0)
+                      //   setDragStartX(0)
+                      // }}
+                      // onDragOver={(e) => e.preventDefault()}
+                      // onDragLeave={(e) => e.preventDefault()}
+                      // onDrag={(e: any) => {
+                      //   e.preventDefault()
+                      //   if (e.clientX == 0) {
+                      //     return
+                      //   }
+                      //   const widhtDelta = e.clientX - dragStartX
+                      //   handleResize(c.key, widhtDelta)
+                      // }}
                     ></div>
                   </div>
                 </th>
