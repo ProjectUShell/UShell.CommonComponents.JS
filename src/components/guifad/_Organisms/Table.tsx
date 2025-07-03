@@ -16,6 +16,7 @@ import ArrowUpIcon from '../../../_Icons/ArrowUpIcon'
 import ChevrodnDownIcon from '../../../_Icons/ChevrodnDownIcon'
 import ChevronRightIcon from '../../../_Icons/ChevronRightIcon'
 import { EntitySchema, FieldSchema } from 'fusefx-modeldescription'
+import { useCallback } from 'react'
 
 function getEntitySchemaFromColumns(columns: TableColumn[]): EntitySchema {
   const fields: FieldSchema[] = columns.map((c) => {
@@ -124,6 +125,13 @@ const Table: React.FC<{
   // nesting
   const [rowOpenState, setRowOpenState] = useState<{ [rowIndex: number]: boolean }>({})
 
+  // column order
+  const [draggedColKey, setDraggedColKey] = useState<string | null>(null)
+  const [dragOverColKey, setDragOverColKey] = useState<string | null>(null)
+  const [columnOrder, setColumnOrder] = useState<string[]>([])
+
+  const storageKeyColumnOrder = `table_column_order_${columns.map((c) => c.key).join('_')}`
+
   const currentWidth = window.innerWidth
 
   useEffect(() => {
@@ -186,6 +194,70 @@ const Table: React.FC<{
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
+    const stored = localStorage.getItem(storageKeyColumnOrder)
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        if (Array.isArray(parsed) && parsed.every((k) => columns.some((c) => c.key === k))) {
+          setColumnOrder(parsed)
+          return
+        }
+      } catch {}
+    }
+    setColumnOrder(columns.map((c) => c.key))
+    // eslint-disable-next-line
+  }, [columns.map((c) => c.key).join('_')])
+
+  useEffect(() => {
+    if (columnOrder.length === columns.length) {
+      localStorage.setItem(storageKeyColumnOrder, JSON.stringify(columnOrder))
+    }
+  }, [columnOrder, storageKeyColumnOrder, columns.length])
+
+  const orderedColumns = useMemo(
+    () =>
+      columnOrder.length === columns.length
+        ? columnOrder.map((key) => columns.find((c) => c.key === key)!).filter(Boolean)
+        : columns,
+    [columnOrder, columns],
+  )
+
+  const handleDragStart = useCallback((e: React.DragEvent, key: string) => {
+    setDraggedColKey(key)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', key)
+  }, [])
+
+  const handleDragOver = useCallback((e: React.DragEvent, key: string) => {
+    e.preventDefault()
+    setDragOverColKey(key)
+  }, [])
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent, key: string) => {
+      e.preventDefault()
+      if (draggedColKey && draggedColKey !== key) {
+        const fromIdx = columnOrder.indexOf(draggedColKey)
+        const toIdx = columnOrder.indexOf(key)
+        if (fromIdx !== -1 && toIdx !== -1) {
+          const newOrder = [...columnOrder]
+          newOrder.splice(fromIdx, 1)
+          newOrder.splice(toIdx, 0, draggedColKey)
+          setColumnOrder(newOrder)
+        }
+      }
+      setDraggedColKey(null)
+      setDragOverColKey(null)
+    },
+    [draggedColKey, columnOrder],
+  )
+
+  const handleDragEnd = useCallback(() => {
+    setDraggedColKey(null)
+    setDragOverColKey(null)
   }, [])
 
   const dragStartXRef = useRef(0)
@@ -688,7 +760,7 @@ const Table: React.FC<{
                   }
                 ></th>
               )}
-              {columns.map((c: TableColumn) => (
+              {orderedColumns.map((c: TableColumn) => (
                 <th
                   id={`column_${c.key}`}
                   // onMouseEnter={() => initColumnWidth(c.key)}
@@ -700,6 +772,11 @@ const Table: React.FC<{
                       'bg-tableHead dark:bg-tableHeadDark hover:bg-tableHover dark:hover:bg-tableHoverDark border-b-2 border-tableBorder dark:border-tableBorderDark'
                     }
                   cursor-pointer select-none`}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, c.key)}
+                  onDragOver={(e) => handleDragOver(e, c.key)}
+                  onDrop={(e) => handleDrop(e, c.key)}
+                  onDragEnd={handleDragEnd}
                   onClick={(e) => {
                     if (c.sortable) {
                       e.stopPropagation()

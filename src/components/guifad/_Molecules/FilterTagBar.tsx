@@ -29,7 +29,7 @@ const FilterTagBar: React.FC<{
     onUpdateFilters([...filters.filter((f, i) => i !== index)])
   }
   return (
-    <div className={`flex justify-start gap-2 ${className} `}>
+    <div className={`flex justify-start gap-2 ${className} overflow-auto`}>
       {filters.map((f, i) => (
         <div key={i}>
           <FilterTag
