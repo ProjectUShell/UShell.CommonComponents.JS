@@ -52,7 +52,7 @@ const Modal3: React.FC<{
     <div
       style={{ backgroundColor: 'rgb(0 0 0 / 0.5)' }}
       className='UShell_Modal fixed top-0 left-0 right-0 bottom-0
-        z-40 w-full h-full bg-black bg-opacity-50 border-0 border-red-400 justify-center items-center'
+        z-40 w-full h-full bg-black bg-opacity-50 border-0 border-red-400 justify-center items-center whitespace-normal'
     >
       <div
         style={{
@@ -63,6 +63,7 @@ const Modal3: React.FC<{
           width: sizes?.w || '100%',
           height: sizes?.h || '100%',
           maxHeight: '90%',
+          maxWidth: '100vw',
           scale: full || !sizes ? undefined : '50%',
         }}
         className={`UShell_Modal_Inn1er ${!sizes && 'invisible'} fixed flex flex-col
@@ -93,9 +94,10 @@ const Modal3: React.FC<{
             id={sizeRefId}
             className={`${
               sizes
-                ? 'flex fle1x-col overflow-hidden flex-grow border-0 border-orange-400'
+                ? 'flex fle1x-col overflow-hidden flex-grow border-0 border-orange-400 break-words'
                 : 'fixed flex overflow-hidden flex-grow invisible border-4 border-green-400'
             }`}
+            style={{ wordBreak: 'break-word' }} // <-- Fallback for word breaking
           >
             {children}
           </div>

@@ -17,7 +17,10 @@ const DialogBasic = () => {
           // closeDialog()
           setDialog(null)
         },
-        <div>Do you really want to delete something?</div>,
+        <div>
+          Do you really want to delete
+          somethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomething?
+        </div>,
       ),
     )
   }
@@ -26,7 +29,10 @@ const DialogBasic = () => {
     showDialog2(
       'Delete?',
       ['Cancel', 'Ok'],
-      <div>Do you really want to delete something?</div>,
+      <div>
+        Do you really want to delete
+        somethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomethingsomething?
+      </div>,
       (r) => {
         console.log('result', r)
       },

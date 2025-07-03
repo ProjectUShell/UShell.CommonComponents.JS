@@ -32,9 +32,9 @@ const Dialog: React.FC<{
       height={height}
       width={width}
     >
-      <div className='flex flex-col justify-between h-full w-full border-0 '>
-        <div className='content-center items-center h-full border-0'>{children}</div>
-        <div className='flex gap-1 justify-end border-t dark:border-menuBorderDark py-1'>
+      <div className='flex flex-col justify-between h-full w-full border-0 border-red-400 '>
+        <div className='content-center items-center h-full border-0 p-3'>{children}</div>
+        <div className='flex gap-1 justify-end border-t dark:border-menuBorderDark py-1 px-3'>
           {buttons.map((b, i) => (
             <div
               className='p-2 rounded-md hover:bg-contentHover dark:hover:bg-contentHoverDark cursor-pointer'
@@ -109,10 +109,10 @@ export function showDialog2(
       title={title}
       top={top || '25%'}
       bottom={bottom}
-      left={left}
+      left={left || '10%'}
       right={right}
       height={height || '40%'}
-      width={width}
+      width={width || '80%'}
     >
       {children}
     </Dialog>,
