@@ -150,7 +150,12 @@ export function satisfiesPredicate(
   entitySchema: EntitySchema,
 ): boolean {
   if (!(filter.fieldName in record)) return true
-  const filterValue = JSON.parse(filter.valueSerialized)
+  let filterValue: any
+  try {
+    filterValue = JSON.parse(filter.valueSerialized)
+  } catch (e) {
+    filterValue = filter.valueSerialized
+  }
   switch (filter.operator) {
     case '=':
       return record[filter.fieldName] == filterValue

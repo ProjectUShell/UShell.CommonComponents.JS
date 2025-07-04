@@ -45,8 +45,6 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
     localStorage.setItem(getStorageKey(entityName), JSON.stringify(selectedColumnKeys))
   }, [entityName, selectedColumnKeys])
 
-  console.log('ColumnSelector render', { entityName, selectedColumnKeys })
-
   return (
     <div className='relative flex items-center'>
       <DropdownMultiSelect
