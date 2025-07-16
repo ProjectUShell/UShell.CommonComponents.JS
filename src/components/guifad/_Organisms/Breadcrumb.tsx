@@ -79,7 +79,7 @@ const Breadcrumb: React.FC<{
               )}
               <button
                 disabled={dirty}
-                className={`rounded-md p-1 m-0
+                className={`whitespace-nowrap  rounded-md p-1 m-0
               ${dirty ? '' : 'hover:bg-breadcrumbHover dark:hover:bg-breadcrumbHoverDark'}`}
                 onClick={() => onNodeClick(nodes.slice(0, i + 1), getCallingRecord(i))}
               >

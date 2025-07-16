@@ -938,6 +938,7 @@ const EntityTableInternal: React.FC<{
             className={`overflow-auto h-full ${className}`}
             columns={columns.filter((c) => !hiddenColumnKeys.includes(c.key))}
             records={data1.page}
+            entityName={dataSource.entitySchema!.name}
             getId={getId}
             onRecordEnter={onRecordEnter || ((sr) => setDetailsVisible(true))}
             onSelectedRecordsChange={(sr) => {

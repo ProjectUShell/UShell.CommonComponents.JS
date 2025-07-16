@@ -61,6 +61,7 @@ export interface ExpandableProps {
 const Table: React.FC<{
   columns: TableColumn[]
   records: any[]
+  entityName?: string
   getId?: (e: any) => any
   className?: string
   classNameHeader?: string
@@ -84,6 +85,7 @@ const Table: React.FC<{
 }> = ({
   columns,
   records,
+  entityName,
   getId,
   className,
   classNameHeader,
@@ -130,7 +132,7 @@ const Table: React.FC<{
   const [dragOverColKey, setDragOverColKey] = useState<string | null>(null)
   const [columnOrder, setColumnOrder] = useState<string[]>([])
 
-  const storageKeyColumnOrder = `table_column_order_${columns.map((c) => c.key).join('_')}`
+  const storageKeyColumnOrder = `table_column_order_${entityName || 'default'}`
 
   const currentWidth = window.innerWidth
 
@@ -201,8 +203,12 @@ const Table: React.FC<{
     if (stored) {
       try {
         const parsed = JSON.parse(stored)
-        if (Array.isArray(parsed) && parsed.every((k) => columns.some((c) => c.key === k))) {
-          setColumnOrder(parsed)
+        if (Array.isArray(parsed)) {
+          // Only keep keys that exist in columns, and add any new columns at the end
+          const validKeys = columns.map((c) => c.key)
+          const filtered = parsed.filter((k: string) => validKeys.includes(k))
+          const missing = validKeys.filter((k) => !filtered.includes(k))
+          setColumnOrder([...filtered, ...missing])
           return
         }
       } catch {}
@@ -941,7 +947,7 @@ const Table: React.FC<{
                       </button>
                     </td>
                   )}
-                  {columns.map((c, j) => (
+                  {orderedColumns.map((c, j) => (
                     <td
                       id={`table_cell_${j}_${i}`}
                       key={j}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import MultiSelect, { Option } from '../../../_Atoms/MultiSelect'
 import EyeIcon from '../../../_Icons/EyeIcon'
 import DropdownMultiSelect from '../../../_Atoms/DropdownMultiSelect'
@@ -18,7 +18,7 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
   selectedColumnKeys,
   onChange,
 }) => {
-  const [open, setOpen] = useState(false)
+  const [ready, setReady] = useState('')
   const options: Option[] = columns.map((c) => ({
     label: c.label,
     value: c.key,
@@ -26,6 +26,7 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
 
   // Load from localStorage on mount
   useEffect(() => {
+    // console.log('Loading selected columns from localStorage for entity:', entityName)
     const stored = localStorage.getItem(getStorageKey(entityName))
     if (stored) {
       try {
@@ -36,15 +37,20 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
         }
       } catch {}
     }
+    setReady(entityName)
     // eslint-disable-next-line
   }, [entityName])
 
-  // Persist to localStorage on change
-  useEffect(() => {
-    // console.log('Saving selected columns:', selectedColumnKeys)
-    localStorage.setItem(getStorageKey(entityName), JSON.stringify(selectedColumnKeys))
-  }, [entityName, selectedColumnKeys])
+  if (ready !== entityName) {
+    return <div className='flex items-center justify-center'>Loading...</div>
+  }
 
+  // Persist to localStorage on change
+  // useEffect(() => {
+  //   console.log('Saving selected columns:', selectedColumnKeys)
+  //   localStorage.setItem(getStorageKey(entityName), JSON.stringify(selectedColumnKeys))
+  // }, [entityName, selectedColumnKeys])
+  // console.log('Rendering ColumnSelector:', selectedColumnKeys)
   return (
     <div className='relative flex items-center'>
       <DropdownMultiSelect
@@ -52,6 +58,8 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
         initialOptions={options.filter((o) => selectedColumnKeys.includes(o.value))}
         onOptionsSet={(opts) => {
           const selected = opts.map((o) => o.value)
+          // console.log('Saving selected columns:', selected)
+          localStorage.setItem(getStorageKey(entityName), JSON.stringify(selected))
           onChange(selected)
         }}
         styleType={1}
