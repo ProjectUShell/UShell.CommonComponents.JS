@@ -59,6 +59,11 @@ const SchemaEditor: React.FC<{
   const [selectedIndex, setSelectedIndex] = useState<IndexSchema | null>(null)
   const [selectedEdge, setSelectedEdge] = useState<EdgeData | null>(null)
 
+  // Track which fields should be highlighted (nodeId -> fieldName)
+  const [highlightedFields, setHighlightedFields] = useState<Map<number, Set<string>>>(new Map())
+  // Track which edges should be highlighted
+  const [highlightedEdges, setHighlightedEdges] = useState<Set<string>>(new Set())
+
   const [newEdge, setNewEdge] = useState<EdgeData | null>(null)
   const [inInput, setInInput] = useState<{
     nodeId: number
@@ -104,6 +109,89 @@ const SchemaEditor: React.FC<{
   function saveSchema() {
     const newEntitySchema: SchemaRoot = getSchemaFromBoardState({ nodes: nodes, edges: edges })
     onChangeSchema(newEntitySchema)
+  }
+
+  /**
+   * Highlight fields when an edge is selected
+   */
+  function handleEdgeSelection(edge: EdgeData | null) {
+    setSelectedEdge(edge)
+    setSelectedNode(null)
+    setSelectedField(null)
+    setSelectedIndex(null)
+
+    if (!edge) {
+      setHighlightedFields(new Map())
+      setHighlightedEdges(new Set())
+      return
+    }
+
+    const newHighlightedFields = new Map<number, Set<string>>()
+
+    // Highlight the output field on the start node
+    const startNodeFields = newHighlightedFields.get(edge.nodeStartId) || new Set<string>()
+    startNodeFields.add(edge.outputFieldName)
+    newHighlightedFields.set(edge.nodeStartId, startNodeFields)
+
+    // Highlight the input field on the end node
+    const endNodeFields = newHighlightedFields.get(edge.nodeEndId) || new Set<string>()
+    endNodeFields.add(edge.inputFieldName)
+    newHighlightedFields.set(edge.nodeEndId, endNodeFields)
+
+    setHighlightedFields(newHighlightedFields)
+    setHighlightedEdges(new Set())
+  }
+
+  /**
+   * Highlight edges and connected fields when a field is selected
+   */
+  function handleFieldSelection(nodeId: number, field: FieldSchema | null) {
+    setSelectedField(field)
+    setSelectedIndex(null)
+
+    if (!field) {
+      setHighlightedFields(new Map())
+      setHighlightedEdges(new Set())
+      return
+    }
+
+    const newHighlightedFields = new Map<number, Set<string>>()
+    const newHighlightedEdges = new Set<string>()
+
+    // Find all edges connected to this field
+    edges.forEach((edge) => {
+      let isConnected = false
+
+      // Check if this field is the output field
+      if (edge.nodeStartId === nodeId && edge.outputFieldName === field.name) {
+        isConnected = true
+        // Highlight the input field on the other end
+        const endNodeFields = newHighlightedFields.get(edge.nodeEndId) || new Set<string>()
+        endNodeFields.add(edge.inputFieldName)
+        newHighlightedFields.set(edge.nodeEndId, endNodeFields)
+      }
+
+      // Check if this field is the input field
+      if (edge.nodeEndId === nodeId && edge.inputFieldName === field.name) {
+        isConnected = true
+        // Highlight the output field on the other end
+        const startNodeFields = newHighlightedFields.get(edge.nodeStartId) || new Set<string>()
+        startNodeFields.add(edge.outputFieldName)
+        newHighlightedFields.set(edge.nodeStartId, startNodeFields)
+      }
+
+      if (isConnected) {
+        newHighlightedEdges.add(edge.id)
+      }
+    })
+
+    // Also highlight the selected field itself
+    const selectedNodeFields = newHighlightedFields.get(nodeId) || new Set<string>()
+    selectedNodeFields.add(field.name)
+    newHighlightedFields.set(nodeId, selectedNodeFields)
+
+    setHighlightedFields(newHighlightedFields)
+    setHighlightedEdges(newHighlightedEdges)
   }
 
   function createNewEntity(pos: Position): void {
@@ -187,6 +275,8 @@ const SchemaEditor: React.FC<{
     setSelectedEdge(null)
     setSelectedField(null)
     setSelectedIndex(null)
+    setHighlightedFields(new Map())
+    setHighlightedEdges(new Set())
     // e.preventDefault()
     e.stopPropagation()
 
@@ -421,6 +511,8 @@ const SchemaEditor: React.FC<{
                     setSelectedIndex(i)
                     setSelectedField(null)
                   }}
+                  highlightedFields={highlightedFields.get(n.id) || new Set<string>()}
+                  onFieldClick={handleFieldSelection}
                 ></EditorNode>
               ))}
               {newEdge && (
@@ -451,6 +543,7 @@ const SchemaEditor: React.FC<{
                   <EditorEdge
                     key={i}
                     selected={selectedEdge ? selectedEdge.id == edge.id : false}
+                    highlighted={highlightedEdges.has(edge.id)}
                     isNew={false}
                     startNode={{
                       position: startNode.currentPosition,
@@ -464,10 +557,7 @@ const SchemaEditor: React.FC<{
                     }}
                     camera={camera}
                     onMouseDownEdge={() => {
-                      setSelectedField(null)
-                      setSelectedIndex(null)
-                      setSelectedNode(null)
-                      setSelectedEdge(edge)
+                      handleEdgeSelection(edge)
                     }}
                     onClickDelete={() => {}}
                   ></EditorEdge>

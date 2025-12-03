@@ -11,6 +11,7 @@ interface NodeInfo {
 
 const EditorEdge: React.FC<{
   selected: boolean
+  highlighted?: boolean
   isNew: boolean
   startNode?: NodeInfo
   endNode?: NodeInfo
@@ -18,7 +19,17 @@ const EditorEdge: React.FC<{
   camera: Camera
   onMouseDownEdge: () => void
   onClickDelete: () => void
-}> = ({ selected, isNew, startNode, endNode, position, camera, onMouseDownEdge, onClickDelete }) => {
+}> = ({
+  selected,
+  highlighted = false,
+  isNew,
+  startNode,
+  endNode,
+  position,
+  camera,
+  onMouseDownEdge,
+  onClickDelete,
+}) => {
   function handleMouseDownEdge(e: any) {
     e.stopPropagation()
 
@@ -64,11 +75,18 @@ const EditorEdge: React.FC<{
     y1 = 0
   }
 
+  // Determine edge color based on state
+  let strokeColor = 'stroke-pink-500'
+  if (selected) {
+    strokeColor = 'stroke-orange-400'
+  } else if (highlighted) {
+    strokeColor = 'stroke-blue-400'
+  }
+
   return (
     <svg className='absolute top-0 left-0 w-full h-full pointer-events-none border-0'>
       <path
-        className={`pointer-events-auto stroke-2  fill-transparent cursor-pointer
-         ${selected ? 'stroke-orange-400' : 'stroke-pink-500'}`}
+        className={`pointer-events-auto stroke-2 fill-transparent cursor-pointer ${strokeColor}`}
         d={`M ${x0} ${y0} C ${x0 + calculateOffset(Math.abs(x1 - x0))} ${y0}, ${
           x1 - calculateOffset(Math.abs(x1 - x0))
         } ${y1}, ${x1} ${y1}`}
