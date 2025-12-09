@@ -277,12 +277,6 @@ const SchemaEditor: React.FC<{
   }
 
   function handleMouseDown(e: any) {
-    setSelectedNode(null)
-    setSelectedEdge(null)
-    setSelectedField(null)
-    setSelectedIndex(null)
-    setHighlightedFields(new Map())
-    setHighlightedEdges(new Set())
     // e.preventDefault()
     e.stopPropagation()
 
