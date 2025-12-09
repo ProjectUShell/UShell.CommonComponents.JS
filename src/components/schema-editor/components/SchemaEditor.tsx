@@ -50,6 +50,7 @@ const SchemaEditor: React.FC<{
 
   const [currentId, setCurrentId] = useState(1)
   const [grabbingBoard, setGrabbingBoard] = useState(false)
+  const [isDraggingNode, setIsDraggingNode] = useState(false)
   const [camera, setCamera] = useState(new Camera())
   const [clickedPosition, setClickedPosition] = useState<any>({ x: -1, y: -1 })
   const [nodes, setNodes] = useState<NodeData[]>([])
@@ -293,6 +294,7 @@ const SchemaEditor: React.FC<{
   function handleMouseUp(e: any) {
     e.preventDefault()
     setGrabbingBoard(false)
+    setIsDraggingNode(false)
     setClickedPosition({ x: -1, y: -1 })
 
     if (newEdge && inInput === null) {
@@ -344,7 +346,7 @@ const SchemaEditor: React.FC<{
     if (!(clickedPosition.x >= 0 && clickedPosition.y >= 0)) return
     const deltaX = (e.clientX - clickedPosition.x) / camera.scale
     const deltaY = (e.clientY - clickedPosition.y) / camera.scale
-    if (selectedNode) {
+    if (isDraggingNode && selectedNode) {
       const node: NodeData | undefined = nodes.find((n) => n.id === selectedNode)
       if (node) {
         // Update node position
@@ -370,6 +372,7 @@ const SchemaEditor: React.FC<{
     (id: number, e: any) => {
       setSelectedNode(id)
       setSelectedEdge(null)
+      setIsDraggingNode(true)
 
       setClickedPosition({ x: e.clientX, y: e.clientY })
 
