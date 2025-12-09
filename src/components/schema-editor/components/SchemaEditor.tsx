@@ -74,6 +74,12 @@ const SchemaEditor: React.FC<{
 
   const [contextMenuPos, setContextMenuPos] = useState<{ x: number; y: number } | null>(null)
 
+  // Panel resizing state
+  const [panelWidth, setPanelWidth] = useState<number>(256) // Default 256px (w-64)
+  const [isResizingPanel, setIsResizingPanel] = useState<boolean>(false)
+  const [resizeStartX, setResizeStartX] = useState<number>(0)
+  const [resizeStartWidth, setResizeStartWidth] = useState<number>(0)
+
   useEffect(() => {
     const pd = (e: any) => e.preventDefault()
     document.addEventListener('contextmenu', pd)
@@ -441,6 +447,37 @@ const SchemaEditor: React.FC<{
     }
   }
 
+  // Panel resize handlers
+  const handleResizeMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsResizingPanel(true)
+    setResizeStartX(e.clientX)
+    setResizeStartWidth(panelWidth)
+  }
+
+  useEffect(() => {
+    if (!isResizingPanel) return
+
+    const handleResizeMouseMove = (e: MouseEvent) => {
+      const deltaX = resizeStartX - e.clientX // Inverted because panel is on right
+      const newWidth = Math.max(200, Math.min(600, resizeStartWidth + deltaX))
+      setPanelWidth(newWidth)
+    }
+
+    const handleResizeMouseUp = () => {
+      setIsResizingPanel(false)
+    }
+
+    document.addEventListener('mousemove', handleResizeMouseMove)
+    document.addEventListener('mouseup', handleResizeMouseUp)
+
+    return () => {
+      document.removeEventListener('mousemove', handleResizeMouseMove)
+      document.removeEventListener('mouseup', handleResizeMouseUp)
+    }
+  }, [isResizingPanel, resizeStartX, resizeStartWidth])
+
   const backgroundWorldX: number = -camera.scale * camera.pos.x
   const backgroundWorldY: number = -camera.scale * camera.pos.y
   const backgroundWorldWidth: number = camera.scale * 30
@@ -579,9 +616,18 @@ const SchemaEditor: React.FC<{
             </div>
           </div>
         </div>
+        {showProperties && (
+          <div
+            onMouseDown={handleResizeMouseDown}
+            className={`absolute right-0 w-1 h-full bg-navigationBorder dark:bg-navigationBorderDark
+              hover:bg-blue-500 dark:hover:bg-blue-400 cursor-col-resize z-20 transition-colors`}
+            style={{ right: `${panelWidth}px` }}
+          ></div>
+        )}
         <div
-          className={` ight-0 top-0 text-sm py-2 border-navigationBorder dark:border-navigationBorderDark bg-navigation dark:bg-navigationDark
-             z-0 transition-all ${showProperties ? 'w-64 h-full border-l px-2 ' : 'w-0 h-full'}`}
+          className={`right-0 top-0 text-sm py-2 border-navigationBorder dark:border-navigationBorderDark bg-navigation dark:bg-navigationDark
+             z-0 ${showProperties ? 'h-full border-l px-2' : 'w-0 h-full'}`}
+          style={{ width: showProperties ? `${panelWidth}px` : '0px' }}
         >
           <EditorProperties
             entity={nodes.find((n) => n.id == selectedNode)?.entitySchema}
