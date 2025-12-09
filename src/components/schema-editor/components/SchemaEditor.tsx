@@ -490,7 +490,7 @@ const SchemaEditor: React.FC<{
         save={() => saveSchema()}
       ></EditorToolbar>
       <div className='flex w-full h-full overflow-hidden border-0 border-red-400'>
-        <div className='relative w-full h-full overflow-hidden border-0 border-red-400'>
+        <div className='relative flex-1 h-full overflow-hidden border-0 border-red-400'>
           <div
             id='boardWrapper'
             className='absolute w-full h-full overflow-hidden top-0 left-0 border-0 border-blue-400'
@@ -613,19 +613,18 @@ const SchemaEditor: React.FC<{
             </div>
           </div>
         </div>
-        {showProperties && (
-          <div
-            onMouseDown={handleResizeMouseDown}
-            className={`absolute right-0 w-1 h-full bg-navigationBorder dark:bg-navigationBorderDark
-              hover:bg-blue-500 dark:hover:bg-blue-400 cursor-col-resize z-20 transition-colors`}
-            style={{ right: `${panelWidth}px` }}
-          ></div>
-        )}
         <div
-          className={`right-0 top-0 text-sm py-2 border-navigationBorder dark:border-navigationBorderDark bg-navigation dark:bg-navigationDark
+          className={`relative text-sm py-2 border-navigationBorder dark:border-navigationBorderDark bg-navigation dark:bg-navigationDark
              z-0 ${showProperties ? 'h-full border-l px-2' : 'w-0 h-full'}`}
           style={{ width: showProperties ? `${panelWidth}px` : '0px' }}
         >
+          {showProperties && (
+            <div
+              onMouseDown={handleResizeMouseDown}
+              className='absolute left-0 top-0 w-2 h-full cursor-col-resize z-30 hover:bg-blue-500/20'
+              style={{ marginLeft: '-4px' }}
+            ></div>
+          )}
           <EditorProperties
             entity={nodes.find((n) => n.id == selectedNode)?.entitySchema}
             field={selectedField}
