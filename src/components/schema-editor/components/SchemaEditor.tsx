@@ -513,6 +513,7 @@ const SchemaEditor: React.FC<{
                   }}
                   highlightedFields={highlightedFields.get(n.id) || new Set<string>()}
                   onFieldClick={handleFieldSelection}
+                  isDraggingEdge={newEdge !== null}
                 ></EditorNode>
               ))}
               {newEdge && (

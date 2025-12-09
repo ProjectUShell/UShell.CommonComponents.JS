@@ -35,6 +35,7 @@ const EditorNode: React.FC<{
   setActiveIndex: (i: IndexSchema | null) => void
   highlightedFields: Set<string>
   onFieldClick: (nodeId: number, field: FieldSchema) => void
+  isDraggingEdge: boolean
 }> = React.memo(
   ({
     id,
@@ -60,6 +61,7 @@ const EditorNode: React.FC<{
     setActiveIndex,
     highlightedFields,
     onFieldClick,
+    isDraggingEdge,
   }) => {
     const [entityName, setEntityName] = useState(nodeData.entitySchema.name)
     // const [activeField, setActiveField] = useState('')
@@ -328,29 +330,33 @@ const EditorNode: React.FC<{
                       : 'bbg-bg6 dark:bg-bg6dark select-none'
                 }`}
               ></input>
-              <div
-                style={{
-                  top: worldHeightField / 2 - worldHeightField / 6,
-                  width: worldHeightField / 3,
-                  height: worldHeightField / 3,
-                }}
-                ref={inputRef}
-                className='absolute left-0 rounded-r-full bg-green-300 
-                  cursor-crosshair hover:bg-red-400 pointer-events-auto'
-                onMouseEnter={(e) => handleMouseEnterInput(inputRef, e, f.name)}
-                onMouseLeave={() => onMouseLeaveInput(id, f.name)}
-              ></div>
-              <div
-                style={{
-                  top: worldHeightField / 2 - worldHeightField / 6,
-                  width: worldHeightField / 3,
-                  height: worldHeightField / 3,
-                }}
-                ref={outputRef}
-                className='absolute right-0 rounded-l-full bg-yellow-300 
-                  cursor-crosshair hover:bg-red-400 pointer-events-auto'
-                onMouseDown={(e) => handleMouseDownOutput(outputRef, e, f.name)}
-              ></div>
+              {isDraggingEdge && (
+                <div
+                  style={{
+                    top: worldHeightField / 2 - worldHeightField / 6,
+                    width: worldHeightField / 3,
+                    height: worldHeightField / 3,
+                  }}
+                  ref={inputRef}
+                  className='absolute left-0 rounded-r-full bg-green-300
+                    cursor-crosshair hover:bg-red-400 pointer-events-auto'
+                  onMouseEnter={(e) => handleMouseEnterInput(inputRef, e, f.name)}
+                  onMouseLeave={() => onMouseLeaveInput(id, f.name)}
+                ></div>
+              )}
+              {selected && activeField?.name === f.name && (
+                <div
+                  style={{
+                    top: worldHeightField / 2 - worldHeightField / 6,
+                    width: worldHeightField / 3,
+                    height: worldHeightField / 3,
+                  }}
+                  ref={outputRef}
+                  className='absolute right-0 rounded-l-full bg-yellow-300
+                    cursor-crosshair hover:bg-red-400 pointer-events-auto'
+                  onMouseDown={(e) => handleMouseDownOutput(outputRef, e, f.name)}
+                ></div>
+              )}
               {selected && activeField?.name == f.name && (
                 <>
                   <div
@@ -443,29 +449,33 @@ const EditorNode: React.FC<{
                       : 'bbg-bg6 dark:bg-bg6dark select-none'
                 }`}
               ></input>
-              <div
-                style={{
-                  top: worldHeightField / 2 - worldHeightField / 6,
-                  width: worldHeightField / 3,
-                  height: worldHeightField / 3,
-                }}
-                ref={inputRef}
-                className='absolute left-0 rounded-r-full bg-green-300 
-                  cursor-crosshair hover:bg-red-400 pointer-events-auto'
-                onMouseEnter={(e) => handleMouseEnterInput(inputRef, e, index.name)}
-                onMouseLeave={() => onMouseLeaveInput(id, index.name)}
-              ></div>
-              <div
-                style={{
-                  top: worldHeightField / 2 - worldHeightField / 6,
-                  width: worldHeightField / 3,
-                  height: worldHeightField / 3,
-                }}
-                ref={outputRef}
-                className='absolute right-0 rounded-l-full bg-yellow-300 
-                  cursor-crosshair hover:bg-red-400 pointer-events-auto'
-                onMouseDown={(e) => handleMouseDownOutput(outputRef, e, index.name)}
-              ></div>
+              {isDraggingEdge && (
+                <div
+                  style={{
+                    top: worldHeightField / 2 - worldHeightField / 6,
+                    width: worldHeightField / 3,
+                    height: worldHeightField / 3,
+                  }}
+                  ref={inputRef}
+                  className='absolute left-0 rounded-r-full bg-green-300
+                    cursor-crosshair hover:bg-red-400 pointer-events-auto'
+                  onMouseEnter={(e) => handleMouseEnterInput(inputRef, e, index.name)}
+                  onMouseLeave={() => onMouseLeaveInput(id, index.name)}
+                ></div>
+              )}
+              {selected && activeIndex?.name === index.name && (
+                <div
+                  style={{
+                    top: worldHeightField / 2 - worldHeightField / 6,
+                    width: worldHeightField / 3,
+                    height: worldHeightField / 3,
+                  }}
+                  ref={outputRef}
+                  className='absolute right-0 rounded-l-full bg-yellow-300
+                    cursor-crosshair hover:bg-red-400 pointer-events-auto'
+                  onMouseDown={(e) => handleMouseDownOutput(outputRef, e, index.name)}
+                ></div>
+              )}
               {selected && activeIndex?.name == index.name && (
                 <>
                   <div
