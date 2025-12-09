@@ -33,6 +33,8 @@ const EditorNode: React.FC<{
   activeIndex: IndexSchema | null
   setActiveField: (f: FieldSchema | null) => void
   setActiveIndex: (i: IndexSchema | null) => void
+  highlightedFields: Set<string>
+  onFieldClick: (nodeId: number, field: FieldSchema) => void
 }> = React.memo(
   ({
     id,
@@ -56,6 +58,8 @@ const EditorNode: React.FC<{
     activeIndex,
     setActiveField,
     setActiveIndex,
+    highlightedFields,
+    onFieldClick,
   }) => {
     const [entityName, setEntityName] = useState(nodeData.entitySchema.name)
     // const [activeField, setActiveField] = useState('')
@@ -297,6 +301,7 @@ const EditorNode: React.FC<{
                     setInputMode(false)
                   }
                   setActiveField(f)
+                  onFieldClick(id, f)
                   onMouseDown(id, e)
                 }}
                 onFocus={() => setActiveField(f)}
@@ -316,9 +321,11 @@ const EditorNode: React.FC<{
                   fontSize: worldHeightField / 2.5,
                 }}
                 className={` text-center p-1 rounded-none outline-none cursor-default ${
-                  selected && activeField?.name == f.name
-                    ? 'bg-bg9 dark:bg-bg9dark'
-                    : 'bbg-bg6 dark:bg-bg6dark select-none'
+                  highlightedFields.has(f.name)
+                    ? 'bg-blue-200 dark:bg-blue-800'
+                    : selected && activeField?.name == f.name
+                      ? 'bg-bg9 dark:bg-bg9dark'
+                      : 'bbg-bg6 dark:bg-bg6dark select-none'
                 }`}
               ></input>
               <div
@@ -429,9 +436,11 @@ const EditorNode: React.FC<{
                   fontSize: worldHeightField / 2.5,
                 }}
                 className={` text-center p-1 rounded-none outline-none cursor-default ${
-                  selected && activeIndex?.name == index.name
-                    ? 'bg-bg9 dark:bg-bg9dark'
-                    : 'bbg-bg6 dark:bg-bg6dark select-none'
+                  highlightedFields.has(index.name)
+                    ? 'bg-blue-200 dark:bg-blue-800'
+                    : selected && activeIndex?.name == index.name
+                      ? 'bg-bg9 dark:bg-bg9dark'
+                      : 'bbg-bg6 dark:bg-bg6dark select-none'
                 }`}
               ></input>
               <div

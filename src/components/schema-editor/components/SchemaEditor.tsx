@@ -24,6 +24,20 @@ import EditorToolbar from './EditorToolbar'
 import EditorProperties from './EditorProperties'
 import { BoardState } from '../BoardState'
 
+// Constants for node sizing
+const NODE_WIDTH = 220
+const NODE_FIELD_HEIGHT = 30
+
+/**
+ * Calculate the dimensions of a node based on its content
+ */
+function calculateNodeDimensions(nodeData: NodeData): { width: number; height: number } {
+  const width = NODE_WIDTH
+  const numRows = 3 + nodeData.entitySchema.fields.length + nodeData.entitySchema.indices.length
+  const height = NODE_FIELD_HEIGHT * numRows
+  return { width, height }
+}
+
 const SchemaEditor: React.FC<{
   schemaName: string
   schema: SchemaRoot
@@ -44,6 +58,11 @@ const SchemaEditor: React.FC<{
   const [selectedField, setSelectedField] = useState<FieldSchema | null>(null)
   const [selectedIndex, setSelectedIndex] = useState<IndexSchema | null>(null)
   const [selectedEdge, setSelectedEdge] = useState<EdgeData | null>(null)
+
+  // Track which fields should be highlighted (nodeId -> fieldName)
+  const [highlightedFields, setHighlightedFields] = useState<Map<number, Set<string>>>(new Map())
+  // Track which edges should be highlighted
+  const [highlightedEdges, setHighlightedEdges] = useState<Set<string>>(new Set())
 
   const [newEdge, setNewEdge] = useState<EdgeData | null>(null)
   const [inInput, setInInput] = useState<{
@@ -90,6 +109,89 @@ const SchemaEditor: React.FC<{
   function saveSchema() {
     const newEntitySchema: SchemaRoot = getSchemaFromBoardState({ nodes: nodes, edges: edges })
     onChangeSchema(newEntitySchema)
+  }
+
+  /**
+   * Highlight fields when an edge is selected
+   */
+  function handleEdgeSelection(edge: EdgeData | null) {
+    setSelectedEdge(edge)
+    setSelectedNode(null)
+    setSelectedField(null)
+    setSelectedIndex(null)
+
+    if (!edge) {
+      setHighlightedFields(new Map())
+      setHighlightedEdges(new Set())
+      return
+    }
+
+    const newHighlightedFields = new Map<number, Set<string>>()
+
+    // Highlight the output field on the start node
+    const startNodeFields = newHighlightedFields.get(edge.nodeStartId) || new Set<string>()
+    startNodeFields.add(edge.outputFieldName)
+    newHighlightedFields.set(edge.nodeStartId, startNodeFields)
+
+    // Highlight the input field on the end node
+    const endNodeFields = newHighlightedFields.get(edge.nodeEndId) || new Set<string>()
+    endNodeFields.add(edge.inputFieldName)
+    newHighlightedFields.set(edge.nodeEndId, endNodeFields)
+
+    setHighlightedFields(newHighlightedFields)
+    setHighlightedEdges(new Set())
+  }
+
+  /**
+   * Highlight edges and connected fields when a field is selected
+   */
+  function handleFieldSelection(nodeId: number, field: FieldSchema | null) {
+    setSelectedField(field)
+    setSelectedIndex(null)
+
+    if (!field) {
+      setHighlightedFields(new Map())
+      setHighlightedEdges(new Set())
+      return
+    }
+
+    const newHighlightedFields = new Map<number, Set<string>>()
+    const newHighlightedEdges = new Set<string>()
+
+    // Find all edges connected to this field
+    edges.forEach((edge) => {
+      let isConnected = false
+
+      // Check if this field is the output field
+      if (edge.nodeStartId === nodeId && edge.outputFieldName === field.name) {
+        isConnected = true
+        // Highlight the input field on the other end
+        const endNodeFields = newHighlightedFields.get(edge.nodeEndId) || new Set<string>()
+        endNodeFields.add(edge.inputFieldName)
+        newHighlightedFields.set(edge.nodeEndId, endNodeFields)
+      }
+
+      // Check if this field is the input field
+      if (edge.nodeEndId === nodeId && edge.inputFieldName === field.name) {
+        isConnected = true
+        // Highlight the output field on the other end
+        const startNodeFields = newHighlightedFields.get(edge.nodeStartId) || new Set<string>()
+        startNodeFields.add(edge.outputFieldName)
+        newHighlightedFields.set(edge.nodeStartId, startNodeFields)
+      }
+
+      if (isConnected) {
+        newHighlightedEdges.add(edge.id)
+      }
+    })
+
+    // Also highlight the selected field itself
+    const selectedNodeFields = newHighlightedFields.get(nodeId) || new Set<string>()
+    selectedNodeFields.add(field.name)
+    newHighlightedFields.set(nodeId, selectedNodeFields)
+
+    setHighlightedFields(newHighlightedFields)
+    setHighlightedEdges(newHighlightedEdges)
   }
 
   function createNewEntity(pos: Position): void {
@@ -173,6 +275,8 @@ const SchemaEditor: React.FC<{
     setSelectedEdge(null)
     setSelectedField(null)
     setSelectedIndex(null)
+    setHighlightedFields(new Map())
+    setHighlightedEdges(new Set())
     // e.preventDefault()
     e.stopPropagation()
 
@@ -208,19 +312,6 @@ const SchemaEditor: React.FC<{
         nodeStart.outputEdgeIds = [...nodeStart.outputEdgeIds, edgeId]
         nodeEnd.inputEdgeIds = [...nodeEnd.inputEdgeIds, edgeId]
 
-        newEdge.previousStartPosition = {
-          x: newEdge.currentStartPosition.x,
-          y: newEdge.currentStartPosition.y,
-        }
-        newEdge.previousEndPosition = {
-          x: inInput.posX,
-          y: inInput.posY,
-        }
-        newEdge.currentEndPosition = {
-          x: inInput.posX,
-          y: inInput.posY,
-        }
-
         newEdge.relation.primaryEntityName = nodeEnd.entitySchema.name
         setEdges([
           ...edges,
@@ -229,6 +320,11 @@ const SchemaEditor: React.FC<{
             id: edgeId,
             nodeEndId: nodeEnd.id,
             inputFieldName: inInput.fieldName,
+            // Position fields are kept for backward compatibility but not used for rendering
+            previousStartPosition: newEdge.previousStartPosition,
+            previousEndPosition: newEdge.previousEndPosition,
+            currentStartPosition: newEdge.currentStartPosition,
+            currentEndPosition: { x: inInput.posX, y: inInput.posY },
           },
         ])
         setNewEdge(null)
@@ -257,27 +353,7 @@ const SchemaEditor: React.FC<{
           y: node.previousPosition.y + deltaY,
         }
         setNodes([...nodes])
-
-        // update edge positions
-        for (let i = 0; i < node.inputEdgeIds.length; i++) {
-          const edgeId = node.inputEdgeIds[i]
-          const edge = edges.find((edge) => edge.id === edgeId)
-          if (!edge) continue
-          edge.currentEndPosition = {
-            x: edge.previousEndPosition.x + deltaX,
-            y: edge.previousEndPosition.y + deltaY,
-          }
-        }
-
-        for (let i = 0; i < node.outputEdgeIds.length; i++) {
-          const edgeId = node.outputEdgeIds[i]
-          const edge = edges.find((edge) => edge.id === edgeId)
-          if (!edge) continue
-          edge.currentStartPosition = {
-            x: edge.previousStartPosition.x + deltaX,
-            y: edge.previousStartPosition.y + deltaY,
-          }
-        }
+        // Edges will automatically update their positions based on node positions
       }
     } else {
       const boardWrapperElement = document.getElementById('boardWrapper')
@@ -303,31 +379,7 @@ const SchemaEditor: React.FC<{
           x: node.currentPosition.x,
           y: node.currentPosition.y,
         }
-
-        // Update input edges positions
-        for (let i = 0; i < node.inputEdgeIds.length; i++) {
-          const edgeId = node.inputEdgeIds[i]
-          const edge = edges.find((edge) => edge.id === edgeId)
-
-          if (edge) {
-            edge.previousEndPosition = {
-              x: edge.currentEndPosition.x,
-              y: edge.currentEndPosition.y,
-            }
-          }
-        }
-
-        // Update output edges positions
-        for (let i = 0; i < node.outputEdgeIds.length; i++) {
-          const edgeId = node.outputEdgeIds[i]
-          const edge = edges.find((edge) => edge.id === edgeId)
-          if (edge) {
-            edge.previousStartPosition = {
-              x: edge.currentStartPosition.x,
-              y: edge.currentStartPosition.y,
-            }
-          }
-        }
+        // Edges will automatically update their positions based on node positions
       }
     },
     [nodes, edges],
@@ -342,12 +394,16 @@ const SchemaEditor: React.FC<{
 
   const handleMouseDownOutput = useCallback(
     (posX: number, posY: number, nodeId: number, fieldName: string) => {
-      const prevStartPos = { x: posX, y: posY }
-      const prevEndPos = { x: posX, y: posY }
-      const curStartPos = { x: posX, y: posY }
-      const curEndPos = { x: posX, y: posY }
       const node: NodeData | undefined = nodes.find((n) => n.id == nodeId)
       if (!node) throw `No Node with id ${nodeId}`
+
+      // Use node center as starting point for new edge
+      const nodeDimensions = calculateNodeDimensions(node)
+      const nodeCenter = {
+        x: node.currentPosition.x + nodeDimensions.width / 2,
+        y: node.currentPosition.y + nodeDimensions.height / 2,
+      }
+
       const relation: RelationSchema = new RelationSchema()
       relation.foreignEntityName = node.entitySchema.name
       relation.foreignKeyIndexName = fieldName
@@ -357,10 +413,10 @@ const SchemaEditor: React.FC<{
         outputFieldName: fieldName,
         nodeEndId: 0,
         inputFieldName: '',
-        previousStartPosition: prevStartPos,
-        previousEndPosition: prevEndPos,
-        currentStartPosition: curStartPos,
-        currentEndPosition: curEndPos,
+        previousStartPosition: nodeCenter,
+        previousEndPosition: nodeCenter,
+        currentStartPosition: nodeCenter,
+        currentEndPosition: nodeCenter,
         relation: relation,
       })
     },
@@ -455,6 +511,8 @@ const SchemaEditor: React.FC<{
                     setSelectedIndex(i)
                     setSelectedField(null)
                   }}
+                  highlightedFields={highlightedFields.get(n.id) || new Set<string>()}
+                  onFieldClick={handleFieldSelection}
                 ></EditorNode>
               ))}
               {newEdge && (
@@ -472,27 +530,39 @@ const SchemaEditor: React.FC<{
                   onMouseDownEdge={() => {}}
                 ></EditorEdge>
               )}
-              {edges.map((edge: EdgeData, i) => (
-                <EditorEdge
-                  key={i}
-                  selected={selectedEdge ? selectedEdge.id == edge.id : false}
-                  isNew={false}
-                  position={{
-                    x0: edge.currentStartPosition.x,
-                    y0: edge.currentStartPosition.y,
-                    x1: edge.currentEndPosition.x,
-                    y1: edge.currentEndPosition.y,
-                  }}
-                  camera={camera}
-                  onMouseDownEdge={() => {
-                    setSelectedField(null)
-                    setSelectedIndex(null)
-                    setSelectedNode(null)
-                    setSelectedEdge(edge)
-                  }}
-                  onClickDelete={() => {}}
-                ></EditorEdge>
-              ))}
+              {edges.map((edge: EdgeData, i) => {
+                const startNode = nodes.find((n) => n.id === edge.nodeStartId)
+                const endNode = nodes.find((n) => n.id === edge.nodeEndId)
+
+                if (!startNode || !endNode) return null
+
+                const startDimensions = calculateNodeDimensions(startNode)
+                const endDimensions = calculateNodeDimensions(endNode)
+
+                return (
+                  <EditorEdge
+                    key={i}
+                    selected={selectedEdge ? selectedEdge.id == edge.id : false}
+                    highlighted={highlightedEdges.has(edge.id)}
+                    isNew={false}
+                    startNode={{
+                      position: startNode.currentPosition,
+                      width: startDimensions.width,
+                      height: startDimensions.height,
+                    }}
+                    endNode={{
+                      position: endNode.currentPosition,
+                      width: endDimensions.width,
+                      height: endDimensions.height,
+                    }}
+                    camera={camera}
+                    onMouseDownEdge={() => {
+                      handleEdgeSelection(edge)
+                    }}
+                    onClickDelete={() => {}}
+                  ></EditorEdge>
+                )
+              })}
               {contextMenuPos && (
                 <div
                   style={{ top: contextMenuPos.y, left: contextMenuPos.x }}

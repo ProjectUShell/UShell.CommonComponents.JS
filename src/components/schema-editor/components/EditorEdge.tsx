@@ -1,16 +1,35 @@
 import React from 'react'
 import { Camera } from '../Camera'
 import { Position } from '../Position'
-import { getBoardPosFromWindowPos } from '../BoardUtils'
+import { calculateNodeConnectionPoints, getViewPosFromWorldPos } from '../BoardUtils'
+
+interface NodeInfo {
+  position: Position
+  width: number
+  height: number
+}
 
 const EditorEdge: React.FC<{
   selected: boolean
+  highlighted?: boolean
   isNew: boolean
-  position: { x0: number; y0: number; x1: number; y1: number }
+  startNode?: NodeInfo
+  endNode?: NodeInfo
+  position?: { x0: number; y0: number; x1: number; y1: number }
   camera: Camera
   onMouseDownEdge: () => void
   onClickDelete: () => void
-}> = ({ selected, isNew, position, camera, onMouseDownEdge, onClickDelete }) => {
+}> = ({
+  selected,
+  highlighted = false,
+  isNew,
+  startNode,
+  endNode,
+  position,
+  camera,
+  onMouseDownEdge,
+  onClickDelete,
+}) => {
   function handleMouseDownEdge(e: any) {
     e.stopPropagation()
 
@@ -21,33 +40,53 @@ const EditorEdge: React.FC<{
     return value / 2
   }
 
-  const startPos: Position = getBoardPosFromWindowPos({ x: position.x0, y: position.y0 })
-  const endPos: Position = getBoardPosFromWindowPos({ x: position.x1, y: position.y1 })
+  let x0: number, y0: number, x1: number, y1: number
 
-  const boardEl: HTMLElement | null = document.getElementById('board')
-  const widthDiff: number = boardEl!.clientWidth - window.innerWidth
-  const heightDiff: number = boardEl!.clientHeight - window.innerHeight
+  // If both nodes are provided, calculate dynamic connection points
+  if (startNode && endNode) {
+    const { startPoint, endPoint } = calculateNodeConnectionPoints(
+      startNode.position,
+      startNode.width,
+      startNode.height,
+      endNode.position,
+      endNode.width,
+      endNode.height,
+    )
 
-  // let x0 = position.x0 + widthDiff
-  // let x1 = position.x1 + widthDiff
-  // let y0 = position.y0 + heightDiff
-  // let y1 = position.y1 + heightDiff
+    // Convert world positions to view positions
+    const startViewPos = getViewPosFromWorldPos(startPoint, camera)
+    const endViewPos = getViewPosFromWorldPos(endPoint, camera)
 
-  let x0 = position.x0
-  let x1 = position.x1
-  let y0 = position.y0
-  let y1 = position.y1
+    x0 = startViewPos.x
+    y0 = startViewPos.y
+    x1 = endViewPos.x
+    y1 = endViewPos.y
+  } else if (position) {
+    // Fallback to direct position (used for new edges being drawn)
+    x0 = camera.scale * position.x0 - camera.scale * camera.pos.x
+    x1 = camera.scale * position.x1 - camera.scale * camera.pos.x
+    y0 = camera.scale * position.y0 - camera.scale * camera.pos.y
+    y1 = camera.scale * position.y1 - camera.scale * camera.pos.y
+  } else {
+    // Default fallback
+    x0 = 0
+    y0 = 0
+    x1 = 0
+    y1 = 0
+  }
 
-  x0 = camera.scale * x0 - camera.scale * camera.pos.x
-  x1 = camera.scale * x1 - camera.scale * camera.pos.x
-  y0 = camera.scale * y0 - camera.scale * camera.pos.y
-  y1 = camera.scale * y1 - camera.scale * camera.pos.y
+  // Determine edge color based on state
+  let strokeColor = 'stroke-pink-500'
+  if (selected) {
+    strokeColor = 'stroke-orange-400'
+  } else if (highlighted) {
+    strokeColor = 'stroke-blue-400'
+  }
 
   return (
     <svg className='absolute top-0 left-0 w-full h-full pointer-events-none border-0'>
       <path
-        className={`pointer-events-auto stroke-2  fill-transparent cursor-pointer
-         ${selected ? 'stroke-orange-400' : 'stroke-pink-500'}`}
+        className={`pointer-events-auto stroke-2 fill-transparent cursor-pointer ${strokeColor}`}
         d={`M ${x0} ${y0} C ${x0 + calculateOffset(Math.abs(x1 - x0))} ${y0}, ${
           x1 - calculateOffset(Math.abs(x1 - x0))
         } ${y1}, ${x1} ${y1}`}
