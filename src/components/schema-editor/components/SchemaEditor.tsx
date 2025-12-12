@@ -50,6 +50,7 @@ const SchemaEditor: React.FC<{
 
   const [currentId, setCurrentId] = useState(1)
   const [grabbingBoard, setGrabbingBoard] = useState(false)
+  const [isDraggingNode, setIsDraggingNode] = useState(false)
   const [camera, setCamera] = useState(new Camera())
   const [clickedPosition, setClickedPosition] = useState<any>({ x: -1, y: -1 })
   const [nodes, setNodes] = useState<NodeData[]>([])
@@ -73,6 +74,12 @@ const SchemaEditor: React.FC<{
   } | null>(null)
 
   const [contextMenuPos, setContextMenuPos] = useState<{ x: number; y: number } | null>(null)
+
+  // Panel resizing state
+  const [panelWidth, setPanelWidth] = useState<number>(256) // Default 256px (w-64)
+  const [isResizingPanel, setIsResizingPanel] = useState<boolean>(false)
+  const [resizeStartX, setResizeStartX] = useState<number>(0)
+  const [resizeStartWidth, setResizeStartWidth] = useState<number>(0)
 
   useEffect(() => {
     const pd = (e: any) => e.preventDefault()
@@ -271,12 +278,6 @@ const SchemaEditor: React.FC<{
   }
 
   function handleMouseDown(e: any) {
-    setSelectedNode(null)
-    setSelectedEdge(null)
-    setSelectedField(null)
-    setSelectedIndex(null)
-    setHighlightedFields(new Map())
-    setHighlightedEdges(new Set())
     // e.preventDefault()
     e.stopPropagation()
 
@@ -293,6 +294,7 @@ const SchemaEditor: React.FC<{
   function handleMouseUp(e: any) {
     e.preventDefault()
     setGrabbingBoard(false)
+    setIsDraggingNode(false)
     setClickedPosition({ x: -1, y: -1 })
 
     if (newEdge && inInput === null) {
@@ -344,7 +346,7 @@ const SchemaEditor: React.FC<{
     if (!(clickedPosition.x >= 0 && clickedPosition.y >= 0)) return
     const deltaX = (e.clientX - clickedPosition.x) / camera.scale
     const deltaY = (e.clientY - clickedPosition.y) / camera.scale
-    if (selectedNode) {
+    if (isDraggingNode && selectedNode) {
       const node: NodeData | undefined = nodes.find((n) => n.id === selectedNode)
       if (node) {
         // Update node position
@@ -370,6 +372,11 @@ const SchemaEditor: React.FC<{
     (id: number, e: any) => {
       setSelectedNode(id)
       setSelectedEdge(null)
+      setSelectedField(null)
+      setSelectedIndex(null)
+      setHighlightedFields(new Map())
+      setHighlightedEdges(new Set())
+      setIsDraggingNode(true)
 
       setClickedPosition({ x: e.clientX, y: e.clientY })
 
@@ -441,6 +448,37 @@ const SchemaEditor: React.FC<{
     }
   }
 
+  // Panel resize handlers
+  const handleResizeMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsResizingPanel(true)
+    setResizeStartX(e.clientX)
+    setResizeStartWidth(panelWidth)
+  }
+
+  useEffect(() => {
+    if (!isResizingPanel) return
+
+    const handleResizeMouseMove = (e: MouseEvent) => {
+      const deltaX = resizeStartX - e.clientX // Inverted because panel is on right
+      const newWidth = Math.max(200, Math.min(600, resizeStartWidth + deltaX))
+      setPanelWidth(newWidth)
+    }
+
+    const handleResizeMouseUp = () => {
+      setIsResizingPanel(false)
+    }
+
+    document.addEventListener('mousemove', handleResizeMouseMove)
+    document.addEventListener('mouseup', handleResizeMouseUp)
+
+    return () => {
+      document.removeEventListener('mousemove', handleResizeMouseMove)
+      document.removeEventListener('mouseup', handleResizeMouseUp)
+    }
+  }, [isResizingPanel, resizeStartX, resizeStartWidth])
+
   const backgroundWorldX: number = -camera.scale * camera.pos.x
   const backgroundWorldY: number = -camera.scale * camera.pos.y
   const backgroundWorldWidth: number = camera.scale * 30
@@ -456,7 +494,7 @@ const SchemaEditor: React.FC<{
         save={() => saveSchema()}
       ></EditorToolbar>
       <div className='flex w-full h-full overflow-hidden border-0 border-red-400'>
-        <div className='relative w-full h-full overflow-hidden border-0 border-red-400'>
+        <div className='relative flex-1 h-full overflow-hidden border-0 border-red-400'>
           <div
             id='boardWrapper'
             className='absolute w-full h-full overflow-hidden top-0 left-0 border-0 border-blue-400'
@@ -513,6 +551,7 @@ const SchemaEditor: React.FC<{
                   }}
                   highlightedFields={highlightedFields.get(n.id) || new Set<string>()}
                   onFieldClick={handleFieldSelection}
+                  isDraggingEdge={newEdge !== null}
                 ></EditorNode>
               ))}
               {newEdge && (
@@ -579,15 +618,27 @@ const SchemaEditor: React.FC<{
           </div>
         </div>
         <div
-          className={` ight-0 top-0 text-sm py-2 border-navigationBorder dark:border-navigationBorderDark bg-navigation dark:bg-navigationDark
-             z-0 transition-all ${showProperties ? 'w-64 h-full border-l px-2 ' : 'w-0 h-full'}`}
+          className={`relative text-sm py-2 border-navigationBorder dark:border-navigationBorderDark bg-navigation dark:bg-navigationDark
+             z-0 ${showProperties ? 'h-full border-l px-2' : 'w-0 h-full'}`}
+          style={{ width: showProperties ? `${panelWidth}px` : '0px' }}
         >
+          {showProperties && (
+            <div
+              onMouseDown={handleResizeMouseDown}
+              className='absolute left-0 top-0 w-2 h-full cursor-col-resize z-30 hover:bg-blue-500/20'
+              style={{ marginLeft: '-4px' }}
+            ></div>
+          )}
           <EditorProperties
-            entity={nodes.find((n) => n.id == selectedNode)?.entitySchema}
+            nodeData={nodes.find((n) => n.id == selectedNode)}
             field={selectedField}
             relation={selectedEdge?.relation}
             index={selectedIndex}
-            onChange={() => save()}
+            onChange={() => {
+              save()
+              saveSchema()
+              setNodes([...nodes]) // Force re-render
+            }}
           ></EditorProperties>
         </div>
       </div>
