@@ -9,4 +9,5 @@ export interface NodeData {
   inputEdgeIds: string[]
   outputEdgeIds: string[]
   entitySchema: EntitySchema
+  color?: string
 }

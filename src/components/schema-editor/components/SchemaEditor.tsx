@@ -626,7 +626,7 @@ const SchemaEditor: React.FC<{
             ></div>
           )}
           <EditorProperties
-            entity={nodes.find((n) => n.id == selectedNode)?.entitySchema}
+            nodeData={nodes.find((n) => n.id == selectedNode)}
             field={selectedField}
             relation={selectedEdge?.relation}
             index={selectedIndex}

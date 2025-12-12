@@ -255,6 +255,7 @@ const EditorNode: React.FC<{
             (3 + (nodeData.entitySchema.fields.length + nodeData.entitySchema.indices.length))
           }px`,
           transform: `translate(${viewPos.x}px, ${viewPos.y}px`,
+          backgroundColor: nodeData.color || undefined,
         }}
         onMouseDown={(e: any) => {
           e.stopPropagation()
@@ -265,10 +266,10 @@ const EditorNode: React.FC<{
           setInputMode(false)
           // setActiveField('')
         }}
-        className={`flex flex-col absolute rounded-md cursor-grab bg-bg6 dark:bg-bg6dark border-2 z-10 
+        className={`flex flex-col absolute rounded-md cursor-grab border-2 z-10
         shadow-md hover:shadow-2xl ${
-          selected ? 'border-orange-400' : 'border-bg9 dark:border-bg9dark'
-        }`}
+          nodeData.color ? '' : 'bg-bg6 dark:bg-bg6dark'
+        } ${selected ? 'border-orange-400' : 'border-bg9 dark:border-bg9dark'}`}
       >
         <input
           id='test123'

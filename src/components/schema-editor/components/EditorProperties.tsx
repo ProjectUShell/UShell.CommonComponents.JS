@@ -3,17 +3,26 @@ import { EntitySchema, RelationSchema, FieldSchema, IndexSchema } from 'fusefx-m
 import RelationForm from './RelationForm'
 import FieldForm from './FieldForm'
 import IndexForm from './IndexForm'
+import { NodeData } from '../NodeData'
 
 const EditorProperties: React.FC<{
-  entity: EntitySchema | undefined
+  nodeData: NodeData | undefined
   field: FieldSchema | null
   relation: RelationSchema | undefined
   index: IndexSchema | null
   onChange: () => void
-}> = ({ entity, relation, field, index, onChange }) => {
+}> = ({ nodeData, relation, field, index, onChange }) => {
   const [activeTab, setActiveTab] = useState<'layout' | 'data'>('layout')
 
+  const entity = nodeData?.entitySchema
   const showEntityTabs = entity && !field && !relation && !index
+
+  const handleColorChange = (color: string) => {
+    if (nodeData) {
+      nodeData.color = color
+      onChange()
+    }
+  }
 
   return (
     <div className='flex flex-col gap-2 p-2 h-full'>
@@ -48,8 +57,21 @@ const EditorProperties: React.FC<{
           {/* Tab content */}
           <div className='flex-1 overflow-auto'>
             {activeTab === 'layout' && (
-              <div className='flex flex-col gap-2'>
-                <div>Color</div>
+              <div className='flex flex-col gap-3'>
+                <div className='flex flex-col gap-2'>
+                  <label className='text-sm font-medium'>Color</label>
+                  <div className='flex gap-2 items-center'>
+                    <input
+                      type='color'
+                      value={nodeData?.color || '#e0e0e0'}
+                      onChange={(e) => handleColorChange(e.target.value)}
+                      className='w-12 h-8 rounded border border-contentBorder dark:border-contentBorderDark cursor-pointer'
+                    />
+                    <span className='text-xs text-content dark:text-contentDark'>
+                      {nodeData?.color || '#e0e0e0'}
+                    </span>
+                  </div>
+                </div>
                 {/* More layout properties will go here */}
               </div>
             )}
