@@ -372,6 +372,10 @@ const SchemaEditor: React.FC<{
     (id: number, e: any) => {
       setSelectedNode(id)
       setSelectedEdge(null)
+      setSelectedField(null)
+      setSelectedIndex(null)
+      setHighlightedFields(new Map())
+      setHighlightedEdges(new Set())
       setIsDraggingNode(true)
 
       setClickedPosition({ x: e.clientX, y: e.clientY })
