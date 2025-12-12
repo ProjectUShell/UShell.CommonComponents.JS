@@ -630,7 +630,11 @@ const SchemaEditor: React.FC<{
             field={selectedField}
             relation={selectedEdge?.relation}
             index={selectedIndex}
-            onChange={() => save()}
+            onChange={() => {
+              save()
+              saveSchema()
+              setNodes([...nodes]) // Force re-render
+            }}
           ></EditorProperties>
         </div>
       </div>

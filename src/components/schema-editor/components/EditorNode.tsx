@@ -288,8 +288,9 @@ const EditorNode: React.FC<{
             width: `${worldWidth - 4}px`,
             height: `${worldHeightField}px`,
             fontSize: worldHeightField / 2.5,
+            backgroundColor: nodeData.color ? 'transparent' : undefined,
           }}
-          className={`bg-contentSelected dark:bg-contentSelectedDark text-center p-1 border-0 cursor-grab border-b-2 border-bg9 dark:border-bg9dark outline-none rounded-t-md`}
+          className={`${nodeData.color ? '' : 'bg-contentSelected dark:bg-contentSelectedDark'} text-center p-1 border-0 cursor-grab border-b-2 border-bg9 dark:border-bg9dark outline-none rounded-t-md`}
         ></input>
         {nodeData.entitySchema.fields.map((f) => {
           const inputRef: any = React.createRef()
@@ -322,13 +323,22 @@ const EditorNode: React.FC<{
                   width: `${worldWidth - 4}px`,
                   height: `${worldHeightField}px`,
                   fontSize: worldHeightField / 2.5,
+                  backgroundColor: highlightedFields.has(f.name)
+                    ? undefined
+                    : nodeData.color
+                      ? 'transparent'
+                      : undefined,
                 }}
                 className={` text-center p-1 rounded-none outline-none cursor-default ${
                   highlightedFields.has(f.name)
                     ? 'bg-blue-200 dark:bg-blue-800'
                     : selected && activeField?.name == f.name
-                      ? 'bg-bg9 dark:bg-bg9dark'
-                      : 'bbg-bg6 dark:bg-bg6dark select-none'
+                      ? nodeData.color
+                        ? 'bg-black/10 dark:bg-white/10'
+                        : 'bg-bg9 dark:bg-bg9dark'
+                      : nodeData.color
+                        ? 'select-none'
+                        : 'bbg-bg6 dark:bg-bg6dark select-none'
                 }`}
               ></input>
               {isDraggingEdge && (
@@ -406,8 +416,9 @@ const EditorNode: React.FC<{
             width: `${worldWidth - 4}px`,
             height: `${worldHeightField}px`,
             fontSize: worldHeightField / 2.5,
+            backgroundColor: nodeData.color ? 'transparent' : undefined,
           }}
-          className='bbg-bg6 dark:bg-bg6dark text-center p-1 rounded-none outline-none'
+          className={`${nodeData.color ? '' : 'bbg-bg6 dark:bg-bg6dark'} text-center p-1 rounded-none outline-none`}
         ></input>
         <div className='h-0.5  border-b border-contentBorder dark:border-contentBorderDark'></div>
         {nodeData.entitySchema.indices.map((index) => {
@@ -441,13 +452,22 @@ const EditorNode: React.FC<{
                   width: `${worldWidth - 4}px`,
                   height: `${worldHeightField}px`,
                   fontSize: worldHeightField / 2.5,
+                  backgroundColor: highlightedFields.has(index.name)
+                    ? undefined
+                    : nodeData.color
+                      ? 'transparent'
+                      : undefined,
                 }}
                 className={` text-center p-1 rounded-none outline-none cursor-default ${
                   highlightedFields.has(index.name)
                     ? 'bg-blue-200 dark:bg-blue-800'
                     : selected && activeIndex?.name == index.name
-                      ? 'bg-bg9 dark:bg-bg9dark'
-                      : 'bbg-bg6 dark:bg-bg6dark select-none'
+                      ? nodeData.color
+                        ? 'bg-black/10 dark:bg-white/10'
+                        : 'bg-bg9 dark:bg-bg9dark'
+                      : nodeData.color
+                        ? 'select-none'
+                        : 'bbg-bg6 dark:bg-bg6dark select-none'
                 }`}
               ></input>
               {isDraggingEdge && (
@@ -525,8 +545,9 @@ const EditorNode: React.FC<{
             width: `${worldWidth - 4}px`,
             height: `${worldHeightField}px`,
             fontSize: worldHeightField / 2.5,
+            backgroundColor: nodeData.color ? 'transparent' : undefined,
           }}
-          className='bbg-bg6 dark:bg-bg6dark text-center p-1 rounded-none outline-none'
+          className={`${nodeData.color ? '' : 'bbg-bg6 dark:bg-bg6dark'} text-center p-1 rounded-none outline-none`}
         ></input>
       </div>
     )
